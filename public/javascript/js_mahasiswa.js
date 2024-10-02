@@ -7,9 +7,7 @@ function tambahData(){
     $('#jenis_kelamin').val('')
     $('#email').val('')
     $('#telp').val('')
-    // $('#tanggal_lahir').val('')
-    // $('#tempat_lahir').val('')
-    // $('#alamat').val('')
+    $('#program_studi_id').val('')
     $('#idMahasiswa').val('')
     $('#myModal').modal('show')
 }
