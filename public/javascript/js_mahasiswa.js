@@ -1,5 +1,5 @@
 function tambahData(){
-    $('#myFormulir').attr("action", formUrlCreate);
+    $('#myFormulir').attr("action", `${BASE_URL}/admin/mahasiswa/store`);
     $('#myModalLabel').html('Tambah Data')
     $('#kelas').val('')
     $('#nim').val('')
