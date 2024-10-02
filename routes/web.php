@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Administrator\Profile\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\OAuthController;
@@ -226,4 +227,9 @@ Route::prefix('mahasiswa')->middleware(['admin'])->group(function () {
         Route::get('', [JadwalSeminarMahasiswaController::class, 'index'])->name('mahasiswa.jadwal-seminar')->middleware('can:read-jadwalseminar-mahasiswa');
         Route::get('/show/{id}', [JadwalSeminarMahasiswaController::class, 'show'])->name('mahasiswa.jadwal-seminar.show')->middleware('can:read-jadwalseminar-mahasiswa');
     });
+});
+
+Route::prefix('apps')->middleware(['auth'])->group(function () {
+    Route::get('profile', [ProfileController::class, 'index'])->name('apps.profile');
+    route::post('update', [ProfileController::class, 'update'])->name('apps.profile.update');
 });
