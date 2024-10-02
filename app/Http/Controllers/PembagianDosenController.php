@@ -33,7 +33,6 @@ class PembagianDosenController extends Controller
         $dataDosen = Dosen::all();
         $dosen = [];
         foreach ($dataDosen as $key) {
-            # code...
             $kuota = KuotaDosen::where('dosen_id', $key->id)->where('periode_ta_id', $periode->id)->first();
             $bimbingUji = BimbingUji::with(['tugas_akhir', 'dosen'])->where('dosen_id', $key->id)->where('jenis', 'pembimbing')->where('urut', 1)->whereHas('tugas_akhir', function ($q) use($periode){
                 $q->where('periode_ta_id', $periode->id);
@@ -47,7 +46,7 @@ class PembagianDosenController extends Controller
             $bimbingUji4 = BimbingUji::with(['tugas_akhir', 'dosen'])->where('dosen_id', $key->id)->where('jenis', 'penguji')->where('urut', 2)->whereHas('tugas_akhir', function ($q) use($periode){
                 $q->where('periode_ta_id', $periode->id);
             })->count();
-            // dd(10);
+
             $dosen[] = (object)[
                 'id' => $key->id,
                 'nidn' => $key->nidn,
@@ -63,6 +62,7 @@ class PembagianDosenController extends Controller
                 'total_peng_2' => $bimbingUji4,
             ];
         }
+
         return view('kaprodi-menu.pembagiandosen.form-edit', [
             "title" => "Pembagian Dosen",
             "breadcrumb1" => "Pembagian Dosen",
@@ -110,11 +110,8 @@ class PembagianDosenController extends Controller
             })->count();
 
             if(($pemb_2->dosen_id ?? null) != $request->pemb_2){
-
                 if($bimbingUji2 >= $kuota->pemb_2){
-
                     return redirect()->back()->with('error', 'Kuota dosen pembimbing 2 yang di pilih telah mencapai batas');
-
                 }
 
                 if(isset($pemb_2->id)){

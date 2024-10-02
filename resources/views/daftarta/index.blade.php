@@ -1,26 +1,6 @@
 @extends('layout.admin-main')
 @section('content')
 
-{{-- <style>
-    .table-responsive {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-
-    .table thead th {
-        white-space: nowrap;
-    }
-
-    .table tbody td {
-        white-space: nowrap;
-    }
-
-    @media (min-width: 992px) {
-        
-    }
-
-</style> --}}
-
 <div class="row">
     <div class="col-md-12 col-sm-12 col-g-12">
         <div class="card">

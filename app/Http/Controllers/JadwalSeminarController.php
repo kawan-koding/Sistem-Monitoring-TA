@@ -36,10 +36,8 @@ class JadwalSeminarController extends Controller
             ->whereHas('tugas_akhir', function ($q) use ($periode) {
                 $q->where('status', 'acc')->where('periode_ta_id', $periode->id);
             });
-
             $date = date('Y-m-d');
             $time = date('H:i:s');
-
             $jadwalTS = JadwalSeminar::with(['tugas_akhir'])
                 ->whereHas('tugas_akhir', function ($q) use ($periode) {
                     $q->where('status', 'acc')->where('periode_ta_id', $periode->id);
@@ -53,9 +51,6 @@ class JadwalSeminarController extends Controller
                 });
 
             $hasilJadwalTS = $jadwalTS->get();
-
-
-
         $ta = TugasAkhir::where('periode_ta_id', $periode->id)->get();
 
         return view('jadwal-seminar.index', [
@@ -270,14 +265,11 @@ class JadwalSeminarController extends Controller
                     }
 
                     $peng2 = BimbingUji::where('tugas_akhir_id', $id)->where('jenis', 'penguji')->where('urut', 1)->first();
-
                     if($peng2->dosen_id == $dosen_id){
                         return redirect()->back()->with('error', 'Dosen Penguji 2 sudah memiliki jadwal')->withInput($request->all());
                     }
                 }
             }
-
-
             $pemb1 = BimbingUji::where('tugas_akhir_id', $id)->where('jenis', 'pembimbing')->where('urut', 1)->first();
             $pemb2 = BimbingUji::where('tugas_akhir_id', $id)->where('jenis', 'pembimbing')->where('urut', 2)->first();
             $peng1 = BimbingUji::where('tugas_akhir_id', $id)->where('jenis', 'penguji')->where('urut', 1)->first();

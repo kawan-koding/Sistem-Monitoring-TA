@@ -22,6 +22,8 @@ class DatabaseSeeder extends Seeder
             PeriodeTASeeder::class,
             JenisTaSeeder::class,
             TopikSeeder::class,
+            JurusanSeeder::class,
+            ProgramStudiSeeder::class,
         ]);
     }
 }

@@ -131,17 +131,12 @@ class DashboardController extends Controller
                 $q->where('periode_ta_id', $periode->id)->where('mahasiswa_id', $mh->id);
             });
             $jadwalSeminar = $jadwalSeminar->get();
-
             $ta = TugasAkhir::with(['mahasiswa', 'topik', 'jenis_ta'])->whereHas('mahasiswa', function($q)use($user){
                 $q->where('user_id', $user->id);
             });
             $tta = $ta->where('status', 'acc')->get();
-
-            
-
             // Membuat objek DateTime untuk tanggal sekarang
             $tanggal = $jadwalSeminar[0]->tanggal ?? date('Y-m-d');
-
             // Format tanggal dalam bahasa Indonesia
             $tanggalFormatted = strftime('%A, %d %B %Y', strtotime($tanggal));
 

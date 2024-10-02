@@ -1,7 +1,7 @@
 @extends('layout.admin-main')
 @section('content')
 
-<style> 
+{{-- <style> 
     .custom-card { 
         border: 2px solid #007bff; 
         border-radius: 15px; 
@@ -166,6 +166,6 @@
             </div>
         </div>
     </div>
-</div>
+</div> --}}
 
 @endsection

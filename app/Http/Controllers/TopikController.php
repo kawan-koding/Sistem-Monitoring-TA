@@ -12,7 +12,6 @@ class TopikController extends Controller
      */
     public function index()
     {
-        //
         return view('topik.index', [
             "title" => "Topik",
             "breadcrumb1" => "Topik",
@@ -21,7 +20,6 @@ class TopikController extends Controller
             'jsInit'      => 'js_topik.js',
         ]);
     }
-
 
     public function store(Request $request)
     {
@@ -33,17 +31,13 @@ class TopikController extends Controller
             ]);
             return redirect()->route('admin.topik')->with('success', 'Data berhasil ditambahkan');
         } catch (\Exception $e) {
-
-
             return redirect()->route('admin.topik')->with('error', $e->getMessage());
         }
     }
 
     public function show(string $id)
     {
-        //
         $topik = Topik::find($id);
-
         echo json_encode($topik);
     }
 
@@ -57,8 +51,6 @@ class TopikController extends Controller
             ]);
             return redirect()->route('admin.topik')->with('success', 'Data berhasil diupdate');
         } catch (\Exception $e) {
-
-
             return redirect()->route('admin.topik')->with('error', $e->getMessage());
         }
     }

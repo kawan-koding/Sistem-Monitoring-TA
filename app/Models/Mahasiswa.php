@@ -8,20 +8,19 @@ use Illuminate\Database\Eloquent\Model;
 class Mahasiswa extends Model
 {
     use HasFactory;
+
     protected $table = 'mahasiswas';
-
     protected $primaryKey = 'id';
+    protected $guarded = [];
 
-    protected $fillable = [
-        'user_id',
-        'kelas',
-        'nim',
-        'nama_mhs',
-        'jenis_kelamin',
-        'email',
-        'telp',
-        'tempat_lahir',
-        'tanggal_lahir',
-        'alamat',
-    ];
+    public function programStudi()
+    {
+        return $this->belongsTo(ProgramStudi::class);
+    }
+
+    
+    public function user()
+    {
+        return $this->morphOne(User::class, 'userable');
+    }
 }

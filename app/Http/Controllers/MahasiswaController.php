@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Mahasiswa;
 use App\Models\User;
+use App\Models\Mahasiswa;
+use App\Models\ProgramStudi;
+use Illuminate\Http\Request;
 use App\Imports\MahasiswaImport;
+use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Http\Requests\Mahasiswa\MahasiswaRequest;
 
 class MahasiswaController extends Controller
 {
@@ -15,62 +18,48 @@ class MahasiswaController extends Controller
      */
     public function index()
     {
-        //
-        return view('Mahasiswa.index', [
+        $data = [
             "title" => "Mahasiswa",
             "breadcrumb1" => "Mahasiswa",
             "breadcrumb2" => "Index",
             'dataMhs'   => Mahasiswa::all(),
             'jsInit'      => 'js_mahasiswa.js',
-        ]);
+            'prodi' => ProgramStudi::all(),
+        ];
+
+        return view('Mahasiswa.index', $data);
     }
 
 
-    public function store(Request $request)
+    public function store(MahasiswaRequest $request)
     {
-        //
         try {
-
-            $user = User::where('username', $request->nim)->first();
-
+            $check = Mahasiswa::where('nim', $request->nim)->first();
             if(isset($user->id)){
-                return redirect()->route('admin.mahasiswa')->with('error', 'Username telah terpakai');
+                return redirect()->route('admin.mahasiswa')->with('error', 'Nim sudah digunakan');
             }
-
-            $mhsNew = User::create([
-                'name' => $request->nama_mhs,
-                'username' => $request->nim,
-                // 'email' => $request->email,
-                'password' => password_hash($request->nim, PASSWORD_DEFAULT),
-                'picture' => 'default.jpg',
-                'is_active' => 1
-            ]);
-            $mhsNew->assignRole('mahasiswa');
-
-            $user = User::where('username', $request->nim)->first();
-            // Potensi kode yang dapat menyebabkan pengecualian
-            $result = Mahasiswa::create([
-                'user_id' => $user->id,
-                'kelas' => $request->kelas,
-                'nim' => $request->nim,
-                'nama_mhs' => $request->nama_mhs,
-                'email' => $request->email,
-                'jenis_kelamin' => $request->jenis_kelamin,
-                'telp' => $request->telp,
-            ]);
+            $mhs = Mahasiswa::create($request->only(['kelas','email','nim','nama_mhs','program_studi_id','jenis_kelamin','telp']));
+            $existingUser = User::where('username', $mhs->nim)->orWhere('email', $mhs->email)->first();
+            if(!$existingUser) {
+                $request->merge(['name' => $mhs->nama_mhs,'username' => $mhs->nim,'password' => Hash::make($mhs->nim),'userable_type' => Mahasiswa::class, 'userable_id' => $mhs->id]);
+                $user = User::create($request->only(['name', 'username', 'email', 'password', 'userable_type', 'userable_id']));
+                $user->assignRole('mahasiswa');
+            }  else {
+                if (is_null($existingUser->userable_id) && is_null($existingUser->userable_type)) {
+                    $existingUser->update([
+                        'userable_id' => $mhs->id,
+                        'userable_type' => Mahasiswa::class,
+                    ]);
+                }
+            }
             return redirect()->route('admin.mahasiswa')->with('success', 'Data berhasil ditambahkan');
         } catch (\Exception $e) {
-
-            // dd($e->getMessage());
-            return redirect()->route('admin.mahasiswa')->with('error', $e->getMessage());
+             return redirect()->route('admin.mahasiswa')->with('error', $e->getMessage());
         }
     }
 
-    public function show(string $id)
+    public function show(Mahasiswa $mahasiswa)
     {
-        //
-        $topik = Mahasiswa::find($id);
-
         echo json_encode($topik);
     }
 

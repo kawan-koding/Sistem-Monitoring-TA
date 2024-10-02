@@ -21,7 +21,7 @@ function importData(){
 
 function editData(id, urlShow){
     // alert(urlShow)
-    $('#myFormulir').attr("action", formUrlUpdate);
+    $('#myFormulir').attr("action", `${BASE_URL}/admin/mahasiswa/${id}/update`);
     $('#myModalLabel').html('Ubah Data')
 
     $.ajax({
@@ -35,13 +35,8 @@ function editData(id, urlShow){
             $('#jenis_kelamin').val(response.jenis_kelamin)
             $('#email').val(response.email)
             $('#telp').val(response.telp)
-            // $('#tanggal_lahir').val(response.tanggal_lahir)
-            // $('#tempat_lahir').val(response.tempat_lahir)
-            // $('#alamat').val(response.alamat)
-            $('#idMhs').val(response.id)
         },
         error: function(xhr, status, error) {
-            // Logika untuk menangani kesalahan
             console.error(xhr.responseText);
         }
     });

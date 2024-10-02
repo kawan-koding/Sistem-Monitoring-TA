@@ -46,8 +46,8 @@
                                 <td>{{$item->jenis_kelamin == 'L' ? 'Laki-Laki' : 'Perempuan'}}</td>
                                 <td>{{$item->telp}}</td>
                                 <td>
-                                    <a href="javascript:void(0);" onclick="editData('<?= $item->id?>', '{{route('admin.mahasiswa.show', ['id' => $item->id])}}')" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></a>
-                                    <a href="javascript:void(0);" onclick="hapusData('<?= $item->id?>', '{{route('admin.mahasiswa.delete', ['id' => $item->id])}}')" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></a>
+                                    <a href="javascript:void(0);" onclick="editData('<?= $item?>', '{{route('admin.mahasiswa.show', $item)}}')" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></a>
+                                    <a href="javascript:void(0);" onclick="hapusData('<?= $item?>', '{{route('admin.mahasiswa.delete', ['id' => $item->id])}}')" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></a>
                                 </td>
                             </tr>
                             @endforeach

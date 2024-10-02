@@ -33,6 +33,13 @@
     <link href="{{asset('assets/css/icons.min.css')}}" rel="stylesheet" type="text/css" />
     <!-- App Css-->
     <link href="{{asset('assets/css/app.min.css')}}" id="app-style"  rel="stylesheet" type="text/css" />
+    <script>
+        window.fetch = undefined;
+        const BASE_URL = "{{ url('/') }}"
+        const ASSET_URL = "{{ asset('/') }}"
+        const LANG = 'id'
+        window.translations = []
+    </script>
     <style>
         .table-striped thead {
             background-color: #3b5de7;

@@ -2,9 +2,10 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
 use App\Models\User;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class UserSeeder extends Seeder
 {
@@ -17,9 +18,9 @@ class UserSeeder extends Seeder
         $admin = User::create([
             'name' => 'root',
             'username' => 'root',
-            // 'email' => 'root@gmail.com',
-            'password' => password_hash('root', PASSWORD_DEFAULT),
-            'picture' => 'default.jpg',
+            'email' => 'root@gmail.com',
+            'password' => Hash::make('root'),
+            'image' => 'default.jpg',
             'is_active' => 1
         ]);
 
@@ -28,12 +29,21 @@ class UserSeeder extends Seeder
         $admin = User::create([
             'name' => 'kaprodi',
             'username' => 'kaprodi',
-            // 'email' => 'kaprodi@gmail.com',
-            'password' => password_hash('kaprodi', PASSWORD_DEFAULT),
-            'picture' => 'default.jpg',
+            'email' => 'kaprodi@gmail.com',
+            'password' => Hash::make('kaprodi'),
+            'image' => 'default.jpg',
             'is_active' => 1
         ]);
 
         $admin->assignRole('kaprodi');
+        
+        // $mahasiswa = User::create([
+        //     'name' => 'guest',
+        //     'username' => 'guest',
+        //     'email' => 'guest@gmail.com',
+        //     'password' => Hash::make('guest'),
+        //     'image' => 'default.jpg',
+        //     'is_active' => 1
+        // ])->assignRole('mahasiswa');
     }
 }

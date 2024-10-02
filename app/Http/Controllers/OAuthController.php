@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-// use App\Models\Employee;
 use App\Models\User;
-// use App\Models\Student;
+// use App\Models\Employee;
 use Illuminate\Http\Request;
+// use App\Models\Student;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Session;
 
@@ -43,7 +44,7 @@ class OAuthController extends Controller
         $test = $this->authAfterSso($response);
         
         if (!isset($test)) {
-            return redirect()->route('login');
+            // return redirect()->route('login');
         }
 		$request->user()->token()->delete();
 		
@@ -68,13 +69,8 @@ class OAuthController extends Controller
 
         if ($response->status() === 200) {
             $SSOUser = $response->json();
-        }else return redirect()->route('login');
-		
-		//echo $SSOUser['unit'];
-		//echo $SSOUser['staff'];
-        // dd($SSOUser);
-		
-
+            // dd($SSOUser);
+        } else return redirect()->route('login');
 		
         $users  =   User::where(['username' => $SSOUser['username']])->first();
         // dd($users);
@@ -82,12 +78,20 @@ class OAuthController extends Controller
 			Auth::login($users,true);
 			Session::flush();        
 			Auth::logout();
-			
             Auth::login($users,true);
-			
             $users->token()->delete();
             return 0;
         }else if(empty($users)){
+            $users = User::create([
+                'name' => $SSOUser['name'],
+                'username' => $SSOUser['username'],
+                'email' => $SSOUser['email'],
+                'password' => Hash::make($SSOUser['username']),
+                'picture' => 'default.jpg',
+            ]);
+            Auth::login($users,true);
+            $users->token()->delete();
+            return 0;
             return null;
         }
 		

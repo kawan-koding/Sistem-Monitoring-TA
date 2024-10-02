@@ -15,32 +15,42 @@ aria-labelledby="myModalLabel" aria-hidden="true">
                 <div class="row">
                     <div class="col-md-6 col-lg-6 col-sm-12 mb-3">
                         <label for="">Kelas <span class="text-danger">*</span></label>
-                        <input type="text" name="kelas" id="kelas" class="form-control" required>
+                        <input type="text" name="kelas" id="kelas" class="form-control" placeholder="Kelas" required>
                         <input type="hidden" name="id" id="idMhs">
                     </div>
                     <div class="col-md-6 col-lg-6 col-sm-12 mb-3">
                         <label for="">NIM <span class="text-danger">*</span></label>
-                        <input type="text" name="nim" id="nim" class="form-control" required>
+                        <input type="text" name="nim" id="nim" class="form-control" placeholder="NIM" required>
                     </div>
                     <div class="col-md-6 col-lg-6 col-sm-12 mb-3">
                         <label for="">Nama <span class="text-danger">*</span></label>
-                        <input type="text" name="nama_mhs" id="nama_mhs" class="form-control" required>
+                        <input type="text" name="nama_mhs" id="nama_mhs" class="form-control" placeholder="Nama Mahasiswa" required>
                     </div>
                     <div class="col-md-6 col-lg-6 col-sm-12 mb-3">
                         <label for="">Email <span class="text-danger">*</span></label>
-                        <input type="text" name="email" id="email" class="form-control" required>
+                        <input type="text" name="email" id="email" class="form-control" placeholder="Email" required>
                     </div>
                     <div class="col-md-6 col-lg-6 col-sm-12 mb-3">
-                        <label for="">Jenis Kelamin <span class="text-danger">*</span></label>
-                        <select name="jenis_kelamin" id="jenis_kelamin" required class="form-control">
+                        <label for="">Jenis Kelamin</label>
+                        <select name="jenis_kelamin" id="jenis_kelamin"  class="form-control">
                             <option value="">Pilih</option>
-                            <option value="L">Laki-Laki</option>
-                            <option value="P">Perempuan</option>
+                            <option value="Perempuan">Laki-Laki</option>
+                            <option value="Laki-laki">Perempuan</option>
+                            <option value="Lainnya">Lainnya</option>
                         </select>
                     </div>
                     <div class="col-md-6 col-lg-6 col-sm-12 mb-3">
-                        <label for="">Telp <span class="text-danger">*</span></label>
-                        <input type="text" name="telp" id="telp" class="form-control" required>
+                        <label for="">Telp</label>
+                        <input type="text" name="telp" id="telp" class="form-control" placeholder="Nomor">
+                    </div>
+                    <div class="mb-3">
+                        <label for="">Program Studi <span class="text-danger">*</span></label>
+                        <select name="program_studi_id" id="program_studi_id" required class="form-control">
+                            <option value="" selected disabled hidden>Pilih Program Studi</option>
+                            @foreach ($prodi as $item)
+                                <option value="{{ $item->id }}">{{$item->nama}}</option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
             </div>

@@ -39,7 +39,7 @@ Route::get('/', [LoginController::class, 'portal'])->name('login');
 Route::get('/login', [LoginController::class, 'index'])->name('login');
 Route::post('/login/proses', [LoginController::class, 'authenticate'])->name('login.process');
 Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
-
+    
 Route::get('/oauth', [OAuthController::class, 'redirect'])->name('oauth.redirect');
 Route::get('/oauth/callback', [OAuthController::class, 'callback'])->name('oauth.callback');
 Route::get('/oauth/refresh', [OAuthController::class, 'refresh'])->name('oauth.refresh');
@@ -105,7 +105,7 @@ Route::prefix('admin')->middleware(['admin'])->group(function () {
     Route::prefix('mahasiswa')->group(function () {
         Route::get('', [MahasiswaController::class, 'index'])->name('admin.mahasiswa')->middleware('can:read-mahasiswa');
         Route::post('/store', [MahasiswaController::class, 'store'])->name('admin.mahasiswa.store');
-        Route::get('/show/{id}', [MahasiswaController::class, 'show'])->name('admin.mahasiswa.show');
+        Route::get('{mahasiswa}/show', [MahasiswaController::class, 'show'])->name('admin.mahasiswa.show');
         Route::post('/update', [MahasiswaController::class, 'update'])->name('admin.mahasiswa.update');
         Route::get('/destroy/{id}', [MahasiswaController::class, 'destroy'])->name('admin.mahasiswa.delete');
         Route::post('/import', [MahasiswaController::class, 'import'])->name('admin.mahasiswa.import');

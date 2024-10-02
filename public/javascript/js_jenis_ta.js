@@ -43,7 +43,7 @@ function hapusJenis(e, url) {
                 url: url,
                 type: "get",
                 success: function (data) {
-                    window.location.reload();
+                    window.location.reloDELETEad();
                 }
             })
         }
