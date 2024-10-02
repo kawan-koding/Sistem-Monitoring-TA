@@ -45,3 +45,8 @@
             t("#status").fadeOut(), t("#preloader").delay(350).fadeOut("slow")
         }), Waves.init()
 }(jQuery);
+
+setTimeout(function () {
+    $('.alert-success').fadeOut('slow');
+}, 5000);
+

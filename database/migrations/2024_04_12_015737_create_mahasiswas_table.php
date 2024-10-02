@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('nim')->nullable();
             $table->string('nama_mhs')->nullable();
             $table->enum('jenis_kelamin', ['Perempuan', 'Laki-laki', 'Lainnya'])->nullable();
-            $table->string('email')->nullable();
+            $table->string('email')->nullable()->unique();
             $table->string('telp')->nullable();
             $table->foreignId('program_studi_id')->nullable()->references('id')->on('program_studis')->onDelete('cascade');
             $table->timestamps();

@@ -15,7 +15,7 @@ function tambahData(){
 }
 
 function importData(){
-    $('#myImportFormulir').attr("action", formUrlImport);
+    $('#myImportFormulir').attr("action", `${BASE_URL}/admin/mahasiswa/import`);
     $('#myModalImport').modal('show')
 }
 
@@ -35,6 +35,7 @@ function editData(id, urlShow){
             $('#jenis_kelamin').val(response.jenis_kelamin)
             $('#email').val(response.email)
             $('#telp').val(response.telp)
+            $('#program_studi_id').val(response.program_studi_id)
         },
         error: function(xhr, status, error) {
             console.error(xhr.responseText);

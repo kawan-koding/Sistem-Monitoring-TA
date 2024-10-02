@@ -104,11 +104,11 @@ Route::prefix('admin')->middleware(['admin'])->group(function () {
     //Mahasiswa
     Route::prefix('mahasiswa')->group(function () {
         Route::get('', [MahasiswaController::class, 'index'])->name('admin.mahasiswa')->middleware('can:read-mahasiswa');
-        Route::post('/store', [MahasiswaController::class, 'store'])->name('admin.mahasiswa.store');
+        Route::post('store', [MahasiswaController::class, 'store'])->name('admin.mahasiswa.store');
         Route::get('{mahasiswa}/show', [MahasiswaController::class, 'show'])->name('admin.mahasiswa.show');
-        Route::post('/update', [MahasiswaController::class, 'update'])->name('admin.mahasiswa.update');
-        Route::get('/destroy/{id}', [MahasiswaController::class, 'destroy'])->name('admin.mahasiswa.delete');
-        Route::post('/import', [MahasiswaController::class, 'import'])->name('admin.mahasiswa.import');
+        Route::post('{mahasiswa}/update', [MahasiswaController::class, 'update'])->name('admin.mahasiswa.update');
+        Route::get('{mahasiswa}/destroy', [MahasiswaController::class, 'destroy'])->name('admin.mahasiswa.delete');
+        Route::post('import', [MahasiswaController::class, 'import'])->name('admin.mahasiswa.import');
     });
 
     //Ruangan
