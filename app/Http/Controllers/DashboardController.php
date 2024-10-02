@@ -124,32 +124,33 @@ class DashboardController extends Controller
                     ["nilai"=> $totalTelahSem, 'label' => 'Telah Seminar'],
                 ],
             ]);
-        }else if(session('switchRoles') == 'mahasiswa'){
-            $mh = Mahasiswa::where('user_id', $user->id)->first();
-            $jadwalSeminar = JadwalSeminar::with(['tugas_akhir'])
-            ->whereHas('tugas_akhir', function($q)use($periode, $mh){
-                $q->where('periode_ta_id', $periode->id)->where('mahasiswa_id', $mh->id);
-            });
-            $jadwalSeminar = $jadwalSeminar->get();
-            $ta = TugasAkhir::with(['mahasiswa', 'topik', 'jenis_ta'])->whereHas('mahasiswa', function($q)use($user){
-                $q->where('user_id', $user->id);
-            });
-            $tta = $ta->where('status', 'acc')->get();
-            // Membuat objek DateTime untuk tanggal sekarang
-            $tanggal = $jadwalSeminar[0]->tanggal ?? date('Y-m-d');
-            // Format tanggal dalam bahasa Indonesia
-            $tanggalFormatted = strftime('%A, %d %B %Y', strtotime($tanggal));
+        }
+        else if(session('switchRoles') == 'mahasiswa'){
+            // $mh = Mahasiswa::where('user_id', $user->id)->first();
+            // $jadwalSeminar = JadwalSeminar::with(['tugas_akhir'])
+            // ->whereHas('tugas_akhir', function($q)use($periode, $mh){
+            //     $q->where('periode_ta_id', $periode->id)->where('mahasiswa_id', $mh->id);
+            // });
+            // $jadwalSeminar = $jadwalSeminar->get();
+            // $ta = TugasAkhir::with(['mahasiswa', 'topik', 'jenis_ta'])->whereHas('mahasiswa', function($q)use($user){
+            //     $q->where('user_id', $user->id);
+            // });
+            // $tta = $ta->where('status', 'acc')->get();
+            // // Membuat objek DateTime untuk tanggal sekarang
+            // $tanggal = $jadwalSeminar[0]->tanggal ?? date('Y-m-d');
+            // // Format tanggal dalam bahasa Indonesia
+            // $tanggalFormatted = strftime('%A, %d %B %Y', strtotime($tanggal));
 
             // dd($tanggalFormatted);
             return view('dashboard.index-mahasiswa', [
                 "title" => "Dashboard",
                 "breadcrumb1" => "Dashboard",
                 "breadcrumb2" => "Index",
-                "statusTa" => $tta[0]->status ?? 'belum',
-                "jadwalSeminar" => $tanggalFormatted,
-                "jam_mulai" => $jadwalSeminar[0]->jam_mulai ?? 0,
-                "jam_selesai" => $jadwalSeminar[0]->jam_selesai ?? 0,
-                "data_dosen" => Dosen::with(['rumpun_ilmu'])->get(),
+                // "statusTa" => $tta[0]->status ?? 'belum',
+                // "jadwalSeminar" => $tanggalFormatted,
+                // "jam_mulai" => $jadwalSeminar[0]->jam_mulai ?? 0,
+                // "jam_selesai" => $jadwalSeminar[0]->jam_selesai ?? 0,
+                // "data_dosen" => Dosen::with(['rumpun_ilmu'])->get(),
                 
             ]);
         }

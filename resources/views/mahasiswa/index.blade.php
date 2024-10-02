@@ -43,11 +43,11 @@
                             <tr>
                                 <th width="5%">No</th>
                                 <th>Kelas</th>
-                                <th>NIM</th>
                                 <th>Nama</th>
+                                <th>Email</th>
                                 <th>Jenis Kelamin</th>
-                                <th>Telp.</th>
-                                <th width="20%">Aksi</th>
+                                <th>Program Studi</th>
+                                <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -55,13 +55,27 @@
                             <tr>
                                 <td>{{$loop->iteration}}</td>
                                 <td>{{$item->kelas}}</td>
-                                <td>{{$item->nim}}</td>
-                                <td>{{$item->nama_mhs}}</td>
-                                <td>{{$item->jenis_kelamin == 'Laki-laki' ? 'Laki-Laki' : ($item->jenis_kelamin == 'Perempuan' ? 'Perempuan' : 'Lainnya')}}</td>
-                                <td>{{$item->telp}}</td>
                                 <td>
-                                    <a href="javascript:void(0);" onclick="editData('<?= $item->id?>', '{{route('admin.mahasiswa.show', $item->id)}}')" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></a>
-                                    <a href="javascript:void(0);" onclick="hapusData('<?= $item->id?>', '{{route('admin.mahasiswa.delete', $item->id)}}')" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></a>
+                                    <div class="d-flex align-items-center">
+                                        <div>
+                                            <strong>{{$item->nama_mhs}}</strong>
+                                            <p class="m-0 p-0 text-muted small">NIM : {{$item->nim}}</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div>
+                                            <strong>{{$item->email}}</strong>
+                                            <p class="m-0 p-0 text-muted small">{{$item->telp ?? '-'}}</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>{{$item->jenis_kelamin == 'Laki-laki' ? 'Laki-Laki' : ($item->jenis_kelamin == 'Perempuan' ? 'Perempuan' : 'Lainnya')}}</td>
+                                <td>{{ $item->programStudi->nama ?? '' }}</td>
+                                <td>
+                                    <a href="javascript:void(0);" onclick="editData('<?= $item->id?>', '{{route('admin.mahasiswa.show', $item->id)}}')" class="btn btn-outline-primary btn-sm mx-1 my-1"><i class="bx bx-edit-alt"></i></a>
+                                    <a href="javascript:void(0);" onclick="hapusData('<?= $item->id?>', '{{route('admin.mahasiswa.delete', $item->id)}}')" class="btn btn-outline-dark btn-sm mx-1 my-1"><i class="bx bx-trash"></i></a>
                                 </td>
                             </tr>
                             @endforeach
