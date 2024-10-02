@@ -34,8 +34,8 @@ aria-labelledby="myModalLabel" aria-hidden="true">
                         <label for="">Jenis Kelamin</label>
                         <select name="jenis_kelamin" id="jenis_kelamin"  class="form-control">
                             <option value="">Pilih</option>
-                            <option value="Perempuan">Laki-Laki</option>
-                            <option value="Laki-laki">Perempuan</option>
+                            <option value="Laki-laki">Laki-Laki</option>
+                            <option value="Perempuan">Perempuan</option>
                             <option value="Lainnya">Lainnya</option>
                         </select>
                     </div>

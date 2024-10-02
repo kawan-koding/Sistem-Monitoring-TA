@@ -68,19 +68,19 @@
                         <div class="navbar-brand-box">
                             <a href="index.html" class="logo logo-dark">
                                 <span class="logo-sm">
-                                    <img src="{{asset('images/'.$profil_logo->value)}}" alt="" height="40">
+                                    <img src="{{asset('images/'. $profil_logo->value)}}" alt="" height="40">
                                 </span>
                                 <span class="logo-lg">
-                                    <img src="{{asset('images/'.$profil_logo->value)}}" alt="" height="40">
+                                    <img src="{{asset('images/'. $profil_logo->value)}}" alt="" height="40">
                                 </span>
                             </a>
 
                             <a href="index.html" class="logo logo-light">
                                 <span class="logo-sm">
-                                    <img src="{{asset('images/'.$profil_logo->value)}}" alt="" height="40">
+                                    <img src="{{asset('images/'. $profil_logo->value)}}" alt="" height="40">
                                 </span>
                                 <span class="logo-lg">
-                                    <img src="{{asset('images/'.$profil_logo->value)}}" alt="" height="40">
+                                    <img src="{{asset('images/'. $profil_logo->value)}}" alt="" height="40">
                                 </span>
                             </a>
                         </div>

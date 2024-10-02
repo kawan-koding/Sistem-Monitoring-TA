@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Mahasiswa;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class MahasiswaRequest extends FormRequest
@@ -36,6 +37,7 @@ class MahasiswaRequest extends FormRequest
             'nama_mhs' => 'required',
             'email' => [
                 'required',
+                'email',
                 $this->routeName == 'admin.mahasiswa.store' ? 'unique:mahasiswas,email' : Rule::unique('mahasiswas', 'email')->ignoreModel($this->mahasiswa)
             ],
             'jenis_kelamin' => 'nullable',

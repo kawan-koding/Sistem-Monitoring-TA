@@ -60,36 +60,25 @@ class MahasiswaController extends Controller
 
     public function show(Mahasiswa $mahasiswa)
     {
-        echo json_encode($topik);
+        return response()->json($mahasiswa);
     }
 
-    public function update(Request $request)
+    public function update(MahasiswaRequest $request, Mahasiswa $mahasiswa)
     {
-        //
         try {
-            // Potensi kode yang dapat menyebabkan pengecualian
-            $mhs = Mahasiswa::find($request->id);
-
-            User::where('username', $mhs->nim)->update([
-                'name' => $request->nama_mhs,
-                'username' => $request->nim,
-                // 'email' => $request->email,
-                'password' => password_hash($mhs->nim, PASSWORD_DEFAULT),
-                'picture' => 'default.jpg',
-            ]);
-
-            $result = Mahasiswa::where('id', $request->id)->update([
-                'kelas' => $request->kelas,
-                'nim' => $request->nim,
-                'nama_mhs' => $request->nama_mhs,
-                'email' => $request->email,
-                'jenis_kelamin' => $request->jenis_kelamin,
-                'telp' => $request->telp,
-            ]);
+            $oldEmail = $mahasiswa->email;
+            $oldNim = $mahasiswa->nim;
+            $mahasiswa->update($request->only(['kelas','email','nim','nama_mhs','program_studi_id','jenis_kelamin','telp']));
+            if ($oldEmail !== $mahasiswa->email || $oldNim !== $mahasiswa->nim) {
+                $user = $mahasiswa->user;
+                $existingUser = User::where('username', $mahasiswa->nim)->orWhere('email', $mahasiswa->email)->where('id', '!=', $user->id)->first();
+                if(!$existingUser) {
+                    $request->merge(['username' => $mahasiswa->nim,'password' => Hash::make($mahasiswa->nim)]);
+                    $mahasiswa->user->update($request->only(['name', 'username', 'email', 'password']));          
+                }
+            }            
             return redirect()->route('admin.mahasiswa')->with('success', 'Data berhasil diupdate');
         } catch (\Exception $e) {
-
-            dd($e->getMessage());
             return redirect()->route('admin.mahasiswa')->with('error', $e->getMessage());
         }
     }
@@ -97,18 +86,12 @@ class MahasiswaController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Mahasiswa $mahasiswa)
     {
-        //
         try {
-            // Potensi kode yang dapat menyebabkan pengecualian
-            $dos = Mahasiswa::where('id', $id)->first();
-            User::where('id', $dos->user_id)->delete();
-            Mahasiswa::where('id', $id)->delete();
-
+            $mahasiswa->user()->delete();
+            $mahasiswa->delete();       
         } catch (\Exception $e) {
-
-            dd($e->getMessage());
             return redirect()->route('admin.mahasiswa')->with('error', $e->getMessage());
         }
     }
