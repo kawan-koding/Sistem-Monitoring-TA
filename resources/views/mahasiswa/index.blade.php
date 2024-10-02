@@ -75,9 +75,4 @@
 
 @include('mahasiswa.form')
 @include('mahasiswa.import')
-<script>
-    // const formUrlCreate = "{{route('admin.mahasiswa.store')}}"
-    // const formUrlUpdate = "{{route('admin.mahasiswa.update')}}"
-    // const formUrlImport = "{{route('admin.mahasiswa.import')}}"
-</script>
 @endsection
