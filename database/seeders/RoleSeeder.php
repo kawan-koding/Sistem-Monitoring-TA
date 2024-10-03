@@ -15,26 +15,53 @@ class RoleSeeder extends Seeder
     public function run(): void
     {
         //
+        $developer = Role::create([
+            'name' => 'Developer',
+            'guard_name' => 'web'
+        ]);
+
         $admin = Role::create([
-            'name' => 'admin',
+            'name' => 'Admin',
             'guard_name' => 'web'
         ]);
-        $admin->givePermissionTo(Permission::where('group', 'admin')->get());
+
         $kaprodi = Role::create([
-            'name' => 'kaprodi',
+            'name' => 'Kaprodi',
             'guard_name' => 'web'
         ]);
-        $kaprodi->givePermissionTo(Permission::where('group', 'kaprodi')->get(), ['read-dashboard']);
+
         $dosen = Role::create([
-            'name' => 'dosen',
+            'name' => 'Dosen',
             'guard_name' => 'web'
         ]);
-        $dosen->givePermissionTo(Permission::where('group', 'dosen')->get(), ['read-dashboard']);
+        
         $mahasiswa = Role::create([
-            'name' => 'mahasiswa',
+            'name' => 'Mahasiswa',
             'guard_name' => 'web'
         ]);
-        $mahasiswa->givePermissionTo(Permission::where('group', 'mahasiswa')->get(), ['read-dashboard']);
+        
+        $developer->givePermissionTo(Permission::all());
+
+        $admin->givePermissionTo([
+            'read-dashboard',
+            'read-permissions','change-permissions',
+            'read-roles', 'create-roles', 'update-roles', 'delete-roles',
+            'read-users', 'create-users', 'update-users', 'delete-users',
+            'read-mahasiswa', 'create-mahasiswa', 'update-mahasiswa', 'delete-mahasiswa','import-mahasiswa',
+            'read-dosen', 'create-dosen', 'update-dosen', 'delete-dosen',
+            'read-jurusan', 'create-jurusan', 'update-jurusan', 'delete-jurusan',
+            'read-program-studi', 'create-program-studi', 'update-program-studi', 'delete-program-studi',
+        ]);
+
+        $kaprodi->givePermissionTo([
+            'read-dashboard',
+        ]);
+        $dosen->givePermissionTo([
+            'read-dashboard',
+        ]);
+        $mahasiswa->givePermissionTo([
+            'read-dashboard',
+        ]);
 
     }
 }

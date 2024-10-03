@@ -2,9 +2,11 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Collection;
 use Spatie\Permission\Models\Permission;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class PermissionSeeder extends Seeder
 {
@@ -14,320 +16,84 @@ class PermissionSeeder extends Seeder
     public function run(): void
     {
         //
-        Permission::insert([
-            // Admin
-            //Dashboard
-            [
-                'name' => 'read-dashboard',
-                'label' => 'Lihat Dashboard',
-                'guard_name' => 'web',
-                'group' => 'admin',
-            ],
-            // Topik
-            [
-                'name' => 'read-topik',
-                'label' => 'Lihat Topik',
-                'guard_name' => 'web',
-                'group' => 'admin',
-            ],
-            [
-                'name' => 'create-topik',
-                'label' => 'Tambah Topik',
-                'guard_name' => 'web',
-                'group' => 'admin',
-            ],
-            [
-                'name' => 'update-topik',
-                'label' => 'Ubah Topik',
-                'guard_name' => 'web',
-                'group' => 'admin',
-            ],
-            [
-                'name' => 'delete-topik',
-                'label' => 'Hapus Topik',
-                'guard_name' => 'web',
-                'group' => 'admin',
-            ],
-
-            // Jenis
-            [
-                'name' => 'read-jenis',
-                'label' => 'Lihat Jenis',
-                'guard_name' => 'web',
-                'group' => 'admin',
-            ],
-            [
-                'name' => 'create-jenis',
-                'label' => 'Tambah Jenis',
-                'guard_name' => 'web',
-                'group' => 'admin',
-            ],
-            [
-                'name' => 'update-jenis',
-                'label' => 'Ubah Jenis',
-                'guard_name' => 'web',
-                'group' => 'admin',
-            ],
-            [
-                'name' => 'delete-jenis',
-                'label' => 'Hapus Jenis',
-                'guard_name' => 'web',
-                'group' => 'admin',
-            ],
-
-            // periode
-            [
-                'name' => 'read-periode',
-                'label' => 'Lihat periode',
-                'guard_name' => 'web',
-                'group' => 'admin',
-            ],
-            [
-                'name' => 'create-periode',
-                'label' => 'Tambah periode',
-                'guard_name' => 'web',
-                'group' => 'admin',
-            ],
-            [
-                'name' => 'update-periode',
-                'label' => 'Ubah periode',
-                'guard_name' => 'web',
-                'group' => 'admin',
-            ],
-            [
-                'name' => 'delete-periode',
-                'label' => 'Hapus periode',
-                'guard_name' => 'web',
-                'group' => 'admin',
-            ],
-
-            // Dosen
-            [
-                'name' => 'read-dosen',
-                'label' => 'Lihat Dosen',
-                'guard_name' => 'web',
-                'group' => 'admin',
-            ],
-            [
-                'name' => 'create-dosen',
-                'label' => 'Tambah Dosen',
-                'guard_name' => 'web',
-                'group' => 'admin',
-            ],
-            [
-                'name' => 'update-dosen',
-                'label' => 'Ubah Dosen',
-                'guard_name' => 'web',
-                'group' => 'admin',
-            ],
-            [
-                'name' => 'delete-dosen',
-                'label' => 'Hapus Dosen',
-                'guard_name' => 'web',
-                'group' => 'admin',
-            ],
-
-            // Mahasiswa
-            [
-                'name' => 'read-mahasiswa',
-                'label' => 'Lihat Mahasiswa',
-                'guard_name' => 'web',
-                'group' => 'admin',
-            ],
-            [
-                'name' => 'create-mahasiswa',
-                'label' => 'Tambah Mahasiswa',
-                'guard_name' => 'web',
-                'group' => 'admin',
-            ],
-            [
-                'name' => 'update-mahasiswa',
-                'label' => 'Ubah Mahasiswa',
-                'guard_name' => 'web',
-                'group' => 'admin',
-            ],
-            [
-                'name' => 'delete-mahasiswa',
-                'label' => 'Hapus Mahasiswa',
-                'guard_name' => 'web',
-                'group' => 'admin',
-            ],
-
-            // Ruangan
-            [
-                'name' => 'read-ruangan',
-                'label' => 'Lihat Ruangan',
-                'guard_name' => 'web',
-                'group' => 'admin',
-            ],
-            [
-                'name' => 'create-ruangan',
-                'label' => 'Tambah Ruangan',
-                'guard_name' => 'web',
-                'group' => 'admin',
-            ],
-            [
-                'name' => 'update-ruangan',
-                'label' => 'Ubah Ruangan',
-                'guard_name' => 'web',
-                'group' => 'admin',
-            ],
-            [
-                'name' => 'delete-ruangan',
-                'label' => 'Hapus Ruangan',
-                'guard_name' => 'web',
-                'group' => 'admin',
-            ],
-
-            // Users
-            [
-                'name' => 'read-users',
-                'label' => 'Lihat Users',
-                'guard_name' => 'web',
-                'group' => 'admin',
-            ],
-            [
-                'name' => 'create-users',
-                'label' => 'Tambah Users',
-                'guard_name' => 'web',
-                'group' => 'admin',
-            ],
-            [
-                'name' => 'update-users',
-                'label' => 'Ubah Users',
-                'guard_name' => 'web',
-                'group' => 'admin',
-            ],
-            [
-                'name' => 'delete-users',
-                'label' => 'Hapus Users',
-                'guard_name' => 'web',
-                'group' => 'admin',
-            ],
-
-            // Kuota Dosen
-            [
-                'name' => 'read-kuota',
-                'label' => 'Lihat Kuota',
-                'guard_name' => 'web',
-                'group' => 'admin',
-            ],
-            [
-                'name' => 'update-kuota',
-                'label' => 'Ubah Kuota',
-                'guard_name' => 'web',
-                'group' => 'admin',
-            ],
-
-            //Daftar Ta
-            [
-                'name' => 'read-daftarta-admin',
-                'label' => 'Lihat daftar',
-                'guard_name' => 'web',
-                'group' => 'admin',
-            ],
-
-            //Jadwal Seminar
-            [
-                'name' => 'read-seminar-admin',
-                'label' => 'Lihat daftar',
-                'guard_name' => 'web',
-                'group' => 'admin',
-            ],
-
-            //settings
-            [
-                'name' => 'read-settings',
-                'label' => 'Lihat Pengaturan',
-                'guard_name' => 'web',
-                'group' => 'admin',
-            ],
-
-
-
-            // Kaprodi
-            // Pengajuan TA
-            [
-                'name' => 'read-pengajuanta-kaprodi',
-                'label' => 'Lihat Pengajuan TA',
-                'guard_name' => 'web',
-                'group' => 'kaprodi',
-            ],
-
-            //Daftar TA
-            [
-                'name' => 'read-daftarta-kaprodi',
-                'label' => 'Lihat Daftar TA',
-                'guard_name' => 'web',
-                'group' => 'kaprodi',
-            ],
-
-            //Pembagian Dosen
-            [
-                'name' => 'read-bagidosen-kaprodi',
-                'label' => 'Lihat Pembagian Dosen',
-                'guard_name' => 'web',
-                'group' => 'kaprodi',
-            ],
-
-            // Dosen
-            // daftar bimbingan
-            [
-                'name' => 'read-daftar-bimbingan',
-                'label' => 'Lihat Daftar Bimbingan',
-                'guard_name' => 'web',
-                'group' => 'dosen',
-            ],
-
-            // Jadwal Uji
-            [
-                'name' => 'read-jadwaluji',
-                'label' => 'Lihat Jadwal Uji',
-                'guard_name' => 'web',
-                'group' => 'dosen',
-            ],
-
-
-            // Mahasiswa
-            // Pengajuan TA
-            [
-                'name' => 'read-pengajuanta-mahasiswa',
-                'label' => 'Lihat Pengajuan TA',
-                'guard_name' => 'web',
-                'group' => 'mahasiswa',
-            ],
-            //jadwal seminar
-            [
-                'name' => 'read-jadwalseminar-mahasiswa',
-                'label' => 'Lihat Jadwal Seminar',
-                'guard_name' => 'web',
-                'group' => 'mahasiswa',
-            ],
-            //rumpun ilmu
-            [
-                'name' => 'read-rumpunilmu',
-                'label' => 'Lihat Rumpun Ilmu',
-                'guard_name' => 'web',
-                'group' => 'dosen',
-            ],
-            [
-                'name' => 'create-rumpunilmu',
-                'label' => 'Lihat Rumpun Ilmu',
-                'guard_name' => 'web',
-                'group' => 'dosen',
-            ],
-            [
-                'name' => 'update-rumpunilmu',
-                'label' => 'Lihat Rumpun Ilmu',
-                'guard_name' => 'web',
-                'group' => 'dosen',
-            ],
-            [
-                'name' => 'delete-rumpunilmu',
-                'label' => 'Lihat Rumpun Ilmu',
-                'guard_name' => 'web',
-                'group' => 'dosen',
-            ],
+        $permissions = collect([
+            ["name" => "read-topik", "display_name" => "Lihat Topik"],
+            ["name" => "create-topik", "display_name" => "Tambah Topik"],
+            ["name" => "update-topik", "display_name" => "Ubah Topik"],
+            ["name" => "delete-topik", "display_name" => "Hapus Topik"],
+            ["name" => "read-jenis", "display_name" => "Lihat Jenis"],
+            ["name" => "create-jenis", "display_name" => "Tambah Jenis"],
+            ["name" => "update-jenis", "display_name" => "Ubah Jenis"],
+            ["name" => "delete-jenis", "display_name" => "Hapus Jenis"],
+            ["name" => "read-periode", "display_name" => "Lihat Periode"],
+            ["name" => "create-periode", "display_name" => "Tambah Periode"],
+            ["name" => "update-periode", "display_name" => "Ubah Periode"],
+            ["name" => "delete-periode", "display_name" => "Hapus Periode"],
+            ["name" => "read-dosen", "display_name" => "Lihat Dosen"],
+            ["name" => "create-dosen", "display_name" => "Tambah Dosen"],
+            ["name" => "update-dosen", "display_name" => "Ubah Dosen"],
+            ["name" => "delete-dosen", "display_name" => "Hapus Dosen"],
+            ["name" => "read-ruangan", "display_name" => "Lihat Ruangan"],
+            ["name" => "create-ruangan", "display_name" => "Tambah Ruangan"],
+            ["name" => "update-ruangan", "display_name" => "Ubah Ruangan"],
+            ["name" => "delete-ruangan", "display_name" => "Hapus Ruangan"],
+            ["name" => "read-kuota", "display_name" => "Lihat Kuota"],
+            ["name" => "update-kuota", "display_name" => "Ubah Kuota"],
+            ["name" => "read-daftarta-admin", "display_name" => "Lihat Daftar TA Admin"],
+            ["name" => "read-seminar-admin", "display_name" => "Lihat Jadwal Seminar Admin"],
+            ["name" => "read-settings", "display_name" => "Lihat Pengaturan"],
+            ["name" => "read-pengajuanta-kaprodi", "display_name" => "Lihat Pengajuan TA Kaprodi"],
+            ["name" => "read-daftarta-kaprodi", "display_name" => "Lihat Daftar TA Kaprodi"],
+            ["name" => "read-bagidosen-kaprodi", "display_name" => "Lihat Pembagian Dosen Kaprodi"],
+            ["name" => "read-daftar-bimbingan", "display_name" => "Lihat Daftar Bimbingan"],
+            ["name" => "read-jadwaluji", "display_name" => "Lihat Jadwal Uji"],
+            ["name" => "read-pengajuanta-mahasiswa", "display_name" => "Lihat Pengajuan TA Mahasiswa"],
+            ["name" => "read-jadwalseminar-mahasiswa", "display_name" => "Lihat Jadwal Seminar Mahasiswa"],
+            ["name" => "read-rumpunilmu", "display_name" => "Lihat Rumpun Ilmu"],
+            ["name" => "create-rumpunilmu", "display_name" => "Tambah Rumpun Ilmu"],
+            ["name" => "update-rumpunilmu", "display_name" => "Ubah Rumpun Ilmu"],
+            ["name" => "delete-rumpunilmu", "display_name" => "Hapus Rumpun Ilmu"],
+            
+            ["name" => "read-dashboard", "display_name" => "Lihat Dashboard"],
+            ["name" => "read-mahasiswa", "display_name" => "Lihat Mahasiswa"],
+            ["name" => "create-mahasiswa", "display_name" => "Tambah Mahasiswa"],
+            ["name" => "update-mahasiswa", "display_name" => "Ubah Mahasiswa"],
+            ["name" => "delete-mahasiswa", "display_name" => "Hapus Mahasiswa"],
+            ["name" => "import-mahasiswa", "display_name" => "Import Mahasiswa"],
+            ["name" => "read-users", "display_name" => "Lihat Users"],
+            ["name" => "create-users", "display_name" => "Tambah Users"],
+            ["name" => "update-users", "display_name" => "Ubah Users"],
+            ["name" => "delete-users", "display_name" => "Hapus Users"],
+            ["name" => "read-permissions", "display_name" => "Baca Hak Akses"],
+            ["name" => "change-permissions", "display_name" => "Ubah Hak Akses"],
+            ["name" => "read-roles", "display_name" => "Baca Role"],
+            ["name" => "create-roles", "display_name" => "Buat Role"],
+            ["name" => "update-roles", "display_name" => "Ubah Role"],
+            ["name" => "delete-roles", "display_name" => "Hapus Role"],
+            ["name" => "read-jurusan", "display_name" => "Baca Jurusan"],
+            ["name" => "create-jurusan", "display_name" => "Buat Jurusan"],
+            ["name" => "update-jurusan", "display_name" => "Ubah Jurusan"],
+            ["name" => "delete-jurusan", "display_name" => "Hapus Jurusan"],
+            ["name" => "read-program-studi", "display_name" => "Baca Program Studi"],
+            ["name" => "create-program-studi", "display_name" => "Buat Program Studi"],
+            ["name" => "update-program-studi", "display_name" => "Ubah Program Studi"],
+            ["name" => "delete-program-studi", "display_name" => "Hapus Program Studi"],
+            
         ]);
+        $this->insertPermission($permissions);
+
+    }
+
+    private function insertPermission(Collection $permissions, $guardName = 'web')
+    {
+        Permission::insert($permissions->map(function ($permission) use ($guardName) {
+            return [
+                'name' => $permission['name'],
+                'guard_name' => $guardName,
+                'display_name' => $permission['display_name'],
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ];
+        })->toArray());
     }
 }

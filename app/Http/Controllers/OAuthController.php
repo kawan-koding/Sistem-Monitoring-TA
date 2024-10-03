@@ -94,8 +94,6 @@ class OAuthController extends Controller
             return 0;
             return null;
         }
-		
-        
     }
 	
 	public function refresh(Request $request)

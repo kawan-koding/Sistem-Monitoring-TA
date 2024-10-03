@@ -1,9 +1,7 @@
-@extends('layout.auth-main')
-@section('content')
+@extends('administrator.layout.base')
+{{-- @extends('layout.auth-main') --}}
+@section('app')
 
-<div class="home-btn d-none d-sm-block">
-    {{-- <a href="index.html" class="text-reset"><i class="fas fa-home h2"></i></a> --}}
-</div>
 <div class="account-pages my-5 pt-sm-5">
     <div class="container">
         <div class="row justify-content-center">
@@ -15,7 +13,7 @@
                             <h5 class="text-white font-size-20">Sistem Monitoring Tugas Akhir</h5>
                             <p class="text-white-50 mb-0">Politeknik Negeri Banyuwangi</p>
                             <a href="index.html" class="logo logo-admin mt-4">
-                                <img src="{{asset('images/POLIWANGI.png')}}" alt="" height="60">
+                                <img src="{{ asset('assets/images/POLIWANGI.png')}}" alt="" height="60">
                             </a>
                         </div>
                     </div>
@@ -31,6 +29,17 @@
                         @if(session('error'))
                             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                 <i class="mdi mdi-block-helper me-2"></i>{{ session('error') }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                                </button>
+                            </div>
+                        @endif
+                        @if ($errors->any())
+                            <div class="alert alert-error alert-danger alert-dismissible fade show" role="alert">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
                                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
                                 </button>
                             </div>
@@ -58,15 +67,6 @@
 
                     </div>
                 </div>
-                <div class="mt-5 text-center">
-                    {{-- <p>Don't have an account ? <a href="pages-register.html"
-                            class="fw-medium text-primary"> Signup now </a> </p> --}}
-                    {{-- <p>©
-                        <script>document.write(new Date().getFullYear())</script>. Crafted with <i
-                            class="mdi mdi-heart text-danger"></i> by Themesbrand
-                    </p> --}}
-                </div>
-
             </div>
         </div>
     </div>

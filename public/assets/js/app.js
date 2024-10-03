@@ -46,7 +46,21 @@
         }), Waves.init()
 }(jQuery);
 
-setTimeout(function () {
-    $('.alert-success').fadeOut('slow');
-}, 5000);
 
+$('.select2').select2({
+    placeholder: 'Select an option'
+});
+
+$('.select2-selection__rendered').attr('style', '')
+
+// filepond
+FilePond.registerPlugin(FilePondPluginImagePreview);
+document.querySelectorAll(".filepond").forEach((inputElement) => {
+    FilePond.create(inputElement, {
+        storeAsFile: true,
+    });
+});
+
+setTimeout(function () {
+    $('.alert').fadeOut('slow');
+}, 5000);
