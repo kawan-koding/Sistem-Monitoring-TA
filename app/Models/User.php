@@ -51,4 +51,9 @@ class User extends Authenticatable
     {
         return $this->hasOne(OauthToken::class);
     }
+
+    public function userable()
+    {
+        return $this->morphTo();
+    }
 }

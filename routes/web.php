@@ -231,5 +231,6 @@ Route::prefix('mahasiswa')->middleware(['admin'])->group(function () {
 
 Route::prefix('apps')->middleware(['auth'])->group(function () {
     Route::get('profile', [ProfileController::class, 'index'])->name('apps.profile');
+    Route::get('show', [ProfileController::class, 'show'])->name('apps.profile.show');
     route::post('update', [ProfileController::class, 'update'])->name('apps.profile.update');
 });
