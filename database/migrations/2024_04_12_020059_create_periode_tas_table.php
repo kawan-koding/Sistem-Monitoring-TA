@@ -18,7 +18,10 @@ return new class extends Migration
             $table->date('akhir_daftar')->nullable();
             $table->date('mulai_seminar')->nullable();
             $table->date('akhir_seminar')->nullable();
-            $table->tinyInteger('is_active');
+            $table->date('mulai_sidang')->nullable();
+            $table->date('akhir_sidang')->nullable();
+            $table->date('akhir_pemberkasan')->nullable();
+            $table->boolean('is_active')->default(false);
             $table->timestamps();
         });
     }

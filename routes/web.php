@@ -1,10 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\DosenController;
 use App\Http\Controllers\OAuthController;
 use App\Http\Controllers\TopikController;
-use App\Http\Controllers\JenisTAController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\PeriodeTAController;
@@ -20,11 +18,14 @@ use App\Http\Controllers\PengajuanTaKaprodiController;
 use App\Http\Controllers\DaftarBimbinganDosenController;
 use App\Http\Controllers\PengajuanTaMahasiswaController;
 use App\Http\Controllers\JadwalSeminarMahasiswaController;
-
 use App\Http\Controllers\Administrator\Role\RoleController;
 use App\Http\Controllers\Administrator\User\UserController;
+
+use App\Http\Controllers\Administrator\Dosen\DosenController;
+use App\Http\Controllers\Administrator\JenisTA\JenisTAController;
 use App\Http\Controllers\Administrator\Jurusan\JurusanController;
 use App\Http\Controllers\Administrator\Ruangan\RuanganController;
+use App\Http\Controllers\Administrator\TopikTA\TopikTAController;
 use App\Http\Controllers\Administrator\Dashboard\DashboardController;
 use App\Http\Controllers\Administrator\Mahasiswa\MahasiswaController;
 use App\Http\Controllers\Administrator\ProgramStudi\ProgramStudiController;
@@ -105,11 +106,29 @@ Route::prefix('apps')->middleware('auth')->group(function () {
     });
 
     Route::prefix('topik')->middleware('can:read-topik')->group(function () {
-        Route::get('', [TopikController::class, 'index'])->name('apps.topik');
-        Route::post('/store', [TopikController::class, 'store'])->name('apps.topik.store');
-        Route::get('/show/{id}', [TopikController::class, 'show'])->name('apps.topik.show');
-        Route::post('/update/{id}', [TopikController::class, 'update'])->name('apps.topik.update');
-        Route::get('/destroy/{id}', [TopikController::class, 'destroy'])->name('apps.topik.delete');
+        Route::get('', [TopikTAController::class, 'index'])->name('apps.topik');
+        Route::post('/store', [TopikTAController::class, 'store'])->name('apps.topik.store');
+        Route::get('/show/{id}', [TopikTAController::class, 'show'])->name('apps.topik.show');
+        Route::post('/update/{id}', [TopikTAController::class, 'update'])->name('apps.topik.update');
+        Route::get('/destroy/{id}', [TopikTAController::class, 'destroy'])->name('apps.topik.delete');
+    });
+
+    Route::prefix('jenis-ta')->middleware('can:read-jenis')->group(function () {
+        Route::get('', [JenisTAController::class, 'index'])->name('apps.jenis-ta');
+        Route::post('store', [JenisTAController::class, 'store'])->name('apps.jenis-ta.store');
+        Route::get('/show/{id}', [JenisTAController::class, 'show'])->name('apps.jenis-ta.show');
+        Route::post('/update/{id}', [JenisTAController::class, 'update'])->name('apps.jenis-ta.update');
+        Route::get('/destroy/{id}', [JenisTAController::class, 'destroy'])->name('apps.jenis-ta.delete');
+    });
+
+    Route::prefix('dosen')->middleware('can:read-dosen')->group(function () {
+        Route::get('', [DosenController::class, 'index'])->name('apps.dosen');
+        Route::post('/store', [DosenController::class, 'store'])->name('apps.dosen.store');
+        Route::get('/show/{id}', [DosenController::class, 'show'])->name('apps.dosen.show');
+        Route::post('/update/{id}', [DosenController::class, 'update'])->name('apps.dosen.update');
+        Route::get('/destroy/{id}', [DosenController::class, 'destroy'])->name('apps.dosen.delete');
+        Route::post('/import', [DosenController::class, 'import'])->name('apps.dosen.import');
+        Route::get('/tarik-data', [DosenController::class, 'tarikData'])->name('apps.dosen.tarik-data');
     });
 });
 
@@ -120,24 +139,6 @@ Route::prefix('apps')->middleware('auth')->group(function () {
 //     Route::get('/switching', [DashboardController::class, 'switching'])->name('admin.switching');
 //     Route::get('/switcher/{role}', [DashboardController::class, 'switcher'])->name('admin.switcher');
 
-//     //Topik
-//     Route::prefix('topik')->group(function () {
-//         Route::get('', [TopikController::class, 'index'])->name('admin.topik')->middleware('can:read-topik');
-//         Route::post('/store', [TopikController::class, 'store'])->name('admin.topik.store');
-//         Route::get('/show/{id}', [TopikController::class, 'show'])->name('admin.topik.show');
-//         Route::post('/update', [TopikController::class, 'update'])->name('admin.topik.update');
-//         Route::get('/destroy/{id}', [TopikController::class, 'destroy'])->name('admin.topik.delete');
-//         Route::get('/rekapitulasi', [DaftarTaAdminController::class, 'rekapitulasi'])->name('admin.rekapitulasi');
-//     });
-
-//     //Jenis
-//     Route::prefix('jenis')->group(function () {
-//         Route::get('', [JenisTAController::class, 'index'])->name('admin.jenis_ta')->middleware('can:read-jenis');
-//         Route::post('/store', [JenisTAController::class, 'store'])->name('admin.jenis_ta.store');
-//         Route::get('/show/{id}', [JenisTAController::class, 'show'])->name('admin.jenis_ta.show');
-//         Route::post('/update', [JenisTAController::class, 'update'])->name('admin.jenis_ta.update');
-//         Route::get('/destroy/{id}', [JenisTAController::class, 'destroy'])->name('admin.jenis_ta.delete');
-//     });
 
 //     //Periode
 //     Route::prefix('periode')->group(function () {
@@ -150,15 +151,7 @@ Route::prefix('apps')->middleware('auth')->group(function () {
 //     });
 
 //     //Dosen
-//     Route::prefix('dosen')->group(function () {
-//         Route::get('', [DosenController::class, 'index'])->name('admin.dosen')->middleware('can:read-dosen');
-//         Route::post('/store', [DosenController::class, 'store'])->name('admin.dosen.store');
-//         Route::get('/show/{id}', [DosenController::class, 'show'])->name('admin.dosen.show');
-//         Route::post('/update', [DosenController::class, 'update'])->name('admin.dosen.update');
-//         Route::get('/destroy/{id}', [DosenController::class, 'destroy'])->name('admin.dosen.delete');
-//         Route::post('/import', [DosenController::class, 'import'])->name('admin.dosen.import');
-//         Route::get('/tarik-data', [DosenController::class, 'tarikData'])->name('admin.dosen.tarik-data');
-//     });
+//     
 
 //     //Daftar TA
 //     Route::prefix('daftarta')->group(function () {
@@ -169,34 +162,6 @@ Route::prefix('apps')->middleware('auth')->group(function () {
 //         Route::get('/detail/{id}', [DaftarTaAdminController::class, 'detail'])->name('admin.daftarta.detail');
 //         Route::post('/update/{id}', [DaftarTaAdminController::class, 'update'])->name('admin.daftarta.update');
 //         Route::get('/destroy/{id}', [DaftarTaAdminController::class, 'destroy'])->name('admin.daftarta.delete');
-//     });
-
-//     //Mahasiswa
-//     Route::prefix('mahasiswa')->group(function () {
-//         Route::get('', [MahasiswaController::class, 'index'])->name('admin.mahasiswa')->middleware('can:read-mahasiswa');
-//         Route::post('store', [MahasiswaController::class, 'store'])->name('admin.mahasiswa.store');
-//         Route::get('{mahasiswa}/show', [MahasiswaController::class, 'show'])->name('admin.mahasiswa.show');
-//         Route::post('{mahasiswa}/update', [MahasiswaController::class, 'update'])->name('admin.mahasiswa.update');
-//         Route::get('{mahasiswa}/destroy', [MahasiswaController::class, 'destroy'])->name('admin.mahasiswa.delete');
-//         Route::post('import', [MahasiswaController::class, 'import'])->name('admin.mahasiswa.import');
-//     });
-
-//     //Ruangan
-//     Route::prefix('ruangan')->group(function () {
-//         Route::get('', [RuanganController::class, 'index'])->name('admin.ruangan')->middleware('can:read-ruangan');
-//         Route::post('/store', [RuanganController::class, 'store'])->name('admin.ruangan.store');
-//         Route::get('/show/{id}', [RuanganController::class, 'show'])->name('admin.ruangan.show');
-//         Route::post('/update', [RuanganController::class, 'update'])->name('admin.ruangan.update');
-//         Route::get('/destroy/{id}', [RuanganController::class, 'destroy'])->name('admin.ruangan.delete');
-//     });
-
-//     //Ruangan
-//     Route::prefix('user')->group(function () {
-//         Route::get('', [UserController::class, 'index'])->name('admin.user')->middleware('can:read-users');
-//         Route::post('/store', [UserController::class, 'store'])->name('admin.user.store');
-//         Route::get('/show/{id}', [UserController::class, 'show'])->name('admin.user.show');
-//         Route::post('/update', [UserController::class, 'update'])->name('admin.user.update');
-//         Route::get('/destroy/{id}', [UserController::class, 'destroy'])->name('admin.user.delete');
 //     });
 
 //     //Kuota Dosen

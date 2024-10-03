@@ -71,20 +71,20 @@
                         @can(['read-mahasiswa'])
                         <li><a href="{{route('apps.mahasiswa')}}">Mahasiswa</a></li>
                         @endcan
+                        @can(['read-dosen'])
+                        <li><a href="{{route('apps.dosen')}}">Dosen</a></li>
+                        @endcan
                         @can(['read-ruangan'])
                         <li><a href="{{ route('apps.ruangan')}}">Ruangan</a></li>
                         @endcan
-
-                        
-                        {{-- @can(['read-dosen'])
-                        <li><a href="{{route('admin.dosen')}}">Dosen</a></li>
-                        @endcan
                         @can(['read-topik'])
-                        <li><a href="{{route('admin.topik')}}">Topik</a></li>
+                        <li><a href="{{route('apps.topik')}}">Topik</a></li>
                         @endcan
                         @can(['read-jenis'])
-                        <li><a href="{{route('admin.jenis_ta')}}">Jenis TA</a></li>
-                        @endcan --}}
+                        <li><a href="{{route('apps.jenis-ta')}}">Jenis TA</a></li>
+                        @endcan
+
+                        
                     </ul>
                 </li>
                 @endcanany
