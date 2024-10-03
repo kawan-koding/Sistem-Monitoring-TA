@@ -32,13 +32,13 @@ class MahasiswaRequest extends FormRequest
             'kelas' => 'required',
             'nim' => [ 
                 'required',
-                $this->routeName == 'admin.mahasiswa.store' ? 'unique:mahasiswas,nim' : Rule::unique('mahasiswas', 'nim')->ignoreModel($this->mahasiswa)
+                $this->routeName == 'apps.mahasiswa.store' ? 'unique:mahasiswas,nim' : Rule::unique('mahasiswas', 'nim')->ignoreModel($this->mahasiswa)
             ],
             'nama_mhs' => 'required',
             'email' => [
                 'required',
                 'email',
-                $this->routeName == 'admin.mahasiswa.store' ? 'unique:mahasiswas,email' : Rule::unique('mahasiswas', 'email')->ignoreModel($this->mahasiswa)
+                $this->routeName == 'apps.mahasiswa.store' ? 'unique:mahasiswas,email' : Rule::unique('mahasiswas', 'email')->ignoreModel($this->mahasiswa)
             ],
             'jenis_kelamin' => 'nullable',
             'telp' => 'nullable',

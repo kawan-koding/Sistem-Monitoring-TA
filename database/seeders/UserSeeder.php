@@ -15,16 +15,23 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         //
-        $admin = User::create([
+        $developer = User::create([
             'name' => 'root',
             'username' => 'root',
             'email' => 'root@gmail.com',
             'password' => Hash::make('root'),
             'image' => 'default.jpg',
             'is_active' => 1
-        ]);
-
-        $admin->assignRole('admin');
+        ])->assignRole('Developer');
+        
+        $admin = User::create([
+            'name' => 'admin',
+            'username' => 'admin',
+            'email' => 'admin@gmail.com',
+            'password' => Hash::make('admin'),
+            'image' => 'default.jpg',
+            'is_active' => 1
+        ])->assignRole('Admin');
 
         $admin = User::create([
             'name' => 'kaprodi',
@@ -33,17 +40,15 @@ class UserSeeder extends Seeder
             'password' => Hash::make('kaprodi'),
             'image' => 'default.jpg',
             'is_active' => 1
-        ]);
-
-        $admin->assignRole('kaprodi');
+        ])->assignRole('Kaprodi');
         
-        // $mahasiswa = User::create([
-        //     'name' => 'guest',
-        //     'username' => 'guest',
-        //     'email' => 'guest@gmail.com',
-        //     'password' => Hash::make('guest'),
-        //     'image' => 'default.jpg',
-        //     'is_active' => 1
-        // ])->assignRole('mahasiswa');
+        $mahasiswa = User::create([
+            'name' => 'guest',
+            'username' => 'guest',
+            'email' => 'guest@gmail.com',
+            'password' => Hash::make('guest'),
+            'image' => 'default.jpg',
+            'is_active' => 1
+        ])->assignRole('Mahasiswa');
     }
 }

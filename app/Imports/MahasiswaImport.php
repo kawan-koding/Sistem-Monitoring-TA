@@ -2,8 +2,9 @@
 
 namespace App\Imports;
 
-use App\Models\Mahasiswa;
 use App\Models\User;
+use App\Models\Mahasiswa;
+use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
@@ -14,37 +15,23 @@ class MahasiswaImport implements ToModel, WithHeadingRow
     *
     * @return \Illuminate\Database\Eloquent\Model|null
     */
+    
     public function model(array $row)
     {
-        // dd($row);
-        if (empty($row['nim']) || empty($row['nama_mhs'])) {
-            return null; // Skip row if essential fields are empty
+        $existingStudent = Mahasiswa::where('nim', $row['nim'])->orWhere('email', $row['email'])->first();
+        if($existingStudent) { return null; }
+        $gender = strtoupper($row['jenis_kelamin']) === 'L' ? 'Laki-laki' : (strtoupper($row['jenis_kelamin']) === 'P' ? 'Perempuan' : 'Lainnya');
+        $student = new Mahasiswa(['kelas' => $row['kelas'],'nim' => $row['nim'],'nama_mhs' => $row['nama_mahasiswa'],'email' => $row['email'],'jenis_kelamin' => $gender,'telp' => $row['telp'],]);
+        $student->save();
+        $existingUser = User::where('email', $row['email'])->orWhere('username', $row['nim'])->first();
+        if ($existingUser) {
+            if (is_null($existingUser->userable_type) && is_null($existingUser->userable_id)) {
+                $existingUser->update(['userable_type' => Mahasiswa::class,'userable_id' => $student->id]);
+            }
+        } else {
+            $user = User::create(['name' => $row['nama_mahasiswa'],'username' => $row['nim'],'email' => $row['email'],'password' => Hash::make($row['nim']),'userable_type' => Mahasiswa::class,'userable_id' => $student->id]);
+            $user->assignRole('Mahasiswa');
         }
-
-        $user = User::create([
-            'name' => $row['nama_mhs'],
-            'username' => $row['nim'],
-            // 'email' => $row['email'],
-            'password' => password_hash($row['nim'], PASSWORD_DEFAULT),
-            'picture' => 'default.jpg',
-            'is_active' => 1
-        ]);
-        $user->assignRole('mahasiswa');
-
-        $mhsw = new Mahasiswa([
-            //
-            'user_id' => $user->id,
-            'kelas' => $row['kelas'],
-            'nim' => $row['nim'],
-            'nama_mhs' => $row['nama_mhs'],
-            'jenis_kelamin' => $row['jenis_kelamin'],
-            'email' => $row['email'],
-            'telp' => $row['telp'],
-            // 'tempat_lahir' => $row['tempat_lahir'],
-            // 'tanggal_lahir' => date('Y-m-d',strtotime($row['tanggal_lahir'])),
-            // 'alamat' => $row['alamat'],
-        ]);
-
-        return $mhsw;
+        return $student;
     }
 }

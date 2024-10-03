@@ -10,4 +10,9 @@ class Jurusan extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    public function programStudi()
+    {
+        return $this->hasMany(ProgramStudi::class);
+    }
 }

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('kode');
             $table->string('nama');
-            $table->foreignId('jurusan_id')->nullable()->references('id')->on('jurusans')->onDelete('cascade');
+            $table->foreignId('jurusan_id')->nullable()->references('id')->on('jurusans')->onDelete('restrict');
             $table->timestamps();
         });
     }

@@ -97,8 +97,6 @@ class UserController extends Controller
 
             return redirect()->route('admin.user')->with('success', 'Data berhasil ditambahkan');
         } catch (\Exception $e) {
-
-
             return redirect()->route('admin.user')->with('error', $e->getMessage());
         }
     }
