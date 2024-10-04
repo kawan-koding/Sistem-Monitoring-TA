@@ -1,4 +1,4 @@
-@extends('layout.admin-main')
+@extends('administrator.layout.main')
 @section('content')
 
 {{-- <style>
@@ -27,7 +27,7 @@
             <div class="card-body">
                 <a href="javascript:void(0);" onclick="tambahData()" class="btn btn-primary"><i class="fa fa-plus"></i> Tambah</a>
                 <a href="javascript:void(0);" onclick="importData()" class="btn btn-success"><i class="fa fa-file-excel"></i> Import</a>
-                <a href="{{route('admin.dosen.tarik-data')}}" class="btn btn-secondary"><i class="fas fa-hand-paper"></i> Tarik Data</a>
+                <a href="{{route('apps.dosen.tarik-data')}}" class="btn btn-secondary"><i class="fas fa-hand-paper"></i> Tarik Data</a>
                 <hr>
                 @if(session('success'))
                             <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -70,12 +70,12 @@
                                     @if (isset($item->ttd))
                                     <img src="{{asset('images/'.$item->ttd)}}" width="100px">
                                     @else
-                                    <span>*Belum memiliki gambar</span>
+                                    <span> - </span>
                                     @endif
                                 </td>
                                 <td>
-                                    <a href="javascript:void(0);" onclick="editData('<?= $item->id?>', '{{route('admin.dosen.show', ['id' => $item->id])}}')" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></a>
-                                    <a href="javascript:void(0);" onclick="hapusData('<?= $item->id?>', '{{route('admin.dosen.delete', ['id' => $item->id])}}')" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></a>
+                                    <a href="javascript:void(0);" onclick="editData('{{ $item->id }}', '{{route('apps.dosen.show', $item->id)}}')" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></a>
+                                    <a href="javascript:void(0);" onclick="hapusData('{{ $item->id }}', '{{route('apps.dosen.delete', $item->id)}}')" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></a>
                                 </td>
                             </tr>
                             @endforeach
@@ -87,11 +87,5 @@
     </div>
 </div>
 
-@include('dosen.form')
-@include('dosen.import')
-<script>
-    const formUrlCreate = "{{route('admin.dosen.store')}}"
-    const formUrlUpdate = "{{route('admin.dosen.update')}}"
-    const formUrlImport = "{{route('admin.dosen.import')}}"
-</script>
+@include('administrator.dosen.partials.modal')
 @endsection

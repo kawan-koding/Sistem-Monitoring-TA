@@ -12,19 +12,14 @@ class Dosen extends Model
 
     protected $primaryKey = 'id';
 
-    protected $fillable = [
-        'user_id',
-        'nip',
-        'nidn',
-        'name',
-        'jenis_kelamin',
-        'email',
-        'telp',
-        'alamat',
-        'ttd',
-    ];
+    protected $guarded = [];
 
     public function rumpun_ilmu(){
         return $this->hasMany(RumpunIlmu::class);
+    }
+
+    public function user()
+    {
+        return $this->morphOne(User::class, 'userable');
     }
 }

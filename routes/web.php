@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\Administrator\Profile\ProfileController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\DosenController;
 use App\Http\Controllers\OAuthController;
 use App\Http\Controllers\TopikController;
 use App\Http\Controllers\JenisTAController;
@@ -29,6 +28,7 @@ use App\Http\Controllers\Administrator\Ruangan\RuanganController;
 use App\Http\Controllers\Administrator\Dashboard\DashboardController;
 use App\Http\Controllers\Administrator\Mahasiswa\MahasiswaController;
 use App\Http\Controllers\Administrator\ProgramStudi\ProgramStudiController;
+use App\Http\Controllers\Administrator\Dosen\DosenController;
 
 /*
 |--------------------------------------------------------------------------
@@ -113,6 +113,15 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::get('/show/{id}', [TopikController::class, 'show'])->name('apps.topik.show');
         Route::post('/update/{id}', [TopikController::class, 'update'])->name('apps.topik.update');
         Route::get('/destroy/{id}', [TopikController::class, 'destroy'])->name('apps.topik.delete');
+    });
+
+    Route::prefix('dosen')->middleware('can:read-dosen')->group(function () {
+        Route::get('', [DosenController::class, 'index'])->name('apps.dosen');
+        Route::post('store', [DosenController::class, 'store'])->name('apps.dosen.store');
+        Route::get('{dosen}/show', [DosenController::class, 'show'])->name('apps.dosen.show');
+        Route::post('{dosen}/update', [DosenController::class, 'update'])->name('apps.dosen.update');
+        Route::get('{dosen}/destroy', [DosenController::class, 'destroy'])->name('apps.dosen.delete');
+        Route::get('tarik-data', [DosenController::class, 'tarikData'])->name('apps.dosen.tarik-data');
     });
 });
 
