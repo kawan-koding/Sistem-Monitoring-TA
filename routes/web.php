@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Administrator\Profile\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OAuthController;
 use App\Http\Controllers\TopikController;
@@ -59,6 +60,8 @@ Route::prefix('apps')->middleware('auth')->group(function () {
     Route::get('switching', [AuthController::class, 'switching'])->name('apps.switching');
     Route::get('switcher/{role}', [AuthController::class, 'switcher'])->name('apps.switcher');
     Route::get('dashboard', [DashboardController::class, 'index'])->name('apps.dashboard');
+    Route::get('profile', [ProfileController::class, 'index'])->name('apps.profile');
+    Route::post('update', [ProfileController::class, 'update'])->name('apps.profile.update');
 
     Route::prefix('users')->middleware('can:read-users')->group(function () {
         Route::get('', [UserController::class, 'index'])->name('apps.users');
@@ -124,16 +127,6 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::get('/destroy/{id}', [JenisTAController::class, 'destroy'])->name('apps.jenis-ta.delete');
     });
 
-    // Route::prefix('dosen')->middleware('can:read-dosen')->group(function () {
-    //     Route::get('', [DosenController::class, 'index'])->name('apps.dosen');
-    //     Route::post('/store', [DosenController::class, 'store'])->name('apps.dosen.store');
-    //     Route::get('/show/{id}', [DosenController::class, 'show'])->name('apps.dosen.show');
-    //     Route::post('/update/{id}', [DosenController::class, 'update'])->name('apps.dosen.update');
-    //     Route::get('/destroy/{id}', [DosenController::class, 'destroy'])->name('apps.dosen.delete');
-    //     Route::post('/import', [DosenController::class, 'import'])->name('apps.dosen.import');
-    //     Route::get('/tarik-data', [DosenController::class, 'tarikData'])->name('apps.dosen.tarik-data');
-    // });
-    
     Route::prefix('periode')->middleware('can:read-periode')->group(function () {
         Route::get('', [PeriodeTAController::class, 'index'])->name('apps.periode');
         Route::post('store', [PeriodeTAController::class, 'store'])->name('apps.periode.store');
@@ -173,6 +166,15 @@ Route::prefix('apps')->middleware('auth')->group(function () {
        Route::get('', [RekomendasiTopikController::class, 'index'])->name('apps.rekomendasi-topik'); 
        Route::post('store', [RekomendasiTopikController::class, 'store'])->name('apps.rekomendasi-topik.store')->middleware('can:create-rekomendasi-topik');
        Route::get('{id}/show', [RekomendasiTopikController::class, 'show'])->name('apps.rekomendasi-topik.show'); 
+    });
+    
+    Route::prefix('dosen')->middleware('can:read-dosen')->group(function () {
+        Route::get('', [DosenController::class, 'index'])->name('apps.dosen');
+        Route::post('store', [DosenController::class, 'store'])->name('apps.dosen.store');
+        Route::get('{dosen}/show', [DosenController::class, 'show'])->name('apps.dosen.show');
+        Route::post('{dosen}/update', [DosenController::class, 'update'])->name('apps.dosen.update');
+        Route::get('{dosen}/destroy', [DosenController::class, 'destroy'])->name('apps.dosen.delete');
+        Route::get('tarik-data', [DosenController::class, 'tarikData'])->name('apps.dosen.tarik-data');
     });
 });
 

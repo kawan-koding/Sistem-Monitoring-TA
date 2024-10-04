@@ -1,0 +1,213 @@
+<?php
+
+namespace App\Http\Controllers\Administrator\Dosen;
+
+use Illuminate\Http\Request;
+use App\Models\Dosen;
+
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Dosen\DosenRequest;
+use App\Models\User;
+use App\Imports\DosenImport;
+use App\Models\Jurusan;
+use App\Models\ProgramStudi;
+use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Hash;
+
+class DosenController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        $data = [
+            'title' => 'Dosen',
+            'mods' => 'dosen',
+            'breadscrumb' => [
+                [
+                    'title' => 'Dashboard',
+                    'url' => route('apps.dashboard')
+                ],
+                [
+                    'title' => 'Master Data',
+                    'is_active' => true
+                ],
+                [
+                    'title' => 'Dosen',
+                    'is_active' => true
+                ],
+            ],
+            'dataDosen' => Dosen::all(),
+            'jurusan' => Jurusan::all(),
+            'studyPrograms' => ProgramStudi::all(),
+        ];
+        // dd(Jurusan::all());
+        
+        return view('administrator.dosen.index', $data);
+    }
+    
+    public function store(DosenRequest $request)
+    {
+        // dd($request->all());
+        try {
+            // DB::beginTransaction();
+            $user = User::where('username', $request->nidn)->first();
+            if(isset($user->id)){
+                return redirect()->route('apps.dosen')->with('error', 'Username telah terpakai');
+            }
+            if($request->hasFile('file')) {
+                $file = $request->file('file');
+                $filename = 'Dosen_'. rand(0, 999999999) .'_'. rand(0, 999999999) .'.'. $file->getClientOriginalExtension();
+                $file->move(public_path('storage/images/dosen', $filename));
+            } else {
+                $filename = null;
+            }
+            $dosen = Dosen::create($request->only(['nip', 'nidn', 'name', 'email', 'jenis_kelamin', 'telp', 'ttd']));
+            $dsnNew = User::create([
+                'name' => $request->name,
+                'username' => $request->nidn,
+                'email' => $request->email,
+                'password' => Hash::make($request->nidn),
+                'image' => 'default.jpg',
+                'is_active' => 1,
+                'userable_type' => Dosen::class,
+                'userable_id' => $dosen->id
+            ]);
+            $dsnNew->assignRole('Dosen');
+            // DB::commit();
+            return redirect()->route('apps.dosen')->with('success', 'Data berhasil ditambahkan');
+        } catch(\Exception $e) {
+            return redirect()->route('apps.dosen')->with('error', $e->getMessage());
+        }
+    }
+
+    public function show(Dosen $dosen)
+    {
+        return response()->json($dosen);
+        // $topik = Dosen::find($id);
+
+        // echo json_encode($topik);
+    }
+
+    public function update(DosenRequest $request, Dosen $dosen)
+    {
+        //
+        try {
+            $oldEmail = $dosen->email;
+            $dosen->update($request->only(['nip', 'nidn', 'name', 'email', 'jenis_kelamin', 'telp', 'ttd']));
+            if($oldEmail !== $dosen->email) {
+                $user = $dosen->user;
+                // dd($user);
+                $existingUser = User::where('username', $dosen->nidn)->orWhere('email', $dosen->email)->where('id', '!=', $user->id)->first();
+                if(!$existingUser) {
+                    $request->merge(['username' => $dosen->nidn, 'password' => Hash::make($dosen->nidn)]);
+                    $dosen->user->update($request->only(['name', 'username', 'email', 'password']));
+                }
+            }
+            return redirect()->route('apps.dosen')->with('success', 'Data berhasil diupdate');
+        } catch (\Exception $e) {
+            return redirect()->route('apps.dosen')->with('error', $e->getMessage());
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        //
+        try {
+            // Potensi kode yang dapat menyebabkan pengecualian
+            $dos = Dosen::where('id', $id)->first();
+            User::where('username', $dos->nidn)->delete();
+            Dosen::where('id', $id)->delete();
+
+        } catch (\Exception $e) {
+
+
+            return redirect()->route('apps.dosen')->with('error', $e->getMessage());
+        }
+    }
+
+    public function import(Request $request)
+    {
+        try {
+            // validasi
+            $this->validate($request, [
+                'file' => 'required|mimes:csv,xls,xlsx'
+            ]);
+
+            // menangkap file excel
+            $file = $request->file('file');
+
+            // membuat nama file unik
+            $nama_file = rand().$file->getClientOriginalName();
+
+            // upload ke folder file_dosen di dalam folder public
+            $file->move('file_dosen',$nama_file);
+
+            // import data
+            Excel::import(new DosenImport, public_path('file_dosen/'.$nama_file));
+
+            return redirect()->route('apps.dosen')->with('success', 'Berhasil melakukan import');
+
+        } catch (\Exception $e) {
+            return redirect()->route('apps.dosen')->with('error', $e->getMessage());
+        }
+    }
+    
+    public function tarikData(){
+        try{
+            //dd($response);
+            $token = env("KEY_BEARER_TOKEN");
+            if (!isset($token)) {
+                return redirect()->route('apps.dosen')->with('error', 'Set token bearer terlebih dahulu');
+            }
+            
+            $response = Http::withoutVerifying()
+            ->withHeaders([
+                'Accept' => 'application/json',
+                'Authorization' => 'Bearer ' . env('KEY_BEARER_TOKEN'),
+            ])
+            ->get('https://sit.poliwangi.ac.id/v2/api/v1/sitapi/pegawai', [
+                'prodi' => 4,
+            ]);
+            $data = $response->json()['data']; 
+            // dd($data);
+            foreach ($data as $key) {
+                
+                $cek_user = User::where('username', $key['username'])->first();
+                if(!isset($cek_user->id) && isset($key['username'])){
+                    $dsnNew = User::create([
+                        'name' => $key['nama'],
+                        'username' => $key['username'],
+                        // 'email' => $request->email,
+                        'password' => password_hash($key['username'], PASSWORD_DEFAULT),
+                        'picture' => 'default.jpg',
+                        'is_active' => 1,
+                    ]);
+                    $dsnNew->assignRole('dosen');
+                    $user = User::where('username', $key['username'])->first();
+                    // Potensi kode yang dapat menyebabkan pengecualian
+                    $result = Dosen::create([
+                        'user_id' => $user->id,
+                        'nip' => $key['nip'],
+                        'nidn' => $key['nip'],
+                        'name' => $key['nama'],
+                        'email' => null,
+                        'jenis_kelamin' => $key['jenis_kelamin'],
+                        'telp' => '081',
+                        'ttd' => null,
+                    ]);
+                }
+            }
+
+            return redirect()->route('apps.dosen')->with('success', 'Data berhasil ditarik!');
+        }catch(\Exception $e){
+            return redirect()->route('apps.dosen')->with('error', $e->getMessage());
+        }
+    }
+}

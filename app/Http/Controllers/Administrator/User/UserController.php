@@ -44,7 +44,7 @@ class UserController extends Controller
             if($request->hasFile('picture')) {
                 $file = $request->file('picture');
                 $filename = 'Users_'. rand(0, 999999999) .'_'. rand(0, 999999999) .'.'. $file->getClientOriginalExtension();
-                $file->move(public_path('storage/images/users', $filename));
+                $file->move(public_path('storage/images/users'), $filename);
             } else {
                 $filename = 'default.jpg';
             }
@@ -74,7 +74,7 @@ class UserController extends Controller
             if($request->hasFile('file')) {
                 $file = $request->file('file');
                 $filename = 'Users_'. rand(0, 999999999) .'_'. rand(0, 999999999) .'.'. $file->getClientOriginalExtension();
-                $file->move(public_path('storage/images/users', $filename));
+                $file->move(public_path('storage/images/users'), $filename);
             } else {
                 $filename = $user->image;
             }

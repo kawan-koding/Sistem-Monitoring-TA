@@ -1,6 +1,26 @@
 @extends('administrator.layout.main')
-
 @section('content')
+
+{{-- <style>
+    .table-responsive {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .table thead th {
+        white-space: nowrap;
+    }
+
+    .table tbody td {
+        white-space: nowrap;
+    }
+
+    @media (min-width: 992px) {
+        
+    }
+
+</style> --}}
+
 <div class="row">
     <div class="col-md-12 col-sm-12 col-g-12">
         <div class="card">
@@ -50,12 +70,12 @@
                                     @if (isset($item->ttd))
                                     <img src="{{asset('images/'.$item->ttd)}}" width="100px">
                                     @else
-                                    <span>*Belum memiliki gambar</span>
+                                    <span> - </span>
                                     @endif
                                 </td>
                                 <td>
-                                    <a href="javascript:void(0);" onclick="editData('<?= $item->id?>', '{{route('admin.dosen.show', ['id' => $item->id])}}')" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></a>
-                                    <a href="javascript:void(0);" onclick="hapusData('<?= $item->id?>', '{{route('admin.dosen.delete', ['id' => $item->id])}}')" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></a>
+                                    <a href="javascript:void(0);" onclick="editData('{{ $item->id }}', '{{route('apps.dosen.show', $item->id)}}')" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></a>
+                                    <a href="javascript:void(0);" onclick="hapusData('{{ $item->id }}', '{{route('apps.dosen.delete', $item->id)}}')" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></a>
                                 </td>
                             </tr>
                             @endforeach

@@ -88,4 +88,5 @@
 </div>
 
 @include('mahasiswa.form')
+@include('mahasiswa.import')
 @endsection

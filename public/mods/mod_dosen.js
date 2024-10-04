@@ -1,6 +1,6 @@
-function tambahData() {
+function tambahData(){
     $('#myFormulir').attr("action", `${BASE_URL}/apps/dosen/store`);
-    $('#myModalLabel').html('Tambah Dosen')
+    $('#myModalLabel').html('Tambah Data')
     $('#nip').val('')
     $('#nidn').val('')
     $('#name').val('')
@@ -11,22 +11,21 @@ function tambahData() {
     $('#idDosen').val('')
     $('#myModal').modal('show')
 }
-
-function importData() {
+function importData(){
     $('#myImportFormulir').attr("action", `${BASE_URL}/apps/dosen/import`);
     $('#myModalImport').modal('show')
 }
 
-function editData(id, urlShow) {
+function editData(id, urlShow){
     // alert(urlShow)
-    $('#myFormulir').attr("action", `${BASE_URL}/apps/dosen/update/${id}`);
-    $('#myModalLabel').html('Ubah Dosen')
+    $('#myFormulir').attr("action", `${BASE_URL}/apps/dosen/${id}/update`);
+    $('#myModalLabel').html('Ubah Data')
 
     $.ajax({
         url: urlShow,
         type: "GET",
         dataType: "json",
-        success: function (response) {
+        success: function(response) {
             $('#nip').val(response.nip)
             $('#nidn').val(response.nidn)
             $('#name').val(response.name)
@@ -36,7 +35,7 @@ function editData(id, urlShow) {
             // $('#alamat').val(response.alamat)
             $('#idDosen').val(response.id)
         },
-        error: function (xhr, status, error) {
+        error: function(xhr, status, error) {
             // Logika untuk menangani kesalahan
             console.error(xhr.responseText);
         }
