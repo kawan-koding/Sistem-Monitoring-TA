@@ -15,6 +15,10 @@ aria-labelledby="myModalLabel" aria-hidden="true">
                 <div class="mb-3">
                     <label for="">NIP/NIPPPK/NIK<span class="text-danger">*</span></label>
                     <input type="text" name="nip" id="nip" class="form-control" required>
+<<<<<<< HEAD
+=======
+                    <input type="hidden" name="id" id="idDosen">
+>>>>>>> 4c9cc11431091a33b5c4a40efa42a5749199da12
                 </div>
                 <div class="mb-3">
                     <label for="">NIDN <span class="text-danger">*</span></label>

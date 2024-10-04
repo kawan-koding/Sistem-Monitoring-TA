@@ -28,25 +28,9 @@ function editData(id, urlShow) {
     $('#myModal').modal('show')
 }
 
-function hapusData(e, url) {
-    Swal.fire({
-        title: "Hapus Program Studi ?",
-        text: "Apakah kamu yakin untuk menghapus data ini?",
-        type: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, Hapus!"
-    }).then((result) => {
-        if (result.value) {
-            $.ajax({
-                url: url,
-                type: "get",
-                success: function (data) {
-                    window.location.reload();
-                }
-            })
-        }
-    })
-
-}
+$(document).ready(function () {
+    $('*[data-toggle="delete"]').on('click', function () {
+        const url = $(this).data('url');
+        confirmDelete('Program Studi', url);
+    });
+});

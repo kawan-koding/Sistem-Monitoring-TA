@@ -5,8 +5,7 @@
                     <div class="float-end">
 
                         <div class="dropdown d-inline-block d-lg-none ms-2">
-                            <button type="button" class="btn header-item noti-icon waves-effect"
-                                id="page-header-search-dropdown" data-bs-toggle="dropdown" aria-haspopup="true"
+                            <button type="button" class="btn header-item noti-icon waves-effect" id="page-header-search-dropdown" data-bs-toggle="dropdown" aria-haspopup="true"
                                 aria-expanded="false">
                                 <i class="mdi mdi-magnify"></i>
                             </button>
@@ -57,24 +56,24 @@
 
 
                     </div>
-                    {{-- <div>
+                    <div>
                         <!-- LOGO -->
                         <div class="navbar-brand-box">
                             <a href="index.html" class="logo logo-dark">
                                 <span class="logo-sm">
-                                    <img src="{{asset('images/'. $profil_logo->value)}}" alt="" height="40">
+                                    {{-- <img src="{{asset('images/'. $profil_logo->value)}}" alt="" height="40"> --}}
                                 </span>
                                 <span class="logo-lg">
-                                    <img src="{{asset('images/'. $profil_logo->value)}}" alt="" height="40">
+                                    {{-- <img src="{{asset('images/'. $profil_logo->value)}}" alt="" height="40"> --}}
                                 </span>
                             </a>
 
                             <a href="index.html" class="logo logo-light">
                                 <span class="logo-sm">
-                                    <img src="{{asset('images/'. $profil_logo->value)}}" alt="" height="40">
+                                    {{-- <img src="{{asset('images/'. $profil_logo->value)}}" alt="" height="40"> --}}
                                 </span>
                                 <span class="logo-lg">
-                                    <img src="{{asset('images/'. $profil_logo->value)}}" alt="" height="40">
+                                    {{-- <img src="{{asset('images/'. $profil_logo->value)}}" alt="" height="40"> --}}
                                 </span>
                             </a>
                         </div>
@@ -86,7 +85,7 @@
 
 
 
-                    </div> --}}
+                    </div>
 
                 </div>
             </div>
