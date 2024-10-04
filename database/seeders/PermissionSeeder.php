@@ -78,7 +78,10 @@ class PermissionSeeder extends Seeder
             ["name" => "create-program-studi", "display_name" => "Buat Program Studi"],
             ["name" => "update-program-studi", "display_name" => "Ubah Program Studi"],
             ["name" => "delete-program-studi", "display_name" => "Hapus Program Studi"],
-            
+            ["name" => "read-rekomendasi-topik", "display_name" => "Baca Rekomendasi Topik"],
+            ["name" => "create-rekomendasi-topik", "display_name" => "Buat Rekomendasi Topik"],
+            ["name" => "update-rekomendasi-topik", "display_name" => "Ubah Rekomendasi Topik"],
+            ["name" => "delete-rekomendasi-topik", "display_name" => "Hapus Rekomendasi Topik"],            
         ]);
         $this->insertPermission($permissions);
 

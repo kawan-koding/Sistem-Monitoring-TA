@@ -25,10 +25,13 @@ use App\Http\Controllers\Administrator\JenisTA\JenisTAController;
 use App\Http\Controllers\Administrator\Jurusan\JurusanController;
 use App\Http\Controllers\Administrator\Ruangan\RuanganController;
 use App\Http\Controllers\Administrator\TopikTA\TopikTAController;
+use App\Http\Controllers\Administrator\DaftarTA\DaftarTAController;
 use App\Http\Controllers\Administrator\Dashboard\DashboardController;
 use App\Http\Controllers\Administrator\Mahasiswa\MahasiswaController;
 use App\Http\Controllers\Administrator\PeriodeTA\PeriodeTAController;
+use App\Http\Controllers\Administrator\PengajuanTA\PengajuanTAController;
 use App\Http\Controllers\Administrator\ProgramStudi\ProgramStudiController;
+use App\Http\Controllers\Administrator\RekomendasiTopik\RekomendasiTopikController;
 
 /*
 |--------------------------------------------------------------------------
@@ -138,6 +141,38 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::post('{periode}/update', [PeriodeTAController::class, 'update'])->name('apps.periode.update');
         Route::delete('{periode}/destroy', [PeriodeTAController::class, 'destroy'])->name('apps.periode.delete');
         Route::get('{periode}/change', [PeriodeTAController::class, 'change'])->name('apps.periode.change');
+    });
+
+    Route::prefix('daftar-ta')->group(function () {
+        Route::get('', [DaftarTAController::class, 'index'])->name('apps.daftar-ta')->middleware('can:read-daftarta');
+        Route::post('/store', [DaftarTAController::class, 'store'])->name('apps.daftar-ta.store');
+        Route::get('/show/{id}', [DaftarTAController::class, 'show'])->name('apps.daftar-ta.show');
+        Route::get('/edit/{id}', [DaftarTAController::class, 'edit'])->name('apps.daftar-ta.edit');
+        Route::get('/detail/{id}', [DaftarTAController::class, 'detail'])->name('apps.daftar-ta.detail');
+        Route::post('/update/{id}', [DaftarTAController::class, 'update'])->name('apps.daftar-ta.update');
+        Route::get('/destroy/{id}', [DaftarTAController::class, 'destroy'])->name('apps.daftar-ta.delete');
+    });
+
+    Route::prefix('pengajuan-ta')->group(function () {
+        Route::get('', [PengajuanTAController::class, 'index'])->name('apps.pengajuan-ta');
+        // Route::get('/create', [PengajuanTaMahasiswaController::class, 'create'])->name('mahasiswa.pengajuan-ta.create')->middleware('can:read-pengajuanta-mahasiswa');
+        // Route::post('/store', [PengajuanTaMahasiswaController::class, 'store'])->name('mahasiswa.pengajuan-ta.store');
+        // Route::get('/edit/{id}', [PengajuanTaMahasiswaController::class, 'edit'])->name('mahasiswa.pengajuan-ta.edit');
+        // Route::post('/update/{id}', [PengajuanTaMahasiswaController::class, 'update'])->name('mahasiswa.pengajuan-ta.update');
+        // Route::get('/show/{id}', [PengajuanTaMahasiswaController::class, 'show'])->name('mahasiswa.pengajuan-ta.show');
+        // Route::post('/unggah_berkas/{id}', [PengajuanTaMahasiswaController::class, 'unggah_berkas'])->name('mahasiswa.pengajuan-ta.unggah-berkas');
+        // Route::get('/print_nilai/{id}', [PengajuanTaMahasiswaController::class, 'print_nilai'])->name('mahasiswa.pengajuan-ta.print_nilai');
+        // Route::get('/print_rekap/{id}', [PengajuanTaMahasiswaController::class, 'print_rekap'])->name('mahasiswa.pengajuan-ta.print_rekap');
+        // Route::get('/print_revisi/{id}', [PengajuanTaMahasiswaController::class, 'print_revisi'])->name('mahasiswa.pengajuan-ta.print_revisi');
+        // Route::get('/cek-dosen', [PengajuanTaMahasiswaController::class, 'cekDosen'])->name('mahasiswa.pengajuan-ta.cekdosen');
+        // Route::get('/print_pemb1/{id}', [PengajuanTaMahasiswaController::class, 'printPembSatu'])->name('mahasiswa.pengajuan-ta.print_pemb1');
+        // Route::get('/print_pemb2/{id}', [PengajuanTaMahasiswaController::class, 'printPembDua'])->name('mahasiswa.pengajuan-ta.print_pemb2');
+    });
+
+    Route::prefix('rekomendasi-topik')->middleware('can:read-rekomendasi-topik')->group(function () {
+       Route::get('', [RekomendasiTopikController::class, 'index'])->name('apps.rekomendasi-topik'); 
+       Route::post('store', [RekomendasiTopikController::class, 'store'])->name('apps.rekomendasi-topik.store')->middleware('can:create-rekomendasi-topik');
+       Route::get('{id}/show', [RekomendasiTopikController::class, 'show'])->name('apps.rekomendasi-topik.show'); 
     });
 });
 

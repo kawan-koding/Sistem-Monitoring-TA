@@ -55,6 +55,24 @@
                 </li>
                 @endcan
 
+                @can(['read-rekomendasi-topik'])
+                <li>
+                    <a href="{{route('apps.rekomendasi-topik')}}" class=" waves-effect">
+                        <i class="mdi mdi-book-open"></i>
+                        <span>Rekomendasi Topik</span>
+                    </a>
+                </li>
+                @endcan
+                
+                {{-- @can(['read-pengajuanta-mahasiswa']) --}}
+                <li>
+                    <a href="{{ route('apps.pengajuan-ta')}}" class=" waves-effect">
+                        <i class="mdi mdi-calendar-text"></i>
+                        <span>Pengajuan TA</span>
+                    </a>
+                </li>
+                {{-- @endcan --}}
+
                 @canany(['read-mahasiswa', 'read-dosen', 'read-ruangan', 'read-topik', 'read-topik'])
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
@@ -95,6 +113,23 @@
                         </a>
                     </li>
                 @endcan
+
+                 @canany(['read-daftarta-admin', 'read-seminar-admin'])
+                    <li>
+                        <a href="javascript: void(0);" class="has-arrow waves-effect">
+                            <i class="mdi mdi-clipboard-list-outline"></i>
+                            <span>Tugas Akhir</span>
+                        </a>
+                        <ul class="sub-menu" aria-expanded="false">
+                            @can(['read-daftarta-admin'])
+                            <li><a href="{{route('apps.daftar-ta')}}">Daftar TA</a></li>
+                            @endcan
+                            {{-- @can(['read-seminar-admin'])
+                            <li><a href="{{route('admin.jadwal-seminar')}}">Jadwal Seminar</a></li>
+                            @endcan --}}
+                        </ul>
+                    </li>
+                @endcanany
 
                 @canany(['read-users', 'read-roles'])
                     <li>
