@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Hash;
+use File;
 
 class DosenController extends Controller
 {
@@ -53,7 +54,7 @@ class DosenController extends Controller
     {
         // dd($request->all());
         try {
-            // DB::beginTransaction();
+            DB::beginTransaction();
             $user = User::where('username', $request->nidn)->first();
             if(isset($user->id)){
                 return redirect()->route('apps.dosen')->with('error', 'Username telah terpakai');
@@ -61,10 +62,10 @@ class DosenController extends Controller
             if($request->hasFile('file')) {
                 $file = $request->file('file');
                 $filename = 'Dosen_'. rand(0, 999999999) .'_'. rand(0, 999999999) .'.'. $file->getClientOriginalExtension();
-                $file->move(public_path('storage/images/dosen', $filename));
-            } else {
-                $filename = null;
+                $file->move(public_path('storage/images/dosen'), $filename);
             }
+
+            $request->merge(['ttd' => $filename]);
             $dosen = Dosen::create($request->only(['nip', 'nidn', 'name', 'email', 'jenis_kelamin', 'telp', 'ttd']));
             $dsnNew = User::create([
                 'name' => $request->name,
@@ -77,7 +78,7 @@ class DosenController extends Controller
                 'userable_id' => $dosen->id
             ]);
             $dsnNew->assignRole('Dosen');
-            // DB::commit();
+            DB::commit();
             return redirect()->route('apps.dosen')->with('success', 'Data berhasil ditambahkan');
         } catch(\Exception $e) {
             return redirect()->route('apps.dosen')->with('error', $e->getMessage());
@@ -96,6 +97,18 @@ class DosenController extends Controller
     {
         //
         try {
+            if($request->hasFile('file')) {
+                $file = $request->file('file');
+                $filename = 'Dosen_'. rand(0, 999999999) .'_'. rand(0, 999999999) .'.'. $file->getClientOriginalExtension();
+                $file->move(public_path('storage/images/dosen'), $filename);
+                if($dosen->ttd) {
+                    File::delete(public_path('storage/images/dosen/'. $dosen->ttd));
+                }
+            } else {
+                $filename = $dosen->ttd;
+            }
+
+            $request->merge(['ttd' => $filename]);
             $oldEmail = $dosen->email;
             $dosen->update($request->only(['nip', 'nidn', 'name', 'email', 'jenis_kelamin', 'telp', 'ttd']));
             if($oldEmail !== $dosen->email) {
@@ -116,44 +129,38 @@ class DosenController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Dosen $dosen)
     {
         //
         try {
-            // Potensi kode yang dapat menyebabkan pengecualian
-            $dos = Dosen::where('id', $id)->first();
-            User::where('username', $dos->nidn)->delete();
-            Dosen::where('id', $id)->delete();
+            $dosen->user()->delete();
+            $dosen->delete();
 
+            return $this->successResponse('Data berhasil di hapus');
         } catch (\Exception $e) {
-
-
-            return redirect()->route('apps.dosen')->with('error', $e->getMessage());
+            return $this->exceptionResponse($e);
         }
     }
 
     public function import(Request $request)
     {
+        $request->validate([
+            'file' => 'required|mimes:xls,xlsx,csv'
+        ],[
+            'file.required' => 'File harus diisi',
+            'file.mimes' => 'File harus berupa xls, xlsx, atau csv'
+        ]);
+
         try {
-            // validasi
-            $this->validate($request, [
-                'file' => 'required|mimes:csv,xls,xlsx'
-            ]);
-
-            // menangkap file excel
-            $file = $request->file('file');
-
-            // membuat nama file unik
-            $nama_file = rand().$file->getClientOriginalName();
-
-            // upload ke folder file_dosen di dalam folder public
-            $file->move('file_dosen',$nama_file);
-
-            // import data
-            Excel::import(new DosenImport, public_path('file_dosen/'.$nama_file));
-
-            return redirect()->route('apps.dosen')->with('success', 'Berhasil melakukan import');
-
+            if ($request->hasFile('file')) {
+                $file = $request->file('file');
+                $filename = 'Dosen_'. rand(0, 999999999) .'_'. rand(0, 999999999) .'.'. $file->getClientOriginalExtension();
+                $file->move(public_path('storage/files/dosen'), $filename);
+            }
+            
+            Excel::import(new DosenImport, public_path('storage/files/dosen/'. $filename));
+            
+            return redirect()->route('apps.dosen')->with('success', 'Berhasil import dosen');
         } catch (\Exception $e) {
             return redirect()->route('apps.dosen')->with('error', $e->getMessage());
         }

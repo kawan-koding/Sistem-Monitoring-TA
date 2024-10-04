@@ -148,7 +148,8 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::post('store', [DosenController::class, 'store'])->name('apps.dosen.store');
         Route::get('{dosen}/show', [DosenController::class, 'show'])->name('apps.dosen.show');
         Route::post('{dosen}/update', [DosenController::class, 'update'])->name('apps.dosen.update');
-        Route::get('{dosen}/destroy', [DosenController::class, 'destroy'])->name('apps.dosen.delete');
+        Route::delete('{dosen}/destroy', [DosenController::class, 'destroy'])->name('apps.dosen.delete');
+        Route::post('import', [DosenController::class, 'import'])->name('apps.dosen.import');
         Route::get('tarik-data', [DosenController::class, 'tarikData'])->name('apps.dosen.tarik-data');
     });
 });
