@@ -95,9 +95,12 @@
                         @can(['read-ruangan'])
                         <li><a href="{{ route('apps.ruangan')}}">Ruangan</a></li>
                         @endcan
-
-                        {{-- @can(['read-topik'])
+                        @can(['read-topik'])
                         <li><a href="{{route('admin.topik')}}">Topik</a></li>
+                        @can(['read-topik'])
+                        @can(['read-ruangan'])
+                        <li><a href="{{ route('apps.ruangan')}}">Ruangan</a></li>
+                        @endcan
                         @can(['read-topik'])
                         <li><a href="{{route('apps.topik')}}">Topik</a></li>
                         @endcan

@@ -61,9 +61,9 @@ document.querySelectorAll(".filepond").forEach((inputElement) => {
     });
 });
 
-setTimeout(function () {
-    $('.alert').fadeOut('slow');
-}, 5000);
+// setTimeout(function () {
+//     $('.alert').fadeOut('slow');
+// }, 5000);
 
 function confirmDelete(title, url) {
     Swal.fire({

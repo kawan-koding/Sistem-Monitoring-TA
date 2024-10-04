@@ -47,7 +47,7 @@ class DosenRequest extends FormRequest
             ],
             'jenis_kelamin' => 'required',
             'telp' => 'nullable',
-            'ttd' => 'nullable|image|mimes:png,jpg,jpeg',
+            'file' => 'nullable|image|mimes:png,jpg,jpeg',
         ];
     }
 
@@ -63,8 +63,8 @@ class DosenRequest extends FormRequest
             'email.required' => 'Email harus diisi',
             'email.unique' => 'Email sudah ada',
             'jenis_kelamin.required' => 'Jenis kelamin harus diisi',
-            'ttd.image' => 'File harus berupa gambar',
-            'ttd.mimes' => 'File harus png,jpg,jpeg',
+            'file.image' => 'File harus berupa gambar',
+            'file.mimes' => 'File harus png,jpg,jpeg',
         ];
     }
 }

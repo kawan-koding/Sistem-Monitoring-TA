@@ -49,11 +49,10 @@
                             <tr>
                                 <th width="5%">No</th>
                                 <th>NIP/NIPPPK/NIK</th>
-                                <th>NIDN</th>
                                 <th>Nama</th>
+                                <th>Email</th>
                                 <th>Jenis Kelamin</th>
-                                <th>Telp.</th>
-                                <th>TTD.</th>
+                                <th>Tanda Tangan</th>
                                 <th width="20%">Aksi</th>
                             </tr>
                         </thead>
@@ -62,20 +61,34 @@
                             <tr>
                                 <td>{{$loop->iteration}}</td>
                                 <td>{{$item->nip}}</td>
-                                <td>{{$item->nidn}}</td>
-                                <td>{{$item->name}}</td>
-                                <td>{{$item->jenis_kelamin == 'L' ? 'Laki-Laki' : 'Perempuan'}}</td>
-                                <td>{{$item->telp}}</td>
                                 <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="">
+                                            <strong>{{ucfirst($item->name)}}</strong>
+                                            <p class="m-0 p-0 text-muted small">NIDN : {{$item->nidn}}</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-fex align-items-center">
+                                        <div class="">
+                                            <strong>{{ucfirst($item->email)}}</strong>
+                                            <p class="m-0 p-0 text-muted small">{{$item->telp}}</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>{{$item->jenis_kelamin == 'L' ? 'Laki-Laki' : 'Perempuan'}}</td>
+                                <td class="text-center">
                                     @if (isset($item->ttd))
-                                    <img src="{{asset('images/'.$item->ttd)}}" width="100px">
+                                    <a href="{{asset('storage/images/dosen/' .  $item->ttd)}}" target="_blank"><i class="bx bx-file"></i> Lihat</a>
+                                    {{-- <img src="{{asset('storage/images/dosen/' .  $item->ttd)}}" width="100px" class="rounded-circle"> --}}
                                     @else
                                     <span> - </span>
                                     @endif
                                 </td>
-                                <td>
-                                    <a href="javascript:void(0);" onclick="editData('{{ $item->id }}', '{{route('apps.dosen.show', $item->id)}}')" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></a>
-                                    <a href="javascript:void(0);" onclick="hapusData('{{ $item->id }}', '{{route('apps.dosen.delete', $item->id)}}')" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></a>
+                                <td class="text-center">
+                                    <button onclick="editData('{{ $item->id }}', '{{route('apps.dosen.show', $item->id)}}')" class="btn btn-primary btn-sm"><i class="bx bx-edit-alt"></i></a>
+                                    <button class="btn btn-danger btn-sm mx-1 my-1" data-toggle="delete" data-url="{{ route('apps.dosen.delete', $item->id) }}"><i class="bx bx-trash"></i></button>
                                 </td>
                             </tr>
                             @endforeach
@@ -88,4 +101,5 @@
 </div>
 
 @include('administrator.dosen.partials.modal')
+
 @endsection
