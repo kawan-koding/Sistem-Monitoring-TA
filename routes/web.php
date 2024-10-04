@@ -5,7 +5,6 @@ use App\Http\Controllers\OAuthController;
 use App\Http\Controllers\TopikController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\PeriodeTAController;
 use App\Http\Controllers\KuotaDosenController;
 use App\Http\Controllers\RumpunIlmuController;
 use App\Http\Controllers\Login\LoginController;
@@ -17,10 +16,10 @@ use App\Http\Controllers\DaftarTaKaprodiController;
 use App\Http\Controllers\PengajuanTaKaprodiController;
 use App\Http\Controllers\DaftarBimbinganDosenController;
 use App\Http\Controllers\PengajuanTaMahasiswaController;
+
 use App\Http\Controllers\JadwalSeminarMahasiswaController;
 use App\Http\Controllers\Administrator\Role\RoleController;
 use App\Http\Controllers\Administrator\User\UserController;
-
 use App\Http\Controllers\Administrator\Dosen\DosenController;
 use App\Http\Controllers\Administrator\JenisTA\JenisTAController;
 use App\Http\Controllers\Administrator\Jurusan\JurusanController;
@@ -28,6 +27,7 @@ use App\Http\Controllers\Administrator\Ruangan\RuanganController;
 use App\Http\Controllers\Administrator\TopikTA\TopikTAController;
 use App\Http\Controllers\Administrator\Dashboard\DashboardController;
 use App\Http\Controllers\Administrator\Mahasiswa\MahasiswaController;
+use App\Http\Controllers\Administrator\PeriodeTA\PeriodeTAController;
 use App\Http\Controllers\Administrator\ProgramStudi\ProgramStudiController;
 
 /*
@@ -48,9 +48,9 @@ Route::get('login', [AuthController::class, 'index'])->name('login');
 Route::post('login', [AuthController::class, 'authenticate'])->name('login.process');
 Route::get('logout', [AuthController::class, 'logout'])->name('logout');
     
-Route::get('oauth', [OAuthController::class, 'redirect'])->name('oauth.redirect');
-Route::get('oauth/callback', [OAuthController::class, 'callback'])->name('oauth.callback');
-Route::get('oauth/refresh', [OAuthController::class, 'refresh'])->name('oauth.refresh');
+Route::get('oauth', [AuthController::class, 'redirect'])->name('oauth.redirect');
+Route::get('oauth/callback', [AuthController::class, 'callback'])->name('oauth.callback');
+Route::get('oauth/refresh', [AuthController::class, 'refresh'])->name('oauth.refresh');
 
 Route::prefix('apps')->middleware('auth')->group(function () {
     Route::get('switching', [AuthController::class, 'switching'])->name('apps.switching');
@@ -86,7 +86,7 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::post('store', [JurusanController::class, 'store'])->name('apps.jurusan.store');
         Route::get('{jurusan}/show', [JurusanController::class, 'show'])->name('apps.jurusan.show');
         Route::post('{jurusan}/update', [JurusanController::class, 'update'])->name('apps.jurusan.update');
-        Route::get('{jurusan}/destroy', [JurusanController::class, 'destroy'])->name('apps.jurusan.delete');
+        Route::delete('{jurusan}/destroy', [JurusanController::class, 'destroy'])->name('apps.jurusan.delete');
     });
 
     Route::prefix('program-studi')->middleware('can:read-program-studi')->group(function () {
@@ -94,7 +94,7 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::post('store', [ProgramStudiController::class, 'store'])->name('apps.program-studi.store');
         Route::get('{programStudi}/show', [ProgramStudiController::class, 'show'])->name('apps.program-studi.show');
         Route::post('{programStudi}/update', [ProgramStudiController::class, 'update'])->name('apps.program-studi.update');
-        Route::get('{programStudi}/destroy', [ProgramStudiController::class, 'destroy'])->name('apps.program-studi.delete');
+        Route::delete('{programStudi}/destroy', [ProgramStudiController::class, 'destroy'])->name('apps.program-studi.delete');
     });
 
     Route::prefix('ruangan')->middleware('can:read-ruangan')->group(function () {
@@ -121,14 +121,23 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::get('/destroy/{id}', [JenisTAController::class, 'destroy'])->name('apps.jenis-ta.delete');
     });
 
-    Route::prefix('dosen')->middleware('can:read-dosen')->group(function () {
-        Route::get('', [DosenController::class, 'index'])->name('apps.dosen');
-        Route::post('/store', [DosenController::class, 'store'])->name('apps.dosen.store');
-        Route::get('/show/{id}', [DosenController::class, 'show'])->name('apps.dosen.show');
-        Route::post('/update/{id}', [DosenController::class, 'update'])->name('apps.dosen.update');
-        Route::get('/destroy/{id}', [DosenController::class, 'destroy'])->name('apps.dosen.delete');
-        Route::post('/import', [DosenController::class, 'import'])->name('apps.dosen.import');
-        Route::get('/tarik-data', [DosenController::class, 'tarikData'])->name('apps.dosen.tarik-data');
+    // Route::prefix('dosen')->middleware('can:read-dosen')->group(function () {
+    //     Route::get('', [DosenController::class, 'index'])->name('apps.dosen');
+    //     Route::post('/store', [DosenController::class, 'store'])->name('apps.dosen.store');
+    //     Route::get('/show/{id}', [DosenController::class, 'show'])->name('apps.dosen.show');
+    //     Route::post('/update/{id}', [DosenController::class, 'update'])->name('apps.dosen.update');
+    //     Route::get('/destroy/{id}', [DosenController::class, 'destroy'])->name('apps.dosen.delete');
+    //     Route::post('/import', [DosenController::class, 'import'])->name('apps.dosen.import');
+    //     Route::get('/tarik-data', [DosenController::class, 'tarikData'])->name('apps.dosen.tarik-data');
+    // });
+    
+    Route::prefix('periode')->middleware('can:read-periode')->group(function () {
+        Route::get('', [PeriodeTAController::class, 'index'])->name('apps.periode');
+        Route::post('store', [PeriodeTAController::class, 'store'])->name('apps.periode.store');
+        Route::get('{periode}/show', [PeriodeTAController::class, 'show'])->name('apps.periode.show');
+        Route::post('{periode}/update', [PeriodeTAController::class, 'update'])->name('apps.periode.update');
+        Route::delete('{periode}/destroy', [PeriodeTAController::class, 'destroy'])->name('apps.periode.delete');
+        Route::get('{periode}/change', [PeriodeTAController::class, 'change'])->name('apps.periode.change');
     });
 });
 
@@ -139,16 +148,6 @@ Route::prefix('apps')->middleware('auth')->group(function () {
 //     Route::get('/switching', [DashboardController::class, 'switching'])->name('admin.switching');
 //     Route::get('/switcher/{role}', [DashboardController::class, 'switcher'])->name('admin.switcher');
 
-
-//     //Periode
-//     Route::prefix('periode')->group(function () {
-//         Route::get('', [PeriodeTAController::class, 'index'])->name('admin.periode')->middleware('can:read-periode');
-//         Route::post('/store', [PeriodeTAController::class, 'store'])->name('admin.periode.store');
-//         Route::get('/show/{id}', [PeriodeTAController::class, 'show'])->name('admin.periode.show');
-//         Route::post('/update', [PeriodeTAController::class, 'update'])->name('admin.periode.update');
-//         Route::get('/destroy/{id}', [PeriodeTAController::class, 'destroy'])->name('admin.periode.delete');
-//         Route::get('/change/{id}', [PeriodeTAController::class, 'change'])->name('admin.periode.change');
-//     });
 
 //     //Dosen
 //     

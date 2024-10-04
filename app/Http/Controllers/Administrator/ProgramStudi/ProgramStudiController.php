@@ -68,9 +68,9 @@ class ProgramStudiController extends Controller
         try {
             $programStudi->delete();
     
-            return redirect()->route('apps.program-studi')->with('success', 'Data berhasil dihapus');
+            return $this->successResponse('Data berhasil di hapus');
         } catch (\Exception $e) {
-            return redirect()->route('apps.program-studi')->with('error', $e->getMessage());
+            return $this->exceptionResponse($e);
         }
     }
 }

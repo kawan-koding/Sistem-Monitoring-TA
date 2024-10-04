@@ -64,9 +64,9 @@ class JurusanController extends Controller
     {
         try {
             $jurusan->delete();
-            return redirect()->route('apps.jurusan')->with('success', 'Data berhasil dihapus');
+            return $this->successResponse('Data berhasil di hapus');
         } catch (\Exception $e) {
-            return redirect()->route('apps.jurusan')->with('error', $e->getMessage());
+            return $this->exceptionResponse($e);
         }
     }
 }

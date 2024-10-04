@@ -64,3 +64,41 @@ document.querySelectorAll(".filepond").forEach((inputElement) => {
 setTimeout(function () {
     $('.alert').fadeOut('slow');
 }, 5000);
+
+function confirmDelete(title, url) {
+    Swal.fire({
+        title: "Hapus " + title + " ?",
+        text: "Apakah kamu yakin untuk menghapus data ini!",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Ya, Hapus!"
+    }).then((result) => {
+        if (result.value) {
+            $.ajax({
+                url: url,
+                type: "DELETE",
+                data: {
+                    _token: $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function (data) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil!',
+                        text: data.message
+                    }).then(() => {
+                        window.location.reload();
+                    });
+                },
+                error: function (xhr) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: xhr.responseJSON.message
+                    });
+                }
+            });
+        }
+    });
+}
