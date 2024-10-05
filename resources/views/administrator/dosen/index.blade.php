@@ -27,7 +27,7 @@
             <div class="card-body">
                 <a href="javascript:void(0);" onclick="tambahData()" class="btn btn-primary"><i class="fa fa-plus"></i> Tambah</a>
                 <a href="javascript:void(0);" onclick="importData()" class="btn btn-success"><i class="fa fa-file-excel"></i> Import</a>
-                <a href="{{route('apps.dosen.tarik-data')}}" class="btn btn-secondary"><i class="fas fa-hand-paper"></i> Tarik Data</a>
+                {{-- <a href="{{route('apps.dosen.tarik-data')}}" class="btn btn-secondary"><i class="fas fa-hand-paper"></i> Tarik Data</a> --}}
                 <hr>
                 @if(session('success'))
                             <div class="alert alert-success alert-dismissible fade show" role="alert">

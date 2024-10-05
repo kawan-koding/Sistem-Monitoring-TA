@@ -61,7 +61,7 @@ Route::prefix('apps')->middleware('auth')->group(function () {
     Route::get('switcher/{role}', [AuthController::class, 'switcher'])->name('apps.switcher');
     Route::get('dashboard', [DashboardController::class, 'index'])->name('apps.dashboard');
     Route::get('profile', [ProfileController::class, 'index'])->name('apps.profile');
-    Route::post('update', [ProfileController::class, 'update'])->name('apps.profile.update');
+    Route::post('{user}/update', [ProfileController::class, 'update'])->name('apps.profile.update');
 
     Route::prefix('users')->middleware('can:read-users')->group(function () {
         Route::get('', [UserController::class, 'index'])->name('apps.users');
