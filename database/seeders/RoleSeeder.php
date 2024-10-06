@@ -56,12 +56,16 @@ class RoleSeeder extends Seeder
         $kaprodi->givePermissionTo([
             'read-dashboard',
         ]);
+        
         $dosen->givePermissionTo([
             'read-dashboard',
             'read-rekomendasi-topik','create-rekomendasi-topik','update-rekomendasi-topik','delete-rekomendasi-topik',
         ]);
+
         $mahasiswa->givePermissionTo([
             'read-dashboard',
+            'read-rekomendasi-topik','take-rekomendasi-topik',
+            'read-topik-yang-diambil','cancel-topik-yang-diambil',
         ]);
 
     }

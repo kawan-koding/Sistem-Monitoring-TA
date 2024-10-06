@@ -61,9 +61,10 @@ document.querySelectorAll(".filepond").forEach((inputElement) => {
     });
 });
 
-// setTimeout(function () {
-//     $('.alert').fadeOut('slow');
-// }, 5000);
+setTimeout(function () {
+    $('.alert-success').fadeOut('slow');
+    $('.alert-danger').fadeOut('slow');
+}, 5000);
 
 function confirmDelete(title, url) {
     Swal.fire({
@@ -98,6 +99,45 @@ function confirmDelete(title, url) {
                         text: xhr.responseJSON.message
                     });
                 }
+            });
+        }
+    });
+}
+
+function confirmAlert({title, text, confirmButton, data = {}, url}) {
+    Swal.fire({
+        title: title,
+        text: text,
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: confirmButton
+    }).then((result) => {
+        if (result.value) {
+            $.ajax({
+                url: url,
+                type: "POST",
+                data: {
+                    _token: $('meta[name="csrf-token"]').attr('content'),
+                    ...data
+                },
+                success: function (data) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil!',
+                            text: data.message
+                        }).then(() => {
+                            window.location.reload();
+                        });
+                    },
+                    error: function (xhr) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal!',
+                            text: xhr.responseJSON.message
+                        });
+                    }
             });
         }
     });

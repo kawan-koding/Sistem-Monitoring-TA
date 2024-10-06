@@ -25,6 +25,7 @@ function editData(id, urlShow){
         url: urlShow,
         type: "GET",
         dataType: "json",
+
         success: function(response) {
             $('#nip').val(response.nip)
             $('#nidn').val(response.nidn)
