@@ -34,8 +34,7 @@
                             <tr>
                                 <th width="5%">No</th>
                                 <th>Judul Topik</th>
-                                <th>Jenis Penyelesaian</th>
-                                <th>Jenis Topik</th>
+                                <th>Deskripsi</th>
                                 <th>Dosen</th>
                                 <th>Status</th>
                                 <th>Aksi</th>
@@ -46,8 +45,7 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $item->rekomendasiTopik->judul ?? '-'}}</td>
-                                <td>{{ $item->rekomendasiTopik->tipe ?? '-'}}</td>
-                                <td>{{ $item->rekomendasiTopik->jenisTa->nama_jenis ?? '-'}}</td>
+                                <td>{{ $item->description ?? '-'}}</td>
                                 <td>{{ $item->rekomendasiTopik->dosen->name ?? "-"}}</td>
                                 <td>
                                     <span class="badge {{ $item->status == 'Menunggu' ? 'bg-warning' : ($item->status == 'Disetujui' ? 'bg-success' : 'bg-danger') }}">
@@ -55,7 +53,11 @@
                                     </span>
                                 </td>
                                 <td>
+                                    @if($item->status == 'Menunggu')
                                     <button title="Hapus" class="btn btn-danger btn-sm mx-1 my-1" data-toggle="delete-topik" data-url="{{ route('apps.hapus-topik-yang-diambil', $item->id) }}"><i class="bx bx-trash"></i></button>
+                                    @else
+                                    -
+                                    @endif
                                 </td>
                             </tr>
                             @endforeach

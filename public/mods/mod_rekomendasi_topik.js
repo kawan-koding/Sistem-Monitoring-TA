@@ -32,14 +32,11 @@ function editData(id, urlShow) {
 
 $(document).ready(function() {
     $('*[data-toggle="get-topik"]').on('click', function() {
-        const url = $(this).data('url');
-        confirmAlert({
-            title: 'Ambil Topik Ini ?',
-            text: 'Apakah anda yakin ingin mengambil topik ini ?',
-            confirmButton: 'Ya, Saya Yakin!',
-            data: {},
-            url: url,
-        });
+        const id = $(this).data('id');
+        $('#myImportFormulir').attr('action', `${BASE_URL}/apps/rekomendasi-topik/${id}/mengambil-topik`);
+        $('#myModalLabelApply').html('Ambil Topik');
+        $('#description').val('');
+        $('#myModalApply').modal('show');
     });
 });
 

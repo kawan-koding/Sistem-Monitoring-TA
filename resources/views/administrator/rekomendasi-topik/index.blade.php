@@ -95,11 +95,11 @@
                                         @can('delete-rekomendasi-topik')
                                         <button class="btn btn-danger btn-sm mx-1 my-1" data-toggle="delete" data-url="{{ route('apps.program-studi.delete', $item->id) }}" title="Hapus"><i class="bx bx-trash"></i></button>
                                         @endcan
-                                        <button onclick="detailData('{{ $item->id }}')" class="btn btn-success btn-sm mx-1 my-1" title="Detail"><i class="bx bx-detail"></i></button>
+                                        <a href="{{ route('apps.rekomendasi-topik.detail', $item->id) }}" class="btn btn-success btn-sm mx-1 my-1" title="Detail"><i class="bx bx-detail"></i></a>
                                     @endif
 
                                     @if(auth()->user()->hasRole('Mahasiswa') || auth()->user()->hasRole('Developer'))
-                                        <button data-url="{{ route('apps.ambil-topik', $item->id)}}" class="btn btn-success btn-sm mx-1 my-1" data-toggle="get-topik" title="Ambil Topik"><i class="bx bx-check-circle"></i></button>
+                                        <button class="btn btn-success btn-sm mx-1 my-1" data-toggle="get-topik" data-id="{{ $item->id }}" title="Ambil Topik"><i class="bx bx-check-circle"></i></button>
                                     @endif
                                 </td>
                             </tr>
@@ -113,4 +113,5 @@
     </div>
 </div>
 @include('administrator.rekomendasi-topik.partials.modal')
+@include('administrator.rekomendasi-topik.partials.modal-apply')
 @endsection
