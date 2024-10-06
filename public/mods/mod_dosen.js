@@ -32,7 +32,7 @@ function editData(id, urlShow){
             $('#jenis_kelamin').val(response.jenis_kelamin)
             $('#email').val(response.email)
             $('#telp').val(response.telp)
-            // $('#alamat').val(response.alamat)
+            $('#program_studi_id').val(response.program_studi_id)
             $('#idDosen').val(response.id)
         },
         error: function(xhr, status, error) {

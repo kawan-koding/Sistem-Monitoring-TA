@@ -81,7 +81,7 @@
                                 </td>
                                 <td>{{$item->jenis_kelamin == 'L' ? 'Laki-Laki' : 'Perempuan'}}</td>
                                 <td class="text-center">{{$item->programStudi->nama ?? '-'}}</td>
-                                <td class="text-center">{{$item->bidangkeahlian ??  '-'}}</td>
+                                <td class="text-center">{{$item->bidang_keahlian ??  '-'}}</td>
                                 <td class="text-center">
                                     @if (isset($item->ttd))
                                     <a href="{{asset('storage/images/dosen/' .  $item->ttd)}}" target="_blank"><i class="bx bx-file"></i> Lihat</a>

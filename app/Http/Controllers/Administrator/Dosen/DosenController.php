@@ -68,17 +68,27 @@ class DosenController extends Controller
 
             $request->merge(['ttd' => $filename]);
             $dosen = Dosen::create($request->only(['nip', 'nidn', 'name', 'email', 'jenis_kelamin', 'telp', 'ttd', 'program_studi_id', 'bidang_keahlian']));
-            $dsnNew = User::create([
-                'name' => $request->name,
-                'username' => $request->nidn,
-                'email' => $request->email,
-                'password' => Hash::make($request->nidn),
-                'image' => 'default.jpg',
-                'is_active' => 1,
-                'userable_type' => Dosen::class,
-                'userable_id' => $dosen->id
-            ]);
-            $dsnNew->assignRole('Dosen');
+            $existingUser = User::where('username', $dosen->nidn)->orWhere('email', $dosen->email)->first();
+            if(!$existingUser) {
+                $dsnNew = User::create([
+                    'name' => $request->name,
+                    'username' => $request->nidn,
+                    'email' => $request->email,
+                    'password' => Hash::make($request->nidn),
+                    'image' => 'default.jpg',
+                    'is_active' => 1,
+                    'userable_type' => Dosen::class,
+                    'userable_id' => $dosen->id
+                ]);
+                $dsnNew->assignRole('Dosen');
+            } else {
+                if(is_null($existingUser->userable_id) && is_null($existingUser->userable_type)) {
+                    $existingUser->update([
+                        'userable_id' => $dosen->id,
+                        'userable_type' => Dosen::class,
+                    ]);
+                }
+            }
             DB::commit();
             return redirect()->route('apps.dosen')->with('success', 'Data berhasil ditambahkan');
         } catch(\Exception $e) {
@@ -111,15 +121,12 @@ class DosenController extends Controller
 
             $request->merge(['ttd' => $filename]);
             $oldEmail = $dosen->email;
-            $dosen->update($request->only(['nip', 'nidn', 'name', 'email', 'jenis_kelamin', 'telp', 'ttd']));
-            if($oldEmail !== $dosen->email) {
-                $user = $dosen->user;
-                // dd($user);
-                $existingUser = User::where('username', $dosen->nidn)->orWhere('email', $dosen->email)->where('id', '!=', $user->id)->first();
-                if(!$existingUser) {
-                    $request->merge(['username' => $dosen->nidn, 'password' => Hash::make($dosen->nidn)]);
-                    $dosen->user->update($request->only(['name', 'username', 'email', 'password']));
-                }
+            $dosen->update($request->only(['nip', 'nidn', 'name', 'email', 'jenis_kelamin', 'telp', 'ttd', 'bidang_keahlian', 'program_studi_id']));
+            $user = $dosen->user;
+            $existingUser = User::where('username', $dosen->nidn)->orWhere('email', $dosen->email)->where('id', '!=', $user->id)->first();
+            if(!$existingUser) {
+                $request->merge(['username' => $dosen->nidn, 'password' => Hash::make($dosen->nidn)]);
+                $dosen->user->update($request->only(['name', 'username', 'email', 'password']));
             }
             return redirect()->route('apps.dosen')->with('success', 'Data berhasil diperbarui');
         } catch (\Exception $e) {
