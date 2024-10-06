@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Hash;
-use File;
+use Illuminate\Support\Facades\File;
 
 class DosenController extends Controller
 {
@@ -120,7 +120,7 @@ class DosenController extends Controller
                     $dosen->user->update($request->only(['name', 'username', 'email', 'password']));
                 }
             }
-            return redirect()->route('apps.dosen')->with('success', 'Data berhasil diupdate');
+            return redirect()->route('apps.dosen')->with('success', 'Data berhasil diperbarui');
         } catch (\Exception $e) {
             return redirect()->route('apps.dosen')->with('error', $e->getMessage());
         }
