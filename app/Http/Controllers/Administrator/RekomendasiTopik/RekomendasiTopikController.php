@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Administrator\RekomendasiTopik;
 
+use Carbon\Carbon;
 use App\Models\Dosen;
 use App\Models\JenisTa;
 use App\Models\Mahasiswa;
@@ -23,6 +24,7 @@ class RekomendasiTopikController extends Controller
         } else {
             $query = RekomendasiTopik::with(['dosen', 'jenisTa', 'ambilTawaran.mahasiswa'])->where('kuota', '!=', '0')->get();
         }
+
         $data = [
             'title' => 'Rekomendasi Topik TA',
             'mods' => 'rekomendasi_topik',
@@ -83,6 +85,32 @@ class RekomendasiTopikController extends Controller
         }
     }
 
+    public function detail(RekomendasiTopik $rekomendasiTopik) 
+    {
+        $rekomendasiTopik->ambilTawaran;
+
+        $data = [
+            'title' => 'Detail Rekomendasi Topik',
+            'mods' => 'rekomendasi_topik',
+            'breadcrumbs' => [
+                [
+                    'title' => 'Dashboard',
+                    'url' => route('apps.dashboard')
+                ],
+                [
+                    'title' => 'Rekomendasi Topik',
+                    'url' => route('apps.rekomendasi-topik')
+                ],
+                [
+                    'title' => 'Detail Rekomendasi Topik',
+                    'is_active' => true
+                ]
+            ],
+            'data' => $rekomendasiTopik
+        ];
+
+        return view('administrator.rekomendasi-topik.detail', $data);
+    }
     
     public function apply()
     {
@@ -115,33 +143,42 @@ class RekomendasiTopikController extends Controller
         return view('administrator.rekomendasi-topik.apply', $data);
     }
 
-    public function ambilTopik(RekomendasiTopik $rekomendasiTopik)
+    public function ambilTopik(RekomendasiTopik $rekomendasiTopik, Request $request)
     {
+        $request->validate([
+            'description' => 'required',
+        ],[
+            'description.required' => 'Deskripsi harus diisi',
+        ]);
+
         try {
             $user = Auth::user();
             $mhs = Mahasiswa::where('id', $user->userable_id)->first();
-            // dd($mhs);
             if (!$mhs) {
-                return $this->errorResponse(400,'Anda belum terdaftar sebagai mahasiswa');
+                return redirect()->route('apps.rekomendasi-topik')->with('error','Anda belum terdaftar sebagai mahasiswa');
             }
             
             $exists = AmbilTawaran::where('mahasiswa_id', $mhs->id)->where('rekomendasi_topik_id', $rekomendasiTopik->id)->first();
             if ($exists) {
-                return $this->errorResponse(400,'Anda sudah mengambil topik ini');
+                return redirect()->route('apps.rekomendasi-topik')->with('error','Anda sudah mengambil topik ini');
             }
 
             AmbilTawaran::create([
                 'mahasiswa_id' => $mhs->id,
                 'rekomendasi_topik_id' => $rekomendasiTopik->id,
+                'description' => $request->description,
+                'date' => Carbon::now(),
                 'status' => 'Menunggu',
             ]);
 
-            return $this->successResponse('Berhasil mengambil topik');
+            return redirect()->route('apps.rekomendasi-topik')->with('success', 'Berhasil mengirim data');
         } catch (\Exception $e) {
-            return $this->errorResponse($e->getMessage());
+            return redirect()->route('apps.rekomendasi-topik')->with($e->getMessage());
         }
     }
     
+
+
     public function deleteTopik(AmbilTawaran $ambilTawaran)
     {
         try {
@@ -151,4 +188,25 @@ class RekomendasiTopikController extends Controller
             return $this->errorResponse($e->getMessage());
         }
     }
+
+    public function accept(RekomendasiTopik $rekomendasiTopik, Request $request)
+    { 
+        try {
+            $selected = $request->input('selected_items');
+            if(!$selected) {
+                return redirect()->back()->with('error', 'Tidak ada topik yang dipilih.');
+            }
+            foreach ($selected as $id) {
+                $item = AmbilTawaran::find($id);
+                if($item) {
+                    $item->update(['status' => 'Disetujui']);
+                }
+            }
+            $rekomendasiTopik->update(['kuota' => $rekomendasiTopik->kuota - count($selectedItems),]);
+            return redirect()->route('apps.rekomendasi-topik')->with('success', 'Berhasil mengirim data');
+        } catch (\Exception $e) {
+            return redirect()->route('apps.rekomendasi-topik')->with($e->getMessage());
+        }
+    }
+
 }

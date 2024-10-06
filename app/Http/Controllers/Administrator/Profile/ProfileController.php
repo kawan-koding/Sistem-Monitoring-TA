@@ -52,7 +52,7 @@ class ProfileController extends Controller
                 $file = $request->file('fileImage');
                 $filename = 'Users_'. rand(0, 999999999) .'_'. rand(0, 999999999) .'.'. $file->getClientOriginalExtension();
                 $file->move(public_path('storage/images/users'), $filename);
-                if($user->image) {
+                if($user->image !== 'default.jpg') {
                     File::delete(public_path('storage/images/users/'. $user->image));
                 }
             } else {
