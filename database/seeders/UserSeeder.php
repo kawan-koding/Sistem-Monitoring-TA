@@ -30,6 +30,8 @@ class UserSeeder extends Seeder
             'email' => 'admin@gmail.com',
             'password' => Hash::make('admin'),
             'image' => 'default.jpg',
+            'userable_id' => 1,
+            'userable_type' => 'App\Models\Dosen',
             'is_active' => 1
         ])->assignRole('Admin');
 

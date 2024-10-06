@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('dosens', function (Blueprint $table) {
             $table->id();
-            $table->string('nip', 45);
-            $table->string('nidn', 45);
-            $table->string('name', 45);
-            $table->enum('jenis_kelamin', ['L', 'P']);
+            $table->string('nip', 45)->nullable();
+            $table->string('nidn', 45)->nullable();
+            $table->string('name', 45)->nullable();
+            $table->enum('jenis_kelamin', ['L', 'P'])->nullable();
             $table->string('email', 45)->nullable();
             $table->string('telp', 45)->nullable();
             $table->text('ttd')->nullable();    
