@@ -22,7 +22,7 @@ class UserSeeder extends Seeder
             'password' => Hash::make('root'),
             'image' => 'default.jpg',
             'is_active' => 1
-        ])->assignRole('Developer');
+        ])->assignRole(['Developer', 'Admin', 'Kaprodi', 'Mahasiswa','Dosen']);
         
         $admin = User::create([
             'name' => 'admin',

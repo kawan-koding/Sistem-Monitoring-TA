@@ -9,8 +9,11 @@ use App\Models\Mahasiswa;
 use App\Models\AmbilTawaran;
 use Illuminate\Http\Request;
 use App\Models\RekomendasiTopik;
+use App\Mail\RekomendasiTopikMail;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use App\Http\Requests\RekomendasiTopik\RekomendasiTopikRequest;
 
 class RekomendasiTopikController extends Controller
@@ -192,20 +195,61 @@ class RekomendasiTopikController extends Controller
     public function accept(RekomendasiTopik $rekomendasiTopik, Request $request)
     { 
         try {
+            DB::beginTransaction();
             $selected = $request->input('selected_items');
             if(!$selected) {
-                return redirect()->back()->with('error', 'Tidak ada topik yang dipilih.');
+                return redirect()->back()->with('error', 'Pilih setidaknya 1 untuk disetujui.');
             }
             foreach ($selected as $id) {
                 $item = AmbilTawaran::find($id);
                 if($item) {
                     $item->update(['status' => 'Disetujui']);
                 }
+                $mahasiswa = $item->mahasiswa;
+                if ($mahasiswa) {
+                   Mail::to($mahasiswa->email)->send(new RekomendasiTopikMail($rekomendasiTopik, $mahasiswa));
+                }
             }
-            $rekomendasiTopik->update(['kuota' => $rekomendasiTopik->kuota - count($selectedItems),]);
-            return redirect()->route('apps.rekomendasi-topik')->with('success', 'Berhasil mengirim data');
+            $rekomendasiTopik->update(['kuota' => $rekomendasiTopik->kuota - count($selected),]);
+
+            DB::commit();
+            return redirect()->route('apps.rekomendasi-topik.detail', $rekomendasiTopik)->with('success', 'Berhasil menyetujui data');
         } catch (\Exception $e) {
-            return redirect()->route('apps.rekomendasi-topik')->with($e->getMessage());
+            return redirect()->back()->with($e->getMessage());
+        }
+    }
+
+    public function deleteMhs(RekomendasiTopik $rekomendasiTopik)
+    {
+        try {
+            $ambilTawaran = AmbilTawaran::where('rekomendasi_topik_id', $rekomendasiTopik->id)->first();
+            $ambilTawaran->delete();
+            $rekomendasiTopik->increment('kuota');
+
+            return $this->successResponse('Berhasil menghapus data');
+        } catch(\Exception $e) {
+            return $this->exceptionResponse($e);
+        }
+    }
+
+    public function reject(RekomendasiTopik $rekomendasiTopik, Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            $selected = $request->input('selected_items');
+            if (!$selected) {
+                return redirect()->back()->with('error', 'Pilih setidaknya 1 untuk ditolak.');
+            }
+            foreach ($selected as $id) {
+                $item = AmbilTawaran::find($id);
+                if ($item) {
+                    $item->update(['status' => 'Ditolak']);
+                }
+            }
+            DB::commit();
+            return redirect()->route('apps.rekomendasi-topik.detail', $rekomendasiTopik)->with('success', 'Berhasil menolak data');
+        } catch(\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
