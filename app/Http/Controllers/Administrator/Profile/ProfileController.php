@@ -14,17 +14,8 @@ class ProfileController extends Controller
 {
     public function index()
     {
-        // $user = Auth::user();
-        
-        // if($user->userable_type == Mahasiswa::class) {
-        //     $profile = Mahasiswa::find($user->userable_id);
-        //     // dd($profile);
-        // } 
-
-        // if($user->userable_type == Dosen::class) {
-        //     $profile = Dosen::find($user->userable_id);
-        // }
-
+        $user = Auth::user();
+        $bidangKeahlian = $user->userable->bidang_keahlian ? explode(',', $user->userable->bidang_keahlian) : [];
         $data = [
             'title' => 'Profile',
             'breadcrumbs' => [
@@ -37,10 +28,12 @@ class ProfileController extends Controller
                     'is_active' => true
                 ]
             ],
-            'profile' => Auth::user(),
+            'profile' => $user,
+            'bidangKeahlian' => $bidangKeahlian,
+            
         ];
 
-        // dd(Auth::user());
+        // dd($bidangKeahlian);
 
         return view('administrator.profile.index', $data);
     }
@@ -81,6 +74,7 @@ class ProfileController extends Controller
                 $user->userable->telp = $request->telp;
                 $user->userable->jenis_kelamin = $jenisKelamin[$request->jenis_kelamin];
             } else if($user->hasRole(['Dosen', 'Admin', 'Kaprodi'])) {
+                // dd($request->all());
                 $request->validate([
                     'name' => 'required',
                     'telp' => 'required',
@@ -99,7 +93,7 @@ class ProfileController extends Controller
                 $user->userable->name = $request->name;
                 $user->userable->telp = $request->telp;
                 $user->userable->jenis_kelamin = $request->jenis_kelamin;
-                $user->userable->bidang_keahlian = $request->bidang_keahlian;
+                $user->userable->bidang_keahlian = implode(', ',$request->bidang_keahlian);
                 if($request->hasFile('file')) {
                     $file = $request->file('file');
                     $filename = 'Dosen_'. rand(0, 999999999) .'_'. rand(0, 999999999) .'.'. $file->getClientOriginalExtension();

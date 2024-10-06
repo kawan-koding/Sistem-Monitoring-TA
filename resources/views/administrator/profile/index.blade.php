@@ -119,9 +119,12 @@
                                 @if ($profile->hasRole(['Dosen', 'Admin', 'Kaprodi']))
                                     <div class="mb-3">
                                         <label for="">Bidang Keahlian</label>
-                                        <select class="tagging-example form-control" multiple="multiple" name="bidang_keahlian"></select>
-                                        <span class="small text-danger"><i>*Tekan enter untuk menambahkan bidang keahlian dan gunakan tanda (-) sebagai sebagai pemisah</i></span><br>
-                                        {{-- <span class="small text-danger"><i>*</i></span> --}}
+                                        <select class="tagging-example form-control" multiple="multiple" name="bidang_keahlian[]">
+                                            @foreach ($bidangKeahlian as $item)
+                                                <option value="{{$item}}" selected>{{$item}}</option>
+                                            @endforeach
+                                        </select>
+                                        {{-- <span class="small text-danger"><i>*Tekan enter untuk menambahkan bidang keahlian dan gunakan tanda (-) sebagai sebagai pemisah</i></span><br> --}}
                                     </div>
                                 @endif
                                 @if ($profile->hasRole(['Dosen', 'Admin', 'Kaprodi']))
@@ -157,7 +160,7 @@
         $('.tagging-example').select2({
             tags: true,
             placeholder: "Tambahkan Bidang Keahlian",
-            tokenSeparators: [',', ' '],
+            tokenSeparators: [','],
         })
     });
   </script>
