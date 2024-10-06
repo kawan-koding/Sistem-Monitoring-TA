@@ -20,4 +20,9 @@ class RekomendasiTopik extends Model
     {
         return $this->belongsTo(Dosen::class);
     }
+
+    public function ambilTawaran()
+    {
+        return $this->hasMany(AmbilTawaran::class);
+    }
 }
