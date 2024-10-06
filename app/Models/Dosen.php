@@ -22,4 +22,9 @@ class Dosen extends Model
     {
         return $this->morphOne(User::class, 'userable');
     }
+
+    public function programStudi()
+    {
+        return $this->belongsTo(ProgramStudi::class);
+    }
 }

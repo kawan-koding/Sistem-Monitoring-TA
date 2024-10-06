@@ -106,6 +106,8 @@
             <script src="{{ asset('mods/mod_' . $mods . '.js') }}"></script>
         @endif
     @endif
+
+    @yield('js')
 </body>
 
 </html>

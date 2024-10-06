@@ -41,7 +41,7 @@ class DosenController extends Controller
                     'is_active' => true
                 ],
             ],
-            'dataDosen' => Dosen::all(),
+            'dataDosen' => Dosen::with(['programStudi', 'user'])->get(),
             'jurusan' => Jurusan::all(),
             'studyPrograms' => ProgramStudi::all(),
         ];
@@ -52,7 +52,6 @@ class DosenController extends Controller
     
     public function store(DosenRequest $request)
     {
-        // dd($request->all());
         try {
             DB::beginTransaction();
             $user = User::where('username', $request->nidn)->first();
@@ -63,10 +62,12 @@ class DosenController extends Controller
                 $file = $request->file('file');
                 $filename = 'Dosen_'. rand(0, 999999999) .'_'. rand(0, 999999999) .'.'. $file->getClientOriginalExtension();
                 $file->move(public_path('storage/images/dosen'), $filename);
+            } else {
+                $filename = null;
             }
 
             $request->merge(['ttd' => $filename]);
-            $dosen = Dosen::create($request->only(['nip', 'nidn', 'name', 'email', 'jenis_kelamin', 'telp', 'ttd']));
+            $dosen = Dosen::create($request->only(['nip', 'nidn', 'name', 'email', 'jenis_kelamin', 'telp', 'ttd', 'program_studi_id', 'bidang_keahlian']));
             $dsnNew = User::create([
                 'name' => $request->name,
                 'username' => $request->nidn,

@@ -20,7 +20,8 @@ return new class extends Migration
             $table->string('email', 45)->nullable();
             $table->string('telp', 45)->nullable();
             $table->text('ttd')->nullable();    
-            // $table->morphs('model');
+            $table->string('bidang_keahlian')->nullable();
+            $table->foreignId('program_studi_id')->nullable()->references('id')->on('program_studis')->onDelete('cascade');
             $table->timestamps();
         });
     }

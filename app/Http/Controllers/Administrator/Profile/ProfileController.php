@@ -52,7 +52,7 @@ class ProfileController extends Controller
                 $file = $request->file('fileImage');
                 $filename = 'Users_'. rand(0, 999999999) .'_'. rand(0, 999999999) .'.'. $file->getClientOriginalExtension();
                 $file->move(public_path('storage/images/users'), $filename);
-                if($user->image) {
+                if($user->image !== 'default.jpg') {
                     File::delete(public_path('storage/images/users/'. $user->image));
                 }
             } else {
@@ -86,6 +86,7 @@ class ProfileController extends Controller
                     'telp' => 'required',
                     'jenis_kelamin' => 'required',
                     'file' => 'nullable|mimes:png,jpg,jpeg',
+                    'bidang_keahlian' => 'nullable',
                 ],
                 [
                     'name.required' => 'Nama harus diisi',
@@ -98,6 +99,7 @@ class ProfileController extends Controller
                 $user->userable->name = $request->name;
                 $user->userable->telp = $request->telp;
                 $user->userable->jenis_kelamin = $request->jenis_kelamin;
+                $user->userable->bidang_keahlian = $request->bidang_keahlian;
                 if($request->hasFile('file')) {
                     $file = $request->file('file');
                     $filename = 'Dosen_'. rand(0, 999999999) .'_'. rand(0, 999999999) .'.'. $file->getClientOriginalExtension();

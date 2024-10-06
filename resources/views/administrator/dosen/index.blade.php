@@ -52,6 +52,8 @@
                                 <th>Nama</th>
                                 <th>Email</th>
                                 <th>Jenis Kelamin</th>
+                                <th>Program Studi</th>
+                                <th>Bidang Keahlian</th>
                                 <th>Tanda Tangan</th>
                                 <th width="20%">Aksi</th>
                             </tr>
@@ -78,6 +80,8 @@
                                     </div>
                                 </td>
                                 <td>{{$item->jenis_kelamin == 'L' ? 'Laki-Laki' : 'Perempuan'}}</td>
+                                <td class="text-center">{{$item->programStudi->nama ?? '-'}}</td>
+                                <td class="text-center">{{$item->bidangkeahlian ??  '-'}}</td>
                                 <td class="text-center">
                                     @if (isset($item->ttd))
                                     <a href="{{asset('storage/images/dosen/' .  $item->ttd)}}" target="_blank"><i class="bx bx-file"></i> Lihat</a>

@@ -41,6 +41,15 @@ aria-labelledby="myModalLabel" aria-hidden="true">
                     <input type="text" name="telp" id="telp" class="form-control">
                 </div>
                 <div class="mb-3">
+                    <label for="">Program Studi</label>
+                    <select name="program_studi_id" id="program_studi_id" class="form-control">
+                        <option value="">Pilih Program Studi</option>
+                        @foreach ($studyPrograms as $item)
+                        <option value="{{ $item->id}}">{{$item->nama}}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="mb-3">
                     <label for="">TTD </label>
                     <input type="file" name="file" id="file" class="form-control filepond">
                 </div>
