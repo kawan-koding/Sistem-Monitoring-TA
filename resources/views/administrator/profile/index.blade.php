@@ -76,7 +76,7 @@
                                         <td class="font-size-13">{{$profile->userable->kelas}}</td>
                                     </tr>
                                     @endif
-                                    @if ($profile->hasRole('Mahsiswa'))
+                                    @if ($profile->hasRole('Mahasiswa'))
                                     <tr>
                                         <td class="font-size-13 fw-bold text-end" style="white-space: nowrap; vertical-align: top;">Program Studi</td>
                                         <td class="font-size-13" style="vertical-align: top">:</td>
