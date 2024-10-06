@@ -61,6 +61,10 @@ class ProfileController extends Controller
             $user->image = $filename;
 
             if($user->hasRole('Mahasiswa')) {
+                $jenisKelamin = [
+                    'L' => 'Laki-laki',
+                    'P' => 'Perempuan',
+                ];
                 $request->validate([
                     'name' => 'required',
                     'telp' => 'required',
@@ -75,7 +79,7 @@ class ProfileController extends Controller
                 $user->name = $request->name;
                 $user->userable->nama_mhs = $request->name;
                 $user->userable->telp = $request->telp;
-                $user->userable->jenis_kelamin = $request->jenis_kelamin;
+                $user->userable->jenis_kelamin = $jenisKelamin[$request->jenis_kelamin];
             } else if($user->hasRole(['Dosen', 'Admin', 'Kaprodi'])) {
                 $request->validate([
                     'name' => 'required',
