@@ -24,7 +24,6 @@ class DatabaseSeeder extends Seeder
             TopikSeeder::class,
             JurusanSeeder::class,
             ProgramStudiSeeder::class,
-            DosenSeeder::class,
         ]);
     }
 }

@@ -67,7 +67,7 @@ class DosenController extends Controller
             }
 
             $request->merge(['ttd' => $filename]);
-            $dosen = Dosen::create($request->only(['nip', 'nidn', 'name', 'email', 'jenis_kelamin', 'telp', 'ttd', 'program_studi_id', 'bidang_keahlian']));
+            $dosen = Dosen::create($request->only(['nip', 'nidn', 'name', 'email', 'jenis_kelamin', 'telp', 'ttd', 'program_studi_id', 'bidang_keahlian', 'alamat']));
             $existingUser = User::where('username', $dosen->nidn)->orWhere('email', $dosen->email)->first();
             if(!$existingUser) {
                 $dsnNew = User::create([
@@ -121,7 +121,7 @@ class DosenController extends Controller
 
             $request->merge(['ttd' => $filename]);
             $oldEmail = $dosen->email;
-            $dosen->update($request->only(['nip', 'nidn', 'name', 'email', 'jenis_kelamin', 'telp', 'ttd', 'bidang_keahlian', 'program_studi_id']));
+            $dosen->update($request->only(['nip', 'nidn', 'name', 'email', 'jenis_kelamin', 'telp', 'ttd', 'bidang_keahlian', 'program_studi_id','alamat']));
             $user = $dosen->user;
             $existingUser = User::where('username', $dosen->nidn)->orWhere('email', $dosen->email)->where('id', '!=', $user->id)->first();
             if(!$existingUser) {

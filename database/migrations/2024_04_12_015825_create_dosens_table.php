@@ -13,12 +13,13 @@ return new class extends Migration
     {
         Schema::create('dosens', function (Blueprint $table) {
             $table->id();
-            $table->string('nip', 45)->nullable();
-            $table->string('nidn', 45)->nullable();
-            $table->string('name', 45)->nullable();
+            $table->string('nip')->nullable();
+            $table->string('nidn')->nullable();
+            $table->string('name')->nullable();
             $table->enum('jenis_kelamin', ['L', 'P'])->nullable();
-            $table->string('email', 45)->nullable();
-            $table->string('telp', 45)->nullable();
+            $table->string('email')->nullable();
+            $table->string('telp')->nullable();
+            $table->text('alamat')->nullable();
             $table->text('ttd')->nullable();    
             $table->string('bidang_keahlian')->nullable();
             $table->foreignId('program_studi_id')->nullable()->references('id')->on('program_studis')->onDelete('cascade');

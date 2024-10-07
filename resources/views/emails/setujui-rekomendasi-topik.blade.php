@@ -1,26 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-<body>
-    
-    <h1>Selamat {{ $mahasiswa->nama_mhs }},</h1>
-    
-    <p>Anda telah disetujui untuk topik berikut:</p>
-
-    <ul>
-        <li><strong>Judul Topik:</strong> {{ $rekomendasiTopik->judul }}</li>
-        <li><strong>Dosen Pembimbing:</strong> {{ $rekomendasiTopik->dosen->name }}</li>
+<div>
+    <h2>Selamat atas pilihan topik Tugas Akhir Anda!</h2>
+    <p>Kepada, <b>{{ $mahasiswa->nama_mhs }}</b></p>
+    <p style="text-align: justify ">Kami dengan sengan hati mengonfirmasi bahwa anda telah disetujui mengambil topik Tugas Akhir yang ditawarkan oleh :</p>
+    <ul style="margin-left: -20px;">
+        <li>Calon Dosen Pembimbing:<strong> {{ $rekomendasiTopik->dosen->name }} </strong></li>
+        <li>Judul Topik:<strong> {{ $rekomendasiTopik->judul }}</strong></li>
     </ul>
-
-    <p>Silakan hubungi dosen pembimbing Anda untuk langkah selanjutnya.</p>
-
-    <p>Terima kasih,</p>
-    <p>Tim Rekomendasi Topik</p>
-</body>
-</html>
+    <p>Kami berharap Anda menjalani penelitian ini dengan penuh semangat dan dedikasi.</p>
+    <p style="text-align: justify ">Selanjutnya silahkan hubungi calon dosen pembimbing anda untuk berdiskusi lebih lanjut terkait topik Tugas Akhir anda.</p>
+    <p>Terima kasih</p>
+</div>    
 

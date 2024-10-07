@@ -26,7 +26,7 @@ aria-labelledby="myModalLabel" aria-hidden="true">
                 </div>
                 <div class="mb-3">
                     <label for="">Email <span class="text-danger">*</span></label>
-                    <input type="text" name="email" id="email" class="form-control" required>
+                    <input type="email" name="email" id="email" class="form-control" required>
                 </div>
                 <div class="mb-3">
                     <label for="">Jenis Kelamin <span class="text-danger">*</span></label>
@@ -39,6 +39,10 @@ aria-labelledby="myModalLabel" aria-hidden="true">
                 <div class="mb-3">
                     <label for="">Telp</label>
                     <input type="text" name="telp" id="telp" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="">Alamat</label>
+                    <input type="text" name="alamat" id="alamat" class="form-control">
                 </div>
                 <div class="mb-3">
                     <label for="">Program Studi</label>
@@ -82,7 +86,7 @@ aria-labelledby="myModalLabel" aria-hidden="true">
         <form action="" enctype="multipart/form-data" id="myImportFormulir" method="post">
             @csrf
             <div class="modal-body">
-                <a href="{{asset('Dosen-Excel.xlsx')}}" class="btn btn-sm btn-success"><i class="fa fa-file-excel"></i> Template</a>
+                <a href="{{ asset('assets/files/Dosen.xlsx')}}" class="btn btn-sm btn-success"><i class="fa fa-file-excel"></i> Template</a>
                 <hr>
                 <div>
                     <label for="">File</label>

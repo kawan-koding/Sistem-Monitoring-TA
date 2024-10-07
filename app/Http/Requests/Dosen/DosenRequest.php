@@ -47,6 +47,7 @@ class DosenRequest extends FormRequest
             ],
             'jenis_kelamin' => 'required',
             'telp' => 'nullable',
+            'alamat' => 'nullable',
             'program_studi_id' => 'nullable',
             'file' => 'nullable|image|mimes:png,jpg,jpeg',
         ];

@@ -22,7 +22,7 @@ class DosenImport implements ToModel, WithHeadingRow
             return null;
         }
         $gender = strtoupper($row['jenis_kelamin']) === 'P' ? 'P' : 'L';
-        $dsn = new Dosen(['nip' => $row['nip'], 'nidn' => $row['nidn'], 'name' => $row['name'],'email' => $row['email'],'jenis_kelamin' => $gender,'telp' => $row['telp']]);
+        $dsn = new Dosen(['nip' => $row['nip'], 'nidn' => $row['nidn'], 'name' => $row['name'],'email' => $row['email'],'jenis_kelamin' => $gender,'telp' => $row['telp'], 'alamat' => $row['alamat']]);
         $dsn->save();
         $existingUser = User::where('email', $row['email'])->orWhere('username', $row['nidn'])->first();
         if ($existingUser) {

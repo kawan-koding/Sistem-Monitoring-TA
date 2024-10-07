@@ -49,7 +49,7 @@
                                 <th>Jenis Penyelesaian</th>
                                 <th>Jenis Topik</th>
                                 @if(auth()->user()->hasRole('Dosen') || auth()->user()->hasRole('Developer'))
-                                <th>Di Pick Up Oleh</th>
+                                <th>Pengambil:</th>
                                 @endif
                                 @if(auth()->user()->hasRole('Mahasiswa') || auth()->user()->hasRole('Developer'))
                                 <th>Nama Dosen</th>

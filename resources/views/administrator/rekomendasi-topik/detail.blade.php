@@ -55,7 +55,7 @@
                 <a href="{{ route('apps.rekomendasi-topik') }}" class="btn btn-light">Kembali</a>
                 @if($data->ambilTawaran->count() > 0)
                 <button  data-url="{{ route('apps.tolak-mahasiswa-yang-terkait', $data->id) }}" data-toggle="reject-mhs" class="btn btn-danger">Tolak</button>
-                <button  data-url="{{ route('apps.rekomendasi-topik.accept', $data->id) }}" data-toggle="approve-mhs" class="btn btn-primary">Simpan</button>
+                <button  data-url="{{ route('apps.rekomendasi-topik.accept', $data->id) }}" data-toggle="approve-mhs" class="btn btn-primary">Setujui</button>
                 @endif
             </div>
         </form>
