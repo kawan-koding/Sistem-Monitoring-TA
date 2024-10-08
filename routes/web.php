@@ -148,8 +148,8 @@ Route::prefix('apps')->middleware('auth')->group(function () {
 
     Route::prefix('pengajuan-ta')->group(function () {
         Route::get('', [PengajuanTAController::class, 'index'])->name('apps.pengajuan-ta');
-        // Route::get('/create', [PengajuanTaMahasiswaController::class, 'create'])->name('mahasiswa.pengajuan-ta.create')->middleware('can:read-pengajuanta-mahasiswa');
-        // Route::post('/store', [PengajuanTaMahasiswaController::class, 'store'])->name('mahasiswa.pengajuan-ta.store');
+        Route::get('create', [PengajuanTAController::class, 'create'])->name('apps.pengajuan-ta.create');
+        Route::post('store', [PengajuanTAController::class, 'store'])->name('apps.pengajuan-ta.store');
         // Route::get('/edit/{id}', [PengajuanTaMahasiswaController::class, 'edit'])->name('mahasiswa.pengajuan-ta.edit');
         // Route::post('/update/{id}', [PengajuanTaMahasiswaController::class, 'update'])->name('mahasiswa.pengajuan-ta.update');
         // Route::get('/show/{id}', [PengajuanTaMahasiswaController::class, 'show'])->name('mahasiswa.pengajuan-ta.show');

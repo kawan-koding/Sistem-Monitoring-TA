@@ -174,55 +174,55 @@ class DosenController extends Controller
         }
     }
     
-    public function tarikData(){
-        try{
-            //dd($response);
-            $token = env("KEY_BEARER_TOKEN");
-            if (!isset($token)) {
-                return redirect()->route('apps.dosen')->with('error', 'Set token bearer terlebih dahulu');
-            }
+    // public function tarikData(){
+    //     try{
+    //         //dd($response);
+    //         $token = env("KEY_BEARER_TOKEN");
+    //         if (!isset($token)) {
+    //             return redirect()->route('apps.dosen')->with('error', 'Set token bearer terlebih dahulu');
+    //         }
             
-            $response = Http::withoutVerifying()
-            ->withHeaders([
-                'Accept' => 'application/json',
-                'Authorization' => 'Bearer ' . env('KEY_BEARER_TOKEN'),
-            ])
-            ->get('https://sit.poliwangi.ac.id/v2/api/v1/sitapi/pegawai', [
-                'prodi' => 4,
-            ]);
-            $data = $response->json()['data']; 
-            // dd($data);
-            foreach ($data as $key) {
+    //         $response = Http::withoutVerifying()
+    //         ->withHeaders([
+    //             'Accept' => 'application/json',
+    //             'Authorization' => 'Bearer ' . env('KEY_BEARER_TOKEN'),
+    //         ])
+    //         ->get('https://sit.poliwangi.ac.id/v2/api/v1/sitapi/pegawai', [
+    //             'prodi' => 4,
+    //         ]);
+    //         $data = $response->json()['data']; 
+    //         // dd($data);
+    //         foreach ($data as $key) {
                 
-                $cek_user = User::where('username', $key['username'])->first();
-                if(!isset($cek_user->id) && isset($key['username'])){
-                    $dsnNew = User::create([
-                        'name' => $key['nama'],
-                        'username' => $key['username'],
-                        // 'email' => $request->email,
-                        'password' => password_hash($key['username'], PASSWORD_DEFAULT),
-                        'picture' => 'default.jpg',
-                        'is_active' => 1,
-                    ]);
-                    $dsnNew->assignRole('dosen');
-                    $user = User::where('username', $key['username'])->first();
-                    // Potensi kode yang dapat menyebabkan pengecualian
-                    $result = Dosen::create([
-                        'user_id' => $user->id,
-                        'nip' => $key['nip'],
-                        'nidn' => $key['nip'],
-                        'name' => $key['nama'],
-                        'email' => null,
-                        'jenis_kelamin' => $key['jenis_kelamin'],
-                        'telp' => '081',
-                        'ttd' => null,
-                    ]);
-                }
-            }
+    //             $cek_user = User::where('username', $key['username'])->first();
+    //             if(!isset($cek_user->id) && isset($key['username'])){
+    //                 $dsnNew = User::create([
+    //                     'name' => $key['nama'],
+    //                     'username' => $key['username'],
+    //                     // 'email' => $request->email,
+    //                     'password' => password_hash($key['username'], PASSWORD_DEFAULT),
+    //                     'picture' => 'default.jpg',
+    //                     'is_active' => 1,
+    //                 ]);
+    //                 $dsnNew->assignRole('dosen');
+    //                 $user = User::where('username', $key['username'])->first();
+    //                 // Potensi kode yang dapat menyebabkan pengecualian
+    //                 $result = Dosen::create([
+    //                     'user_id' => $user->id,
+    //                     'nip' => $key['nip'],
+    //                     'nidn' => $key['nip'],
+    //                     'name' => $key['nama'],
+    //                     'email' => null,
+    //                     'jenis_kelamin' => $key['jenis_kelamin'],
+    //                     'telp' => '081',
+    //                     'ttd' => null,
+    //                 ]);
+    //             }
+    //         }
 
-            return redirect()->route('apps.dosen')->with('success', 'Data berhasil ditarik!');
-        }catch(\Exception $e){
-            return redirect()->route('apps.dosen')->with('error', $e->getMessage());
-        }
-    }
+    //         return redirect()->route('apps.dosen')->with('success', 'Data berhasil ditarik!');
+    //     }catch(\Exception $e){
+    //         return redirect()->route('apps.dosen')->with('error', $e->getMessage());
+    //     }
+    // }
 }

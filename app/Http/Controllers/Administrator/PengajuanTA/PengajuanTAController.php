@@ -7,38 +7,22 @@ use App\Models\TugasAkhir;
 use Illuminate\Http\Request;
 use App\Models\JadwalSeminar;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\PengajuanTA\PengajuanTARequest;
+use App\Models\BimbingUji;
+use App\Models\Dosen;
+use App\Models\JenisTa;
+use App\Models\KuotaDosen;
+use App\Models\PeriodeTa;
+use App\Models\Topik;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class PengajuanTAController extends Controller
 {
     public function index()
     {
-        // $myId = Auth::guard('web')->user()->username;
-        // $mahasiswa = Mahasiswa::where('nim', $myId)->first();
-        // $ta = TugasAkhir::with(['jenis_ta', 'topik'])->where('mahasiswa_id', $mahasiswa->id)->first();
-
-        // $seminar = null;
-        // if(isset($ta->id)){
-
-        //     $seminar = JadwalSeminar::where('tugas_akhir_id', $ta->id)->first();
-        // }
-
-        // if ($seminar) {
-        //     $waktu_sekarang = date('Y-m-d H:i:s');
-        //     $tgl_sekarang = date('Y-m-d');
-        //     $wk = ($seminar->tanggal . ' ' . $seminar->jam_selesai);
-        //     if ($waktu_sekarang > $wk && $tgl_sekarang >= $seminar->tanggal) {
-        //         $waktu = 'selesai';
-        //     } else {
-        //         $waktu = 'tidak selesai';
-        //     }
-        // } else {
-        //     $waktu = 'seminar tidak ditemukan';
-        // }
-
         $data = [
             'title' => 'Pengajuan Tugas Akhir',
-            'mods' => 'pengajuan_ta',
             'breadcrumbs' => [
                 [
                     'title' => 'Dashboard',
@@ -52,20 +36,9 @@ class PengajuanTAController extends Controller
                     'is_active' => true
                 ]
             ],
-            // 'timer' => $waktu,
-            // 'data' => TugasAkhir::with(['jenis_ta', 'topik'])->where('mahasiswa_id', $mahasiswa->id)->get(),
         ];
         
         return view('administrator.pengajuan-ta.index', $data);
-
-        // return view('mahasiswa-menu.pengajuan.index', [
-        //     "title" => "Pengajuan TA",
-        //     "breadcrumb1" => "Pengajuan TA",
-        //     "breadcrumb2" => "Index",
-        //     'dataTA'   => TugasAkhir::with(['jenis_ta', 'topik'])->where('mahasiswa_id', $mahasiswa->id)->get(),
-        //     'timer' => $waktu,
-        //     'jsInit'      => 'js_jadwal_bimbingan_mahasiswa.js',
-        // ]);
     }
 
     public function create()
@@ -95,7 +68,6 @@ class PengajuanTAController extends Controller
             'dataTopik'   => Topik::all(),
             'dataDosen'   => $dosen,
             'dosenKuota'   => $dosen,
-            'mods' => 'pengajuan_ta',
             'breadcrumbs' => [
                 [
                     'title' => 'Dashboard',
@@ -112,32 +84,17 @@ class PengajuanTAController extends Controller
             ],
         ];
 
-        return view('administrator.pengajuan-ta.form', $data);
+        // dd(JenisTa::all());
+
+        return view('administrator.pengajuan-ta.partials.form', $data);
     }
 
-    public function store(Request $request)
-    {
+    public function store(PengajuanTARequest $request)
+    {   
+        // dd($request->all());
         try {
-
-            $rules = [
-                // 'dokumen_pembimbing_1' => 'required|mimes:pdf,docx',
-                'dokumen_ringkasan' => 'required|mimes:docx,pdf',
-            ];
-
-            $messages = [
-                // 'dokumen_pembimbing_1.required' => 'Dokumen pembimbing 1 tidak boleh kosong!',
-                'dokumen_ringkasan.required' => 'Dokumen ringkasan tidak boleh kosong!',
-                'dokumen_ringkasan.mimes' => 'Dokumen ringkasan harus dalam format PDF atau DOCX.',
-                'dokumen_pembimbing_1.mimes' => 'Dokumen pembimbing 1 harus dalam format PDF atau DOCX.',
-            ];
-
-            $validator = Validator::make($request->all(), $rules, $messages);
-            if ($validator->fails()) {
-                return redirect()->back()->withErrors($validator)->withInput($request->all())->with('gagal', 'Anda gagal menambahkan data!!');
-            }
-
             $periode = PeriodeTa::where('is_active', 1)->first();
-            $myId = Auth::guard('web')->user()->username;
+            $myId = Auth::user()->username;
             $mahasiswa = Mahasiswa::where('nim', $myId)->first();
             $docPemb1 = null;
             $docRing = null;
@@ -146,8 +103,8 @@ class PengajuanTAController extends Controller
             $bimbingUji = BimbingUji::with(['tugas_akhir', 'dosen'])->where('jenis', 'pembimbing')->where('urut', 1)->where('dosen_id', $request->pemb_1)->whereHas('tugas_akhir', function ($q) use($periode){
                 $q->where('periode_ta_id', $periode->id);
             })->count();
-
-            if($bimbingUji >= $kuota->pemb_1){
+            // dd(!is_null($kuota) ? $kuota->pemb_1 : 0);
+            if($bimbingUji >= (!is_null($kuota) ? $kuota->pemb_1 : 0)){
 
                 return redirect()->back()->with('error', 'Kuota dosen pembimbing 1 yang di pilih telah mencapai batas');
 
@@ -188,11 +145,11 @@ class PengajuanTAController extends Controller
                 ]
             );
 
-            return redirect()->route('mahasiswa.pengajuan-ta')->with('success', 'Data berhasil ditambahkan');
+            return redirect()->route('apps.pengajuan-ta')->with('success', 'Data berhasil ditambahkan');
         } catch (\Exception $e) {
 
-            // dd($e->getMessage());
-            return redirect()->route('mahasiswa.pengajuan-ta')->with('error', $e->getMessage())->withInput($request->all());
+            dd($e->getMessage());
+            // return redirect()->route('apps.pengajuan-ta')->with('error', $e->getMessage())->withInput($request->all());
         }
     }
 }
