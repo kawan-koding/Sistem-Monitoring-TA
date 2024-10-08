@@ -2,17 +2,35 @@
 
 @section('content')
 
+@if(session('success'))
+   <div class="alert alert-success alert-dismissible fade show" role="alert">
+       <i class="mdi mdi-check-all me-2"></i> {{ session('success') }}
+       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+       </button>
+   </div>
+@endif
+@if(session('error'))
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+   <i class="mdi mdi-block-helper me-2"></i>{{ session('error') }}
+   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+   </button>
+</div>
+@endif
 <div class="card">
     <div class="card-body">
         <p><strong>Judul : {{ $data->judul}}</strong></p>
         <hr>
-       <form id="approveForm" method="POST" action="{{ route('apps.rekomendasi-topik.accept', $data->id) }}">
+       <form id="approveForm" method="POST" action="">
             @csrf
-            @foreach ($data->ambilTawaran as $item)
+            @forelse ($data->ambilTawaran as $item)
                 <div class="faq-box d-flex align-items-start mb-4">
                     @if($item->status == 'Menunggu')
                     <div class="faq-icon me-3">
                         <input type="checkbox" name="selected_items[]" value="{{ $item->id }}" class="approve-checkbox">
+                    </div>
+                    @else 
+                    <div class="me-3">
+                        <button type="button" data-toggle="delete-mhs" data-url="{{ route('apps.hapus-mahasiswa-yang-terkait', $item->id)}}" class="btn btn-sm" title="Hapus"><i class="fas fa-trash-alt text-danger"></i></button>
                     </div>
                     @endif
                     <div class="flex-1">
@@ -27,10 +45,18 @@
                         <p class="text-muted">{{ $item->description }}</p>
                     </div>
                 </div>
-            @endforeach
+            @empty
+                <div class="text-center">
+                    <p class="text-muted">Tidak ada data</p>
+                </div>
+            @endforelse
+
             <div class="text-end">
                 <a href="{{ route('apps.rekomendasi-topik') }}" class="btn btn-light">Kembali</a>
-                <button type="submit" class="btn btn-primary">Simpan</button>
+                @if($data->ambilTawaran->count() > 0)
+                <button  data-url="{{ route('apps.tolak-mahasiswa-yang-terkait', $data->id) }}" data-toggle="reject-mhs" class="btn btn-danger">Tolak</button>
+                <button  data-url="{{ route('apps.rekomendasi-topik.accept', $data->id) }}" data-toggle="approve-mhs" class="btn btn-primary">Setujui</button>
+                @endif
             </div>
         </form>
     </div>

@@ -3,6 +3,7 @@
     <div class="">
         <h5 class="m-0">Informasi Profile</h5>
         <p class="text-muted font-size-13">Perbarui informasi profile anda</p>
+        
         @if (session('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 <i class="mdi mdi-check-all me-2"></i> {{ session('success') }}
@@ -47,45 +48,45 @@
                                     <tr>
                                         <td class="font-size-13 fw-bold text-end">NIP/NIPPPK/NIK</td>
                                         <td class="font-size-13">:</td>
-                                        <td class="font-size-13">{{ $profile->userable->nip }}</td>
+                                        <td class="font-size-13">{{ $profile->userable->nip ?? '-'}}</td>
                                     </tr>
                                 @endif
                                 @if ($profile->hasRole(['Dosen', 'Admin', 'Kaprodi']))
                                     <tr>
                                         <td class="font-size-13 fw-bold text-end">NIDN</td>
                                         <td class="font-size-13">:</td>
-                                        <td class="font-size-13">{{ $profile->userable->nidn }}</td>
+                                        <td class="font-size-13">{{ $profile->userable->nidn ?? '-'}}</td>
                                     </tr>
                                 @endif
                                 <tr>
                                     <td class="font-size-13 fw-bold text-end">Username</td>
                                     <td class="font-size-13">:</td>
-                                    <td class="font-size-13">{{ $profile->username }}</td>
+                                    <td class="font-size-13">{{ $profile->username ?? '-'}}</td>
                                 </tr>
                                 @if ($profile->hasRole('Mahasiswa'))
                                     <tr>
                                         <td class="font-size-13 fw-bold text-end">NIM</td>
                                         <td class="font-size-13">:</td>
-                                        <td class="font-size-13">{{ $profile->userable->nim }}</td>
+                                        <td class="font-size-13">{{ $profile->userable->nim ?? '-'}}</td>
                                     </tr>
                                 @endif
                                 <tr>
                                     <td class="font-size-13 fw-bold text-end">Email</td>
                                     <td class="font-size-13">:</td>
-                                    <td class="font-size-13">{{ $profile->userable->email }}</td>
+                                    <td class="font-size-13">{{ $profile->userable->email ?? '-'}}</td>
                                 </tr>
                                 @if ($profile->hasRole('Mahasiswa'))
                                     <tr>
                                         <td class="font-size-13 fw-bold text-end">Kelas</td>
                                         <td class="font-size-13">:</td>
-                                        <td class="font-size-13">{{ $profile->userable->kelas }}</td>
+                                        <td class="font-size-13">{{ $profile->userable->kelas  ?? '-'}}</td>
                                     </tr>
                                 @endif
                                 <tr>
                                     <td class="font-size-13 fw-bold text-end"
                                         style="white-space: nowrap; vertical-align: top;">Program Studi</td>
                                     <td class="font-size-13" style="vertical-align: top">:</td>
-                                    <td class="font-size-13">{{ $profile->userable->programStudi->nama ?? '' }}</td>
+                                    <td class="font-size-13">{{ $profile->userable->programStudi->nama ?? '-' }}</td>
                                 </tr>
                             </table>
                         </div>

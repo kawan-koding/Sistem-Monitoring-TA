@@ -39,18 +39,21 @@ class RoleSeeder extends Seeder
             'name' => 'Mahasiswa',
             'guard_name' => 'web'
         ]);
-        
         $developer->givePermissionTo(Permission::all());
-
         $admin->givePermissionTo([
             'read-dashboard',
             'read-permissions','change-permissions',
             'read-roles', 'create-roles', 'update-roles', 'delete-roles',
-            'read-users', 'create-users', 'update-users', 'delete-users',
-            'read-mahasiswa', 'create-mahasiswa', 'update-mahasiswa', 'delete-mahasiswa','import-mahasiswa',
-            'read-dosen', 'create-dosen', 'update-dosen', 'delete-dosen',
             'read-jurusan', 'create-jurusan', 'update-jurusan', 'delete-jurusan',
             'read-program-studi', 'create-program-studi', 'update-program-studi', 'delete-program-studi',
+            'read-dosen', 'create-dosen', 'update-dosen', 'delete-dosen',
+            'read-mahasiswa', 'create-mahasiswa', 'update-mahasiswa', 'delete-mahasiswa','import-mahasiswa',
+            'read-topik', 'create-topik', 'update-topik', 'delete-topik',
+            'read-jenis', 'create-jenis', 'update-jenis', 'delete-jenis',
+            'read-ruangan', 'create-ruangan', 'update-ruangan', 'delete-ruangan',
+            'read-periode', 'create-periode', 'update-periode', 'delete-periode','change-periode',
+            'read-users', 'create-users', 'update-users', 'delete-users',
+            'read-kuota', 'update-kuota'
         ]);
 
         $kaprodi->givePermissionTo([

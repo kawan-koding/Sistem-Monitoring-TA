@@ -21,19 +21,13 @@
                         </button>
                     {{-- </center> --}}
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                      <!-- Replace with dynamic user roles or accounts -->
-                      @if ((isset($myMultiRole[0])) && $myMultiRole[0] == 'admin' || (isset($myMultiRole[1])) && $myMultiRole[1] == 'admin' || (isset($myMultiRole[2])) && $myMultiRole[2] == 'admin' || (isset($myMultiRole[3])) && $myMultiRole[3] == 'admin')
-                      <li><a class="dropdown-item" href="{{ route('admin.switcher', ['role' => 'admin']) }}">Admin</a></li>
-                      @endif
-                      @if ((isset($myMultiRole[0])) && $myMultiRole[0] == 'dosen' || (isset($myMultiRole[1])) && $myMultiRole[1] == 'dosen' || (isset($myMultiRole[2])) && $myMultiRole[2] == 'dosen' || (isset($myMultiRole[3])) && $myMultiRole[3] == 'dosen')
-                      <li><a class="dropdown-item" href="{{ route('admin.switcher', ['role' => 'dosen']) }}">Dosen</a></li>
-                      @endif
-                      @if ((isset($myMultiRole[0])) && $myMultiRole[0] == 'kaprodi' || (isset($myMultiRole[1])) && $myMultiRole[1] == 'kaprodi' || (isset($myMultiRole[2])) && $myMultiRole[2] == 'kaprodi' || (isset($myMultiRole[3])) && $myMultiRole[3] == 'kaprodi')
-                      <li><a class="dropdown-item" href="{{ route('admin.switcher', ['role' => 'kaprodi']) }}">Kaprodi</a></li>
-                      @endif
-                      @if ((isset($myMultiRole[0])) && $myMultiRole[0] == 'mahasiswa' || (isset($myMultiRole[1])) && $myMultiRole[1] == 'mahasiswa' || (isset($myMultiRole[2])) && $myMultiRole[2] == 'mahasiswa' || (isset($myMultiRole[3])) && $myMultiRole[3] == 'mahasiswa')
-                      <li><a class="dropdown-item" href="{{ route('admin.switcher', ['role' => 'mahasiswa']) }}">Mahasiswa</a></li>
-                      @endif
+                        @foreach (getAvailableRoles() as $role)
+                            @if (userHasRole($role))
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('apps.switcher', ['role' => $role]) }}">{{ ucfirst($role) }}</a>
+                                </li>
+                            @endif
+                        @endforeach
                     </ul>
                   </div>
 
@@ -73,54 +67,52 @@
                 </li>
                 {{-- @endcan --}}
 
-                @canany(['read-mahasiswa', 'read-dosen', 'read-ruangan', 'read-topik', 'read-topik'])
-                <li>
-                    <a href="javascript: void(0);" class="has-arrow waves-effect">
-                        <i class="mdi mdi-inbox-full"></i>
-                        <span>Master Data</span>
-                    </a>
-                    <ul class="sub-menu" aria-expanded="false">
-                        @can(['read-jurusan'])
-                        <li><a href="{{route('apps.jurusan')}}">Jurusan</a></li>
-                        @endcan
-                        @can(['read-program-studi'])
-                        <li><a href="{{route('apps.program-studi')}}">Program Studi</a></li>
-                        @endcan
-                        @can(['read-mahasiswa'])
-                        <li><a href="{{route('apps.mahasiswa')}}">Mahasiswa</a></li>
-                        @endcan
-                        @can(['read-dosen'])
-                        <li><a href="{{route('apps.dosen')}}">Dosen</a></li>
-                        @endcan
-                        @can(['read-ruangan'])
-                        <li><a href="{{ route('apps.ruangan')}}">Ruangan</a></li>
-                        @endcan
-                        @can(['read-topik'])
-                        <li><a href="{{route('apps.topik')}}">Topik</a></li>
-                        @endcan
-                        @can(['read-ruangan'])
-                        <li><a href="{{ route('apps.ruangan')}}">Ruangan</a></li>
-                        @endcan
-                        @can(['read-topik'])
-                        <li><a href="{{route('apps.topik')}}">Topik</a></li>
-                        @endcan
-                        @can(['read-jenis'])
-                        <li><a href="{{route('apps.jenis-ta')}}">Jenis TA</a></li>
-                        @endcan
-                    </ul>
-                </li>
-                @endcanany
-
-                @can(['read-periode'])
+                @if (in_array(session('switchRoles'), ['Admin','Developer']))  
+                    @canany(['read-mahasiswa', 'read-dosen', 'read-ruangan', 'read-topik', 'read-topik'])
                     <li>
-                        <a href="{{route('apps.periode')}}" class=" waves-effect">
-                            <i class="mdi mdi-calendar-text"></i>
-                            <span>Periode TA</span>
+                        <a href="javascript: void(0);" class="has-arrow waves-effect">
+                            <i class="mdi mdi-inbox-full"></i>
+                            <span>Master Data</span>
                         </a>
+                        <ul class="sub-menu" aria-expanded="false">
+                            @can(['read-jurusan'])
+                            <li><a href="{{route('apps.jurusan')}}">Jurusan</a></li>
+                            @endcan
+                            @can(['read-program-studi'])
+                            <li><a href="{{route('apps.program-studi')}}">Program Studi</a></li>
+                            @endcan
+                            @can(['read-mahasiswa'])
+                            <li><a href="{{route('apps.mahasiswa')}}">Mahasiswa</a></li>
+                            @endcan
+                            @can(['read-dosen'])
+                            <li><a href="{{route('apps.dosen')}}">Dosen</a></li>
+                            @endcan
+                            @can(['read-ruangan'])
+                            <li><a href="{{ route('apps.ruangan')}}">Ruangan</a></li>
+                            @endcan
+                            @can(['read-topik'])
+                            <li><a href="{{route('apps.topik')}}">Topik</a></li>
+                            @endcan
+                            @can(['read-ruangan'])
+                            <li><a href="{{ route('apps.ruangan')}}">Ruangan</a></li>
+                            @endcan
+                            @can(['read-jenis'])
+                            <li><a href="{{route('apps.jenis-ta')}}">Jenis TA</a></li>
+                            @endcan
+                        </ul>
                     </li>
-                @endcan
-
-                 @canany(['read-daftarta-admin', 'read-seminar-admin'])
+                    @endcanany
+                    @can(['read-periode'])
+                        <li>
+                            <a href="{{route('apps.periode')}}" class=" waves-effect">
+                                <i class="mdi mdi-calendar-text"></i>
+                                <span>Periode TA</span>
+                            </a>
+                        </li>
+                    @endcan
+                @endif
+                
+                @canany(['read-daftarta-admin', 'read-seminar-admin'])
                     <li>
                         <a href="javascript: void(0);" class="has-arrow waves-effect">
                             <i class="mdi mdi-clipboard-list-outline"></i>
@@ -137,22 +129,40 @@
                     </li>
                 @endcanany
 
-                @canany(['read-users', 'read-roles'])
+                @if (in_array(session('switchRoles'), ['Admin','Developer'])) 
+                    @canany(['read-users', 'read-roles'])
+                        <li>
+                        <a href="javascript: void(0);" class="has-arrow waves-effect">
+                            <i class="mdi mdi-account-circle-outline"></i>
+                            <span>Manajemen Pengguna</span>
+                        </a>
+                        <ul class="sub-menu" aria-expanded="false">
+                            @can(['read-users'])
+                            <li><a href="{{route('apps.users')}}">Pengguna</a></li>
+                            @endcan
+                            @can(['read-roles'])
+                            <li><a href="{{route('apps.roles')}}">Role</a></li>
+                            @endcan
+                        </ul>
+                    </li>
+                    @endcanany
+                    @canany(['read-kuota', 'read-settings'])
                     <li>
-                    <a href="javascript: void(0);" class="has-arrow waves-effect">
-                        <i class="mdi mdi-account-circle-outline"></i>
-                        <span>Manajemen Pengguna</span>
-                    </a>
-                    <ul class="sub-menu" aria-expanded="false">
-                        @can(['read-users'])
-                        <li><a href="{{route('apps.users')}}">Pengguna</a></li>
-                        @endcan
-                        @can(['read-roles'])
-                        <li><a href="{{route('apps.roles')}}">Role</a></li>
-                        @endcan
-                    </ul>
-                </li>
-                @endcanany
+                        <a href="javascript: void(0);" class="has-arrow waves-effect">
+                            <i class="mdi mdi-settings"></i>
+                            <span>Pengaturan</span>
+                        </a>
+                        <ul class="sub-menu" aria-expanded="false">
+                            @can(['read-settings'])
+                            <li><a href="#">Aplikasi</a></li>
+                            @endcan
+                            @can(['read-kuota'])
+                            <li><a href="{{ route('apps.kuota-dosen')}}">Kuota Dosen</a></li>
+                            @endcan
+                        </ul>
+                    </li>
+                    @endcanany
+                @endif
 
 
                 {{-- @canany(['read-kuota', 'read-settings'])

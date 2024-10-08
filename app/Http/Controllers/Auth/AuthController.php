@@ -58,7 +58,6 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        // dd(Auth::user()->token->access_token);
         if (Auth::check()) {
             if (isset(Auth::user()->token)) {
                 $response = Http::withOptions(['verify' => false])->withHeaders([
@@ -66,8 +65,10 @@ class AuthController extends Controller
                     'Authorization' => 'Bearer '  . Auth::user()->token->access_token
                 ])->get('https://sso.poliwangi.ac.id/logout');
             }
+            if ($request->user() && $request->user()->token()) {
+                $request->user()->token()->delete();
+            }
         }
-        $request->user()->token()->delete();
         Session::flush();  
         Auth::logout();
         return redirect('/');

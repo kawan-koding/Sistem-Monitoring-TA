@@ -62,7 +62,7 @@
                             @foreach ($dataDosen as $item)
                             <tr>
                                 <td>{{$loop->iteration}}</td>
-                                <td>{{$item->nip}}</td>
+                                <td>{{$item->nip ?? '-'}}</td>
                                 <td>
                                     <div class="d-flex align-items-center">
                                         <div class="">
@@ -79,7 +79,7 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>{{$item->jenis_kelamin == 'L' ? 'Laki-Laki' : 'Perempuan'}}</td>
+                                <td>{{$item->jenis_kelamin == 'L' ? 'Laki-laki' : ($item->jenis_kelamin == 'P' ? 'Perempuan' : '-')}}</td>
                                 <td class="text-center">{{$item->programStudi->nama ?? '-'}}</td>
                                 <td class="text-center">{{$item->bidang_keahlian ??  '-'}}</td>
                                 <td class="text-center">

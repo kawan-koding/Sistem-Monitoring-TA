@@ -12,12 +12,5 @@ class KuotaDosen extends Model
 
     protected $primaryKey = 'id';
 
-    protected $fillable = [
-        'dosen_id',
-        'periode_ta_id',
-        'pemb_1',
-        'pemb_2',
-        'penguji_1',
-        'penguji_2',
-    ];
+    protected $guarded = [];
 }

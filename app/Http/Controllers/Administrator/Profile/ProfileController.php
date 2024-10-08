@@ -15,6 +15,7 @@ class ProfileController extends Controller
     public function index()
     {
         $user = Auth::user();
+
         $bidangKeahlian = $user->userable->bidang_keahlian ? explode(',', $user->userable->bidang_keahlian) : [];
         $data = [
             'title' => 'Profile',
@@ -29,11 +30,8 @@ class ProfileController extends Controller
                 ]
             ],
             'profile' => $user,
-            'bidangKeahlian' => $bidangKeahlian,
-            
+            'bidangKeahlian' => $bidangKeahlian,  
         ];
-
-        // dd($bidangKeahlian);
 
         return view('administrator.profile.index', $data);
     }

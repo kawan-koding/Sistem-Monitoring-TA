@@ -13,12 +13,10 @@ return new class extends Migration
     {
         Schema::create('kuota_dosens', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('dosen_id');
-            $table->unsignedBigInteger('periode_ta_id');
-            $table->foreign('dosen_id')->references('id')->on('dosens')->onDelete('cascade');
-            $table->foreign('periode_ta_id')->references('id')->on('periode_tas')->onDelete('cascade');
-            $table->integer('pemb_1')->default(0);
-            $table->integer('pemb_2')->default(0);
+            $table->foreignId('dosen_id')->nullable()->references('id')->on('dosens')->onDelete('restrict');
+            $table->foreignId('periode_ta_id')->nullable()->references('id')->on('periode_tas')->onDelete('restrict');
+            $table->integer('pembimbing_1')->default(0);
+            $table->integer('pembimbing_2')->default(0);
             $table->integer('penguji_1')->default(0);
             $table->integer('penguji_2')->default(0);
             $table->timestamps();

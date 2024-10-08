@@ -53,3 +53,26 @@ $(document).ready(function () {
         confirmDelete('Topik Yang Diambil', url);
     });
 });
+
+$(document).ready(function () {
+    $('*[data-toggle="delete-mhs"]').on('click', function () {
+        const url = $(this).data('url');
+        confirmDelete('Mahasiswa', url);
+    });
+});
+
+$(document).ready(function () {
+    $('*[data-toggle="reject-mhs"]').on('click', function () {
+        const url = $(this).data('url');
+        $('#approveForm').attr('action', url);
+    });
+});
+
+$(document).ready(function () {
+    $('*[data-toggle="approve-mhs"]').on('click', function () {
+        const url = $(this).data('url');
+        $('#approveForm').attr('action', url);
+    });
+});
+
+
