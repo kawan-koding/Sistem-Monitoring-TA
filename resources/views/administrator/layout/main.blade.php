@@ -36,7 +36,7 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-sm-6">
-                        {{ date('Y') }} © Politeknik Negeri Banyuwangi
+                        {{ getSetting('app_copyright') }}
                     </div>
                 </div>
             </div>

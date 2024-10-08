@@ -86,6 +86,9 @@ class PermissionSeeder extends Seeder
             ["name" => "cancel-topik-yang-diambil", "display_name" => "Batalkan Topik Yang Diambil"],            
             ["name" => "read-kuota", "display_name" => "Lihat Kuota"],
             ["name" => "update-kuota", "display_name" => "Ubah Kuota"],
+            ["name" => "read-setting", "display_name" => "Lihat Pengaturan"],
+            ["name" => "update-setting", "display_name" => "Ubah Pengaturan"],
+
         ]);
         $this->insertPermission($permissions);
 

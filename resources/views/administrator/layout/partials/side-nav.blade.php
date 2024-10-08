@@ -1,10 +1,5 @@
 <div class="vertical-menu">
-    @php
-        $myMultiRole = Auth::guard('web')->user()->getRoleNames();
-    @endphp
-
     <div class="h-100">
-
         <div class="user-wid text-center py-4">
             <div class="user-img">
                 <img src="{{asset('storage/images/users/'. Auth::user()->image)}}" alt="" class="avatar-md mx-auto rounded-circle">
@@ -153,8 +148,8 @@
                             <span>Pengaturan</span>
                         </a>
                         <ul class="sub-menu" aria-expanded="false">
-                            @can(['read-settings'])
-                            <li><a href="#">Aplikasi</a></li>
+                            @can(['read-setting'])
+                            <li><a href="{{ route('apps.settings')}}">Aplikasi</a></li>
                             @endcan
                             @can(['read-kuota'])
                             <li><a href="{{ route('apps.kuota-dosen')}}">Kuota Dosen</a></li>
