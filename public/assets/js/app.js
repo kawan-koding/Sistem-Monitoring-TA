@@ -142,3 +142,11 @@ function confirmAlert({title, text, confirmButton, data = {}, url}) {
         }
     });
 }
+
+$(document).ready(function () {
+    $('button[type="submit"]').on('click', function () {
+        $(this).html('Loading...');
+        $(this).prop('disabled', true);
+        $(this).closest('form').submit();
+    });
+});

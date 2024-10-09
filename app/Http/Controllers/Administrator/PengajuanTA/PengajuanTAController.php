@@ -101,7 +101,7 @@ class PengajuanTAController extends Controller
                 ],
                 [
                     'title' => 'Tugas Akhir',
-                    'is_active' => true
+                    'url' => route('apps.pengajuan-ta') 
                 ],
                 [
                     'title' => 'Pengajuan Tugas Akhir',
@@ -173,9 +173,7 @@ class PengajuanTAController extends Controller
 
             return redirect()->route('apps.pengajuan-ta')->with('success', 'Data berhasil ditambahkan');
         } catch (\Exception $e) {
-
-            // dd($e->getMessage());
-            return redirect()->route('apps.pengajuan-ta')->with('error', $e->getMessage())->withInput($request->all());
+            return redirect()->route('apps.pengajuan-ta')->with('error', $e->getMessage());
         }
     }
 

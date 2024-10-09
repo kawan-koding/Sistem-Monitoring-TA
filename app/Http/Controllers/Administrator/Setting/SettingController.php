@@ -51,8 +51,7 @@ class SettingController extends Controller
                     $file = $request->file('file');
                     $filename = time() .'_'. rand(0, 9999999) .'.'. $file->getClientOriginalExtension();
                     $file->move(public_path('storage/images/settings'), $filename);
-
-                    if(file_exists(public_path('storage/images/settings/'. $setting->value))) {
+                    if(file_exists(public_path('storage/images/settings/'. $setting->value) && $setting->value !== 'poliwangi.png')) {
                         File::delete(public_path('storage/images/settings/'. $setting->value));
                     }
                     $request->merge(['value' => $filename]);
