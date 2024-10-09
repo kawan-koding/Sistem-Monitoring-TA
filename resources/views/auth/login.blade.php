@@ -1,5 +1,4 @@
 @extends('administrator.layout.base')
-{{-- @extends('layout.auth-main') --}}
 @section('app')
 
 <div class="account-pages my-5 pt-sm-5">
@@ -10,10 +9,10 @@
                     <div class="bg-login text-center">
                         <div class="bg-login-overlay"></div>
                         <div class="position-relative">
-                            <h5 class="text-white font-size-20">Sistem Monitoring Tugas Akhir</h5>
+                            <h5 class="text-white font-size-20">{{ getSetting('app_name') }}</h5>
                             <p class="text-white-50 mb-0">Politeknik Negeri Banyuwangi</p>
-                            <a href="index.html" class="logo logo-admin mt-4">
-                                <img src="{{ asset('assets/images/POLIWANGI.png')}}" alt="" height="60">
+                            <a href="#" class="logo logo-admin mt-4">
+                                <img src="{{ asset('storage/images/settings/' . getSetting('app_logo') )}}" alt="" height="60">
                             </a>
                         </div>
                     </div>

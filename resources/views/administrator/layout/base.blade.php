@@ -3,12 +3,10 @@
 
 <head>
     <meta charset="utf-8" />
+    <link rel="shortcut icon" href="{{ asset('storage/images/settings/' . getSetting('app_favicon')) }}">
     <title> {{ $title ?? 'unknown'}} | Administrator {{ getSetting('app_name') }}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta content="Themesbrand" name="author" />
-    <link rel="shortcut icon" href="{{ asset('storage/images/settings/' . getSetting('app_logo')) }}">
     <!-- DataTables -->
     <link href="{{ asset('assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css') }}" rel="stylesheet"
         type="text/css" />

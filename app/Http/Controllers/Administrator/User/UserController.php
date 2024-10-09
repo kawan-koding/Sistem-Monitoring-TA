@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\User\UserRequest;
+use File;
 
 class UserController extends Controller
 {
@@ -75,6 +76,9 @@ class UserController extends Controller
                 $file = $request->file('file');
                 $filename = 'Users_'. rand(0, 999999999) .'_'. rand(0, 999999999) .'.'. $file->getClientOriginalExtension();
                 $file->move(public_path('storage/images/users'), $filename);
+                if($user->image !== 'default.jpg') {
+                    File::delete(public_path('storage/images/users/'. $user->image));
+                }
             } else {
                 $filename = $user->image;
             }

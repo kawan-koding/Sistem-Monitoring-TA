@@ -51,7 +51,7 @@
                                     Profile</a>
                                     @endif
                                     @if(getInfoLogin()->hasRole('Developer') && getInfoLogin()->hasRole('Admin'))
-                                    <a class="dropdown-item" href="#"><i class="bx bx-cog font-size-16 align-middle me-1"></i>
+                                    <a class="dropdown-item" href="{{ route('apps.settings')}}"><i class="bx bx-cog font-size-16 align-middle me-1"></i>
                                         Pengaturan</a>
                                     @endif
                                 <div class="dropdown-divider"></div>

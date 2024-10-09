@@ -98,8 +98,13 @@ class PengajuanTAController extends Controller
                     'url' => route('apps.dashboard')
                 ],
                 [
+<<<<<<< HEAD
                     'title' => 'Pengajuan Tugas Akhir',
                     'url' => route('apps.pengajuan-ta')
+=======
+                    'title' => 'Tugas Akhir',
+                    'url' => route('apps.pengajuan-ta') 
+>>>>>>> 01a9dc2f519dae520dc9b026786a9a04cc6956de
                 ],
                 [
                     'title' => 'Tambah Pengajuan Tugas Akhir',
@@ -174,9 +179,7 @@ class PengajuanTAController extends Controller
 
             return redirect()->route('apps.pengajuan-ta')->with('success', 'Data berhasil ditambahkan');
         } catch (\Exception $e) {
-
-            // dd($e->getMessage());
-            return redirect()->route('apps.pengajuan-ta')->with('error', $e->getMessage())->withInput($request->all());
+            return redirect()->route('apps.pengajuan-ta')->with('error', $e->getMessage());
         }
     }
 

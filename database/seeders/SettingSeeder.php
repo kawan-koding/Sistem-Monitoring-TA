@@ -36,7 +36,7 @@ class SettingSeeder extends Seeder
                 'type' => 'file',
                 'key' => 'app_favicon',
                 'name' => 'Favicon Aplikasi',
-                'value' => 'favicon.png'
+                'value' => 'poliwangi.png'
             ],
             [
                 'type' => 'general',
@@ -55,6 +55,18 @@ class SettingSeeder extends Seeder
                 'key' => 'app_address',
                 'name' => 'Alamat Aplikasi',
                 'value' => 'SMK 17 AGUSTUS 1945 MUNCAR JL. RAYA BLAMBANGAN NO. 37 MUNCAR, KAB. BANYUWANGI PROV. JATIM'
+            ],
+            [
+                'type' => 'general',
+                'key' => 'app_template_mentor_one',
+                'name' => 'Template Persetujuan Pembimbing 1',
+                'value' => 'https://drive.google.com/file/d/1ldapUYIdj04TKkkUG4hRfzaa4oSxJ05r/view?usp=sharing'
+            ],
+            [
+                'type' => 'general',
+                'key' => 'app_template_summary',
+                'name' => 'Template Ringkasan',
+                'value' => 'https://drive.google.com/file/d/1CF7BnMwtpPVVmo3fkdBsJztGabu_I3FE/view?usp=sharing'
             ],
         ]);
         //
