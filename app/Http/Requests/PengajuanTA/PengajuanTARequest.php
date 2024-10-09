@@ -3,6 +3,7 @@
 namespace App\Http\Requests\PengajuanTA;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class PengajuanTARequest extends FormRequest
 {
@@ -33,8 +34,8 @@ class PengajuanTARequest extends FormRequest
             'topik' => 'required',
             'judul' => 'required',
             'tipe' => 'required',
-            'dokumen_pembimbing_1' => 'required|mimes:docx,pdf',
-            'dokumen_ringkasan' => 'required|mimes:docx,pdf',
+            'dokumen_pembimbing_1' => $this->routeName == 'apps.pengajuan-ta.store' ? 'required|mimes:docx,pdf' : 'nullable|mimes:docx,pdf',
+            'dokumen_ringkasan' => $this->routeName == 'apps.pengajuan-ta.store' ? 'required|mimes:docx,pdf' : 'nullable|mimes:docx,pdf',
         ];
     }
 

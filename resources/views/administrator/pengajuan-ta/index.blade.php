@@ -23,7 +23,10 @@
                         </button>
                     </div>
                 @endif
+                {{-- {{dd($dataTA);}} --}}
+                @if($dataTA->where('status', 'reject')->count() > 0 || $dataTA->count() == 0)
                 <a href="{{route('apps.pengajuan-ta.create')}}" class="btn btn-primary mb-2"><i class="fa fa-plus"></i> Tambah</a>
+                @endif
                 <a href="https://drive.google.com/file/d/1ldapUYIdj04TKkkUG4hRfzaa4oSxJ05r/view?usp=sharing" target="_blank" class="btn btn-success mb-2"><i class="far fa-file-alt"></i> Template Persetujuan Pemb 1</a>
                 <a href="https://drive.google.com/file/d/1CF7BnMwtpPVVmo3fkdBsJztGabu_I3FE/view?usp=sharing" target="_blank" class="btn btn-secondary mb-2"><i class="far fa-file-alt"></i> Template Ringkasan</a>
                 <hr>
@@ -101,7 +104,7 @@
                                 {{-- <td>{{$item->catatan}}</td> --}}
                                 <td>
                                     <a href="{{route('apps.pengajuan-ta.edit', ['pengajuanTA' => $item->id])}}" class="btn btn-sm btn-primary mb-3" title="Edit"><i class="fas fa-edit"></i></a>
-                                    <a href="{{route('apps.pengajuan-ta.show', ['id' => $item->id])}}" class="btn btn-sm btn-primary mb-3" title="Detail"><i class="fas fa-search"></i></a>
+                                    <a href="{{route('apps.pengajuan-ta.show', ['pengajuanTA' => $item->id])}}" class="btn btn-sm btn-primary mb-3" title="Detail"><i class="fas fa-search"></i></a>
                                     <a href="javascript:void(0);" data-url="{{route('apps.pengajuan-ta.unggah-berkas', ['id' => $item->id])}}" class="btn btn-sm btn-secondary unggah-berkas mb-3" title="Unggah Berkas"><i class="far fa-file-alt"></i></a>
 
                                     @if ($timer == 'selesai')

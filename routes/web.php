@@ -150,8 +150,8 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::get('create', [PengajuanTAController::class, 'create'])->name('apps.pengajuan-ta.create');
         Route::post('store', [PengajuanTAController::class, 'store'])->name('apps.pengajuan-ta.store');
         Route::get('/{pengajuanTA}/edit', [PengajuanTAController::class, 'edit'])->name('apps.pengajuan-ta.edit');
-        Route::post('/update/{id}', [PengajuanTAController::class, 'update'])->name('apps.pengajuan-ta.update');
-        Route::get('/show/{id}', [PengajuanTAController::class, 'show'])->name('apps.pengajuan-ta.show');
+        Route::post('/{pengajuanTA}/update', [PengajuanTAController::class, 'update'])->name('apps.pengajuan-ta.update');
+        Route::get('{pengajuanTA}/show', [PengajuanTAController::class, 'show'])->name('apps.pengajuan-ta.show');
         Route::post('/unggah_berkas/{id}', [PengajuanTAController::class, 'unggah_berkas'])->name('apps.pengajuan-ta.unggah-berkas');
         Route::get('/print_nilai/{id}', [PengajuanTAController::class, 'print_nilai'])->name('apps.pengajuan-ta.print_nilai');
         Route::get('/print_rekap/{id}', [PengajuanTAController::class, 'print_rekap'])->name('apps.pengajuan-ta.print_rekap');
