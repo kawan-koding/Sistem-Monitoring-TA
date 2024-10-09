@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OAuthController;
 use App\Http\Controllers\TopikController;
-use App\Http\Controllers\SettingController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\RumpunIlmuController;
 use App\Http\Controllers\Login\LoginController;
@@ -17,13 +16,14 @@ use App\Http\Controllers\DaftarBimbinganDosenController;
 use App\Http\Controllers\PengajuanTaMahasiswaController;
 use App\Http\Controllers\JadwalSeminarMahasiswaController;
 use App\Http\Controllers\Administrator\Role\RoleController;
-
 use App\Http\Controllers\Administrator\User\UserController;
+
 use App\Http\Controllers\Administrator\Dosen\DosenController;
 use App\Http\Controllers\Administrator\JenisTA\JenisTAController;
 use App\Http\Controllers\Administrator\Jurusan\JurusanController;
 use App\Http\Controllers\Administrator\Profile\ProfileController;
 use App\Http\Controllers\Administrator\Ruangan\RuanganController;
+use App\Http\Controllers\Administrator\Setting\SettingController;
 use App\Http\Controllers\Administrator\TopikTA\TopikTAController;
 use App\Http\Controllers\Administrator\DaftarTA\DaftarTAController;
 use App\Http\Controllers\Administrator\Dashboard\DashboardController;
@@ -190,6 +190,14 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::get('', [KuotaDosenController::class, 'index'])->name('apps.kuota-dosen');
         Route::post('store', [KuotaDosenController::class, 'store'])->name('apps.kuota-dosen.store')->middleware('can:update-kuota');
     });
+    
+    Route::prefix('settings')->middleware('can:read-setting')->group( function() {
+        Route::get('', [SettingController::class, 'index'])->name('apps.settings');
+        Route::get('{setting}/show', [SettingController::class, 'show'])->name('apps.settings.show');
+        Route::post('{setting}/update', [SettingController::class, 'update'])->name('apps.settings.update')->middleware('can:update-setting');
+    });
+
+
 });
 
 

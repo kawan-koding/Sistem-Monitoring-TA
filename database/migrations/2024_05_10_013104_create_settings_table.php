@@ -13,12 +13,15 @@ return new class extends Migration
     {
         Schema::create('settings', function (Blueprint $table) {
             $table->id();
-            $table->enum('groups', ['general', 'config', 'images']);
-            $table->string('options', 255);
-            $table->string('label', 255);
-            $table->text('value');
-            $table->tinyInteger('is_default');
-            $table->string('display_suffix', 255)->nullable();
+            $table->string('key')->unique();
+            $table->string('name');
+            $table->enum('type', ['general', 'config', 'file']);
+            $table->string('value');
+            // $table->string('options', 255);
+            // $table->string('label', 255);
+            // $table->text('value');
+            // $table->tinyInteger('is_default');
+            // $table->string('display_suffix', 255)->nullable();
             $table->timestamps();
         });
     }

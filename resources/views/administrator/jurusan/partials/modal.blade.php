@@ -23,7 +23,7 @@ aria-labelledby="myModalLabel" aria-hidden="true">
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary waves-effect"
-                    data-bs-dismiss="modal">Keluar</button>
+                    data-bs-dismiss="modal">Batal</button>
                 <button type="submit"
                     class="btn btn-primary waves-effect waves-light">Simpan</button>
             </div>
