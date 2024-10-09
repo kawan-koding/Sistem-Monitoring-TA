@@ -31,8 +31,8 @@ return new class extends Migration
             $table->enum('status', ['draft', 'acc', 'reject']);
             $table->text('catatan')->nullable();
             $table->enum('status_seminar', ['revisi', 'acc', 'reject'])->nullable();
-            $table->string('periode_mulai', 45);
-            $table->string('periode_akhir', 45);
+            // $table->string('periode_mulai', 45);
+            // $table->string('periode_akhir', 45);
             $table->timestamps();
         });
     }

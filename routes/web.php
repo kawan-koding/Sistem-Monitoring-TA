@@ -149,16 +149,16 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::get('', [PengajuanTAController::class, 'index'])->name('apps.pengajuan-ta');
         Route::get('create', [PengajuanTAController::class, 'create'])->name('apps.pengajuan-ta.create');
         Route::post('store', [PengajuanTAController::class, 'store'])->name('apps.pengajuan-ta.store');
-        // Route::get('/edit/{id}', [PengajuanTaMahasiswaController::class, 'edit'])->name('mahasiswa.pengajuan-ta.edit');
-        // Route::post('/update/{id}', [PengajuanTaMahasiswaController::class, 'update'])->name('mahasiswa.pengajuan-ta.update');
-        // Route::get('/show/{id}', [PengajuanTaMahasiswaController::class, 'show'])->name('mahasiswa.pengajuan-ta.show');
-        // Route::post('/unggah_berkas/{id}', [PengajuanTaMahasiswaController::class, 'unggah_berkas'])->name('mahasiswa.pengajuan-ta.unggah-berkas');
-        // Route::get('/print_nilai/{id}', [PengajuanTaMahasiswaController::class, 'print_nilai'])->name('mahasiswa.pengajuan-ta.print_nilai');
-        // Route::get('/print_rekap/{id}', [PengajuanTaMahasiswaController::class, 'print_rekap'])->name('mahasiswa.pengajuan-ta.print_rekap');
-        // Route::get('/print_revisi/{id}', [PengajuanTaMahasiswaController::class, 'print_revisi'])->name('mahasiswa.pengajuan-ta.print_revisi');
-        // Route::get('/cek-dosen', [PengajuanTaMahasiswaController::class, 'cekDosen'])->name('mahasiswa.pengajuan-ta.cekdosen');
-        // Route::get('/print_pemb1/{id}', [PengajuanTaMahasiswaController::class, 'printPembSatu'])->name('mahasiswa.pengajuan-ta.print_pemb1');
-        // Route::get('/print_pemb2/{id}', [PengajuanTaMahasiswaController::class, 'printPembDua'])->name('mahasiswa.pengajuan-ta.print_pemb2');
+        Route::get('/{pengajuanTA}/edit', [PengajuanTAController::class, 'edit'])->name('apps.pengajuan-ta.edit');
+        Route::post('/update/{id}', [PengajuanTAController::class, 'update'])->name('apps.pengajuan-ta.update');
+        Route::get('/show/{id}', [PengajuanTAController::class, 'show'])->name('apps.pengajuan-ta.show');
+        Route::post('/unggah_berkas/{id}', [PengajuanTAController::class, 'unggah_berkas'])->name('apps.pengajuan-ta.unggah-berkas');
+        Route::get('/print_nilai/{id}', [PengajuanTAController::class, 'print_nilai'])->name('apps.pengajuan-ta.print_nilai');
+        Route::get('/print_rekap/{id}', [PengajuanTAController::class, 'print_rekap'])->name('apps.pengajuan-ta.print_rekap');
+        Route::get('/print_revisi/{id}', [PengajuanTAController::class, 'print_revisi'])->name('apps.pengajuan-ta.print_revisi');
+        Route::get('/cek-dosen', [PengajuanTAController::class, 'cekDosen'])->name('apps.pengajuan-ta.cekdosen');
+        Route::get('/print_pemb1/{id}', [PengajuanTAController::class, 'printPembSatu'])->name('apps.pengajuan-ta.print_pemb1');
+        Route::get('/print_pemb2/{id}', [PengajuanTAController::class, 'printPembDua'])->name('apps.pengajuan-ta.print_pemb2');
     });
 
     Route::prefix('rekomendasi-topik')->middleware('can:read-rekomendasi-topik')->group(function () {

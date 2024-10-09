@@ -32,17 +32,17 @@
                         <thead>
                             <tr>
                                 <th width="2%">No</th>
-                                <th min-width="150px">Judul</th>
-                                <th>Jenis</th>
-                                <th>Topik</th>
+                                <th min-width="300px">Judul</th>
+                                {{-- <th>Jenis</th> --}}
+                                {{-- <th>Topik</th> --}}
+                                <th min-width="200px">Dosen</th>
                                 <th>Status</th>
-                                <th min-width="300px">Dosen</th>
-                                <th min-width="200px">Catatan</th>
+                                {{-- <th min-width="200px">Catatan</th> --}}
                                 <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {{-- @foreach ($dataTA as $item)
+                            @foreach ($dataTA as $item)
                                 @foreach ($item->bimbing_uji as $bimuj)
                                     @if ($bimuj->jenis == 'pembimbing' && $bimuj->urut == 1)
                                         @php
@@ -67,9 +67,30 @@
                                 @endforeach
                             <tr>
                                 <td>{{$loop->iteration}}</td>
-                                <td>{{$item->judul}}</td>
-                                <td>{{$item->jenis_ta->nama_jenis}}</td>
-                                <td>{{$item->topik->nama_topik}}</td>
+                                <td>
+                                    <span class="badge bg-soft-primary small mb-1">{{ $item->tipe == 'I' ? 'Individu' : 'Kelompok' }}</span>
+                                    <h5 class="fw-bold m-0">{{ $item->judul }}</h5>
+                                    <p class="m-0 text-muted small">{{ $item->topik->nama_topik }} - {{ $item->jenis_ta->nama_jenis }}</p>
+                                    <p class="m-0 text-muted small">Catatan : {{ $item->catatan ?? '-' }}</p>
+                                </td>
+                                {{-- <td>{{$item->jenis_ta->nama_jenis}}</td>
+                                <td>{{$item->topik->nama_topik}}</td> --}}
+                                <td>
+                                    <strong>Pembimbing</strong>
+                                    <ol>
+                                        <li>{{$item_pemb_1 ?? '-'}}</li>
+                                        <li>{{$item_pemb_2 ?? '-'}}</li>
+                                    </ol>
+                                    <strong>Penguji</strong>
+                                    <ol>
+                                        <li>{{$item_peng_1 ?? '-'}}</li>
+                                        <li>{{$item_peng_2 ?? '-'}}</li>
+                                    </ol>
+                                    {{-- Pembimbing 1 : {{$item_pemb_1 ?? '-'}}<br>
+                                    Pembimbing 2 : {{$item_pemb_2 ?? '-'}}<br>
+                                    Penguji 1 : {{$item_peng_1 ?? '-'}}<br>
+                                    Penguji 2 : {{$item_peng_2 ?? '-'}}<br> --}}
+                                </td>
                                 <td>
                                     @if ($item->status == 'acc')
                                     <span class='badge rounded-pill badge-soft-primary font-size-11'>{{ucfirst($item->status)}}</span>
@@ -77,17 +98,11 @@
                                     <span class='badge rounded-pill badge-soft-secondary font-size-11'>{{ucfirst($item->status)}}</span>
                                     @endif
                                 </td>
+                                {{-- <td>{{$item->catatan}}</td> --}}
                                 <td>
-                                    Pembimbing 1 : {{$item_pemb_1 ?? '-'}}<br>
-                                    Pembimbing 2 : {{$item_pemb_2 ?? '-'}}<br>
-                                    Penguji 1 : {{$item_peng_1 ?? '-'}}<br>
-                                    Penguji 2 : {{$item_peng_2 ?? '-'}}<br>
-                                </td>
-                                <td>{{$item->catatan}}</td>
-                                <td>
-                                    <a href="{{route('app.pengajuan-ta.edit', ['id' => $item->id])}}" class="btn btn-sm btn-primary mb-3" title="Edit"><i class="fas fa-edit"></i></a>
+                                    <a href="{{route('apps.pengajuan-ta.edit', ['pengajuanTA' => $item->id])}}" class="btn btn-sm btn-primary mb-3" title="Edit"><i class="fas fa-edit"></i></a>
                                     <a href="{{route('apps.pengajuan-ta.show', ['id' => $item->id])}}" class="btn btn-sm btn-primary mb-3" title="Detail"><i class="fas fa-search"></i></a>
-                                    <a href="javascript:void(0);" data-url="{{route('mahasiswa.pengajuan-ta.unggah-berkas', ['id' => $item->id])}}" class="btn btn-sm btn-secondary unggah-berkas mb-3" title="Unggah Berkas"><i class="far fa-file-alt"></i></a>
+                                    <a href="javascript:void(0);" data-url="{{route('apps.pengajuan-ta.unggah-berkas', ['id' => $item->id])}}" class="btn btn-sm btn-secondary unggah-berkas mb-3" title="Unggah Berkas"><i class="far fa-file-alt"></i></a>
 
                                     @if ($timer == 'selesai')
 
@@ -96,14 +111,14 @@
                                     <a href="{{route('apps.pengajuan-ta.print_revisi', ['id' => $item->id])}}" class="btn btn-sm btn-success mb-3" title="Revisi"><i class="fas fa-file-invoice"></i></a>
                                     @endif
                                     @if (isset($item_pemb_1))
-                                    <a href="{{route('mahasiswa.pengajuan-ta.print_pemb1', ['id' => $item->id])}}" class="btn btn-sm btn-success mb-3" title="Print Persetujuan Dosen"><i class="fas fa-file-invoice"></i></a>
+                                    <a href="{{route('apps.pengajuan-ta.print_pemb1', ['id' => $item->id])}}" class="btn btn-sm btn-success mb-3" title="Print Persetujuan Dosen"><i class="fas fa-file-invoice"></i></a>
                                     @endif
                                     @if (isset($item_pemb_2))
-                                    <a href="{{route('mahasiswa.pengajuan-ta.print_pemb2', ['id' => $item->id])}}" class="btn btn-sm btn-success mb-3" title="Print Persetujuan Dosen"><i class="fas fa-file-invoice"></i></a>
+                                    <a href="{{route('apps.pengajuan-ta.print_pemb2', ['id' => $item->id])}}" class="btn btn-sm btn-success mb-3" title="Print Persetujuan Dosen"><i class="fas fa-file-invoice"></i></a>
                                     @endif
                                 </td>
                             </tr>
-                            @endforeach --}}
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
