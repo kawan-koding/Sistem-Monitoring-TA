@@ -12,11 +12,11 @@
          <div class="card-body">
             <div class="d-flex">
                 <div class="w-100">
-                    <h5 class="fw-bold mb-1">Sistem Rekomendasi Pencarian Buku</h5>
+                    <h5 class="fw-bold mb-1">{{isset($dataTA->judul) ? $dataTA->judul : '-'}}</h5>
                     <div class="d-flex gap-2 small text-muted">
-                        <div class="badge badge-soft-primary rounded-pill font-size-12 px-2">Acc</div>
+                        <div class="badge badge-soft-primary rounded-pill font-size-12 px-2">{{isset($dataTA->status) ? $dataTA->status : '-'}}</div>
                         |
-                        <span><strong>Penelitian</strong> - Sistem Pengambilan Keputusan</span>
+                        <span><strong>{{isset($dataTA->topik->nama_topik) ? $dataTA->topik->nama_topik : '-'}}</strong> - {{isset($dataTA->jenis_ta->nama_jenis) ? $dataTA->jenis_ta->nama_jenis : '-'}}</span>
                     </div>
                 </div>
                 <button class="btn btn-rounded btn-light bx bx-dots-horizontal fs-4" style="width: 45px;height: 45px;"></button>
@@ -29,32 +29,32 @@
                 <tr>
                     <th>Pembimbing 1</th>
                     <td>:</td>
-                    <td>Lutfi Hakim, S.Pd., M.T.</td>
+                    <td>{{isset($pembimbing1) ? $pembimbing1->dosen->name : '-'}}</td>
                 </tr>
                 <tr>
                     <th>Pembimbing 2</th>
                     <td>:</td>
-                    <td>-</td>
+                    <td>{{isset($pembimbing2) ? $pembimbing2->dosen->name : '-'}}</td>
                 </tr>
                 <tr>
                     <th>Penguji 1</th>
                     <td>:</td>
-                    <td>-</td>
+                    <td>{{isset($penguji1) ? $penguji1->dosen->name : '-'}}</td>
                 </tr>
                 <tr>
                     <th>Penguji 2</th>
                     <td>:</td>
-                    <td>-</td>
+                    <td>{{isset($penguji2) ? $penguji2->dosen->name : '-'}}</td>
                 </tr>
                 <tr>
                     <th>Tipe</th>
                     <td>:</td>
-                    <td>Individu</td>
+                    <td>{{isset($dataTA->tipe) ? (($dataTA->tipe == 'I') ? 'Individu' : 'Kelompok') : '-'}}</td>
                 </tr>
                 <tr>
                     <th>Periode TA</th>
                     <td>:</td>
-                    <td>2023/2024</td>
+                    <td>{{isset($dataTA->periode_ta_id) ? $dataTA->periode_ta->nama : '-'}}</td>
                 </tr>
             </table>
             <br><br>
@@ -82,12 +82,36 @@
                     <p class="text-muted"><i class="text-danger">*</i>) Belum memiliki dokumen</p>
                 </div>
                 <div class="col-md-3 col-sm-6 col-12 border p-3 text-center">
-                    <strong>Dokumen Pembimbing 1</strong>
+                    <strong>Dokumen Ringkasan</strong>
                     <i class="mdi mdi-file-pdf-box-outline text-danger d-block" style="font-size: 56px;"></i>
                     <button class="btn btn-secondary btn-sm"><i class="bx bx-download"></i> Download Dokumen</button> 
                 </div>
                 <div class="col-md-3 col-sm-6 col-12 border p-3 text-center">
-                    <strong>Dokumen Proposal</strong>
+                    <strong>Lembar Penilaian</strong>
+                    <br><br>
+                    <br><br><br>
+                    <p class="text-muted"><i class="text-danger">*</i>) Belum memiliki dokumen</p>
+                </div>
+                <div class="col-md-3 col-sm-6 col-12 border p-3 text-center">
+                    <strong>Rekapitulasi Nilai</strong>
+                    <br><br>
+                    <br><br><br>
+                    <p class="text-muted"><i class="text-danger">*</i>) Belum memiliki dokumen</p>
+                </div>
+                <div class="col-md-3 col-sm-6 col-12 border p-3 text-center">
+                    <strong>Berita Acara</strong>
+                    <br><br>
+                    <br><br><br>
+                    <p class="text-muted"><i class="text-danger">*</i>) Belum memiliki dokumen</p>
+                </div>
+                <div class="col-md-3 col-sm-6 col-12 border p-3 text-center">
+                    <strong>Lembar Revisi</strong>
+                    <br><br>
+                    <br><br><br>
+                    <p class="text-muted"><i class="text-danger">*</i>) Belum memiliki dokumen</p>
+                </div>
+                <div class="col-md-3 col-sm-6 col-12 border p-3 text-center">
+                    <strong>Jadwal Seminar <Proposal></Proposal></strong>
                     <br><br>
                     <br><br><br>
                     <p class="text-muted"><i class="text-danger">*</i>) Belum memiliki dokumen</p>

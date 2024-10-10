@@ -308,6 +308,11 @@ class PengajuanTAController extends Controller
 
     public function show(TugasAkhir $pengajuanTA)
     {
+        $bimbingUji = $pengajuanTA->bimbing_uji;
+        $pembimbing1 = $bimbingUji->where('jenis', 'pembimbing')->where('urut', 1)->first();
+        $pembimbing2 = $bimbingUji->where('jenis', 'pembimbing')->where('urut', 2)->first();
+        $penguji1 = $bimbingUji->where('jenis', 'penguji')->where('urut', 1)->first();
+        $penguji2 = $bimbingUji->where('jenis', 'penguji')->where('urut', 2)->first();
         $data = [
             'title' => 'Detail Pengajuan Tugas Akhir',
             'breadcrumbs' => [
@@ -323,7 +328,13 @@ class PengajuanTAController extends Controller
                     'title' => 'Detail Pengajuan Tugas Akhir',
                     'is_active' => true
                 ]
-            ]
+            ],
+            'dataTA' => $pengajuanTA,
+            'pembimbingPenguji' => $bimbingUji,
+            'pembimbing1' => $pembimbing1,
+            'pembimbing2' => $pembimbing2,
+            'penguji1' => $penguji1,
+            'penguji2' => $penguji2,
         ];
 
         return view('administrator.pengajuan-ta.partials.detail', $data);
