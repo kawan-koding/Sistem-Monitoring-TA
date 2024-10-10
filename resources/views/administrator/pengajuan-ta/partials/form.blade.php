@@ -18,6 +18,17 @@
                             </button>
                         </div>
                     @endif
+                    @if ($errors->any())
+                        <div class="alert alert-error alert-danger alert-dismissible fade show" role="alert">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                            </button>
+                        </div>
+                    @endif
                     <form action="{{isset($editedData) ? route('apps.pengajuan-ta.update', ['pengajuanTA' => $editedData->id]) : route('apps.pengajuan-ta.store')}}" method="post" enctype="multipart/form-data">
                         @csrf
                         <div class="mb-3">

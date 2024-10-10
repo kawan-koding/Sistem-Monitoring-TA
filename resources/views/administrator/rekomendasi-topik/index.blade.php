@@ -40,6 +40,17 @@
                     </button>
                 </div>
                 @endif
+                 @if ($errors->any())
+                        <div class="alert alert-error alert-danger alert-dismissible fade show" role="alert">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                            </button>
+                        </div>
+                    @endif
                 <div class="table-responsive">
                     <table class="table table-striped" id="datatable">
                         <thead>
@@ -65,7 +76,7 @@
                                 <td>
                                     <div class="d-flex align-items-center">
                                             <div>
-                                                {{$item->tipe}}
+                                                <span class="badge rounded-pill bg-dark-subtle text-body small mb-1">{{ $item->tipe }}</span>
                                                 <p class="m-0 p-0 text-muted">Jumlah Kuota : {{$item->kuota}}</p>
                                             </div>
                                         </div>

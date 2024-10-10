@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('rekomendasi_topik_id')->nullable()->references('id')->on('rekomendasi_topiks')->onDelete('cascade');
             $table->foreignId('mahasiswa_id')->nullable()->references('id')->on('mahasiswas')->onDelete('cascade');
             $table->text('description')->nullable();
+            $table->string('file')->nullable();
             $table->date('date')->nullable();
             $table->enum('status', ['Menunggu', 'Ditolak', 'Disetujui'])->default('Menunggu');
             $table->timestamps();
