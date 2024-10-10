@@ -150,29 +150,42 @@ class RekomendasiTopikController extends Controller
     {
         $request->validate([
             'description' => 'required',
+            'document' => 'required|max:2048',
         ],[
             'description.required' => 'Deskripsi harus diisi',
+            'document.required' => 'Dokumen harus diisi',
+            'document.max' => 'Dokumen maksimal 2 MB',
         ]);
 
         try {
-            $user = Auth::user();
-            $mhs = Mahasiswa::where('id', $user->userable_id)->first();
+            $mhs = Mahasiswa::where('id', getInfoLogin()->userable_id)->first();
             if (!$mhs) {
                 return redirect()->route('apps.rekomendasi-topik')->with('error','Anda belum terdaftar sebagai mahasiswa');
             }
-            
+
             $exists = AmbilTawaran::where('mahasiswa_id', $mhs->id)->where('rekomendasi_topik_id', $rekomendasiTopik->id)->first();
             if ($exists) {
                 return redirect()->route('apps.rekomendasi-topik')->with('error','Anda sudah mengambil topik ini');
             }
 
+            if($request->hasFile('document')) {
+                $file = $request->file('document');
+                $filename = 'Lampiran_'. rand(0, 999999999) .'_'. rand(0, 999999999) .'.'. $file->getClientOriginalExtension();
+                $file->move(public_path('storage/files/apply-topik'), $filename);
+            } else {
+                $filename = null;
+            }
+
+            
             AmbilTawaran::create([
                 'mahasiswa_id' => $mhs->id,
                 'rekomendasi_topik_id' => $rekomendasiTopik->id,
                 'description' => $request->description,
+                'file' => $filename,
                 'date' => Carbon::now(),
                 'status' => 'Menunggu',
             ]);
+
 
             return redirect()->route('apps.rekomendasi-topik')->with('success', 'Berhasil mengirim data');
         } catch (\Exception $e) {

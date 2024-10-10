@@ -42,7 +42,8 @@
                                 <p class="small">{{ \Carbon\Carbon::parse($item->date)->locale('id')->isoFormat('D MMMM Y') }}</p>
                             </div>
                         </div>
-                        <p class="text-muted">{{ $item->description }}</p>
+                        <p class="text-muted m-0">{{ $item->description }}</p>
+                        <a href="{{ asset('storage/files/apply-topik/' . $item->file )}}" target="_blank" class="nav-link text-primary mt-1"><span>Lihat Cv/Portofolio</span></a>
                     </div>
                 </div>
             @empty

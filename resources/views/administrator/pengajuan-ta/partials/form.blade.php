@@ -18,7 +18,6 @@
                             </button>
                         </div>
                     @endif
-<<<<<<< HEAD
                     @if ($errors->any())
                         <div class="alert alert-error alert-danger alert-dismissible fade show" role="alert">
                             <ul>
@@ -26,25 +25,15 @@
                                     <li>{{ $error }}</li>
                                 @endforeach
                             </ul>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                            </button>
                         </div>
                     @endif
-                    <form action="{{route('apps.pengajuan-ta.store')}}" method="post" enctype="multipart/form-data">
-                        @csrf
-                        <div class="mb-3">
-                            <label for="pembimbing_1">Pembimbing 1 <span class="text-danger">*</span></label>
-                            <select name="pembimbing_1" class="form-control" required>
-                                <option value="">Pilih Dosen Pembimbing 1</option>
-                                @foreach ($dataDosen as $item)
-                                <option value="{{$item->id}}" {{ isset($editedData) ? $editedData->bimbing_uji()->where('tugas_akhir_id', $editedData->id)->first()->dosen->id == $item->id ? "selected" : '' : ''}}>({{($item->kuota_pembimbing_1-$item->total_pembimbing_1)}}) {{$item->nidn}} - {{$item->name}}</option>
-                                @endforeach
-                            </select>
-=======
                     <form action="{{isset($editedData) ? route('apps.pengajuan-ta.update', ['pengajuanTA' => $editedData->id]) : route('apps.pengajuan-ta.store')}}" method="post" enctype="multipart/form-data">
                         @csrf
                         <div class="mb-3">
                             <label for="judul">Judul <span class="text-danger">*</span></label>
                             <textarea name="judul" class="form-control" required>{{isset($editedData) ? $editedData->judul : ''}}</textarea>
->>>>>>> b3d1c9dad91babb846a6a95d9afc1634ec7c54c5
                         </div>
                         <div class="row">
                             <div class="col-sm-12 col-md-6 col-lg-6">
@@ -58,16 +47,6 @@
                                     </select>
                                 </div>
                                 <div class="mb-3">
-<<<<<<< HEAD
-                                    <label for="judul">Judul <span class="text-danger">*</span></label>
-                                    <input type="text" name="judul" class="form-control" value="{{isset($editedData) ? $editedData->judul : ''}}" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="">Dokumen Dosen Pembimbing 1 <span class="text-danger">*</span></label>
-                                    <input type="file" name="dokumen_pembimbing_1" class="form-control" required>
-                                    @if(isset($editedData) && !is_null($editedData->document_pembimbing_1))
-                                        <a href="{{ asset('assets/dokumen/'.$editedData->document_pembimbing_1) }}" target="_blank" class="nav-link">Lihat Dokumen Dosen Pembimbing 1</a>
-=======
                                     <label for="pembimbing_1">Pembimbing 1 <span class="text-danger">*</span></label>
                                     <select name="pembimbing_1" class="form-control" required>
                                         <option value="">Pilih Dosen Pembimbing 1</option>
@@ -81,7 +60,6 @@
                                     <input type="file" name="dokumen_pembimbing_1" class="form-control">
                                     @if(isset($editedData) && !is_null($editedData->dokumen_pemb_1))
                                         <a href="{{ asset('storage/files/tugas-akhir/'.$editedData->dokumen_pemb_1) }}" target="_blank" class="nav-link small text-primary mt-1"><i>Lihat Dokumen Pembimbing 1</i></a>
->>>>>>> b3d1c9dad91babb846a6a95d9afc1634ec7c54c5
                                     @endif
                                 </div>
                             </div>
@@ -105,15 +83,9 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="dokumen_ringkasan">Dokumen Ringkasan <span class="text-danger">*</span></label>
-<<<<<<< HEAD
-                                    <input type="file" name="dokumen_ringkasan" class="form-control" required>
-                                    @if(isset($editedData) && !is_null($editedData->dokumen_ringkasan))
-                                        <a href="{{ asset('assets/dokumen/'.$editedData->dokumen_ringkasan) }}" target="_blank" class="nav-link">Lihat Dokumen Ringkasan</a>
-=======
                                     <input type="file" name="dokumen_ringkasan" class="form-control">
                                     @if(isset($editedData) && !is_null($editedData->dokumen_ringkasan))
                                         <a href="{{ asset('storage/files/tugas-akhir/'.$editedData->dokumen_ringkasan) }}" target="_blank" class="nav-link small text-primary mt-1"><i>Lihat Dokumen Ringkasan</i></a>
->>>>>>> b3d1c9dad91babb846a6a95d9afc1634ec7c54c5
                                     @endif
                                 </div>
                             </div>

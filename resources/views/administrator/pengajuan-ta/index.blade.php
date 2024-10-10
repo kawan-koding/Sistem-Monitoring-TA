@@ -27,8 +27,8 @@
                 @if($dataTA->where('status', 'reject')->count() > 0 || $dataTA->count() == 0)
                 <a href="{{route('apps.pengajuan-ta.create')}}" class="btn btn-primary mb-2"><i class="fa fa-plus"></i> Tambah</a>
                 @endif
-                <a href="https://drive.google.com/file/d/1ldapUYIdj04TKkkUG4hRfzaa4oSxJ05r/view?usp=sharing" target="_blank" class="btn btn-success mb-2"><i class="far fa-file-alt"></i> Template Persetujuan Pemb 1</a>
-                <a href="https://drive.google.com/file/d/1CF7BnMwtpPVVmo3fkdBsJztGabu_I3FE/view?usp=sharing" target="_blank" class="btn btn-secondary mb-2"><i class="far fa-file-alt"></i> Template Ringkasan</a>
+                <a href="{{ getSetting('app_template_mentor_one')}}" target="_blank" class="btn btn-success mb-2"><i class="far fa-file-alt"></i> Template Persetujuan Pemb 1</a>
+                <a href="{{ getSetting('app_template_summary')}}" target="_blank" class="btn btn-secondary mb-2"><i class="far fa-file-alt"></i> Template Ringkasan</a>
                 <hr>
                 <div class="table-responsive">
                     <table class="table table-striped" id="datatable">
