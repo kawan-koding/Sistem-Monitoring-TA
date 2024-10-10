@@ -57,7 +57,7 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="">Dokumen Pembimbing 1 <span class="text-danger">*</span></label>
-                                    <input type="file" name="dokumen_pembimbing_1" class="form-control">
+                                    <input type="file" name="dokumen_pembimbing_1" class="form-control filepond">
                                     @if(isset($editedData) && !is_null($editedData->dokumen_pemb_1))
                                         <a href="{{ asset('storage/files/tugas-akhir/'.$editedData->dokumen_pemb_1) }}" target="_blank" class="nav-link small text-primary mt-1"><i>Lihat Dokumen Pembimbing 1</i></a>
                                     @endif
@@ -83,7 +83,7 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="dokumen_ringkasan">Dokumen Ringkasan <span class="text-danger">*</span></label>
-                                    <input type="file" name="dokumen_ringkasan" class="form-control">
+                                    <input type="file" name="dokumen_ringkasan" class="form-control filepond">
                                     @if(isset($editedData) && !is_null($editedData->dokumen_ringkasan))
                                         <a href="{{ asset('storage/files/tugas-akhir/'.$editedData->dokumen_ringkasan) }}" target="_blank" class="nav-link small text-primary mt-1"><i>Lihat Dokumen Ringkasan</i></a>
                                     @endif
@@ -91,7 +91,7 @@
                             </div>
                         </div>
                         <hr>
-                        <button type="submit" class="btn btn-secondary">Kembali</button>
+                        <a href="{{route('apps.pengajuan-ta')}}" class="btn btn-secondary">Kembali</a>
                         <button type="submit" class="btn btn-primary">Simpan</button>
                     </form>
                 </div>

@@ -34,8 +34,8 @@ class PengajuanTARequest extends FormRequest
             'topik' => 'required',
             'judul' => 'required',
             'tipe' => 'required',
-            'dokumen_pembimbing_1' => $this->routeName == 'apps.pengajuan-ta.store' ? 'required|mimes:docx,pdf' : 'nullable|mimes:docx,pdf',
-            'dokumen_ringkasan' => $this->routeName == 'apps.pengajuan-ta.store' ? 'required|mimes:docx,pdf' : 'nullable|mimes:docx,pdf',
+            'dokumen_pembimbing_1' => $this->routeName == 'apps.pengajuan-ta.store' ? 'required|mimes:docx,pdf|max:5120' : 'nullable|mimes:docx,pdf|max:5120',
+            'dokumen_ringkasan' => $this->routeName == 'apps.pengajuan-ta.store' ? 'required|mimes:docx,pdf|max:5120' : 'nullable|mimes:docx,pdf|max:5120',
         ];
     }
 
@@ -49,8 +49,10 @@ class PengajuanTARequest extends FormRequest
             'tipe.required' => 'Tipe tidak boleh kosong',
             'dokumen_pembimbing_1.required' => 'Dokumen pembimbing 1 tidak boleh kosong',
             'dokumen_pembimbing_1.mimes' => 'Dokumen pembimbing 1 harus dalam format PDF atau Docx',
+            'dokumen_pembimbing_1.max' => 'Dokumen pembimbing 2 tidak boleh lebih dari 5 MB',
             'dokumen_ringkasan.required' => 'Dokumen ringkasan tidak boleh kosong',
-            'dokumen_ringkasan.mimes' => 'Dokumen ringkasan harus dalam format PDF atau Docx'
+            'dokumen_ringkasan.mimes' => 'Dokumen ringkasan harus dalam format PDF atau Docx',
+            'dokumen_ringkasan.max' => 'Dokumen ringkasan tidak boleh lebih dari 5 MB',
         ];
     }
 }

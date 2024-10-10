@@ -13,14 +13,10 @@ return new class extends Migration
     {
         Schema::create('tugas_akhirs', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('jenis_ta_id');
-            $table->unsignedBigInteger('topik_id');
-            $table->unsignedBigInteger('mahasiswa_id');
-            $table->unsignedBigInteger('periode_ta_id');
-            $table->foreign('jenis_ta_id')->references('id')->on('jenis_tas')->onDelete('cascade');
-            $table->foreign('topik_id')->references('id')->on('topiks')->onDelete('cascade');
-            $table->foreign('mahasiswa_id')->references('id')->on('mahasiswas')->onDelete('cascade');
-            $table->foreign('periode_ta_id')->references('id')->on('periode_tas')->onDelete('cascade');
+            $table->foreignId('jenis_ta_id')->references('id')->on('jenis_tas')->onDelete('cascade');
+            $table->foreignId('topik_id')->references('id')->on('topiks')->onDelete('cascade');
+            $table->foreignId('mahasiswa_id')->references('id')->on('mahasiswas')->onDelete('cascade');
+            $table->foreignId('periode_ta_id')->references('id')->on('periode_tas')->onDelete('cascade');
             $table->string('judul', 255);
             $table->enum('tipe', ['K', 'I']);
             $table->string('dokumen_pemb_1', 255)->nullable();
@@ -32,6 +28,7 @@ return new class extends Migration
             $table->text('catatan')->nullable();
             $table->enum('status_seminar', ['revisi', 'acc', 'reject'])->nullable();
             $table->boolean('is_completed')->nullable()->default(false);
+            $table->string('file_persetujuan_pemb_2', 255)->nullable();
             // $table->string('periode_mulai', 45);
             // $table->string('periode_akhir', 45);
             $table->timestamps();

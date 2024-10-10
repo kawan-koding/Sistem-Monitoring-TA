@@ -23,15 +23,25 @@
                         </button>
                     </div>
                 @endif
-                {{-- {{dd($dataTA);}} --}}
-                @if(getInfoLogin()->hasRole('Mahasiswa'))
-                    @if($dataTA->where('status', 'reject')->count() > 0 || $dataTA->count() == 0)
-                    <a href="{{route('apps.pengajuan-ta.create')}}" class="btn btn-primary mb-2"><i class="fa fa-plus"></i> Tambah</a>
-                    @endif
-                    <a href="{{ getSetting('app_template_mentor_one')}}" target="_blank" class="btn btn-success mb-2"><i class="far fa-file-alt"></i> Template Persetujuan Pemb 1</a>
-                    <a href="{{ getSetting('app_template_summary')}}" target="_blank" class="btn btn-secondary mb-2"><i class="far fa-file-alt"></i> Template Ringkasan</a>
-                    <hr>
+                @if ($errors->any())
+                <div class="alert alert-error alert-danger alert-dismissible fade show" role="alert">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                    </button>
+                </div>
                 @endif
+                @can('create-tugas-akhir')
+                @if($dataTA->where('status', 'reject')->count() > 0 || $dataTA->count() == 0)
+                <a href="{{route('apps.pengajuan-ta.create')}}" class="btn btn-primary mb-2"><i class="fa fa-plus"></i> Tambah</a>
+                @endif
+                @endcan
+                <a href="{{ getSetting('app_template_mentor_one')}}" target="_blank" class="btn btn-success mb-2"><i class="far fa-file-alt"></i> Template Persetujuan Pemb 1</a>
+                <a href="{{ getSetting('app_template_summary')}}" target="_blank" class="btn btn-secondary mb-2"><i class="far fa-file-alt"></i> Template Ringkasan</a>
+                <hr>
                 <div class="table-responsive">
                     <table class="table table-striped" id="datatable">
                         <thead>
@@ -105,9 +115,11 @@
                                 </td>
                                 {{-- <td>{{$item->catatan}}</td> --}}
                                 <td>
+                                    @can('update-tugas-akhir')
                                     <a href="{{route('apps.pengajuan-ta.edit', ['pengajuanTA' => $item->id])}}" class="btn btn-sm btn-primary mb-3" title="Edit"><i class="fas fa-edit"></i></a>
+                                    @endcan
                                     <a href="{{route('apps.pengajuan-ta.show', ['pengajuanTA' => $item->id])}}" class="btn btn-sm btn-primary mb-3" title="Detail"><i class="fas fa-search"></i></a>
-                                    <a href="javascript:void(0);" data-url="{{route('apps.pengajuan-ta.unggah-berkas', ['id' => $item->id])}}" class="btn btn-sm btn-secondary unggah-berkas mb-3" title="Unggah Berkas"><i class="far fa-file-alt"></i></a>
+                                    <a href="javascript:void(0);" onclick="uploadFile('{{$item->id}}','{{route('apps.pengajuan-ta.unggah-berkas',  $item->id)}}')" class="btn btn-sm btn-secondary unggah-berkas mb-3" title="Unggah Berkas"><i class="far fa-file-alt"></i></a>
 
                                     @if ($timer == 'selesai')
 
@@ -115,12 +127,12 @@
                                     <a href="{{route('apps.pengajuan-ta.print_rekap', ['id' => $item->id])}}" class="btn btn-sm btn-success mb-3" title="Rekapitulasi"><i class="far fa-file-alt"></i></a>
                                     <a href="{{route('apps.pengajuan-ta.print_revisi', ['id' => $item->id])}}" class="btn btn-sm btn-success mb-3" title="Revisi"><i class="fas fa-file-invoice"></i></a>
                                     @endif
-                                    @if (isset($item_pemb_1))
+                                    {{-- @if (isset($item_pemb_1))
                                     <a href="{{route('apps.pengajuan-ta.print_pemb1', ['id' => $item->id])}}" class="btn btn-sm btn-success mb-3" title="Print Persetujuan Dosen"><i class="fas fa-file-invoice"></i></a>
                                     @endif
                                     @if (isset($item_pemb_2))
                                     <a href="{{route('apps.pengajuan-ta.print_pemb2', ['id' => $item->id])}}" class="btn btn-sm btn-success mb-3" title="Print Persetujuan Dosen"><i class="fas fa-file-invoice"></i></a>
-                                    @endif
+                                    @endif --}}
                                 </td>
                             </tr>
                             @endforeach
@@ -132,4 +144,36 @@
     </div>
 </div>
 
+
+<div id="myModalUploadFile" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-tile mt-0" id="myModalLabelUploadFile">Unggah Berkas</h5>
+                <button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+            </div>
+            <form action="" id="myUploadFile" method="post" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="">File Pengesahan</label>
+                        <input type="file" name="file_pengesahan" class="form-control filepond">
+                    </div>
+                    <div class="mb-3">
+                        <label for="">File Proposal</label>
+                        <input type="file" name="file_proposal" class="form-control filepond">
+                    </div>
+                    <div class="mb-3">
+                        <label for="">Dokumen Pembimbing 2</label>
+                        <input type="file" name="dokumen_pemb_2" class="form-control filepond">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary waves-effect waves-light" data-bs-dismiss="modal">Keluar</button>
+                    <button type="submit" class="btn btn-primary waves-effect waves-light">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 @endsection

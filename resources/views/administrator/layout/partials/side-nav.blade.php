@@ -53,14 +53,14 @@
                 </li>
                 @endcan
                 
-                {{-- @can(['read-pengajuanta-mahasiswa']) --}}
+                @can(['read-tugas-akhir'])
                 <li>
                     <a href="{{ route('apps.pengajuan-ta')}}" class=" waves-effect">
                         <i class="mdi mdi-calendar-text"></i>
                         <span>Pengajuan TA</span>
                     </a>
                 </li>
-                {{-- @endcan --}}
+                @endcan
 
                 @if (in_array(session('switchRoles'), ['Admin','Developer']))  
                     @canany(['read-mahasiswa', 'read-dosen', 'read-ruangan', 'read-topik', 'read-topik'])
