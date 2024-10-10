@@ -24,7 +24,9 @@ class PengajuanTAController extends Controller
     {
         $myId = getInfoLogin()->username;
         $mahasiswa = Mahasiswa::where('nim', $myId)->first();
-        $ta = TugasAkhir::with(['jenis_ta', 'topik'])->where('mahasiswa_id', $mahasiswa->id)->first();
+        if($mahasiswa) {
+            $ta = TugasAkhir::with(['jenis_ta', 'topik'])->where('mahasiswa_id', $mahasiswa->id)->first();
+        }
 
         $seminar = null;
         if(isset($ta->id)){
@@ -44,6 +46,11 @@ class PengajuanTAController extends Controller
         } else {
             $waktu = 'seminar tidak ditemukan';
         }
+        
+        $query = [];
+        if($mahasiswa) {
+            $query = TugasAkhir::with(['jenis_ta', 'topik'])->where('mahasiswa_id', $mahasiswa->id)->get();
+        }
 
         $data = [
             'title' => 'Pengajuan Tugas Akhir',
@@ -57,7 +64,7 @@ class PengajuanTAController extends Controller
                     'is_active' => true
                 ]
             ],
-            'dataTA'   => TugasAkhir::with(['jenis_ta', 'topik'])->where('mahasiswa_id', $mahasiswa->id)->get(),
+            'dataTA'   => $query,
             'timer' => $waktu,
         ];
         
@@ -98,13 +105,8 @@ class PengajuanTAController extends Controller
                     'url' => route('apps.dashboard')
                 ],
                 [
-<<<<<<< HEAD
                     'title' => 'Pengajuan Tugas Akhir',
                     'url' => route('apps.pengajuan-ta')
-=======
-                    'title' => 'Tugas Akhir',
-                    'url' => route('apps.pengajuan-ta') 
->>>>>>> 01a9dc2f519dae520dc9b026786a9a04cc6956de
                 ],
                 [
                     'title' => 'Tambah Pengajuan Tugas Akhir',

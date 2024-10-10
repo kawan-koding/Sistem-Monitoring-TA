@@ -22,7 +22,7 @@
                         @csrf
                         <div class="mb-3">
                             <label for="judul">Judul <span class="text-danger">*</span></label>
-                            <input type="text" name="judul" class="form-control" value="{{isset($editedData) ? $editedData->judul : ''}}" required>
+                            <textarea name="judul" class="form-control" required>{{isset($editedData) ? $editedData->judul : ''}}</textarea>
                         </div>
                         <div class="row">
                             <div class="col-sm-12 col-md-6 col-lg-6">
