@@ -54,11 +54,13 @@ class RoleSeeder extends Seeder
             'read-periode', 'create-periode', 'update-periode', 'delete-periode','change-periode',
             'read-users', 'create-users', 'update-users', 'delete-users',
             'read-kuota', 'update-kuota',
-            'read-setting', 'update-setting'
+            'read-setting', 'update-setting',
+            'read-tugas-akhir'
         ]);
 
         $kaprodi->givePermissionTo([
             'read-dashboard',
+            'read-tugas-akhir', 'acc-tugas-akhir', 'reject-tugas-akhir'
         ]);
         
         $dosen->givePermissionTo([
@@ -70,6 +72,7 @@ class RoleSeeder extends Seeder
             'read-dashboard',
             'read-rekomendasi-topik','take-rekomendasi-topik',
             'read-topik-yang-diambil','cancel-topik-yang-diambil',
+            'read-tugas-akhir', 'create-tugas-akhir', 'update-tugas-akhir',
         ]);
 
     }

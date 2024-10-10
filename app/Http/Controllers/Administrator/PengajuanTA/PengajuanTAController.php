@@ -16,7 +16,6 @@ use App\Models\PeriodeTa;
 use App\Models\Topik;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Validator;
 
 class PengajuanTAController extends Controller
 {
@@ -54,6 +53,7 @@ class PengajuanTAController extends Controller
 
         $data = [
             'title' => 'Pengajuan Tugas Akhir',
+            'mods' => 'pengajuan_ta',
             'breadcrumbs' => [
                 [
                     'title' => 'Dashboard',
@@ -181,7 +181,7 @@ class PengajuanTAController extends Controller
 
             return redirect()->route('apps.pengajuan-ta')->with('success', 'Data berhasil ditambahkan');
         } catch (\Exception $e) {
-            return redirect()->route('apps.pengajuan-ta')->with('error', $e->getMessage());
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -235,7 +235,7 @@ class PengajuanTAController extends Controller
         return view('administrator.pengajuan-ta.partials.form', $data);
     }
 
-    public function update(Request $request, TugasAkhir $pengajuanTA)
+    public function update(PengajuanTARequest $request, TugasAkhir $pengajuanTA)
     {
         try {
             $ta = $pengajuanTA;
@@ -250,7 +250,6 @@ class PengajuanTAController extends Controller
 
             if($cekPemb1->dosen_id != $request->pembimbing_1){
                 if($bimbingUji >= $kuota->pembimbing_1){
-
                     return redirect()->back()->with('error', 'Kuota dosen pembimbing 1 yang di pilih telah mencapai batas');
 
                 }
@@ -302,7 +301,7 @@ class PengajuanTAController extends Controller
             return redirect()->route('apps.pengajuan-ta')->with('success', 'Data berhasil ditambahkan');
         } catch (\Exception $e) {
             // dd($e->getMessage());
-            return redirect()->route('apps.pengajuan-ta')->with('error', $e->getMessage())->withInput($request->all());
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -339,4 +338,52 @@ class PengajuanTAController extends Controller
 
         return view('administrator.pengajuan-ta.partials.detail', $data);
     }
+
+    public function unggah_berkas(TugasAkhir $pengajuanTA, Request $request)
+    {
+        $request->validate([
+            'file_pengesahan' => 'nullable|mimes:pdf,docx|max:51200',
+            'file_proposal' => 'nullable|mimes:docx,pdf',
+            'dokumen_pemb_2' => 'nullable|mimes:docx,pdf',
+        ],[
+            'file_pengesahan.mimes' => 'File pengesahan harus dalam format PDF atau DOCX',
+            'file_pengesahan.max' => 'File pengesahan melebihi batas upload, maksimal 5MB',
+            'file_proposal.mimes' => 'Fiel proposal harus dalam format PDF atau DOCX',
+            'file_pemb_2.mimes' => 'Fiel proposal harus dalam format PDF atau DOCX',
+            'file_pemb_2.max' => 'File proposal melebihi batas upload, maksimal 5MB',
+        ]);
+
+        try {
+            $data = TugasAkhir::where('id', $pengajuanTA->id)->first();
+            // dd($data);
+
+            if($request->hasFile('file_pengesahan')){
+                $file = $request->file('file_pengesahan');
+                $filePengesahan = 'Pengesahan_' . rand(0, 999999999) . '.' . $file->getClientOriginalExtension();
+                $file->move(public_path('storage/files/tugas-akhir'), $filePengesahan);
+            }
+            if($request->hasFile('file_proposal')){
+                $file = $request->file('file_proposal');
+                $fileProposal = 'Proposal_' . rand(0, 999999999) . '.' . $file->getClientOriginalExtension();
+                $file->move(public_path('storage/files/tugas-akhir'), $fileProposal);
+            }
+            if($request->hasFile('dokumen_pemb_2')){
+                $file = $request->file('dokumen_pemb_2');
+                $dokumenPemb2 = 'Pembimbing2_' . rand(0, 999999999) . '.' . $file->getClientOriginalExtension();
+                $file->move(public_path('storage/files/tugas-akhir'), $dokumenPemb2);
+            }
+            
+            $data->update([
+                'file_pengesahan' => $filePengesahan,
+                'file_proposal' => $fileProposal,
+                'file_persetujuan_pemb_2' => $dokumenPemb2,
+            ]);
+
+            return redirect()->route('apps.pengajuan-ta')->with('success', 'Berkas berhasil diunggah');
+        } catch (\Exception $e) {
+            // dd($e->getMessage());
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+    
 }

@@ -28,8 +28,7 @@ class TugasAkhir extends Model
         'status',
         'catatan',
         'status_seminar',
-        'periode_mulai',
-        'periode_akhir',
+        'file_persetujuan_pemb_2',
     ];
 
     public function mahasiswa(){

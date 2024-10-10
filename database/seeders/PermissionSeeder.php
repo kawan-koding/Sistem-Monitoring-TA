@@ -88,6 +88,11 @@ class PermissionSeeder extends Seeder
             ["name" => "update-kuota", "display_name" => "Ubah Kuota"],
             ["name" => "read-setting", "display_name" => "Lihat Pengaturan"],
             ["name" => "update-setting", "display_name" => "Ubah Pengaturan"],
+            ["name" => "read-tugas-akhir", "display_name" => "Lihat Tugas Akhir"],
+            ["name" => "create-tugas-akhir", "display_name" => "Buat Tugas Akhir"],
+            ["name" => "update-tugas-akhir", "display_name" => "Ubah Tugas Akhir"],
+            ["name" => "acc-tugas-akhir", "display_name" => "Menyetujui Tugas Akhir"],
+            ["name" => "reject-tugas-akhir", "display_name" => "Menolak Tugas Akhir"],
 
         ]);
         $this->insertPermission($permissions);
