@@ -10,27 +10,8 @@ class TugasAkhir extends Model
     use HasFactory;
 
     protected $table = 'tugas_akhirs';
-
     protected $primaryKey = 'id';
-
-    protected $fillable = [
-        'jenis_ta_id',
-        'topik_id',
-        'mahasiswa_id',
-        'periode_ta_id',
-        'judul',
-        'tipe',
-        'dokumen_pemb_1',
-        'dokumen_ringkasan',
-        'file_proposal',
-        'file_pengesahan',
-        'file_draft',
-        'status',
-        'catatan',
-        'status_seminar',
-        'periode_mulai',
-        'periode_akhir',
-    ];
+    protected $guarded = [];
 
     public function mahasiswa(){
         return $this->belongsTo(Mahasiswa::class);

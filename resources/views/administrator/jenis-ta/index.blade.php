@@ -47,8 +47,8 @@
                                 <td>{{$loop->iteration}}</td>
                                 <td>{{$item->nama_jenis}}</td>
                                 <td>
-                                    <a href="javascript:void(0);" onclick="editJenis('{{ $item->id }}', '{{route('apps.jenis-ta.show', ['id' => $item->id])}}')" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></a>
-                                    <a href="javascript:void(0);" onclick="hapusJenis('{{ $item->id }}', '{{route('apps.jenis-ta.delete', ['id' => $item->id])}}')" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></a>
+                                    <a href="javascript:void(0);" onclick="editJenis('{{ $item->id }}', '{{route('apps.jenis-ta.show', ['id' => $item->id])}}')" class="btn btn-outline-primary btn-sm mx-1 my-1"><i class="fa fa-edit"></i></a>
+                                    <a href="javascript:void(0);" onclick="hapusJenis('{{ $item->id }}', '{{route('apps.jenis-ta.delete', ['id' => $item->id])}}')" class="btn btn-outline-dark btn-sm mx-1 my-1"><i class="fa fa-trash"></i></a>
                                 </td>
                             </tr>
                             @endforeach

@@ -88,6 +88,9 @@ class PermissionSeeder extends Seeder
             ["name" => "update-kuota", "display_name" => "Ubah Kuota"],
             ["name" => "read-setting", "display_name" => "Lihat Pengaturan"],
             ["name" => "update-setting", "display_name" => "Ubah Pengaturan"],
+            ["name" => "read-pembagian-dosen", "display_name" => "Lihat Pembagian Dosen"],
+            ["name" => "update-pembagian-dosen", "display_name" => "Ubah Pembagian Dosen"],
+
 
         ]);
         $this->insertPermission($permissions);

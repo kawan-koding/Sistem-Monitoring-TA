@@ -9,7 +9,6 @@ use App\Http\Controllers\Login\LoginController;
 use App\Http\Controllers\DaftarTaAdminController;
 use App\Http\Controllers\JadwalSeminarController;
 use App\Http\Controllers\JadwalUjiDosenController;
-use App\Http\Controllers\PembagianDosenController;
 use App\Http\Controllers\DaftarTaKaprodiController;
 use App\Http\Controllers\PengajuanTaKaprodiController;
 use App\Http\Controllers\DaftarBimbinganDosenController;
@@ -17,8 +16,8 @@ use App\Http\Controllers\PengajuanTaMahasiswaController;
 use App\Http\Controllers\JadwalSeminarMahasiswaController;
 use App\Http\Controllers\Administrator\Role\RoleController;
 use App\Http\Controllers\Administrator\User\UserController;
-
 use App\Http\Controllers\Administrator\Dosen\DosenController;
+
 use App\Http\Controllers\Administrator\JenisTA\JenisTAController;
 use App\Http\Controllers\Administrator\Jurusan\JurusanController;
 use App\Http\Controllers\Administrator\Profile\ProfileController;
@@ -32,6 +31,7 @@ use App\Http\Controllers\Administrator\PeriodeTA\PeriodeTAController;
 use App\Http\Controllers\Administrator\KuotaDosen\KuotaDosenController;
 use App\Http\Controllers\Administrator\PengajuanTA\PengajuanTAController;
 use App\Http\Controllers\Administrator\ProgramStudi\ProgramStudiController;
+use App\Http\Controllers\Administrator\PembagianDosen\PembagianDosenController;
 use App\Http\Controllers\Administrator\RekomendasiTopik\RekomendasiTopikController;
 
 /*
@@ -195,6 +195,12 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::get('', [SettingController::class, 'index'])->name('apps.settings');
         Route::get('{setting}/show', [SettingController::class, 'show'])->name('apps.settings.show');
         Route::post('{setting}/update', [SettingController::class, 'update'])->name('apps.settings.update')->middleware('can:update-setting');
+    });
+    
+    Route::prefix('pembagian-dosen')->middleware('can:read-pembagian-dosen')->group( function() {
+        Route::get('', [PembagianDosenController::class, 'index'])->name('apps.pembagian-dosen');
+        Route::get('belum-terbagi', [PembagianDosenController::class, 'notCompleted'])->name('apps.pembagian-dosen.belum-dibagi');
+        // Route::post('store', [KuotaDosenController::class, 'store'])->name('apps.pembagian-dosen.update')->middleware('can:update-kuota');
     });
 
 
