@@ -84,7 +84,7 @@
                 <div class="col-md-3 col-sm-6 col-12 border p-3 text-center">
                     <strong>Dokumen Pembimbing 1</strong>
                     <i class="mdi mdi-file-pdf-box-outline text-danger d-block" style="font-size: 56px;"></i>
-                    <button class="btn btn-secondary btn-sm"><i class="bx bx-download"></i> Download Dokumen</button>
+                    <button class="btn btn-secondary btn-sm"><i class="bx bx-download"></i> Download Dokumen</button> 
                 </div>
                 <div class="col-md-3 col-sm-6 col-12 border p-3 text-center">
                     <strong>Dokumen Proposal</strong>
