@@ -34,7 +34,7 @@
                     </button>
                 </div>
                 @endif
-                @can('create-tugas-akhir')
+                @can('create-pengajuan-tugas-akhir')
                 @if($dataTA->where('status', 'reject')->count() > 0 || $dataTA->count() == 0)
                 <a href="{{route('apps.pengajuan-ta.create')}}" class="btn btn-primary mb-2"><i class="fa fa-plus"></i> Tambah</a>
                 @endif
@@ -115,7 +115,7 @@
                                 </td>
                                 {{-- <td>{{$item->catatan}}</td> --}}
                                 <td>
-                                    @can('update-tugas-akhir')
+                                    @can('update-pengajuan-tugas-akhir')
                                     <a href="{{route('apps.pengajuan-ta.edit', ['pengajuanTA' => $item->id])}}" class="btn btn-sm btn-primary mb-3" title="Edit"><i class="fas fa-edit"></i></a>
                                     @endcan
                                     <a href="{{route('apps.pengajuan-ta.show', ['pengajuanTA' => $item->id])}}" class="btn btn-sm btn-primary mb-3" title="Detail"><i class="fas fa-search"></i></a>

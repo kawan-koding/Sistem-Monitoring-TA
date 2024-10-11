@@ -53,13 +53,15 @@
                 </li>
                 @endcan
                 
-                @can(['read-tugas-akhir'])
-                <li>
-                    <a href="{{ route('apps.pengajuan-ta')}}" class=" waves-effect">
-                        <i class="mdi mdi-calendar-text"></i>
-                        <span>Pengajuan TA</span>
-                    </a>
-                </li>
+                @can(['read-pengajuan-tugas-akhir'])
+                    @if(getInfoLogin()->hasRole('Mahasiswa'))
+                    <li>
+                        <a href="{{ route('apps.pengajuan-ta')}}" class=" waves-effect">
+                            <i class="mdi mdi-calendar-text"></i>
+                            <span>Pengajuan TA</span>
+                        </a>
+                    </li>
+                    @endif
                 @endcan
 
                 @if (in_array(session('switchRoles'), ['Admin','Developer']))  
@@ -117,9 +119,11 @@
                             @can(['read-daftarta-admin'])
                             <li><a href="{{route('apps.daftar-ta')}}">Daftar TA</a></li>
                             @endcan
-                            {{-- @can(['read-seminar-admin'])
-                            <li><a href="{{route('admin.jadwal-seminar')}}">Jadwal Seminar</a></li>
-                            @endcan --}}
+                            @if (getInfoLogin()->hasRole('Kaprodi'))
+                                @can(['read-pengajuan-tugas-akhir'])
+                                <li><a href="{{route('apps.pengajuan-ta')}}">Pengajuan TA</a></li>
+                                @endcan
+                            @endif
                             @can(['read-pembagian-dosen'])
                             <li><a href="{{route('apps.pembagian-dosen')}}">Pembagian Dosen</a></li>
                             @endcan

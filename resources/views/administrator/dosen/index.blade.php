@@ -82,7 +82,7 @@
                                     @endif
                                 </td>
                                 <td class="text-center">
-                                    <button onclick="editData('{{ $item->id }}', '{{route('apps.dosen.show', $item->id)}}')" class="btn btn-outline=primary btn-sm"><i class="bx bx-edit-alt"></i></a>
+                                    <button onclick="editData('{{ $item->id }}', '{{route('apps.dosen.show', $item->id)}}')" class="btn btn-outline-primary btn-sm"><i class="bx bx-edit-alt"></i></a>
                                     <button class="btn btn-outline-dark btn-sm mx-1 my-1" data-toggle="delete" data-url="{{ route('apps.dosen.delete', $item->id) }}"><i class="bx bx-trash"></i></button>
                                 </td>
                             </tr>

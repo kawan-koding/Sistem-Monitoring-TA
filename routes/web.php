@@ -145,12 +145,12 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::get('/destroy/{id}', [DaftarTAController::class, 'destroy'])->name('apps.daftar-ta.delete');
     });
 
-    Route::prefix('pengajuan-ta')->middleware('can:read-tugas-akhir')->group(function () {
+    Route::prefix('pengajuan-ta')->middleware('can:read-pengajuan-tugas-akhir')->group(function () {
         Route::get('', [PengajuanTAController::class, 'index'])->name('apps.pengajuan-ta');
         Route::get('create', [PengajuanTAController::class, 'create'])->name('apps.pengajuan-ta.create');
-        Route::post('store', [PengajuanTAController::class, 'store'])->name('apps.pengajuan-ta.store')->middleware('can:create-tugas-akhir');
+        Route::post('store', [PengajuanTAController::class, 'store'])->name('apps.pengajuan-ta.store')->middleware('can:create-pengajuan-tugas-akhir');
         Route::get('/{pengajuanTA}/edit', [PengajuanTAController::class, 'edit'])->name('apps.pengajuan-ta.edit');
-        Route::post('/{pengajuanTA}/update', [PengajuanTAController::class, 'update'])->name('apps.pengajuan-ta.update')->middleware('can:update-tugas-akhir');
+        Route::post('/{pengajuanTA}/update', [PengajuanTAController::class, 'update'])->name('apps.pengajuan-ta.update')->middleware('can:update-pengajuan-tugas-akhir');
         Route::get('{pengajuanTA}/show', [PengajuanTAController::class, 'show'])->name('apps.pengajuan-ta.show');
         Route::post('{pengajuanTA}/unggah-berkas', [PengajuanTAController::class, 'unggah_berkas'])->name('apps.pengajuan-ta.unggah-berkas');
         // Route::get('/print_nilai/{id}', [PengajuanTAController::class, 'print_nilai'])->name('apps.pengajuan-ta.print_nilai');
