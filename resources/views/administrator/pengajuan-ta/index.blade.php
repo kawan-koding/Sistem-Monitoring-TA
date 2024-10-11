@@ -114,7 +114,11 @@
                                     @endif
                                 </td>
                                 {{-- <td>{{$item->catatan}}</td> --}}
-                                <td>
+                                <td class="mb-3">
+                                    @if (getInfoLogin()->hasRole('kaprodi'))    
+                                    <a href="javascript:void(0);" class="btn btn-primary btn-sm mb-3" title="Acc"><i class="bx bx-check-double"></i></a>
+                                    <a href="javascript:void(0);" class="btn btn-danger btn-sm mb-3" title="Reject"><i class="bx bx-x"></i></a>
+                                    @endif
                                     @can('update-tugas-akhir')
                                     <a href="{{route('apps.pengajuan-ta.edit', ['pengajuanTA' => $item->id])}}" class="btn btn-sm btn-primary mb-3" title="Edit"><i class="fas fa-edit"></i></a>
                                     @endcan
