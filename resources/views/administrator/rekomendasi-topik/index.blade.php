@@ -9,13 +9,13 @@
             <ul class="nav nav-tabs nav-tabs-custom nav-justified mt-1 mb-1" role="tablist">
                 <li class="nav-item">
                     <a class="nav-link active" href="#">
-                        <span class="d-block d-sm-none"><i class="fas fa-home"></i></span>
+                        <span class="d-block d-sm-none"><i class="mdi mdi-open-book"></i></span>
                         <span class="d-none d-sm-block">Rekomendasi Topik</span>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('apps.topik-yang-diambil') }}">
-                        <span class="d-block d-sm-none"><i class="far fa-user"></i></span>
+                        <span class="d-block d-sm-none"><i class="mdi mdi-note-plus-outline"></i></span>
                         <span class="d-none d-sm-block">Topik Yang Anda Ambil</span>
                     </a>
                 </li>
@@ -40,17 +40,17 @@
                     </button>
                 </div>
                 @endif
-                 @if ($errors->any())
-                        <div class="alert alert-error alert-danger alert-dismissible fade show" role="alert">
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-                            </button>
-                        </div>
-                    @endif
+                @if ($errors->any())
+                    <div class="alert alert-error alert-danger alert-dismissible fade show" role="alert">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                        </button>
+                    </div>
+                @endif
                 <div class="table-responsive">
                     <table class="table table-striped" id="datatable">
                         <thead>
