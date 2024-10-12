@@ -17,20 +17,20 @@ class PermissionSeeder extends Seeder
     {
         //
         $permissions = collect([
-            ["name" => "read-daftarta-admin", "display_name" => "Lihat Daftar TA Admin"],
-            ["name" => "read-seminar-admin", "display_name" => "Lihat Jadwal Seminar Admin"],
-            ["name" => "read-settings", "display_name" => "Lihat Pengaturan"],
-            ["name" => "read-pengajuanta-kaprodi", "display_name" => "Lihat Pengajuan TA Kaprodi"],
-            ["name" => "read-daftarta-kaprodi", "display_name" => "Lihat Daftar TA Kaprodi"],
-            ["name" => "read-bagidosen-kaprodi", "display_name" => "Lihat Pembagian Dosen Kaprodi"],
-            ["name" => "read-daftar-bimbingan", "display_name" => "Lihat Daftar Bimbingan"],
-            ["name" => "read-jadwaluji", "display_name" => "Lihat Jadwal Uji"],
-            ["name" => "read-pengajuanta-mahasiswa", "display_name" => "Lihat Pengajuan TA Mahasiswa"],
-            ["name" => "read-jadwalseminar-mahasiswa", "display_name" => "Lihat Jadwal Seminar Mahasiswa"],
-            ["name" => "read-rumpunilmu", "display_name" => "Lihat Rumpun Ilmu"],
-            ["name" => "create-rumpunilmu", "display_name" => "Tambah Rumpun Ilmu"],
-            ["name" => "update-rumpunilmu", "display_name" => "Ubah Rumpun Ilmu"],
-            ["name" => "delete-rumpunilmu", "display_name" => "Hapus Rumpun Ilmu"],
+            // ["name" => "read-daftarta-admin", "display_name" => "Lihat Daftar TA Admin"],
+            // ["name" => "read-seminar-admin", "display_name" => "Lihat Jadwal Seminar Admin"],
+            // ["name" => "read-settings", "display_name" => "Lihat Pengaturan"],
+            // ["name" => "read-pengajuanta-kaprodi", "display_name" => "Lihat Pengajuan TA Kaprodi"],
+            // ["name" => "read-daftarta-kaprodi", "display_name" => "Lihat Daftar TA Kaprodi"],
+            // ["name" => "read-bagidosen-kaprodi", "display_name" => "Lihat Pembagian Dosen Kaprodi"],
+            // ["name" => "read-daftar-bimbingan", "display_name" => "Lihat Daftar Bimbingan"],
+            // ["name" => "read-jadwaluji", "display_name" => "Lihat Jadwal Uji"],
+            // ["name" => "read-pengajuanta-mahasiswa", "display_name" => "Lihat Pengajuan TA Mahasiswa"],
+            // ["name" => "read-jadwalseminar-mahasiswa", "display_name" => "Lihat Jadwal Seminar Mahasiswa"],
+            // ["name" => "read-rumpunilmu", "display_name" => "Lihat Rumpun Ilmu"],
+            // ["name" => "create-rumpunilmu", "display_name" => "Tambah Rumpun Ilmu"],
+            // ["name" => "update-rumpunilmu", "display_name" => "Ubah Rumpun Ilmu"],
+            // ["name" => "delete-rumpunilmu", "display_name" => "Hapus Rumpun Ilmu"],
             
             ["name" => "read-dashboard", "display_name" => "Lihat Dashboard"],
             ["name" => "read-mahasiswa", "display_name" => "Lihat Mahasiswa"],
@@ -90,13 +90,13 @@ class PermissionSeeder extends Seeder
             ["name" => "update-setting", "display_name" => "Ubah Pengaturan"],
             ["name" => "read-pembagian-dosen", "display_name" => "Lihat Pembagian Dosen"],
             ["name" => "update-pembagian-dosen", "display_name" => "Ubah Pembagian Dosen"],
-
             ["name" => "read-pengajuan-tugas-akhir", "display_name" => "Lihat Pengajuan Tugas Akhir"],
             ["name" => "create-pengajuan-tugas-akhir", "display_name" => "Buat Pengajuan Tugas Akhir"],
             ["name" => "update-pengajuan-tugas-akhir", "display_name" => "Ubah Pengajuan Tugas Akhir"],
             ["name" => "acc-pengajuan-tugas-akhir", "display_name" => "Menyetujui Pengajuan Tugas Akhir"],
             ["name" => "reject-pengajuan-tugas-akhir", "display_name" => "Menolak Pengajuan Tugas Akhir"],
-
+            ["name" => "read-pembagian-dosen", "display_name" => "Lihat Pembagian Dosen"],
+            ["name" => "update-pembagian-dosen", "display_name" => "Ubah Pembagian Dosen"],
         ]);
         $this->insertPermission($permissions);
 

@@ -61,7 +61,8 @@ class RoleSeeder extends Seeder
         $kaprodi->givePermissionTo([
             'read-dashboard',
             'read-pembagian-dosen','update-pembagian-dosen',
-            'read-pengajuan-tugas-akhir', 'acc-pengajuan-tugas-akhir', 'reject-pengajuan-tugas-akhir'
+            'read-pengajuan-tugas-akhir', 'acc-pengajuan-tugas-akhir', 'reject-pengajuan-tugas-akhir',
+            'read-pembagian-dosen','update-pembagian-dosen',
         ]);
         
         $dosen->givePermissionTo([
