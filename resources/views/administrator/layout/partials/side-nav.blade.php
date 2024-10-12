@@ -120,7 +120,7 @@
                             <span>Tugas Akhir</span>
                         </a>
                         <ul class="sub-menu" aria-expanded="false">
-                            @can(['read-daftarta-admin'])
+                            @can(['read-daftar-ta'])
                             <li><a href="{{route('apps.daftar-ta')}}">Daftar TA</a></li>
                             @endcan
                             @if (getInfoLogin()->hasRole('Kaprodi') || getInfoLogin()->hasRole('Developer'))

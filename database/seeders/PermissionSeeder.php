@@ -17,21 +17,6 @@ class PermissionSeeder extends Seeder
     {
         //
         $permissions = collect([
-            // ["name" => "read-daftarta-admin", "display_name" => "Lihat Daftar TA Admin"],
-            // ["name" => "read-seminar-admin", "display_name" => "Lihat Jadwal Seminar Admin"],
-            // ["name" => "read-settings", "display_name" => "Lihat Pengaturan"],
-            // ["name" => "read-pengajuanta-kaprodi", "display_name" => "Lihat Pengajuan TA Kaprodi"],
-            // ["name" => "read-daftarta-kaprodi", "display_name" => "Lihat Daftar TA Kaprodi"],
-            // ["name" => "read-bagidosen-kaprodi", "display_name" => "Lihat Pembagian Dosen Kaprodi"],
-            // ["name" => "read-daftar-bimbingan", "display_name" => "Lihat Daftar Bimbingan"],
-            // ["name" => "read-jadwaluji", "display_name" => "Lihat Jadwal Uji"],
-            // ["name" => "read-pengajuanta-mahasiswa", "display_name" => "Lihat Pengajuan TA Mahasiswa"],
-            // ["name" => "read-jadwalseminar-mahasiswa", "display_name" => "Lihat Jadwal Seminar Mahasiswa"],
-            // ["name" => "read-rumpunilmu", "display_name" => "Lihat Rumpun Ilmu"],
-            // ["name" => "create-rumpunilmu", "display_name" => "Tambah Rumpun Ilmu"],
-            // ["name" => "update-rumpunilmu", "display_name" => "Ubah Rumpun Ilmu"],
-            // ["name" => "delete-rumpunilmu", "display_name" => "Hapus Rumpun Ilmu"],
-            
             ["name" => "read-dashboard", "display_name" => "Lihat Dashboard"],
             ["name" => "read-mahasiswa", "display_name" => "Lihat Mahasiswa"],
             ["name" => "create-mahasiswa", "display_name" => "Tambah Mahasiswa"],
@@ -95,9 +80,11 @@ class PermissionSeeder extends Seeder
             ["name" => "update-pengajuan-tugas-akhir", "display_name" => "Ubah Pengajuan Tugas Akhir"],
             ["name" => "acc-pengajuan-tugas-akhir", "display_name" => "Menyetujui Pengajuan Tugas Akhir"],
             ["name" => "reject-pengajuan-tugas-akhir", "display_name" => "Menolak Pengajuan Tugas Akhir"],
+            ["name" => "read-daftar-ta", "display_name" => "Lihat Daftar Tugas Akhir"],
+            ["name" => "update-daftar-ta", "display_name" => "Ubah Daftar Tugas Akhir"],
+            ["name" => "delete-daftar-ta", "display_name" => "Hapus Daftar Tugas Akhir"],
         ]);
         $this->insertPermission($permissions);
-
     }
 
     private function insertPermission(Collection $permissions, $guardName = 'web')
