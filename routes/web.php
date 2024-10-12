@@ -137,12 +137,12 @@ Route::prefix('apps')->middleware('auth')->group(function () {
 
     Route::prefix('daftar-ta')->group(function () {
         Route::get('', [DaftarTAController::class, 'index'])->name('apps.daftar-ta')->middleware('can:read-daftarta');
-        Route::post('/store', [DaftarTAController::class, 'store'])->name('apps.daftar-ta.store');
-        Route::get('/show/{id}', [DaftarTAController::class, 'show'])->name('apps.daftar-ta.show');
-        Route::get('/edit/{id}', [DaftarTAController::class, 'edit'])->name('apps.daftar-ta.edit');
-        Route::get('/detail/{id}', [DaftarTAController::class, 'detail'])->name('apps.daftar-ta.detail');
-        Route::post('/update/{id}', [DaftarTAController::class, 'update'])->name('apps.daftar-ta.update');
-        Route::get('/destroy/{id}', [DaftarTAController::class, 'destroy'])->name('apps.daftar-ta.delete');
+        Route::post('store', [DaftarTAController::class, 'store'])->name('apps.daftar-ta.store');
+        Route::get('show/{id}', [DaftarTAController::class, 'show'])->name('apps.daftar-ta.show');
+        Route::get('edit/{id}', [DaftarTAController::class, 'edit'])->name('apps.daftar-ta.edit');
+        Route::get('detail/{id}', [DaftarTAController::class, 'detail'])->name('apps.daftar-ta.detail');
+        Route::post('update/{id}', [DaftarTAController::class, 'update'])->name('apps.daftar-ta.update');
+        Route::get('destroy/{id}', [DaftarTAController::class, 'destroy'])->name('apps.daftar-ta.delete');
     });
 
     Route::prefix('pengajuan-ta')->middleware('can:read-pengajuan-tugas-akhir')->group(function () {
@@ -200,6 +200,8 @@ Route::prefix('apps')->middleware('auth')->group(function () {
     Route::prefix('pembagian-dosen')->middleware('can:read-pembagian-dosen')->group( function() {
         Route::get('', [PembagianDosenController::class, 'index'])->name('apps.pembagian-dosen');
         Route::get('belum-terbagi', [PembagianDosenController::class, 'notCompleted'])->name('apps.pembagian-dosen.belum-dibagi');
+        Route::get('{tugasAkhir}/edit', [PembagianDosenController::class, 'edit'])->name('apps.pembagian-dosen.edit');
+        Route::post('{tugasAkhir}/update', [PembagianDosenController::class, 'update'])->name('apps.pembagian-dosen.update');
         // Route::post('store', [KuotaDosenController::class, 'store'])->name('apps.pembagian-dosen.update')->middleware('can:update-kuota');
     });
 

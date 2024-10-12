@@ -17,11 +17,17 @@ if (!function_exists('getAvailableRoles')) {
     {
         $user = Auth::user();
         $roles = $user->roles->pluck('name')->toArray();
-        if (in_array('Kaprodi', $roles)) {
-            $dsn = Dosen::where('id', $user->userable_id)->first();
-            dd($dsn);
-            $programStudiId = $user->program_studi_id;
-            session(['programStudiId' => $programStudiId]);
+        
+        if($user) {
+            if (in_array('Kaprodi', $roles)) {
+                $dsn = Dosen::where('id', $user->userable_id)->first();
+                if ($dsn && $dsn->programStudi) {
+                    $psd = $dsn->programStudi->nama;
+                    session(['program_studi' => $psd]); // Simpan program studi ke session
+                } else {
+                    session(['program_studi' => '-']); // Jika tidak ada, simpan '-' sebagai placeholder
+                }
+            }
         }
 
         return $roles;

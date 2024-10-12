@@ -2,13 +2,17 @@
     <div class="h-100">
         <div class="user-wid text-center py-4">
             <div class="user-img">
-                <img src="{{asset('storage/images/users/'. Auth::user()->image)}}" alt="" class="avatar-md mx-auto rounded-circle">
+                <img src="{{asset('storage/images/users/'. getInfoLogin()->image)}}" alt="" class="avatar-md mx-auto rounded-circle">
             </div>
 
             <div class="mt-3">
 
-                <a href="#" class="text-reset fw-medium font-size-16">{{ ucfirst(Auth::guard('web')->user()->name) }}</a>
-                <p class="text-muted mt-1 mb-0 font-size-13 mb-2">{{ucfirst(session('switchRoles'))}}</p>
+                <a href="#" class="text-reset fw-medium font-size-16">{{ ucfirst(getInfoLogin()->name) }}</a>
+                <p class="text-muted mt-1 mb-0 font-size-13 mb-2">{{ucfirst(session('switchRoles'))}} 
+                    @if (session('switchRoles') === 'Kaprodi' && session('program_studi'))
+                        {{ session('program_studi') }}
+                    @endif
+                </p>
                 <div class="dropdown dropend">
                     {{-- <center> --}}
                         <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
@@ -54,7 +58,7 @@
                 @endcan
                 
                 @can(['read-pengajuan-tugas-akhir'])
-                    @if(getInfoLogin()->hasRole('Mahasiswa'))
+                    @if(getInfoLogin()->hasRole('Mahasiswa') || getInfoLogin()->hasRole('Developer'))
                     <li>
                         <a href="{{ route('apps.pengajuan-ta')}}" class=" waves-effect">
                             <i class="mdi mdi-calendar-text"></i>
@@ -119,7 +123,7 @@
                             @can(['read-daftarta-admin'])
                             <li><a href="{{route('apps.daftar-ta')}}">Daftar TA</a></li>
                             @endcan
-                            @if (getInfoLogin()->hasRole('Kaprodi'))
+                            @if (getInfoLogin()->hasRole('Kaprodi') || getInfoLogin()->hasRole('Developer'))
                                 @can(['read-pengajuan-tugas-akhir'])
                                 <li><a href="{{route('apps.pengajuan-ta')}}">Pengajuan TA</a></li>
                                 @endcan

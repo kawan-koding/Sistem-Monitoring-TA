@@ -13,4 +13,14 @@ class KuotaDosen extends Model
     protected $primaryKey = 'id';
 
     protected $guarded = [];
+
+    public function dosen()
+    {
+        return $this->belongsTo(Dosen::class);
+    }
+
+    public function periodeTa()
+    {
+        return $this->belongsTo(PeriodeTa::class);
+    }
 }

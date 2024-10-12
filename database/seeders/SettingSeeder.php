@@ -54,7 +54,7 @@ class SettingSeeder extends Seeder
                 'type' => 'general',
                 'key' => 'app_address',
                 'name' => 'Alamat Aplikasi',
-                'value' => 'SMK 17 AGUSTUS 1945 MUNCAR JL. RAYA BLAMBANGAN NO. 37 MUNCAR, KAB. BANYUWANGI PROV. JATIM'
+                'value' => 'Jalan Raya Jember KM 13 Banyuwangi 68461, Jawa Timur - Indonesia'
             ],
             [
                 'type' => 'general',
