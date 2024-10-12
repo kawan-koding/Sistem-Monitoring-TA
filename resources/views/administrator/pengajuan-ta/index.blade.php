@@ -57,6 +57,7 @@
                             </tr>
                         </thead>
                         <tbody>
+                            {{-- {{dd($dataTA)}} --}}
                             @foreach ($dataTA as $item)
                                 @foreach ($item->bimbing_uji as $bimuj)
                                     @if ($bimuj->jenis == 'pembimbing' && $bimuj->urut == 1)
@@ -108,29 +109,39 @@
                                 </td>
                                 <td>
                                     @if ($item->status == 'acc')
-                                    <span class='badge rounded-pill badge-soft-primary font-size-11'>{{ucfirst($item->status)}}</span>
+                                        <span class='badge rounded-pill badge-soft-primary font-size-11'>{{ucfirst($item->status)}}</span>
                                     @else
-                                    <span class='badge rounded-pill badge-soft-secondary font-size-11'>{{ucfirst($item->status)}}</span>
+                                        @if($item->status == 'reject')
+                                            <span class='badge rounded-pill badge-soft-danger font-size-11'>{{ucfirst($item->status)}}</span>
+                                        @else
+                                            <span class='badge rounded-pill badge-soft-danger font-size-11'>{{ucfirst($item->status)}}</span>
+                                        @endif
                                     @endif
                                 </td>
                                 {{-- <td>{{$item->catatan}}</td> --}}
                                 <td class="mb-3">
-                                    @if (getInfoLogin()->hasRole('kaprodi'))    
-                                    <a href="javascript:void(0);" class="btn btn-primary btn-sm mb-3" title="Acc"><i class="bx bx-check-double"></i></a>
-                                    <a href="javascript:void(0);" class="btn btn-danger btn-sm mb-3" title="Reject"><i class="bx bx-x"></i></a>
+                                    @if (getInfoLogin()->hasRole('Kaprodi'))
+                                        @if ($item->status == 'draft')
+                                        @can('acc-pengajuan-tugas-akhir')
+                                        <a href="javascript:void(0);" onclick="acceptTA('{{$item->id}}', '{{route('apps.pengajuan-ta.accept', $item->id)}}')" class="btn btn-primary btn-sm mb-3" title="Acc"><i class="bx bx-check-double"></i></a>
+                                        @endcan
+                                        <a href="javascript:void(0);" onclick="rejectTA('{{$item->id}}', '{{route('apps.pengajuan-ta.reject', $item->id)}}')" class="btn btn-danger btn-sm mb-3" title="Reject"><i class="bx bx-x"></i></a>
+                                        @endif
                                     @endif
-                                    @can('update-pengajuan-tugas-akhir')
-                                    <a href="{{route('apps.pengajuan-ta.edit', ['pengajuanTA' => $item->id])}}" class="btn btn-sm btn-primary mb-3" title="Edit"><i class="fas fa-edit"></i></a>
-                                    @endcan
+                                    @if (getInfoLogin()->hasRole('Mahasiswa'))
+                                        @can('update-pengajuan-tugas-akhir')
+                                        <a href="{{route('apps.pengajuan-ta.edit', ['pengajuanTA' => $item->id])}}" class="btn btn-sm btn-primary mb-3" title="Edit"><i class="fas fa-edit"></i></a>
+                                        @endcan
+                                        <a href="javascript:void(0);" onclick="uploadFile('{{$item->id}}','{{route('apps.pengajuan-ta.unggah-berkas',  $item->id)}}')" class="btn btn-sm btn-secondary unggah-berkas mb-3" title="Unggah Berkas"><i class="far fa-file-alt"></i></a>
+                                    @endif
                                     <a href="{{route('apps.pengajuan-ta.show', ['pengajuanTA' => $item->id])}}" class="btn btn-sm btn-primary mb-3" title="Detail"><i class="fas fa-search"></i></a>
-                                    <a href="javascript:void(0);" onclick="uploadFile('{{$item->id}}','{{route('apps.pengajuan-ta.unggah-berkas',  $item->id)}}')" class="btn btn-sm btn-secondary unggah-berkas mb-3" title="Unggah Berkas"><i class="far fa-file-alt"></i></a>
 
-                                    @if ($timer == 'selesai')
+                                    {{-- @if ($timer == 'selesai') --}}
 
-                                    <a href="{{route('apps.pengajuan-ta.print_nilai', ['id' => $item->id])}}" class="btn btn-sm btn-success mb-3" title="Nilai"><i class="fas fa-file-alt"></i></a>
+                                    {{-- <a href="{{route('apps.pengajuan-ta.print_nilai', ['id' => $item->id])}}" class="btn btn-sm btn-success mb-3" title="Nilai"><i class="fas fa-file-alt"></i></a>
                                     <a href="{{route('apps.pengajuan-ta.print_rekap', ['id' => $item->id])}}" class="btn btn-sm btn-success mb-3" title="Rekapitulasi"><i class="far fa-file-alt"></i></a>
-                                    <a href="{{route('apps.pengajuan-ta.print_revisi', ['id' => $item->id])}}" class="btn btn-sm btn-success mb-3" title="Revisi"><i class="fas fa-file-invoice"></i></a>
-                                    @endif
+                                    <a href="{{route('apps.pengajuan-ta.print_revisi', ['id' => $item->id])}}" class="btn btn-sm btn-success mb-3" title="Revisi"><i class="fas fa-file-invoice"></i></a> --}}
+                                    {{-- @endif --}}
                                     {{-- @if (isset($item_pemb_1))
                                     <a href="{{route('apps.pengajuan-ta.print_pemb1', ['id' => $item->id])}}" class="btn btn-sm btn-success mb-3" title="Print Persetujuan Dosen"><i class="fas fa-file-invoice"></i></a>
                                     @endif
@@ -148,7 +159,7 @@
     </div>
 </div>
 
-
+{{-- modal unggah berkas --}}
 <div id="myModalUploadFile" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -173,7 +184,32 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary waves-effect waves-light" data-bs-dismiss="modal">Keluar</button>
+                    {{-- <button type="button" class="btn btn-secondary waves-effect waves-light" data-bs-dismiss="modal">Keluar</button> --}}
+                    <button type="submit" class="btn btn-primary waves-effect waves-light">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{-- modal acc TA and reject TA --}}
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalAccLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title mt-0"></h5>
+                <button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+            </div>
+            <form action="" method="post">
+                @csrf
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="">Catatan</label>
+                        <textarea name="catatan" class="form-control"></textarea>
+                        <i>Silahkan tuliskan catatan anda (opsional):</i>
+                    </div>
+                </div>
+                <div class="modal-footer">
                     <button type="submit" class="btn btn-primary waves-effect waves-light">Simpan</button>
                 </div>
             </form>

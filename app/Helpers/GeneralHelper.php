@@ -19,7 +19,7 @@ if (!function_exists('getAvailableRoles')) {
         $roles = $user->roles->pluck('name')->toArray();
         if (in_array('Kaprodi', $roles)) {
             $dsn = Dosen::where('id', $user->userable_id)->first();
-            dd($dsn);
+            // dd($dsn);
             $programStudiId = $user->program_studi_id;
             session(['programStudiId' => $programStudiId]);
         }

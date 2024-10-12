@@ -21,35 +21,44 @@ class PengajuanTAController extends Controller
 {
     public function index()
     {
-        $myId = getInfoLogin()->username;
-        $mahasiswa = Mahasiswa::where('nim', $myId)->first();
-        if($mahasiswa) {
-            $ta = TugasAkhir::with(['jenis_ta', 'topik'])->where('mahasiswa_id', $mahasiswa->id)->first();
-        }
-
-        $seminar = null;
-        if(isset($ta->id)){
-
-            $seminar = JadwalSeminar::where('tugas_akhir_id', $ta->id)->first();
-        }
-
-        if ($seminar) {
-            $waktu_sekarang = date('Y-m-d H:i:s');
-            $tgl_sekarang = date('Y-m-d');
-            $wk = ($seminar->tanggal . ' ' . $seminar->jam_selesai);
-            if ($waktu_sekarang > $wk && $tgl_sekarang >= $seminar->tanggal) {
-                $waktu = 'selesai';
-            } else {
-                $waktu = 'tidak selesai';
-            }
-        } else {
-            $waktu = 'seminar tidak ditemukan';
-        }
-        
         $query = [];
-        if($mahasiswa) {
-            $query = TugasAkhir::with(['jenis_ta', 'topik'])->where('mahasiswa_id', $mahasiswa->id)->get();
+        if(getInfoLogin()->hasRole('Mahasiswa')){
+            $myId = getInfoLogin()->username;
+            $mahasiswa = Mahasiswa::where('nim', $myId)->first();
+            if($mahasiswa) {
+                $query = TugasAkhir::with(['jenis_ta', 'topik'])->where('mahasiswa_id', $mahasiswa->id)->get();
+            }
         }
+        if(getInfoLogin()->hasRole('Kaprodi')){
+            $login = Dosen::where('id', getInfoLogin()->userable_id)->first();
+            $prodi = $login->programStudi->nama;
+            $query = TugasAkhir::with(['jenis_ta', 'topik'])->whereHas('mahasiswa', function ($query) use($prodi) {
+                $query->whereHas('programStudi', function ($q) use($prodi) {
+                    $q->where('nama', $prodi);
+                });
+            })->get();
+        }
+
+        // $seminar = null;
+        // if(isset($ta->id)){
+
+        //     $seminar = JadwalSeminar::where('tugas_akhir_id', $ta->id)->first();
+        // }
+        // if ($seminar) {
+        //     $waktu_sekarang = date('Y-m-d H:i:s');
+        //     $tgl_sekarang = date('Y-m-d');
+        //     $wk = ($seminar->tanggal . ' ' . $seminar->jam_selesai);
+        //     if ($waktu_sekarang > $wk && $tgl_sekarang >= $seminar->tanggal) {
+        //         $waktu = 'selesai';
+        //     } else {
+        //         $waktu = 'tidak selesai';
+        //     }
+        // } else {
+        //     $waktu = 'seminar tidak ditemukan';
+        // }        
+        // if($mahasiswa) {
+        //     $query = TugasAkhir::with(['jenis_ta', 'topik'])->where('mahasiswa_id', $mahasiswa->id)->get();
+        // }
 
         $data = [
             'title' => 'Pengajuan Tugas Akhir',
@@ -65,7 +74,7 @@ class PengajuanTAController extends Controller
                 ]
             ],
             'dataTA'   => $query,
-            'timer' => $waktu,
+            // 'timer' => $waktu,
         ];
         
         return view('administrator.pengajuan-ta.index', $data);
@@ -384,6 +393,50 @@ class PengajuanTAController extends Controller
             // dd($e->getMessage());
             return redirect()->back()->with('error', $e->getMessage());
         }
+    }
+
+    public function accept(TugasAkhir $pengajuanTA, Request $request) 
+    {
+        $request->validate([
+           'catatan' => 'nullable'
+        ]);
+        
+        try {
+            $data = TugasAkhir::where('id', $pengajuanTA->id)->first();
+    
+            $data->update([
+                'status' => 'acc',
+                'catatan' => $request->catatan
+            ]);
+
+            return redirect()->route('apps.pengajuan-ta')->with('success', 'Pengajuan TA telah di acc');
+        } catch (\Exception $e) {
+            // dd($e->getMessage());
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+
+    }
+
+    public function reject(TugasAkhir $pengajuanTA, Request $request) 
+    {
+        $request->validate([
+           'catatan' => 'nullable'
+        ]);
+        
+        try {
+            $data = TugasAkhir::where('id', $pengajuanTA->id)->first();
+    
+            $data->update([
+                'status' => 'reject',
+                'catatan' => $request->catatan
+            ]);
+
+            return redirect()->route('apps.pengajuan-ta')->with('success', 'Pengajuan TA telah di acc');
+        } catch (\Exception $e) {
+            // dd($e->getMessage());
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+
     }
     
 }
