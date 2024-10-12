@@ -23,9 +23,9 @@ if (!function_exists('getAvailableRoles')) {
                 $dsn = Dosen::where('id', $user->userable_id)->first();
                 if ($dsn && $dsn->programStudi) {
                     $psd = $dsn->programStudi->nama;
-                    session(['program_studi' => $psd]); // Simpan program studi ke session
+                    session(['program_studi' => $psd]);
                 } else {
-                    session(['program_studi' => '-']); // Jika tidak ada, simpan '-' sebagai placeholder
+                    session(['program_studi' => '-']);
                 }
             }
         }
