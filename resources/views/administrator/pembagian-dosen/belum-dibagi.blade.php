@@ -5,6 +5,7 @@
 <div class="row">
     <div class="col-md-12 col-sm-12 col-g-12">
         <div class="card">
+            @can('read-pembagian-dosen')
             <ul class="nav nav-tabs nav-tabs-custom nav-justified mt-1 mb-1" role="tablist">
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('apps.pembagian-dosen')}}">
@@ -19,6 +20,7 @@
                     </a>
                 </li>
             </ul>
+            @endcan
 
             <div class="card-body">
                 @if(session('success'))

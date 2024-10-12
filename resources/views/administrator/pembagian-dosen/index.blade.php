@@ -5,6 +5,7 @@
 <div class="row">
     <div class="col-md-12 col-sm-12 col-g-12">
         <div class="card">
+            @can('read-pembagian-dosen')
             <ul class="nav nav-tabs nav-tabs-custom nav-justified mt-1 mb-1" role="tablist">
                 <li class="nav-item">
                     <a class="nav-link active" href="#">
@@ -19,6 +20,7 @@
                     </a>
                 </li>
             </ul>
+            @endcan
 
             <div class="card-body">
                 @if(session('success'))
@@ -84,8 +86,9 @@
                                         </ol>
                                     </td>
                                     <td>
-                                        
+                                        @can('update-pembagian-dosen')
                                         <a href="{{ route('apps.pembagian-dosen.edit', $item)}}" class="btn btn-sm btn-outline-primary mb-3" title="Edit"><i class="bx bx-edit-alt"></i></a>
+                                        @endcan
                                     </td>
                                 </tr>
                             @endforeach
