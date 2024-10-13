@@ -145,7 +145,7 @@ function confirmAlert({title, text, confirmButton, data = {}, url}) {
 
 $(document).ready(function () {
     $('button[type="submit"]').on('click', function () {
-        $(this).html('Loading...');
+        $(this).html('<i class="bx bx-loader bx-spin font-size-16 align-middle me-2"></i>Loading...');
         $(this).prop('disabled', true);
         $(this).closest('form').submit();
     });

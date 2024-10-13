@@ -135,15 +135,6 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::get('{periode}/change', [PeriodeTAController::class, 'change'])->name('apps.periode.change')->middleware('can:change-periode');
     });
 
-    Route::prefix('daftar-ta')->group(function () {
-        Route::get('', [DaftarTAController::class, 'index'])->name('apps.daftar-ta')->middleware('can:read-daftarta');
-        Route::post('store', [DaftarTAController::class, 'store'])->name('apps.daftar-ta.store');
-        Route::get('show/{id}', [DaftarTAController::class, 'show'])->name('apps.daftar-ta.show');
-        Route::get('edit/{id}', [DaftarTAController::class, 'edit'])->name('apps.daftar-ta.edit');
-        Route::get('detail/{id}', [DaftarTAController::class, 'detail'])->name('apps.daftar-ta.detail');
-        Route::post('update/{id}', [DaftarTAController::class, 'update'])->name('apps.daftar-ta.update');
-        Route::get('destroy/{id}', [DaftarTAController::class, 'destroy'])->name('apps.daftar-ta.delete');
-    });
 
     Route::prefix('pengajuan-ta')->middleware('can:read-pengajuan-tugas-akhir')->group(function () {
         Route::get('', [PengajuanTAController::class, 'index'])->name('apps.pengajuan-ta');
@@ -203,10 +194,16 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::get('belum-terbagi', [PembagianDosenController::class, 'notCompleted'])->name('apps.pembagian-dosen.belum-dibagi')->middleware('can:read-pembagian-dosen');
         Route::get('{tugasAkhir}/edit', [PembagianDosenController::class, 'edit'])->name('apps.pembagian-dosen.edit');
         Route::post('{tugasAkhir}/update', [PembagianDosenController::class, 'update'])->name('apps.pembagian-dosen.update')->middleware('can:update-pembagian-dosen');
-        // Route::post('store', [KuotaDosenController::class, 'store'])->name('apps.pembagian-dosen.update')->middleware('can:update-kuota');
     });
 
-
+    Route::prefix('daftar-tugas-akhir')->middleware('can:read-daftar-ta')->group( function() {
+        Route::get('', [DaftarTaController::class, 'index'])->name('apps.daftar-ta'); 
+        Route::get('{tugasAkhir}/show', [DaftarTaController::class, 'show'])->name('apps.daftar-ta.show')->middleware('can:read-daftar-ta');
+        Route::get('{tugasAkhir}/edit', [DaftarTaController::class, 'edit'])->name('apps.daftar-ta.edit');
+        Route::post('{tugasAkhir}/update', [DaftarTaController::class, 'update'])->name('apps.daftar-ta.update')->middleware('can:update-daftar-ta');
+        Route::delete('{tugasAkhir}/destroy', [DaftarTaController::class, 'destroy'])->name('apps.daftar-ta.delete')->middleware('can:delete-daftar-ta');
+    });
+    
 });
 
 

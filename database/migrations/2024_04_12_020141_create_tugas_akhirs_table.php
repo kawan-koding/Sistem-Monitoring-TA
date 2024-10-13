@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('topik_id')->references('id')->on('topiks')->onDelete('cascade');
             $table->foreignId('mahasiswa_id')->references('id')->on('mahasiswas')->onDelete('cascade');
             $table->foreignId('periode_ta_id')->references('id')->on('periode_tas')->onDelete('cascade');
-            $table->string('judul', 255);
+            $table->text('judul');
             $table->enum('tipe', ['K', 'I']);
             $table->string('dokumen_pemb_1', 255)->nullable();
             $table->string('dokumen_ringkasan', 255);

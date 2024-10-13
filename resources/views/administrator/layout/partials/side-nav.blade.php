@@ -113,7 +113,7 @@
                     @endcan
                 @endif
                 
-                @canany(['read-daftarta-admin', 'read-seminar-admin', 'read-pembagian-dosen'])
+                @canany(['read-daftar-ta', 'read-pengajuan-tugas-akhir', 'read-pembagian-dosen'])
                     <li>
                         <a href="javascript: void(0);" class="has-arrow waves-effect">
                             <i class="mdi mdi-clipboard-list-outline"></i>
@@ -131,6 +131,7 @@
                             @can(['read-pembagian-dosen'])
                             <li><a href="{{route('apps.pembagian-dosen')}}">Pembagian Dosen</a></li>
                             @endcan
+                            <li><a href="#">Jadwal Seminar</a></li>
                         </ul>
                     </li>
                 @endcanany
