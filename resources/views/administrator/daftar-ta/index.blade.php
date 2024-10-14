@@ -19,77 +19,66 @@
                         </button>
                     </div>
                 @endif
+                @if ($errors->any())
+                    <div class="alert alert-error alert-danger alert-dismissible fade show" role="alert">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                        </button>
+                    </div>
+                @endif
                 <div class="table-responsive">
                     <table class="table table-striped" id="datatable">
                         <thead>
                             <tr>
-                                <th>No</th>
-                                <th>Judul</th>
-                                <th>Jenis</th>
-                                <th>Topik</th>
-                                <th>Status</th>
-                                <th>Periode</th>
+                                <th width="5%">No</th>
+                                <th width="40%">Judul</th>
+                                <th>Mahasiswa</th>
                                 <th>Dosen</th>
+                                <th>Periode</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($dataTA as $item)
-                                @php
-                                    $item_pemb_1 = null;
-                                    $item_peng_1 = null;
-                                    $item_pemb_2 = null;
-                                    $item_peng_2 = null;
-                                @endphp
-                                @foreach ($item->bimbing_uji as $bimuj)
-                                    @if ($bimuj->jenis == 'pembimbing' && $bimuj->urut == 1)
-                                        @php
-                                            $item_pemb_1 = $bimuj->dosen->name;
-                                        @endphp
-                                    @endif
-                                    @if ($bimuj->jenis == 'pembimbing' && $bimuj->urut == 2)
-                                        @php
-                                            $item_pemb_2 = $bimuj->dosen->name;
-                                        @endphp
-                                    @endif
-                                    @if ($bimuj->jenis == 'penguji' && $bimuj->urut == 1)
-                                        @php
-                                            $item_peng_1 = $bimuj->dosen->name;
-                                        @endphp
-                                    @endif
-                                    @if ($bimuj->jenis == 'penguji' && $bimuj->urut == 2)
-                                        @php
-                                            $item_peng_2 = $bimuj->dosen->name;
-                                        @endphp
-                                    @endif
-                                @endforeach
-                            <tr>
-                                <td>{{$loop->iteration}}</td>
-                                <td>{{$item->judul}}</td>
-                                <td>{{$item->jenis_ta->nama_jenis}}</td>
-                                <td>{{$item->topik->nama_topik}}</td>
-                                <td>
-                                    @if ($item->status == 'draft')
-                                        <span class="badge bg-primary">Draft</span>
-                                    @elseif($item->status == 'acc')
-                                        <span class="badge bg-success">Acc</span>
-                                    @else
-                                        <span class="badge bg-danger">Reject</span>
-                                    @endif
-                                </td>
-                                <td>Awal : {{$item->periode_mulai}}<br>Akhir : {{$item->periode_akhir}}</td>
-                                <td>
-                                    Pembimbing 1 : {{$item_pemb_1 ?? '-'}}<br>
-                                    Pembimbing 2 : {{$item_pemb_2 ?? '-'}}<br>
-                                    Penguji 1 : {{$item_peng_1 ?? '-'}}<br>
-                                    Penguji 2 : {{$item_peng_2 ?? '-'}}<br>
-                                </td>
-                                <td>
-                                    <a href="{{route('admin.daftarta.detail', ['id' => $item->id])}}" class="btn btn-sm btn-primary mb-3"><i class="fas fa-search"></i></a>
-                                    <a href="{{route('admin.daftarta.edit', ['id' => $item->id])}}" class="btn btn-sm btn-primary mb-3"><i class="fas fa-edit"></i></a>
-                                    <a href="javascript:void(0);" onclick="hapusData('<?= $item->id?>', '{{route('admin.daftarta.delete', ['id' => $item->id])}}')" class="btn btn-danger btn-sm mb-3"><i class="fa fa-trash"></i></a>
-                                </td>
-                            </tr>
+                            @foreach ($data as $item)
+                                <tr>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>
+                                        <span class="badge {{ isset($item->status) ? ($item->status == 'acc' ? 'badge-soft-success' : ($item->status == 'draft' ? 'bg-dark-subtle text-body' : 'badge-soft-danger')) : '-'}} small mb-1"> {{ ucfirst($item->status ?? '-')}} </span>
+                                        <p class="m-0"><strong>{{ $item->judul }}</strong></p>
+                                        <p class="m-0 text-muted small">{{ $item->topik->nama_topik }} - {{ $item->jenis_ta->nama_jenis}}</p>
+                                    </td>
+                                    <td>{{ $item->mahasiswa->nama_mhs }}</td>
+                                    <td>
+                                        <strong>Pembimbing</strong>
+                                        <ol>
+                                            @foreach ($item->bimbing_uji->where('jenis', 'pembimbing')->sortBy('urut') as $pembimbing)
+                                                <li>{{ $pembimbing->dosen->name }}</li>
+                                            @endforeach
+                                        </ol>
+                                        <strong>Penguji</strong>
+                                        <ol>
+                                          @foreach ($item->bimbing_uji->where('jenis', 'penguji')->sortBy('urut') as $penguji)
+                                            <li>{{ $penguji->dosen->name }}</li>
+                                        @endforeach
+                                        </ol>
+                                    </td>
+                                    <td>{{ $item->periode_ta->nama }}</td>
+                                    <td>
+                                        @can('update-daftar-ta')
+                                        <a href="{{ route('apps.daftar-ta.edit', $item)}}" class="btn btn-sm btn-outline-primary mb-3" title="Edit"><i class="bx bx-edit-alt"></i></a>
+                                        @endcan
+                                        @can('read-daftar-ta')
+                                        <a href="{{ route('apps.daftar-ta.show', $item)}}" class="btn btn-sm btn-outline-info mb-3" title="Detail"><i class="bx bx-show"></i></a>
+                                        @endcan
+                                        @can('delete-daftar-ta')
+                                        <a href="{{ route('apps.daftar-ta.delete', $item)}}" class="btn btn-sm btn-outline-dark mb-3" title="Hapus"><i class="bx bx-trash"></i></a>
+                                        @endcan
+                                    </td>
+                                </tr>
                             @endforeach
                         </tbody>
                     </table>

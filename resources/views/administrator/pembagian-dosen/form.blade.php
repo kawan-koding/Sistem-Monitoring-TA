@@ -3,7 +3,7 @@
 @section('content')
     <div class="card">
         <div class="card-body">
-            @if(session('success'))
+            @if (session('success'))
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                     <i class="mdi mdi-check-all me-2"></i> {{ session('success') }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
@@ -11,14 +11,14 @@
                 </div>
             @endif
 
-            @if(session('error'))
+            @if (session('error'))
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                     <i class="mdi mdi-block-helper me-2"></i>{{ session('error') }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
                     </button>
                 </div>
             @endif
-            
+
             @if ($errors->any())
                 <div class="alert alert-error alert-danger alert-dismissible fade show" role="alert">
                     <ul>
@@ -92,15 +92,19 @@
                         @csrf
                         <div class="mb-3">
                             <label for="">Pembimbing 1 <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" name="pembimbing_1" value="{{ $pembimbing->first()->dosen->name ?? '' }}" readonly> 
-                            <input type="hidden" class="form-control form-pemb_1" name="pemb_1" value="{{$bimbingUji->dosen_id}}" readonly>
+                            <input type="text" class="form-control" name="pembimbing_1"
+                                value="{{ $pembimbing->first()->dosen->name ?? '' }}" readonly>
+                            <input type="hidden" class="form-control form-pemb_1" name="pemb_1"
+                                value="{{ $bimbingUji->dosen_id }}" readonly>
                         </div>
                         <div class="mb-3">
                             <label for="">Pembimbing 2 <span class="text-danger">*</span></label>
-                            <select name="pembimbing_2" id="pembimbing_2" onchange="updateOptions()" class="form-control dosen-select select2">
+                            <select name="pembimbing_2" id="pembimbing_2" onchange="updateOptions()"
+                                class="form-control dosen-select select2">
                                 <option value="">Pilih Pembimbing</option>
-                                @foreach($dosen as $item)
-                                    <option value="{{ $item->id }}" {{ (isset($bimbingUji2->dosen_id) && $bimbingUji2->dosen_id == $item->id) ? 'selected' : '' }}>
+                                @foreach ($dosen as $item)
+                                    <option value="{{ $item->id }}"
+                                        {{ isset($bimbingUji2->dosen_id) && $bimbingUji2->dosen_id == $item->id ? 'selected' : '' }}>
                                         {{ $item->nama }} (Sisa: {{ $item->sisa_pemb_2 }})
                                     </option>
                                 @endforeach
@@ -109,10 +113,12 @@
 
                         <div class="mb-3">
                             <label for="">Penguji 1 <span class="text-danger">*</span></label>
-                            <select name="penguji_1" id="penguji_1" onchange="updateOptions()" class="form-control dosen-select select2">
+                            <select name="penguji_1" id="penguji_1" onchange="updateOptions()"
+                                class="form-control dosen-select select2">
                                 <option value="">Pilih Penguji</option>
-                                @foreach($dosen as $item)
-                                    <option value="{{ $item->id }}" {{ (isset($bimbingUji3->dosen_id) && $bimbingUji3->dosen_id == $item->id) ? 'selected' : '' }}>
+                                @foreach ($dosen as $item)
+                                    <option value="{{ $item->id }}"
+                                        {{ isset($bimbingUji3->dosen_id) && $bimbingUji3->dosen_id == $item->id ? 'selected' : '' }}>
                                         {{ $item->nama }} (Sisa: {{ $item->sisa_peng_1 }})
                                     </option>
                                 @endforeach
@@ -121,10 +127,12 @@
 
                         <div class="mb-3">
                             <label for="">Penguji 2 <span class="text-danger">*</span></label>
-                            <select name="penguji_2" id="penguji_2" onchange="updateOptions()" class="form-control dosen-select select2">
+                            <select name="penguji_2" id="penguji_2" onchange="updateOptions()"
+                                class="form-control dosen-select select2">
                                 <option value="">Pilih Penguji</option>
-                                @foreach($dosen as $item)
-                                    <option value="{{ $item->id }}" {{ (isset($bimbingUji4->dosen_id) && $bimbingUji4->dosen_id == $item->id) ? 'selected' : '' }}>
+                                @foreach ($dosen as $item)
+                                    <option value="{{ $item->id }}"
+                                        {{ isset($bimbingUji4->dosen_id) && $bimbingUji4->dosen_id == $item->id ? 'selected' : '' }}>
                                         {{ $item->nama }} (Sisa: {{ $item->sisa_peng_2 }})
                                     </option>
                                 @endforeach
@@ -133,7 +141,7 @@
 
                         <hr>
                         <div class="text-end">
-                            <a href="{{ route('apps.pembagian-dosen')}}" class="btn btn-secondary">Kembali</a>
+                            <a href="{{ route('apps.pembagian-dosen') }}" class="btn btn-secondary">Kembali</a>
                             <button type="submit" class="btn btn-primary">Simpan</button>
                         </div>
                     </form>
@@ -158,14 +166,14 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                 @foreach ($dosen as $item)
-                                <tr>
-                                    <td>{{ $item->nama }}</td>
-                                    <td>{{ $item->total_pemb_1 }}/{{ $item->kuota_pemb_1 }}</td>
-                                    <td>{{ $item->total_pemb_2 }}/{{ $item->kuota_pemb_2 }}</td>
-                                    <td>{{ $item->total_peng_1 }}/{{ $item->kuota_peng_1 }}</td>
-                                    <td>{{ $item->total_peng_2 }}/{{ $item->kuota_peng_2 }}</td>
-                                </tr>
+                                @foreach ($dosen as $item)
+                                    <tr>
+                                        <td>{{ $item->nama }}</td>
+                                        <td>{{ $item->total_pemb_1 }}/{{ $item->kuota_pemb_1 }}</td>
+                                        <td>{{ $item->total_pemb_2 }}/{{ $item->kuota_pemb_2 }}</td>
+                                        <td>{{ $item->total_peng_1 }}/{{ $item->kuota_peng_1 }}</td>
+                                        <td>{{ $item->total_peng_2 }}/{{ $item->kuota_peng_2 }}</td>
+                                    </tr>
                                 @endforeach
                             </tbody>
                         </table>
