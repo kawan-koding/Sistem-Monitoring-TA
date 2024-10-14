@@ -402,11 +402,14 @@ class PengajuanTAController extends Controller
         ]);
         
         try {
-            $data = TugasAkhir::where('id', $pengajuanTA->id)->first();
-    
-            $data->update([
+            $pengajuanTA->update([
                 'status' => 'acc',
                 'catatan' => $request->catatan
+            ]);
+            
+            JadwalSeminar::create([
+                'tugas_akhir_id' => $pengajuanTA->id,
+                'status' => 'belum_terjadwal'
             ]);
 
             return redirect()->route('apps.pengajuan-ta')->with('success', 'Pengajuan TA telah di acc');

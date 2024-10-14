@@ -57,6 +57,7 @@ class RoleSeeder extends Seeder
             'read-setting', 'update-setting',
             'read-pengajuan-tugas-akhir',
             'read-daftar-ta','update-daftar-ta', 'delete-daftar-ta',
+            'read-jadwal-seminar', 'update-jadwal-seminar',
             'read-kategori-nilai','create-kategori-nilai','update-kategori-nilai','delete-kategori-nilai',
         ]);
 
@@ -70,6 +71,8 @@ class RoleSeeder extends Seeder
         $dosen->givePermissionTo([
             'read-dashboard',
             'read-rekomendasi-topik','create-rekomendasi-topik','update-rekomendasi-topik','delete-rekomendasi-topik',
+            'read-nilai', 'create-nilai',
+            'read-rekapitulasi-nilai', 'create-rekapitulasi-nilai',
         ]);
 
         $mahasiswa->givePermissionTo([
@@ -77,6 +80,9 @@ class RoleSeeder extends Seeder
             'read-rekomendasi-topik','take-rekomendasi-topik',
             'read-topik-yang-diambil','cancel-topik-yang-diambil',
             'read-pengajuan-tugas-akhir', 'create-pengajuan-tugas-akhir', 'update-pengajuan-tugas-akhir',
+            'read-jadwal-seminar',
+            'read-rekapitulasi-nilai',
+
         ]);
 
     }

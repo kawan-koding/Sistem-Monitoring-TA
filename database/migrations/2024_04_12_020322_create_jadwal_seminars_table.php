@@ -13,16 +13,13 @@ return new class extends Migration
     {
         Schema::create('jadwal_seminars', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('tugas_akhir_id');
-            $table->unsignedBigInteger('ruangan_id');
-            $table->unsignedBigInteger('hari_id');
-            $table->foreign('tugas_akhir_id')->references('id')->on('tugas_akhirs')->onDelete('cascade');
-            $table->foreign('ruangan_id')->references('id')->on('ruangans')->onDelete('cascade');
-            $table->foreign('hari_id')->references('id')->on('haris')->onDelete('cascade');
-            $table->time('jam_mulai');
-            $table->time('jam_selesai');
+            $table->foreignId('tugas_akhir_id')->references('id')->on('tugas_akhirs')->onDelete('cascade');
+            $table->foreignId('ruangan_id')->references('id')->on('ruangans')->onDelete('cascade')->nullable();
+            $table->foreignId('hari_id')->references('id')->on('haris')->onDelete('cascade')->nullable();
+            $table->time('jam_mulai')->nullable();
+            $table->time('jam_selesai')->nullable();
             $table->date('tanggal');
-            $table->tinyInteger('status');
+            $table->enum('status', ['belum_terjadwal','sudah_terjadwal','telah_seminar']);
             $table->timestamps();
         });
     }
