@@ -7,7 +7,6 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\RumpunIlmuController;
 use App\Http\Controllers\Login\LoginController;
 use App\Http\Controllers\DaftarTaAdminController;
-use App\Http\Controllers\JadwalSeminarController;
 use App\Http\Controllers\JadwalUjiDosenController;
 use App\Http\Controllers\DaftarTaKaprodiController;
 use App\Http\Controllers\PengajuanTaKaprodiController;
@@ -33,6 +32,7 @@ use App\Http\Controllers\Administrator\PengajuanTA\PengajuanTAController;
 use App\Http\Controllers\Administrator\ProgramStudi\ProgramStudiController;
 use App\Http\Controllers\Administrator\PembagianDosen\PembagianDosenController;
 use App\Http\Controllers\Administrator\RekomendasiTopik\RekomendasiTopikController;
+use App\Http\Controllers\Administrator\JadwalSeminar\JadwalSeminarController;
 
 /*
 |--------------------------------------------------------------------------
@@ -202,6 +202,14 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::get('{tugasAkhir}/edit', [DaftarTaController::class, 'edit'])->name('apps.daftar-ta.edit');
         Route::post('{tugasAkhir}/update', [DaftarTaController::class, 'update'])->name('apps.daftar-ta.update')->middleware('can:update-daftar-ta');
         Route::delete('{tugasAkhir}/destroy', [DaftarTaController::class, 'destroy'])->name('apps.daftar-ta.delete')->middleware('can:delete-daftar-ta');
+    });
+
+    Route::prefix('jadwal-seminar')->middleware('can:read-jadwal-seminar')->group( function() {
+        Route::get('', [JadwalSeminarController::class, 'index'])->name('apps.jadwal-seminar');
+        Route::post('sudah-terjadwal', [JadwalSeminarController::class, 'scheduled'])->name('apps.jadwal-seminar.sudah-terjadwal');
+        Route::post('telah-seminar', [JadwalSeminarController::class, 'haveSeminar'])->name('apps.jadwal-seminar.telah-seminar');
+        Route::get('{jadwalSeminar}/show', [JadwalSeminarController::class, 'index'])->name('apps.jadwal-seminar.show');
+        Route::post('{jadwalSeminar}/update', [JadwalSeminarController::class, 'update'])->name('apps.jadwal-seminar.update')->middleware('can:update-jadwal-seminar');
     });
     
 });

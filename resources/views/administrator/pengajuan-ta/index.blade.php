@@ -114,7 +114,7 @@
                                         @if($item->status == 'reject')
                                             <span class='badge rounded-pill badge-soft-danger font-size-11'>{{ucfirst($item->status)}}</span>
                                         @else
-                                            <span class='badge rounded-pill badge-soft-danger font-size-11'>{{ucfirst($item->status)}}</span>
+                                            <span class='badge rounded-pill badge-soft-secondary font-size-11'>{{ucfirst($item->status)}}</span>
                                         @endif
                                     @endif
                                 </td>

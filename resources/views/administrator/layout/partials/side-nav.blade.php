@@ -131,7 +131,9 @@
                             @can(['read-pembagian-dosen'])
                             <li><a href="{{route('apps.pembagian-dosen')}}">Pembagian Dosen</a></li>
                             @endcan
-                            <li><a href="#">Jadwal Seminar</a></li>
+                            @can('read-jadwal-seminar')
+                            <li><a href="{{route('apps.jadwal-seminar')}}">Jadwal Seminar</a></li>
+                            @endcan
                         </ul>
                     </li>
                 @endcanany
