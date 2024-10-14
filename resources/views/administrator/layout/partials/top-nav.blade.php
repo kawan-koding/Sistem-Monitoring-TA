@@ -35,8 +35,6 @@
                             </button>
                         </div>
 
-
-
                         <div class="dropdown d-inline-block">
                             <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
                                 data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -46,13 +44,12 @@
                             </button>
                             <div class="dropdown-menu dropdown-menu-end">
                                 <!-- item-->
-                                @if(!getInfoLogin()->hasRole('Developer') && !getInfoLogin()->hasRole('Admin'))
+                                @if(!getInfoLogin()->hasRole('Developer') || !getInfoLogin()->hasRole('Admin'))
                                 <a class="dropdown-item" href="{{route('apps.profile')}}"><i class="bx bx-user font-size-16 align-middle me-1"></i>
                                     Profile</a>
                                     @endif
-                                    @if(getInfoLogin()->hasRole('Developer') && getInfoLogin()->hasRole('Admin'))
-                                    <a class="dropdown-item" href="{{ route('apps.settings')}}"><i class="bx bx-cog font-size-16 align-middle me-1"></i>
-                                        Pengaturan</a>
+                                    @if(getInfoLogin()->hasRole('Developer') || getInfoLogin()->hasRole('Admin'))
+                                    <a class="dropdown-item" href="{{ route('apps.settings')}}"><i class="bx bx-cog font-size-16 align-middle me-1"></i>Pengaturan</a>
                                     @endif
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item text-danger" href="{{route('logout')}}"><i

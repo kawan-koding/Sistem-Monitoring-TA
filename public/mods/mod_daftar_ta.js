@@ -35,3 +35,11 @@ function updateOptions() {
         });
     });
 }
+
+
+$(document).ready(function () {
+    $('*[data-toggle="delete"]').on('click', function () {
+        const url = $(this).data('url');
+        confirmDelete('Tugas Akhir', url);
+    });
+});

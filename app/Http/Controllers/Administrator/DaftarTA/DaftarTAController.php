@@ -11,6 +11,7 @@ use App\Models\KuotaDosen;
 use App\Models\TugasAkhir;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use File;
 
 class DaftarTAController extends Controller
 {
@@ -47,7 +48,13 @@ class DaftarTAController extends Controller
 
     public function show(TugasAkhir $tugasAkhir)
     {
-         $data = [
+        $bimbingUji = $tugasAkhir->bimbing_uji;
+        $pembimbing1 = $bimbingUji->where('jenis', 'pembimbing')->where('urut', 1)->first();
+        $pembimbing2 = $bimbingUji->where('jenis', 'pembimbing')->where('urut', 2)->first();
+        $penguji1 = $bimbingUji->where('jenis', 'penguji')->where('urut', 1)->first();
+        $penguji2 = $bimbingUji->where('jenis', 'penguji')->where('urut', 2)->first();
+        
+        $data = [
             'title' => 'Detail  Tugas Akhir',
             'mods' => 'daftar_ta',
             'breadcrumbs' => [
@@ -68,10 +75,16 @@ class DaftarTAController extends Controller
                     'is_active' => true
                 ]
             ],
-            'data' => [],
+            'data' => $tugasAkhir,
+            'pembimbingPenguji' => $bimbingUji,
+            'pembimbing1' => $pembimbing1,
+            'pembimbing2' => $pembimbing2,
+            'penguji1' => $penguji1,
+            'penguji2' => $penguji2,
+       
         ];
         
-        return view('administrator.daftar-ta.index', $data);
+        return view('administrator.daftar-ta.detail', $data);
     }
 
     public function edit(TugasAkhir $tugasAkhir)
@@ -165,8 +178,8 @@ class DaftarTAController extends Controller
             'pembimbing_2' => 'required',
             'penguji_1' => 'required',
             'penguji_2' => 'required',
-            'jenis_ta' => 'required',
-            'topik' => 'required',
+            'jenis_ta_id' => 'required',
+            'topik_id' => 'required',
             'tipe' => 'required',
             'doc_pemb_1' => 'nullable|mimes:pdf,docx,doc|max:5120',
             'doc_ringkasan' => 'nullable|mimes:docx,pdf|max:5120',
@@ -184,7 +197,6 @@ class DaftarTAController extends Controller
             'doc_pemb_1.mimes' => 'Dokumen pembimbing 1 harus dalam format PDF atau DOCX.',
             'doc_ringkasan.mimes' => 'Dokumen ringkasan harus dalam format PDF atau DOCX.',
         ]);
-
         try {
             $kuota = KuotaDosen::where('dosen_id', $request->pembimbing_1)->where('periode_ta_id', $tugasAkhir->periode_ta_id)->first();
             $validasiData = [
@@ -207,87 +219,51 @@ class DaftarTAController extends Controller
                     return redirect()->back()->with('error', 'Kuota untuk dosen ' . $validasi['tipe'] . ' ' . $validasi['urut'] . ' telah penuh.');
                 }
             }
+            $status = ($tugasAkhir->status == 'reject') ? 'draft' : $tugasAkhir->status;
+            
+            if($request->hasFile('doc_pemb_1')) {
+                $file = $request->file('doc_pemb_1');
+                $filename1 = 'TugasAkhir_'. rand(0, 999999999) .'_'. rand(0, 999999999) .'.'. $file->getClientOriginalExtension();
+                $file->move(public_path('storage/files/tugas-akhir'), $filename1);
+                if($tugasAkhir->dokumen_pemb_1) {
+                    File::delete(public_path('storage/files/tugas-akhir/'. $tugasAkhir->dokumen_pemb_1));
+                }
+            } else {
+                $filename1 = $tugasAkhir->dokumen_pemb_1;
+            }
 
-            // $bimbingUji = BimbingUji::with(['tugas_akhir', 'dosen'])->where('jenis', 'pembimbing')->where('urut', 1)
-            // ->where('dosen_id', $request->pembimbing_1)->whereHas('tugas_akhir', function ($q) use($ta){
-            //     $q->where('periode_ta_id', $tugasAkhir->periode_ta_id);
-            // })->count();
-            // if($bimbingUji >= $kuota->pemb_1){
-            //     return redirect()->back()->with('error', 'Kuota dosen pembimbing 1 yang di pilih telah mencapai batas');
-            // }
-            // $bimbingUji2 = BimbingUji::with(['tugas_akhir', 'dosen'])->where('jenis', 'pembimbing')->where('urut', 2)
-            // ->where('dosen_id', $request->pembimbing_2)->whereHas('tugas_akhir', function ($q) use($ta){
-            //     $q->where('periode_ta_id', $ta->periode_ta_id);
-            // })->count();
-            // if($bimbingUji2 >= $kuota->pemb_2){
-            //     return redirect()->back()->with('error', 'Kuota dosen pembimbing 2 yang di pilih telah mencapai batas');
-            // }
-            // $bimbingUji3 = BimbingUji::with(['tugas_akhir', 'dosen'])->where('jenis', 'penguji')->where('urut', 1)
-            // ->where('dosen_id', $request->penguji_1)->whereHas('tugas_akhir', function ($q) use($ta){
-            //     $q->where('periode_ta_id', $ta->periode_ta_id);
-            // })->count();
-            // if($bimbingUji3 >= $kuota->penguji_1){
-            //     return redirect()->back()->with('error', 'Kuota dosen penguji 1 yang di pilih telah mencapai batas');
-            // }
-            // $bimbingUji4 = BimbingUji::with(['tugas_akhir', 'dosen'])->where('jenis', 'penguji')->where('urut', 2)
-            // ->where('dosen_id', $request->penguji_2)->whereHas('tugas_akhir', function ($q) use($ta){
-            //     $q->where('periode_ta_id', $ta->periode_ta_id);
-            // })->count();
-            // if($bimbingUji4 >= $kuota->penguji_2){
-            //     return redirect()->back()->with('error', 'Kuota dosen penguji 2 yang di pilih telah mencapai batas');
-            // }
+            if($request->hasFile('doc_ringkasan')) {
+                $file = $request->file('doc_ringkasan');
+                $filename2 = 'TugasAkhir_'. rand(0, 999999999) .'_'. rand(0, 999999999) .'.'. $file->getClientOriginalExtension();
+                $file->move(public_path('storage/files/tugas-akhir'), $filename2);
+                if($tugasAkhir->dokumen_ringkasan) {
+                    File::delete(public_path('storage/files/tugas-akhir/'. $tugasAkhir->dokumen_ringkasan));
+                }
+            } else {
+                $filename2 = $tugasAkhir->dokumen_ringkasan;
+            }
 
-            // if($ta->status == 'reject'){
-            //     $status = 'draft';
-            // }else{
-            //     $status = $ta->status;
-            // }
+            $request->merge(['dokumen_ringkasan' => $filename2, 'dokumen_pemb_1' => $filename1, 'status' => $status]);
+            $tugasAkhir->update($request->only(['jenis_ta_id', 'topik_id', 'judul', 'tipe', 'dokumen_pemb_1', 'dokumen_ringkasan', 'status']));
+            $data = [
+                ['jenis' => 'pembimbing', 'urut' => 1, 'dosen_id' => $request->pembimbing_1],
+                ['jenis' => 'pembimbing', 'urut' => 2, 'dosen_id' => $request->pembimbing_2],
+                ['jenis' => 'penguji', 'urut' => 1, 'dosen_id' => $request->penguji_1],
+                ['jenis' => 'penguji', 'urut' => 2, 'dosen_id' => $request->penguji_2],
+            ];
 
-            // if(isset($request->dokumen_pembimbing_1)){
-            //     $docPemb1 = $request->dokumen_pembimbing_1->getClientOriginalName() . '-' . time() . '.' . $request->dokumen_pembimbing_1->extension();
-            //     $request->dokumen_pembimbing_1->move(public_path('dokumen'), $docPemb1);
-            //     // dd(1);
-            // }
+            foreach ($data as $item) {
+                BimbingUji::updateOrCreate(
+                    [
+                        'tugas_akhir_id' => $tugasAkhir->id,
+                        'jenis' => $item['jenis'],
+                        'urut' => $item['urut']
+                    ],
+                    ['dosen_id' => $item['dosen_id']]
+                );
+            }
 
-            // if(isset($request->dokumen_ringkasan)){
-            //     $docRing = $request->dokumen_ringkasan->getClientOriginalName() . '-' . time() . '.' . $request->dokumen_ringkasan->extension();
-            //     $request->dokumen_ringkasan->move(public_path('dokumen'), $docRing);
-            //     // dd(1);
-            // }
-
-            // $result = TugasAkhir::where('id', $id)->update([
-            //     'jenis_ta_id' => $request->jenis,
-            //     'topik_id' => $request->topik,
-            //     'judul' => $request->judul,
-            //     'tipe' => $request->tipe,
-            //     'dokumen_pemb_1' => $docPemb1,
-            //     'dokumen_ringkasan' => $docRing,
-            //     'status' => $status,
-            //     'periode_mulai' => $request->periode_mulai,
-            //     'periode_akhir' => $request->periode_akhir,
-            // ]);
-
-            // BimbingUji::where('tugas_akhir_id', $id)->where('jenis', 'pembimbing')->where('urut', 1)->update(
-            //     [
-            //         'dosen_id' => $request->pemb_1,
-            //     ]
-            // );
-            // BimbingUji::where('tugas_akhir_id', $id)->where('jenis', 'pembimbing')->where('urut', 2)->update(
-            //     [
-            //         'dosen_id' => $request->pemb_2,
-            //     ]
-            // );
-            // BimbingUji::where('tugas_akhir_id', $id)->where('jenis', 'penguji')->where('urut', 1)->update(
-            //     [
-            //         'dosen_id' => $request->peng_1,
-            //     ]
-            // );
-            // BimbingUji::where('tugas_akhir_id', $id)->where('jenis', 'penguji')->where('urut', 2)->update(
-            //     [
-            //         'dosen_id' => $request->peng_2,
-            //     ]
-            // );
-            // return redirect()->route('apps.daftar-ta')->with('success', 'Data berhasil ditambahkan');
+            return redirect()->route('apps.daftar-ta')->with('success', 'Data berhasil diperbarui');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
@@ -295,7 +271,20 @@ class DaftarTAController extends Controller
 
     public function destroy(TugasAkhir $tugasAkhir)
     {
-        
+        try {
+            if($tugasAkhir->dokumen_pemb_1) {
+                File::delete(public_path('storage/files/tugas-akhir/'. $tugasAkhir->dokumen_pemb_1));
+            }
+
+            if($tugasAkhir->dokumen_ringkasan) {
+                File::delete(public_path('storage/files/tugas-akhir/'. $tugasAkhir->dokumen_ringkasan));
+            }
+            $tugasAkhir->delete();
+
+            return $this->successResponse('Berhasi menghapus data');
+        } catch(\Exception $e) {
+            return $this->exceptionResponse($e);
+        }
     }
 
 }

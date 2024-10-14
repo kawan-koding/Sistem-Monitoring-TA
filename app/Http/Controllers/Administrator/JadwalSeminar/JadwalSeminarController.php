@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Administrator\JadwalSeminar;
 
 use App\Http\Controllers\Controller;
 use App\Models\JadwalSeminar;
+use App\Models\PeriodeTa;
 use App\Models\TugasAkhir;
 use Illuminate\Http\Request;
 

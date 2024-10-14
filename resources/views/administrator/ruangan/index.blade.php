@@ -42,7 +42,7 @@
                                 <td>{{$item->lokasi}}</td>
                                 <td>
                                     <a href="javascript:void(0);" onclick="editData('<?= $item->id?>', '{{route('apps.ruangan.show', ['id' => $item->id])}}')" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></a>
-                                    <a href="javascript:void(0);" onclick="hapusData('<?= $item->id?>', '{{route('apps.ruangan.delete', ['id' => $item->id])}}')" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></a>
+                                    <button  type="button" data-url="{{route('apps.ruangan.delete', $item->id) }}" data-toggle="delete" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
                                 </td>
                             </tr>
                             @endforeach
