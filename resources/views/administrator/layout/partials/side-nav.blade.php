@@ -56,6 +56,24 @@
                     </a>
                 </li>
                 @endcan
+
+                @can(['read-jadwal-bimbingan'])
+                <li>
+                    <a href="#" class=" waves-effect">
+                        <i class="mdi mdi-file-edit-outline"></i>
+                        <span>Daftar Bimbingan</span>
+                    </a>
+                </li>
+                @endcan
+
+                @can(['read-jadwal-uji'])
+                <li>
+                    <a href="#" class=" waves-effect">
+                        <i class="mdi mdi-calendar-text"></i>
+                        <span>Jadwal Uji</span>
+                    </a>
+                </li>
+                @endcan
                 
                 @can(['read-pengajuan-tugas-akhir'])
                     @if(getInfoLogin()->hasRole('Mahasiswa') || getInfoLogin()->hasRole('Developer'))
