@@ -23,7 +23,6 @@ class UserSeeder extends Seeder
             'image' => 'default.jpg',
             'is_active' => 1
         ])->assignRole('Developer');
-        
         $admin = User::create([
             'name' => 'admin',
             'username' => 'admin',
@@ -32,23 +31,5 @@ class UserSeeder extends Seeder
             'image' => 'default.jpg',
             'is_active' => 1
         ])->assignRole('Admin');
-
-        $admin = User::create([
-            'name' => 'kaprodi',
-            'username' => 'kaprodi',
-            'email' => 'kaprodi@gmail.com',
-            'password' => Hash::make('kaprodi'),
-            'image' => 'default.jpg',
-            'is_active' => 1
-        ])->assignRole('Kaprodi');
-        
-        $mahasiswa = User::create([
-            'name' => 'guest',
-            'username' => 'guest',
-            'email' => 'guest@gmail.com',
-            'password' => Hash::make('guest'),
-            'image' => 'default.jpg',
-            'is_active' => 1
-        ])->assignRole('Mahasiswa');
     }
 }
