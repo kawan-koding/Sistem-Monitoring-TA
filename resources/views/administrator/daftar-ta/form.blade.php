@@ -30,7 +30,6 @@
                         </ul>
                     </div>
                 @endif
-
                 <form action="{{ $action }}" method="post" enctype="multipart/form-data">
                     @csrf
                     <div class="mb-3">
@@ -97,7 +96,7 @@
                         <div class="col-lg-4 col-md-4 col-sm-12">
                             <div class="mb-3">
                                 <label for="">Jenis TA <span class="text-danger">*</span></label>
-                                <select name="jenis_ta" id="jenis" class="form-control ">
+                                <select name="jenis_ta_id" id="jenis" class="form-control ">
                                     <option value="">Pilih Jenis</option>
                                     @foreach ($jenis as $item)
                                     <option value="{{$item->id}}" {{ isset($data) && $data->jenis_ta_id == $item->id ? 'selected' : ' ' }}>{{$item->nama_jenis}}</option>
@@ -108,7 +107,7 @@
                         <div class="col-lg-4 col-md-4 col-sm-12">
                             <div class="mb-3">
                                 <label for="">Topik <span class="text-danger">*</span></label>
-                                <select name="topik" id="topik" class="form-control">
+                                <select name="topik_id" id="topik" class="form-control">
                                     <option value="">Pilih Topik</option>
                                     @foreach ($topik as $item)
                                     <option value="{{$item->id}}" {{ isset($data) && $data->topik_id == $item->id ? 'selected' : ' ' }}>{{$item->nama_topik}}</option>
@@ -133,24 +132,32 @@
                                 <div class="mb-3">
                                     <label for="">Dokumen Pembimbing 1 <span class="text-danger">*</span></label>
                                     <input type="file" name="doc_pemb_1" id="dokumen_pembimbing_1" class="form-control filepond" >
+                                    @if(isset($data) && !is_null($data->dokumen_pemb_1))
+                                        <a href="{{ asset('storage/files/tugas-akhir/'. $data->dokumen_pemb_1) }}" target="_blank" class="nav-link small text-primary mt-1"><i>Lihat Dokumen Pembimbing 1</i></a>
+                                    @endif
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-12">
                                 <div class="mb-3">
                                     <label for="">Dokumen Ringkasan <span class="text-danger">*</span></label>
                                     <input type="file" name="doc_ringkasan" id="doc_ringkasan" class="form-control filepond">
+                                    @if(isset($data) && !is_null($data->dokumen_ringkasan))
+                                        <a href="{{ asset('storage/files/tugas-akhir/'. $data->dokumen_ringkasan) }}" target="_blank" class="nav-link small text-primary mt-1"><i>Lihat Dokumen Ringkasan</i></a>
+                                    @endif
                                 </div>
                             </div>
                         </div>
                     </div>
                     <hr>
-                    <a href="{{route('apps.daftar-ta')}}" class="btn btn-secondary">Kembali</a>
-                    <button type="submit" class="btn btn-primary">Simpan</button>
+                    <div class="text-end">
+                        <a href="{{route('apps.daftar-ta')}}" class="btn btn-secondary">Kembali</a>
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                    </div>
                 </form>
             </div>
         </div>
     </div>
-    <div class="col-lg-4 col-md-4 col-sm-12">
+    <div class="col-lg-4 col-md-12 col-sm-12">
         <div class="card">
             <div class="card-body">
                 <div class="table-responsive">
