@@ -42,13 +42,17 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($dataTopik as $item)
+                            @foreach ($data as $item)
                             <tr>
                                 <td>{{$loop->iteration}}</td>
-                                <td>{{$item->nama_topik}}</td>
+                                <td>{{$item->nama}}</td>
                                 <td>
-                                    <a href="javascript:void(0);" onclick="editTopik('{{ $item->id }}', '{{route('apps.topik.show', ['id' => $item->id])}}')" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></a>
-                                    <button  type="button" data-url="{{route('apps.topik.delete', $item->id) }}" data-toggle="delete" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
+                                    @can('update-kategori-nilai')
+                                    <button  onclick="editData('{{ $item->id }}', '{{ route('apps.kategori-nilai.show', $item->id) }}')" class="btn btn-outline-primary btn-sm mx-1 my-1"><i class="bx bx-edit-alt"></i></button>
+                                    @endcan
+                                    @can('delete-kategori-nilai')
+                                    <button  type="button" data-url="{{route('apps.kategori-nilai.delete', $item) }}" data-toggle="delete" class="btn btn-outline-dark btn-sm mx-1 my-1"><i class="bx bx-trash"></i></button>
+                                    @endcan
                                 </td>
                             </tr>
                             @endforeach
@@ -60,6 +64,6 @@
     </div>
 </div>
 
-@include('administrator.topik.partials.modal')
+@include('administrator.kategori-nilai.partials.modal')
 
 @endsection

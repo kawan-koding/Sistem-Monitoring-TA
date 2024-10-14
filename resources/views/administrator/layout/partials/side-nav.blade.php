@@ -88,9 +88,6 @@
                             @can(['read-dosen'])
                             <li><a href="{{route('apps.dosen')}}">Dosen</a></li>
                             @endcan
-                            @can(['read-ruangan'])
-                            <li><a href="{{ route('apps.ruangan')}}">Ruangan</a></li>
-                            @endcan
                             @can(['read-topik'])
                             <li><a href="{{route('apps.topik')}}">Topik</a></li>
                             @endcan
@@ -99,6 +96,12 @@
                             @endcan
                             @can(['read-jenis'])
                             <li><a href="{{route('apps.jenis-ta')}}">Jenis TA</a></li>
+                            @endcan
+                            @can(['read-kuota'])
+                            <li><a href="{{ route('apps.kuota-dosen')}}">Kuota Dosen</a></li>
+                            @endcan
+                            @can(['read-kategori-nilai'])
+                            <li><a href="{{ route('apps.kategori-nilai')}}">Kategori Nilai</a></li>
                             @endcan
                         </ul>
                     </li>
@@ -162,9 +165,6 @@
                         <ul class="sub-menu" aria-expanded="false">
                             @can(['read-setting'])
                             <li><a href="{{ route('apps.settings')}}">Aplikasi</a></li>
-                            @endcan
-                            @can(['read-kuota'])
-                            <li><a href="{{ route('apps.kuota-dosen')}}">Kuota Dosen</a></li>
                             @endcan
                         </ul>
                     </li>

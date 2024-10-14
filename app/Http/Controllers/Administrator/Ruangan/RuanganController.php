@@ -89,11 +89,9 @@ class RuanganController extends Controller
         try {
             // Potensi kode yang dapat menyebabkan pengecualian
             Ruangan::where('id', $id)->delete();
-
+            return $this->successResponse('Berhasil menghapus data');
         } catch (\Exception $e) {
-
-
-            return redirect()->route('apps.ruangan')->with('error', $e->getMessage());
+            return $this->exceptionResponse($e);
         }
     }
 }

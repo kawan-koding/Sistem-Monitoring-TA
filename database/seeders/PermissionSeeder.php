@@ -83,6 +83,10 @@ class PermissionSeeder extends Seeder
             ["name" => "read-daftar-ta", "display_name" => "Lihat Daftar Tugas Akhir"],
             ["name" => "update-daftar-ta", "display_name" => "Ubah Daftar Tugas Akhir"],
             ["name" => "delete-daftar-ta", "display_name" => "Hapus Daftar Tugas Akhir"],
+            ["name" => "read-kategori-nilai", "display_name" => "Lihat Kategori Nilai"],
+            ["name" => "create-kategori-nilai", "display_name" => "Buat Kategori Nilai"],
+            ["name" => "update-kategori-nilai", "display_name" => "Ubah Kategori Nilai"],
+            ["name" => "delete-kategori-nilai", "display_name" => "Hapus Kategori Nilai"],
         ]);
         $this->insertPermission($permissions);
     }

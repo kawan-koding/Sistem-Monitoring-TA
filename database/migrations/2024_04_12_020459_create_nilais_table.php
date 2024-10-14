@@ -13,10 +13,9 @@ return new class extends Migration
     {
         Schema::create('nilais', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('tugas_akhir_id');
-            $table->unsignedBigInteger('dosen_id');
-            $table->foreign('tugas_akhir_id')->references('id')->on('tugas_akhirs')->onDelete('cascade');
-            $table->foreign('dosen_id')->references('id')->on('dosens')->onDelete('cascade');
+            $table->foreignId('kategori_nilai_id')->references('id')->on('kategori_nilais')->onDelete('cascade');
+            $table->foreignId('tugas_akhir_id')->references('id')->on('tugas_akhirs')->onDelete('cascade');
+            $table->foreignId('dosen_id')->references('id')->on('dosens')->onDelete('cascade');
             $table->enum('jenis', ['penguji', 'pembimbing']);
             $table->integer('urut')->nullable();
             $table->timestamps();

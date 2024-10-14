@@ -68,11 +68,11 @@ class TopikTAController extends Controller
      */
     public function destroy(string $id)
     {
-        //
         try {
             Topik::where('id', $id)->delete();
+            return $this->successResponse('Berhasil menghapus data');
         } catch (\Exception $e) {
-            return redirect()->route('apps.topik')->with('error', $e->getMessage());
+            return $this->exceptionResponse($e);
         }
     }
 }
