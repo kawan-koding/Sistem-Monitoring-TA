@@ -72,7 +72,6 @@ class ProfileController extends Controller
                 $user->userable->telp = $request->telp;
                 $user->userable->jenis_kelamin = $jenisKelamin[$request->jenis_kelamin];
             } else if($user->hasRole(['Dosen', 'Admin', 'Kaprodi'])) {
-                // dd($request->all());
                 $request->validate([
                     'name' => 'required',
                     'telp' => 'required',
@@ -92,8 +91,8 @@ class ProfileController extends Controller
                 $user->userable->telp = $request->telp;
                 $user->userable->jenis_kelamin = $request->jenis_kelamin;
                 $user->userable->bidang_keahlian = implode(', ',$request->bidang_keahlian);
-                if($request->hasFile('file')) {
-                    $file = $request->file('file');
+                if($request->hasFile('foto_profile')) {
+                    $file = $request->file('foto_profile');
                     $filename = 'Dosen_'. rand(0, 999999999) .'_'. rand(0, 999999999) .'.'. $file->getClientOriginalExtension();
                     $file->move(public_path('storage/images/dosen'), $filename);
                     if($user->userable->ttd) {

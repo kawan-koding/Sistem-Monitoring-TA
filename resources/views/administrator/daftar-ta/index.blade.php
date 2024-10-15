@@ -72,7 +72,7 @@
                                         <a href="{{ route('apps.daftar-ta.edit', $item)}}" class="btn btn-sm btn-outline-primary mb-3" title="Edit"><i class="bx bx-edit-alt"></i></a>
                                         @endcan
                                         @can('read-daftar-ta')
-                                        <a href="{{ route('apps.daftar-ta.show', $item)}}" class="btn btn-sm btn-outline-info mb-3" title="Detail"><i class="bx bx-show"></i></a>
+                                        <a href="{{ route('apps.daftar-ta.show', $item)}}" class="btn btn-sm btn-outline-warning mb-3" title="Detail"><i class="bx bx-show"></i></a>
                                         @endcan
                                         @can('delete-daftar-ta')
                                         <button type="button" data-url="{{ route('apps.daftar-ta.delete', $item)}}" class="btn btn-sm btn-outline-dark mb-3" data-toggle="delete" title="Hapus"><i class="bx bx-trash"></i></button>

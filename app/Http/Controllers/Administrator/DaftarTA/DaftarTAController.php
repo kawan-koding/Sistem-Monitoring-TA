@@ -21,6 +21,9 @@ class DaftarTAController extends Controller
         $dataTa = TugasAkhir::with(['mahasiswa','bimbing_uji','periode_ta','topik','jenis_ta'])->where('periode_ta_id', $periode->id);    
         if (getInfoLogin()->hasRole('Admin')) {
             $dataTa->where('status', '!=', 'draft');
+        } 
+        if (getInfoLogin()->hasRole('Kaprodi')) {
+            $dataTa->where('status', 'acc');
         }
         $dataTa = $dataTa->get();
         $data = [

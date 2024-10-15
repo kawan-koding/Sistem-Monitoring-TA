@@ -47,8 +47,12 @@
                                 <td>{{$loop->iteration}}</td>
                                 <td>{{$item->nama_jenis}}</td>
                                 <td>
-                                    <a href="javascript:void(0);" onclick="editJenis('{{ $item->id }}', '{{route('apps.jenis-ta.show', ['id' => $item->id])}}')" class="btn btn-outline-primary btn-sm mx-1 my-1"><i class="fa fa-edit"></i></a>
-                                    <a href="javascript:void(0);" onclick="hapusJenis('{{ $item->id }}', '{{route('apps.jenis-ta.delete', ['id' => $item->id])}}')" class="btn btn-outline-dark btn-sm mx-1 my-1"><i class="fa fa-trash"></i></a>
+                                    @can('update-jenis')
+                                    <a href="javascript:void(0);" onclick="editJenis('{{ $item->id }}', '{{route('apps.jenis-ta.show', ['id' => $item->id])}}')" class="btn btn-outline-primary btn-sm mx-1 my-1"><i class="bx bx-edit-alt"></i></a>
+                                    @endcan
+                                    @can('delete-jenis')
+                                    <a href="javascript:void(0);" onclick="hapusJenis('{{ $item->id }}', '{{route('apps.jenis-ta.delete', ['id' => $item->id])}}')" class="btn btn-outline-dark btn-sm mx-1 my-1"><i class="bx bx-trash"></i></a>
+                                    @endcan
                                 </td>
                             </tr>
                             @endforeach

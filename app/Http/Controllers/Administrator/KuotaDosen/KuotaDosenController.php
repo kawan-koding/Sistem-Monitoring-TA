@@ -71,8 +71,8 @@ class KuotaDosenController extends Controller
 
         try {
             $dosen = Dosen::all();
+            $periode = PeriodeTa::where('is_active', true)->first();
             foreach($dosen as $item) {
-                $periode = PeriodeTa::where('is_active', true)->first();
                 $existingKuota = KuotaDosen::where('dosen_id', $item->id)->where('periode_ta_id', $periode->id)->first();
                 if(!$existingKuota) {
                     $request->merge(['dosen_id' => $item->id,'periode_ta_id' => $periode->id]);
