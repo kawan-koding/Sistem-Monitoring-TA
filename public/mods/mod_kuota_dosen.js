@@ -30,3 +30,14 @@ const procedUpdate = setTimeLoad((name, field, periode, dosen) => {
 function changeKuota(name, field, periode, dosen) {
     procedUpdate(name, field, periode, dosen);
 }
+
+
+function tambahData() {
+    $('#myFormulir').attr("action", `${BASE_URL}/apps/kuota-dosen/create-all`);
+    $('#myModalLabel').html('Tambah Kuota Dosen')
+    $('#pembimbing_1').val('')
+    $('#pembimbing_2').val('')
+    $('#penguji_1').val('')
+    $('#penguji_2').val('')
+    $('#myModal').modal('show')
+}

@@ -186,7 +186,6 @@ class RekomendasiTopikController extends Controller
                 'status' => 'Menunggu',
             ]);
 
-
             return redirect()->route('apps.rekomendasi-topik')->with('success', 'Berhasil mengirim data');
         } catch (\Exception $e) {
             return redirect()->route('apps.rekomendasi-topik')->with($e->getMessage());
@@ -226,7 +225,7 @@ class RekomendasiTopikController extends Controller
             $rekomendasiTopik->update(['kuota' => $rekomendasiTopik->kuota - count($selected),]);
 
             DB::commit();
-            return redirect()->route('apps.rekomendasi-topik.detail', $rekomendasiTopik)->with('success', 'Berhasil menyetujui data');
+            return redirect()->route('apps.rekomendasi-topik.detail', $rekomendasiTopik->id)->with('success', 'Berhasil menyetujui data');
         } catch (\Exception $e) {
             return redirect()->back()->with($e->getMessage());
         }

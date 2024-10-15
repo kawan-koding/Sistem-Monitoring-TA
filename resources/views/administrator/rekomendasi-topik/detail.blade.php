@@ -36,7 +36,7 @@
                     <div class="flex-1">
                         <div class="row">
                             <div class="col-md-6 col-sm-6">
-                                <h5 class="font-size-15">{{ $item->mahasiswa->nama_mhs }}</h5>
+                                <h5 class="font-size-15">{{ $item->mahasiswa->nama_mhs }} <span class="badge {{ isset($item->status) ? ($item->status == 'Disetujui' ? 'badge-soft-success' : ($item->status == 'Menunggu' ? 'bg-dark-subtle text-body' : 'badge-soft-danger')) : ''}} small">{{ ucfirst($item->status) }}</span></h5>
                             </div>
                             <div class="col-md-6 col-sm-6 d-flex justify-content-start justify-content-sm-end">
                                 <p class="small">{{ \Carbon\Carbon::parse($item->date)->locale('id')->isoFormat('D MMMM Y') }}</p>
@@ -55,8 +55,8 @@
             <div class="text-end">
                 <a href="{{ route('apps.rekomendasi-topik') }}" class="btn btn-light">Kembali</a>
                 @if($data->ambilTawaran->count() > 0)
-                <button  data-url="{{ route('apps.tolak-mahasiswa-yang-terkait', $data->id) }}" data-toggle="reject-mhs" class="btn btn-danger">Tolak</button>
-                <button  data-url="{{ route('apps.rekomendasi-topik.accept', $data->id) }}" data-toggle="approve-mhs" class="btn btn-primary">Setujui</button>
+                <button type="submit" data-url="{{ route('apps.tolak-mahasiswa-yang-terkait', $data->id) }}" data-toggle="reject-mhs" class="btn btn-danger">Tolak</button>
+                <button type="submit" data-url="{{ route('apps.rekomendasi-topik.accept', $data->id) }}" data-toggle="approve-mhs" class="btn btn-primary">Setujui</button>
                 @endif
             </div>
         </form>
