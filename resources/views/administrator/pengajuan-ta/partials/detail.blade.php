@@ -19,7 +19,7 @@
                         <span><strong>{{isset($dataTA->topik->nama_topik) ? $dataTA->topik->nama_topik : '-'}}</strong> - {{isset($dataTA->jenis_ta->nama_jenis) ? $dataTA->jenis_ta->nama_jenis : '-'}}</span>
                     </div>
                 </div>
-                <button class="btn btn-rounded btn-light bx bx-dots-horizontal fs-4" style="width: 45px;height: 45px;"></button>
+                {{-- <button class="btn btn-rounded btn-light bx bx-dots-horizontal fs-4" style="width: 45px;height: 45px;"></button> --}}
             </div>
             <hr style="border: 1.5px solid #a1a1a1;">
             <h5 class="fw-bold m-0">Informasi</h5>

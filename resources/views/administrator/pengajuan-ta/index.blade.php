@@ -57,7 +57,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {{-- {{dd($dataTA)}} --}}
+                            @if($dataTA->count() > 0)
                             @foreach ($dataTA as $item)
                                 @foreach ($item->bimbing_uji as $bimuj)
                                     @if ($bimuj->jenis == 'pembimbing' && $bimuj->urut == 1)
@@ -151,6 +151,11 @@
                                 </td>
                             </tr>
                             @endforeach
+                            @else
+                            <tr class="text-center">
+                                <td colspan="7">No data available in table</td>
+                            </tr>
+                            @endif
                         </tbody>
                     </table>
                 </div>
