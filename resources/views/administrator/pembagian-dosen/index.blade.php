@@ -87,7 +87,7 @@
                                     </td>
                                     <td>
                                         @can('update-pembagian-dosen')
-                                        <a href="{{ route('apps.pembagian-dosen.edit', $item)}}" class="btn btn-sm btn-outline-primary mb-3" title="Edit"><i class="bx bx-edit-alt"></i></a>
+                                        <a href="{{ route('apps.pembagian-dosen.edit', $item)}}" class="btn btn-sm btn-outline-primary mx-1 my-1" title="Edit"><i class="bx bx-edit-alt"></i></a>
                                         @endcan
                                     </td>
                                 </tr>

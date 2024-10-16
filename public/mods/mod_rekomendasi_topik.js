@@ -62,17 +62,20 @@ $(document).ready(function () {
 });
 
 $(document).ready(function () {
-    $('*[data-toggle="reject-mhs"]').on('click', function () {
+    $('*[data-toggle="reject-mhs"]').on('click', function (e) {
+        e.preventDefault();
         const url = $(this).data('url');
-        $('#approveForm').attr('action', url);
+        console.log("Tolak URL: ", url);
+        $('#approveForm').attr('action', url).attr('method', 'POST').submit();
+    });
+
+    $('*[data-toggle="approve-mhs"]').on('click', function (e) {
+        e.preventDefault();
+        const url = $(this).data('url');
+        console.log("Setujui URL: ", url);
+        $('#approveForm').attr('action', url).attr('method', 'POST').submit();;
     });
 });
 
-$(document).ready(function () {
-    $('*[data-toggle="approve-mhs"]').on('click', function () {
-        const url = $(this).data('url');
-        $('#approveForm').attr('action', url);
-    });
-});
 
 

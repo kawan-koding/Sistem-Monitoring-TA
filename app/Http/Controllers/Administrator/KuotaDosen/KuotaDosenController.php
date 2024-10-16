@@ -54,4 +54,35 @@ class KuotaDosenController extends Controller
             return $this->exceptionResponse($e);
         }
     }
+
+    public function createAll(Request $request)
+    {
+        $request->validate([
+            'pembimbing_1' => 'required',
+            'pembimbing_2' => 'required',
+            'penguji_1' => 'required',
+            'penguji_2' => 'required'
+        ],[
+            'pembimbing_1' => 'Kuota Pembimbing 1 wajib diisi',
+            'pembimbing_1' => 'Kuota Pembimbing 2 wajib diisi',
+            'penguji_1' => 'Kuota Penguji 1 wajib diisi',
+            'penguji_2' => 'Kuota Penguji 2 wajib diisi',
+        ]);
+
+        try {
+            $dosen = Dosen::all();
+            $periode = PeriodeTa::where('is_active', true)->first();
+            foreach($dosen as $item) {
+                $existingKuota = KuotaDosen::where('dosen_id', $item->id)->where('periode_ta_id', $periode->id)->first();
+                if(!$existingKuota) {
+                    $request->merge(['dosen_id' => $item->id,'periode_ta_id' => $periode->id]);
+                    $kuota  = KuotaDosen::create($request->only(['dosen_id', 'periode_ta_id', 'pembimbing_1', 'pembimbing_2', 'penguji_1', 'penguji_2']));
+                }
+            }
+
+            return redirect()->route('apps.kuota-dosen')->with('success', 'Berhasil menyimpan data');
+        } catch (\Exception $e) {
+            return redirect()->back()->with($e->getMessage());
+        }
+    }
 }

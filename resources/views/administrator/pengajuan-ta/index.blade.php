@@ -123,18 +123,18 @@
                                     @if (getInfoLogin()->hasRole('Kaprodi'))
                                         @if ($item->status == 'draft')
                                         @can('acc-pengajuan-tugas-akhir')
-                                        <a href="javascript:void(0);" onclick="acceptTA('{{$item->id}}', '{{route('apps.pengajuan-ta.accept', $item->id)}}')" class="btn btn-primary btn-sm mb-3" title="Acc"><i class="bx bx-check-double"></i></a>
+                                        <a href="javascript:void(0);" onclick="acceptTA('{{$item->id}}', '{{route('apps.pengajuan-ta.accept', $item->id)}}')" class="btn btn-outline-primary btn-sm mx-1 my-1" title="Acc"><i class="bx bx-check-double"></i></a>
                                         @endcan
-                                        <a href="javascript:void(0);" onclick="rejectTA('{{$item->id}}', '{{route('apps.pengajuan-ta.reject', $item->id)}}')" class="btn btn-danger btn-sm mb-3" title="Reject"><i class="bx bx-x"></i></a>
+                                        <a href="javascript:void(0);" onclick="rejectTA('{{$item->id}}', '{{route('apps.pengajuan-ta.reject', $item->id)}}')" class="btn btn-outline-danger btn-sm mx-1 my-1" title="Reject"><i class="bx bx-x"></i></a>
                                         @endif
                                     @endif
                                     @if (getInfoLogin()->hasRole('Mahasiswa'))
                                         @can('update-pengajuan-tugas-akhir')
-                                        <a href="{{route('apps.pengajuan-ta.edit', ['pengajuanTA' => $item->id])}}" class="btn btn-sm btn-primary mb-3" title="Edit"><i class="fas fa-edit"></i></a>
+                                        <a href="{{route('apps.pengajuan-ta.edit', ['pengajuanTA' => $item->id])}}" class="btn btn-sm btn-outline-primary my-1 mx-1" title="Edit"><i class="fas fa-edit"></i></a>
                                         @endcan
-                                        <a href="javascript:void(0);" onclick="uploadFile('{{$item->id}}','{{route('apps.pengajuan-ta.unggah-berkas',  $item->id)}}')" class="btn btn-sm btn-secondary unggah-berkas mb-3" title="Unggah Berkas"><i class="far fa-file-alt"></i></a>
+                                        <a href="javascript:void(0);" onclick="uploadFile('{{$item->id}}','{{route('apps.pengajuan-ta.unggah-berkas',  $item->id)}}')" class="btn btn-sm btn-outline-secondary unggah-berkas mx-1 my-1" title="Unggah Berkas"><i class="far fa-file-alt"></i></a>
                                     @endif
-                                    <a href="{{route('apps.pengajuan-ta.show', ['pengajuanTA' => $item->id])}}" class="btn btn-sm btn-primary mb-3" title="Detail"><i class="fas fa-search"></i></a>
+                                    <a href="{{route('apps.pengajuan-ta.show', ['pengajuanTA' => $item->id])}}" class="btn btn-sm btn-outline-warning mx-1 my-1" title="Detail"><i class="bx bx-show"></i></a>
 
                                     {{-- @if ($timer == 'selesai') --}}
 

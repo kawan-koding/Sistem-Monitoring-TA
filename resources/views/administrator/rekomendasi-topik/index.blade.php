@@ -101,16 +101,16 @@
                                 <td>
                                     @if (auth()->user()->hasRole('Dosen') || auth()->user()->hasRole('Developer'))
                                         @can('update-rekomendasi-topik')
-                                        <button onclick="editData('{{ $item->id }}', '{{route('apps.rekomendasi-topik.show', $item->id)}}')" class="btn btn-primary btn-sm mx-1 my-1" title="Edit"><i class="bx bx-edit-alt"></i></button>
+                                        <button onclick="editData('{{ $item->id }}', '{{route('apps.rekomendasi-topik.show', $item->id)}}')" class="btn btn-outline-primary btn-sm mx-1 my-1" title="Edit"><i class="bx bx-edit-alt"></i></button>
                                         @endcan
                                         @can('delete-rekomendasi-topik')
-                                        <button class="btn btn-danger btn-sm mx-1 my-1" data-toggle="delete" data-url="{{ route('apps.program-studi.delete', $item->id) }}" title="Hapus"><i class="bx bx-trash"></i></button>
+                                        <button class="btn btn-outline-dark btn-sm mx-1 my-1" data-toggle="delete" data-url="{{ route('apps.program-studi.delete', $item->id) }}" title="Hapus"><i class="bx bx-trash"></i></button>
                                         @endcan
-                                        <a href="{{ route('apps.rekomendasi-topik.detail', $item->id) }}" class="btn btn-success btn-sm mx-1 my-1" title="Detail"><i class="bx bx-detail"></i></a>
+                                        <a href="{{ route('apps.rekomendasi-topik.detail', $item->id) }}" class="btn btn-outline-warning btn-sm mx-1 my-1" title="Detail"><i class="bx bx-show"></i></a>
                                     @endif
 
                                     @if(auth()->user()->hasRole('Mahasiswa') || auth()->user()->hasRole('Developer'))
-                                        <button class="btn btn-success btn-sm mx-1 my-1" data-toggle="get-topik" data-id="{{ $item->id }}" title="Ambil Topik"><i class="bx bx-check-circle"></i></button>
+                                        <button class="btn btn-outline-success btn-sm mx-1 my-1" data-toggle="get-topik" data-id="{{ $item->id }}" title="Ambil Topik"><i class="bx bx-check-circle"></i></button>
                                     @endif
                                 </td>
                             </tr>

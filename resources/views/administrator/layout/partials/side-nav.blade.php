@@ -56,6 +56,24 @@
                     </a>
                 </li>
                 @endcan
+
+                {{-- @can(['read-jadwal-bimbingan']) --}}
+                <li>
+                    <a href="#" class=" waves-effect">
+                        <i class="mdi mdi-file-edit-outline"></i>
+                        <span>Daftar Bimbingan</span>
+                    </a>
+                </li>
+                {{-- @endcan --}}
+
+                {{-- @can(['read-jadwal-uji']) --}}
+                <li>
+                    <a href="#" class=" waves-effect">
+                        <i class="mdi mdi-calendar-text"></i>
+                        <span>Jadwal Uji</span>
+                    </a>
+                </li>
+                {{-- @endcan --}}
                 
                 @can(['read-pengajuan-tugas-akhir'])
                     @if(getInfoLogin()->hasRole('Mahasiswa') || getInfoLogin()->hasRole('Developer'))
@@ -116,30 +134,33 @@
                     @endcan
                 @endif
                 
-                @canany(['read-daftar-ta', 'read-pengajuan-tugas-akhir', 'read-pembagian-dosen'])
-                    <li>
-                        <a href="javascript: void(0);" class="has-arrow waves-effect">
-                            <i class="mdi mdi-clipboard-list-outline"></i>
-                            <span>Tugas Akhir</span>
-                        </a>
-                        <ul class="sub-menu" aria-expanded="false">
-                            @can(['read-daftar-ta'])
-                            <li><a href="{{route('apps.daftar-ta')}}">Daftar TA</a></li>
-                            @endcan
-                            @if (getInfoLogin()->hasRole('Kaprodi') || getInfoLogin()->hasRole('Developer'))
-                                @can(['read-pengajuan-tugas-akhir'])
-                                <li><a href="{{route('apps.pengajuan-ta')}}">Pengajuan TA</a></li>
+                
+                @if (in_array(session('switchRoles'), ['Admin','Kaprodi','Developer']))
+                    @canany(['read-daftar-ta', 'read-pengajuan-tugas-akhir', 'read-pembagian-dosen'])
+                        <li>
+                            <a href="javascript: void(0);" class="has-arrow waves-effect">
+                                <i class="mdi mdi-clipboard-list-outline"></i>
+                                <span>Tugas Akhir</span>
+                            </a>
+                            <ul class="sub-menu" aria-expanded="false">
+                                @can(['read-daftar-ta'])
+                                <li><a href="{{route('apps.daftar-ta')}}">Daftar TA</a></li>
                                 @endcan
-                            @endif
-                            @can(['read-pembagian-dosen'])
-                            <li><a href="{{route('apps.pembagian-dosen')}}">Pembagian Dosen</a></li>
-                            @endcan
-                            @can('read-jadwal-seminar')
-                            <li><a href="{{route('apps.jadwal-seminar')}}">Jadwal Seminar</a></li>
-                            @endcan
-                        </ul>
-                    </li>
-                @endcanany
+                                @if (getInfoLogin()->hasRole('Kaprodi') || getInfoLogin()->hasRole('Developer'))
+                                    @can(['read-pengajuan-tugas-akhir'])
+                                    <li><a href="{{route('apps.pengajuan-ta')}}">Pengajuan TA</a></li>
+                                    @endcan
+                                @endif
+                                @can(['read-pembagian-dosen'])
+                                <li><a href="{{route('apps.pembagian-dosen')}}">Pembagian Dosen</a></li>
+                                @endcan
+                                @can('read-jadwal-seminar')
+                                <li><a href="{{route('apps.jadwal-seminar')}}">Jadwal Seminar</a></li>
+                                @endcan
+                            </ul>
+                        </li>
+                    @endcanany
+                @endif
 
                 @if (in_array(session('switchRoles'), ['Admin','Developer'])) 
                     @canany(['read-users', 'read-roles'])

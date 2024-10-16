@@ -51,7 +51,7 @@
                                 <td>{{ $item->name }}</td>
                                 <td>
                                     @can('read-permissions')
-                                    <a href="{{ route('apps.roles.change', $item->id)}}" class="btn btn-outline-warning btn-sm mx-1 my-1"><i class="bx bx-shield"></i></a>
+                                    <a href="{{ route('apps.roles.change', $item->id)}}" class="btn btn-outline-warning btn-sm mx-1 my-1" title="Edit Hak Akses"><i class="bx bx-shield"></i></a>
                                     @endcan
                                     {{-- @can('update-roles')
                                     <a href="javascript:void(0);" onclick="editData('{{ $item->id }}', '{{route('apps.users.show', $item->id)}}')" class="btn btn-outline-primary btn-sm mx-1 my-1"><i class="bx bx-edit-alt"></i></a>

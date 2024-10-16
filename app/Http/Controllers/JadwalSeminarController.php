@@ -184,7 +184,6 @@ class JadwalSeminarController extends Controller
             }
         }
 
-
         // dd($jadwalSeminarTerdaftarPembimbing1);
 
         return view('jadwal-seminar.tambah-jadwal', [
