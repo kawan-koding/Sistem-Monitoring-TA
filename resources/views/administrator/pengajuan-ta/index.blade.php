@@ -130,9 +130,9 @@
                                     @endif
                                     @if (getInfoLogin()->hasRole('Mahasiswa'))
                                         @can('update-pengajuan-tugas-akhir')
-                                        <a href="{{route('apps.pengajuan-ta.edit', ['pengajuanTA' => $item->id])}}" class="btn btn-sm btn-outline-primary my-1 mx-1" title="Edit"><i class="fas fa-edit"></i></a>
+                                        <a href="{{route('apps.pengajuan-ta.edit', ['pengajuanTA' => $item->id])}}" class="btn btn-sm btn-outline-primary my-1 mx-1" title="Edit"><i class="bx bx-edit-alt"></i></a>
                                         @endcan
-                                        <a href="javascript:void(0);" onclick="uploadFile('{{$item->id}}','{{route('apps.pengajuan-ta.unggah-berkas',  $item->id)}}')" class="btn btn-sm btn-outline-secondary unggah-berkas mx-1 my-1" title="Unggah Berkas"><i class="far fa-file-alt"></i></a>
+                                        <a href="javascript:void(0);" onclick="uploadFile('{{$item->id}}','{{route('apps.pengajuan-ta.unggah-berkas',  $item->id)}}')" class="btn btn-sm btn-outline-secondary unggah-berkas mx-1 my-1" title="Unggah Berkas"><i class="bx bx-file"></i></a>
                                     @endif
                                     <a href="{{route('apps.pengajuan-ta.show', ['pengajuanTA' => $item->id])}}" class="btn btn-sm btn-outline-warning mx-1 my-1" title="Detail"><i class="bx bx-show"></i></a>
 

@@ -189,6 +189,7 @@
                             @can(['read-setting'])
                             <li><a href="{{ route('apps.settings')}}">Aplikasi</a></li>
                             @endcan
+                            <li><a href="{{ route('apps.templates')}}">Template</a></li>
                         </ul>
                     </li>
                     @endcanany

@@ -24,16 +24,17 @@ use App\Http\Controllers\Administrator\Ruangan\RuanganController;
 use App\Http\Controllers\Administrator\Setting\SettingController;
 use App\Http\Controllers\Administrator\TopikTA\TopikTAController;
 use App\Http\Controllers\Administrator\DaftarTA\DaftarTAController;
+use App\Http\Controllers\Administrator\Template\TemplateController;
 use App\Http\Controllers\Administrator\Dashboard\DashboardController;
 use App\Http\Controllers\Administrator\Mahasiswa\MahasiswaController;
 use App\Http\Controllers\Administrator\PeriodeTA\PeriodeTAController;
 use App\Http\Controllers\Administrator\KuotaDosen\KuotaDosenController;
 use App\Http\Controllers\Administrator\PengajuanTA\PengajuanTAController;
 use App\Http\Controllers\Administrator\ProgramStudi\ProgramStudiController;
+use App\Http\Controllers\Administrator\JadwalSeminar\JadwalSeminarController;
 use App\Http\Controllers\Administrator\KategoriNilai\KategoriNilaiController;
 use App\Http\Controllers\Administrator\PembagianDosen\PembagianDosenController;
 use App\Http\Controllers\Administrator\RekomendasiTopik\RekomendasiTopikController;
-use App\Http\Controllers\Administrator\JadwalSeminar\JadwalSeminarController;
 
 /*
 |--------------------------------------------------------------------------
@@ -220,6 +221,11 @@ Route::prefix('apps')->middleware('auth')->group(function () {
        Route::get('{kategoriNilai}/show', [KategoriNilaiController::class, 'show'])->name('apps.kategori-nilai.show');
        Route::post('{kategoriNilai}/update', [KategoriNilaiController::class, 'update'])->name('apps.kategori-nilai.update')->middleware('can:update-kategori-nilai');
        Route::delete('{kategoriNilai}/destroy', [KategoriNilaiController::class, 'destroy'])->name('apps.kategori-nilai.delete')->middleware('can:delete-kategori-nilai'); 
+    });
+
+    Route::prefix('templates')->group( function(){
+        Route::get('',[TemplateController::class, 'index'])->name('apps.templates');
+        Route::get('lembar-penilaian',[TemplateController::class, 'lembarPenilaian'])->name('apps.templates.lembar-penilaian');
     });
     
 });
