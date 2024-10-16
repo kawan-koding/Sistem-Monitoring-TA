@@ -80,6 +80,7 @@ class PermissionSeeder extends Seeder
             ["name" => "update-pengajuan-tugas-akhir", "display_name" => "Ubah Pengajuan Tugas Akhir"],
             ["name" => "acc-pengajuan-tugas-akhir", "display_name" => "Menyetujui Pengajuan Tugas Akhir"],
             ["name" => "reject-pengajuan-tugas-akhir", "display_name" => "Menolak Pengajuan Tugas Akhir"],
+            ["name" => "cancel-pengajuan-tugas-akhir", "display_name" => "Membatalkan Pengajuan Tugas Akhir"],
             ["name" => "read-daftar-ta", "display_name" => "Lihat Daftar Tugas Akhir"],
             ["name" => "update-daftar-ta", "display_name" => "Ubah Daftar Tugas Akhir"],
             ["name" => "delete-daftar-ta", "display_name" => "Hapus Daftar Tugas Akhir"],

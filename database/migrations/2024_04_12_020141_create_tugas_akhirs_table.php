@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('file_proposal', 255)->nullable();
             $table->string('file_pengesahan', 255)->nullable();
             $table->string('file_draft', 255)->nullable();
-            $table->enum('status', ['draft', 'acc', 'reject']);
+            $table->enum('status', ['draft', 'acc', 'reject','cancel']);
             $table->text('catatan')->nullable();
             $table->enum('status_seminar', ['revisi', 'acc', 'reject'])->nullable();
             $table->boolean('is_completed')->nullable()->default(false);

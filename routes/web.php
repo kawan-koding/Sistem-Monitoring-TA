@@ -146,7 +146,8 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::get('{pengajuanTA}/show', [PengajuanTAController::class, 'show'])->name('apps.pengajuan-ta.show');
         Route::post('{pengajuanTA}/unggah-berkas', [PengajuanTAController::class, 'unggah_berkas'])->name('apps.pengajuan-ta.unggah-berkas');
         Route::post('{pengajuanTA}/accept', [PengajuanTAController::class, 'accept'])->name('apps.pengajuan-ta.accept')->middleware('can:acc-pengajuan-tugas-akhir');
-        Route::post('{pengajuanTA}/reject', [PengajuanTAController::class, 'reject'])->name('apps.pengajuan-ta.reject')->middleware('can:acc-pengajuan-tugas-akhir');
+        Route::post('{pengajuanTA}/reject', [PengajuanTAController::class, 'reject'])->name('apps.pengajuan-ta.reject')->middleware('can:reject-pengajuan-tugas-akhir');
+        Route::post('{pengajuanTA}/cancel', [PengajuanTAController::class, 'cancel'])->name('apps.pengajuan-ta.cancel')->middleware('can:cancel-pengajuan-tugas-akhir');
         // Route::get('/print_rekap/{id}', [PengajuanTAController::class, 'print_rekap'])->name('apps.pengajuan-ta.print_rekap');
         // Route::get('/print_revisi/{id}', [PengajuanTAController::class, 'print_revisi'])->name('apps.pengajuan-ta.print_revisi');
         // Route::get('/cek-dosen', [PengajuanTAController::class, 'cekDosen'])->name('apps.pengajuan-ta.cekdosen');
