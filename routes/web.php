@@ -211,10 +211,11 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::get('', [JadwalSeminarController::class, 'index'])->name('apps.jadwal-seminar');
         Route::post('sudah-terjadwal', [JadwalSeminarController::class, 'scheduled'])->name('apps.jadwal-seminar.sudah-terjadwal');
         Route::post('telah-seminar', [JadwalSeminarController::class, 'haveSeminar'])->name('apps.jadwal-seminar.telah-seminar');
-        Route::get('{jadwalSeminar}/show', [JadwalSeminarController::class, 'index'])->name('apps.jadwal-seminar.show');
+        Route::get('{jadwalSeminar}/edit', [JadwalSeminarController::class, 'edit'])->name('apps.jadwal-seminar.edit');
         Route::post('{jadwalSeminar}/update', [JadwalSeminarController::class, 'update'])->name('apps.jadwal-seminar.update')->middleware('can:update-jadwal-seminar');
+        Route::get('{jadwalSeminar}/show', [JadwalSeminarController::class, 'show'])->name('apps.jadwal-seminar.show');
     });
-    
+
     Route::prefix('kategori-nilai')->middleware('can:read-kategori-nilai')->group( function() {
        Route::get('', [KategoriNilaiController::class, 'index'])->name('apps.kategori-nilai');
        Route::post('store', [KategoriNilaiController::class, 'store'])->name('apps.kategori-nilai.store')->middleware('can:create-kategori-nilai');

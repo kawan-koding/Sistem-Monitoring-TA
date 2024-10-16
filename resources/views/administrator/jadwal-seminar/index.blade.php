@@ -29,36 +29,38 @@
             @endif
             @if (getInfoLogin()->hasRole('Admin'))    
             <div class="col-md-8 col-sm-12">
-                <label for="">Filter Tanggal</label>
-                <div class="inner mb-3 row">
-                    <div class="col-md-8 col-sm-6">
-                        <input type="date" name="tanggal" class="inner form-control" placeholder="cari berdasarkan tanggal">
+                <form action="">
+                    <label for="">Filter Tanggal</label>
+                    <div class="inner mb-3 row">
+                        <div class="col-md-8 col-sm-6">
+                            <input type="date" name="tanggal" class="inner form-control" placeholder="cari berdasarkan tanggal">
+                        </div>
+                        <div class="col-md-2 col-sm-3">
+                            <button type="submit" class="btn btn-primary w-100 inner">Filter</button>
+                        </div>
+                        <div class="col-md-2 col-sm-3">
+                            <a href="{{route('apps.jadwal-seminar')}}" class="btn btn-secondary w-100 inner">Reset</a>
+                        </div>
                     </div>
-                    <div class="col-md-2 col-sm-3">
-                        <button type="submit" class="btn btn-primary w-100 inner">Filter</button>
-                    </div>
-                    <div class="col-md-2 col-sm-3">
-                        <button type="submit" class="btn btn-secondary w-100 inner">Reset</button>
-                    </div>
-                </div>
+                </form>
             </div>
 
             @can('read-jadwal-seminar')
             <ul class="nav nav-tabs nav-tabs-custom nav-justified mt-1 mb-2" role="tablist">
                 <li class="nav-item">
-                    <a class="nav-link active" href="#">
+                    <a class="nav-link @if(url()->full() == route('apps.jadwal-seminar')) active @endif" href="{{ route('apps.jadwal-seminar')}}">
                         <span class="d-block d-sm-none"><i class="mdi mdi-check-circle-outline"></i></span>
                         <span class="d-none d-sm-block">Belum Terjadwal</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('apps.jadwal-seminar.sudah-terjadwal') }}">
+                    <a class="nav-link @if(url()->full() == route('apps.jadwal-seminar', ['status' => 'sudah_terjadwal'])) active @endif" href="{{ route('apps.jadwal-seminar', ['status' => 'sudah_terjadwal']) }}">
                         <span class="d-block d-sm-none"><i class="mdi mdi-av-timer"></i></span>
                         <span class="d-none d-sm-block">Sudah Terjadwal</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('apps.jadwal-seminar.telah-seminar') }}">
+                    <a class="nav-link @if(url()->full() == route('apps.jadwal-seminar', ['status' => 'telah_seminar'])) active @endif" href="{{ route('apps.jadwal-seminar', ['status' => 'telah_seminar']) }}">
                         <span class="d-block d-sm-none"><i class="mdi mdi-av-timer"></i></span>
                         <span class="d-none d-sm-block">Telah Diseminarkan</span>
                     </a>
@@ -85,7 +87,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {{-- {{dd($data)}} --}}
+                        @if($data->count() > 0)
                         @foreach ($data as $item)
                             @foreach ($item->tugas_akhir->bimbing_uji as $bimuj)
                                 @if ($bimuj->jenis == 'pembimbing' && $bimuj->urut == 1)
@@ -151,13 +153,23 @@
                             @endif
                             <td class="mb-3 text-center">
                                 @if (getInfoLogin()->hasRole('Admin'))
-                                <a href="{{route('apps.jadwal-seminar.show', ['jadwalSeminar' => $item->id])}}" class="btn btn-sm btn-primary mb-1"><i class="bx bx-calendar-event" style="font-size: 18px"></i></a>
+                                @can('update-jadwal-seminar')
+                                    <a href="{{route('apps.jadwal-seminar.edit', ['jadwalSeminar' => $item->id])}}" class="btn btn-sm btn-primary mb-1"><i class="bx bx-calendar-event"></i></a>
+                                    @if ($item->status == 'sudah_terjadwal')
+                                        <a href="" class="btn btn-sm btn-primary mb-1"><i class="bx bx-check"></i></a>
+                                    @endif
+                                @endcan
                                 @else
                                 <a href="#" class="btn btn-sm btn-primary mb-1"><i class="bx bx-search" style="font-size: 18px"></i></a>
                                 @endif
                             </td>
                         </tr>
                         @endforeach
+                        @else
+                        <tr class="text-center">
+                            <td colspan="7">No data available in table</td>
+                        </tr>
+                        @endif
                     </tbody>
                 </table>
             </div>
