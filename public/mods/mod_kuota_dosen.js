@@ -34,7 +34,7 @@ function changeKuota(name, field, periode, dosen) {
 
 function tambahData() {
     $('#myFormulir').attr("action", `${BASE_URL}/apps/kuota-dosen/create-all`);
-    $('#myModalLabel').html('Tambah Kuota Dosen')
+    $('#myModalLabel').html('Tambah Kuota Semua Dosen')
     $('#pembimbing_1').val('')
     $('#pembimbing_2').val('')
     $('#penguji_1').val('')

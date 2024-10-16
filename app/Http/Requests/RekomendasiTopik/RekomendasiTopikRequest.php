@@ -30,8 +30,10 @@ class RekomendasiTopikRequest extends FormRequest
         return [
             'jenis_ta_id' => 'required',
             'judul' => 'required',
+            'deskripsi' => 'required',
             'tipe' => 'required',
             'kuota' => 'required',
+            'jenis_ta_new' => 'nullable',
         ];
     }
 
@@ -40,6 +42,7 @@ class RekomendasiTopikRequest extends FormRequest
         return [
             'jenis_ta_id.required' => 'Jenis TA wajib diisi',
             'judul.required' => 'Judul TA wajib diisi',
+            'deskripsi.required' => 'Deskripsi TA wajib diisi',
             'tipe.required' => 'Tipe wajib diisi',
             'kuota.required' => 'Kuota wajib diisi',
         ];

@@ -2,6 +2,7 @@ function tambahData() {
     $('#myFormulir').attr("action", `${BASE_URL}/apps/rekomendasi-topik/store`);
     $('#myModalLabel').html('Tambah Rekomendasi Topik')
     $('#judul').val('')
+    $('#deskripsi').val('')
     $('#jenis_ta_id').val('')
     $('#kuota').val('')
     $('#tipe').val('')
@@ -20,6 +21,7 @@ function editData(id, urlShow) {
             $('#judul').val(response.judul)
             $('#kuota').val(response.kuota)
             $('#tipe').val(response.tipe)
+            $('#deskripsi').val(response.deskripsi)
             $('#jenis_ta_id').val(response.jenis_ta_id)
         },
         error: function (xhr, status, error) {
@@ -38,42 +40,40 @@ $(document).ready(function() {
         $('#description').val('');
         $('#myModalApply').modal('show');
     });
-});
 
-$(document).ready(function () {
     $('*[data-toggle="delete"]').on('click', function () {
         const url = $(this).data('url');
-        confirmDelete('Program Studi', url);
+        confirmDelete('Topik Yang Ditawarkan', url);
     });
-});
 
-$(document).ready(function () {
     $('*[data-toggle="delete-topik"]').on('click', function () {
         const url = $(this).data('url');
         confirmDelete('Topik Yang Diambil', url);
     });
-});
-
-$(document).ready(function () {
     $('*[data-toggle="delete-mhs"]').on('click', function () {
         const url = $(this).data('url');
         confirmDelete('Mahasiswa', url);
     });
-});
 
-$(document).ready(function () {
     $('*[data-toggle="reject-mhs"]').on('click', function (e) {
         e.preventDefault();
         const url = $(this).data('url');
-        console.log("Tolak URL: ", url);
         $('#approveForm').attr('action', url).attr('method', 'POST').submit();
     });
 
     $('*[data-toggle="approve-mhs"]').on('click', function (e) {
         e.preventDefault();
         const url = $(this).data('url');
-        console.log("Setujui URL: ", url);
         $('#approveForm').attr('action', url).attr('method', 'POST').submit();;
+    });
+
+    $('#jenis_ta_id').on('change', function () {
+        let selectedValue = $(this).val();
+        if (selectedValue === 'lainnya') {
+            $('#new_jenis').show();
+        } else {
+            $('#new_jenis').hide();
+        }
     });
 });
 

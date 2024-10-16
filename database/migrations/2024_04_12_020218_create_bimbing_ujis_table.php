@@ -17,8 +17,9 @@ return new class extends Migration
             $table->unsignedBigInteger('dosen_id');
             $table->foreign('tugas_akhir_id')->references('id')->on('tugas_akhirs')->onDelete('cascade');
             $table->foreign('dosen_id')->references('id')->on('dosens')->onDelete('cascade');
-            $table->enum('jenis', ['penguji', 'pembimbing']);
+            $table->enum('jenis', ['penguji', 'pembimbing', 'pengganti']);
             $table->integer('urut');
+            $table->text('catatan')->nullable();
             $table->timestamps();
         });
     }
