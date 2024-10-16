@@ -56,7 +56,7 @@
                         <thead>
                             <tr>
                                 <th width="5%">No</th>
-                                <th >Judul Topik</th>
+                                <th >Topik</th>
                                 <th>Jenis Penyelesaian</th>
                                 <th>Jenis Topik</th>
                                 @if(auth()->user()->hasRole('Dosen') || auth()->user()->hasRole('Developer'))
@@ -72,7 +72,10 @@
                             @foreach ($data as $item)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ $item->judul }}</td>
+                                <td>
+                                    <p class="fw-bold m-0">{{ $item->judul }}</p>
+                                    <p class="m-0 text-muted small"><strong>Deskripsi :</strong> {{ $item->deskripsi ?? '-' }}</p>
+                                </td>
                                 <td>
                                     <div class="d-flex align-items-center">
                                             <div>
@@ -104,7 +107,7 @@
                                         <button onclick="editData('{{ $item->id }}', '{{route('apps.rekomendasi-topik.show', $item->id)}}')" class="btn btn-outline-primary btn-sm mx-1 my-1" title="Edit"><i class="bx bx-edit-alt"></i></button>
                                         @endcan
                                         @can('delete-rekomendasi-topik')
-                                        <button class="btn btn-outline-dark btn-sm mx-1 my-1" data-toggle="delete" data-url="{{ route('apps.program-studi.delete', $item->id) }}" title="Hapus"><i class="bx bx-trash"></i></button>
+                                        <button class="btn btn-outline-dark btn-sm mx-1 my-1" data-toggle="delete" data-url="{{ route('apps.rekomendasi-topik.delete', $item->id) }}" title="Hapus"><i class="bx bx-trash"></i></button>
                                         @endcan
                                         <a href="{{ route('apps.rekomendasi-topik.detail', $item->id) }}" class="btn btn-outline-warning btn-sm mx-1 my-1" title="Detail"><i class="bx bx-show"></i></a>
                                     @endif

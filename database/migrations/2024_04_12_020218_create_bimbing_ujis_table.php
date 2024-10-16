@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreign('dosen_id')->references('id')->on('dosens')->onDelete('cascade');
             $table->enum('jenis', ['penguji', 'pembimbing', 'pengganti']);
             $table->integer('urut');
+            $table->text('catatan')->nullable();
             $table->timestamps();
         });
     }

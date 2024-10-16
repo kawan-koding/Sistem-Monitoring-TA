@@ -19,6 +19,7 @@
 <div class="card">
     <div class="card-body">
         <p><strong>Judul : {{ $data->judul}}</strong></p>
+        <p style="text-align: justify"><strong>Deskripsi : </strong>{{ $data->deskripsi}}</p>
         <hr>
        <form id="approveForm" method="POST" action="">
             @csrf

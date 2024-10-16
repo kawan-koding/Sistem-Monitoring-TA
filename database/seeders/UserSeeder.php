@@ -20,7 +20,7 @@ class UserSeeder extends Seeder
             'username' => 'root',
             'email' => 'root@gmail.com',
             'password' => Hash::make('root'),
-            'image' => 'default.jpg',
+            'image' => 'default.png',
             'is_active' => 1
         ])->assignRole('Developer');
         $admin = User::create([
@@ -28,7 +28,7 @@ class UserSeeder extends Seeder
             'username' => 'admin',
             'email' => 'admin@gmail.com',
             'password' => Hash::make('admin'),
-            'image' => 'default.jpg',
+            'image' => 'default.png',
             'is_active' => 1
         ])->assignRole('Admin');
     }

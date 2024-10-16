@@ -143,7 +143,7 @@
                                                     @can('update-pengajuan-tugas-akhir')
                                                         <a href="{{ route('apps.pengajuan-ta.edit', ['pengajuanTA' => $item->id]) }}"
                                                             class="btn btn-sm btn-outline-primary my-1 mx-1" title="Edit"><i
-                                                                class="fas fa-edit"></i></a>
+                                                                class="bx bx-edit-alt"></i></a>
                                                     @endcan
                                                     <a href="javascript:void(0);"
                                                         onclick="uploadFile('{{ $item->id }}','{{ route('apps.pengajuan-ta.unggah-berkas', $item->id) }}')"

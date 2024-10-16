@@ -16,8 +16,9 @@ return new class extends Migration
             $table->foreignId('dosen_id')->nullable()->references('id')->on('dosens')->onDelete('cascade');
             $table->foreignId('jenis_ta_id')->nullable()->references('id')->on('jenis_tas')->onDelete('cascade');
             $table->text('judul');
+            $table->text('deskripsi');
             $table->enum('tipe',['Kelompok','Individu']);
-            $table->string('kuota');
+            $table->bigInteger('kuota');
             $table->timestamps();
         });
     }

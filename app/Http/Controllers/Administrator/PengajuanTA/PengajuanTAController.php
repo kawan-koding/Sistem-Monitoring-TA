@@ -179,14 +179,12 @@ class PengajuanTAController extends Controller
                 'status' => 'draft',
             ]);
 
-            BimbingUji::create(
-                [
-                    'tugas_akhir_id' => $result->id,
-                    'dosen_id' => $request->pembimbing_1,
-                    'jenis' => 'pembimbing',
-                    'urut' => 1,
-                ]
-            );
+            BimbingUji::create([
+                'tugas_akhir_id' => $result->id,
+                'dosen_id' => $request->pembimbing_1,
+                'jenis' => 'pembimbing',
+                'urut' => 1,
+            ]);
 
             return redirect()->route('apps.pengajuan-ta')->with('success', 'Data berhasil ditambahkan');
         } catch (\Exception $e) {

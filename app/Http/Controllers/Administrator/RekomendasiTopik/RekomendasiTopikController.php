@@ -13,6 +13,7 @@ use App\Mail\RekomendasiTopikMail;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Requests\RekomendasiTopik\RekomendasiTopikRequest;
 
@@ -55,8 +56,18 @@ class RekomendasiTopikController extends Controller
             if(!$dosen) {
                 return redirect()->route('apps.rekomendasi-topik')->with('error', 'Anda tidak terdaftar sebagai dosen');
             }
-            $request->merge(['dosen_id' => $dosen->id]);                   
-            RekomendasiTopik::create($request->only(['dosen_id','jenis_ta_id', 'judul', 'tipe', 'kuota']));
+
+            if($request->jenis_ta_new !== null) {
+                $newJenis =JenisTa::create(['nama_jenis' => $request->jenis_ta_new]);
+                $jenis = $newJenis->id;
+
+            } else {
+                $jenis = $request->jenis_ta_id;
+            }
+
+            $kuota = (int) $request->kuota;
+            $request->merge(['dosen_id' => $dosen->id, 'kuota' => $kuota, 'jenis_ta_id' => $jenis]);                   
+            RekomendasiTopik::create($request->only(['dosen_id','jenis_ta_id', 'judul', 'tipe', 'kuota', 'deskripsi']));
             return redirect()->route('apps.rekomendasi-topik')->with('success', 'Data berhasil ditambahkan');
         } catch (\Exception $e) {
             return redirect()->route('apps.rekomendasi-topik')->with('error', $e->getMessage());
@@ -71,6 +82,15 @@ class RekomendasiTopikController extends Controller
     public function update(RekomendasiTopikRequest $request, RekomendasiTopik $rekomendasiTopik)
     {
         try {
+            if($request->jenis_ta_new !== null) {
+                $newJenis =JenisTa::create(['nama_jenis' => $request->jenis_ta_new]);
+                $jenis = $newJenis->id;
+
+            } else {
+                $jenis = $request->jenis_ta_id;
+            }
+            $kuota = (int) $request->kuota;
+            $request->merge(['kuota' => $kuota, 'jenis_ta_id' => $jenis]);   
             $rekomendasiTopik->update($request->only(['jenis_ta_id', 'judul', 'tipe', 'kuota']));
             return redirect()->route('apps.rekomendasi-topik')->with('success', 'Data berhasil diperbarui');
         } catch (\Exception $e) {
@@ -231,13 +251,19 @@ class RekomendasiTopikController extends Controller
         }
     }
 
-    public function deleteMhs(RekomendasiTopik $rekomendasiTopik)
-    {
+    public function deleteMhs(AmbilTawaran $ambilTawaran)
+    {  
         try {
-            $ambilTawaran = AmbilTawaran::where('rekomendasi_topik_id', $rekomendasiTopik->id)->first();
+            $rekomendasiTopik = $ambilTawaran->rekomendasi_topik_id;
+            if($ambilTawaran->file) {
+                File::delete(public_path('storage/files/apply-topik/'. $ambilTawaran->file));
+            }
             $ambilTawaran->delete();
-            $rekomendasiTopik->increment('kuota');
-
+            $rekomendasiTopik = RekomendasiTopik::where('id', $rekomendasiTopikId)->first();
+            if ($rekomendasiTopik) {
+                $rekomendasiTopik->increment('kuota');
+            }
+         
             return $this->successResponse('Berhasil menghapus data');
         } catch(\Exception $e) {
             return $this->exceptionResponse($e);
