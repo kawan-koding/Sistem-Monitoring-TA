@@ -195,7 +195,6 @@ Route::prefix('apps')->middleware('auth')->group(function () {
     
     Route::prefix('pembagian-dosen')->middleware('can:read-pembagian-dosen')->group( function() {
         Route::get('', [PembagianDosenController::class, 'index'])->name('apps.pembagian-dosen');
-        Route::get('belum-terbagi', [PembagianDosenController::class, 'notCompleted'])->name('apps.pembagian-dosen.belum-dibagi')->middleware('can:read-pembagian-dosen');
         Route::get('{tugasAkhir}/edit', [PembagianDosenController::class, 'edit'])->name('apps.pembagian-dosen.edit');
         Route::post('{tugasAkhir}/update', [PembagianDosenController::class, 'update'])->name('apps.pembagian-dosen.update')->middleware('can:update-pembagian-dosen');
     });

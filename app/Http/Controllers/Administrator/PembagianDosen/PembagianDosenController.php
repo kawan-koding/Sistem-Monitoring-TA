@@ -23,7 +23,7 @@ class PembagianDosenController extends Controller
                 $query->whereHas('programStudi', function($q) use ($prodi) {
                     $q->where('nama', $prodi);
                 });
-            })->where('status', 'acc')->where('is_completed', true)->where('periode_ta_id', $periode->id)->get();
+            })->where('status', 'acc')->where('periode_ta_id', $periode->id)->get();
         }
 
         $data = [
@@ -47,43 +47,6 @@ class PembagianDosenController extends Controller
         ];
 
         return view('administrator.pembagian-dosen.index', $data);
-    }
-
-    public function notCompleted()
-    {
-        $dosen = Dosen::where('id', getInfoLogin()->userable_id)->first();
-        $prodi = $dosen->programStudi->nama;
-        $periode = PeriodeTa::where('is_active', true)->first();
-        $query = [];
-        if($prodi) {
-            $query =  TugasAkhir::with(['mahasiswa','bimbing_uji','periode_ta','topik','jenis_ta'])->whereHas('mahasiswa', function($query) use ($prodi) {
-                $query->whereHas('programStudi', function($q) use ($prodi) {
-                    $q->where('nama', $prodi);
-                });
-            })->where('status', 'acc')->where('is_completed', false)->where('periode_ta_id', $periode->id)->get();
-        }
-        // dd($query);
-        $data = [
-            'title' => 'Pembagian Dosen',
-            'mods' => 'pembagian_dosen',
-            'breadcrumbs' => [
-                [
-                    'title' => 'Dashboard',
-                    'url' => route('apps.dashboard')
-                ],
-                [
-                    'title' => 'Tugas Akhir',
-                    'is_active' => true,
-                ],
-                [
-                    'title' => 'Pembagian Dosen',
-                    'is_active' => true,
-                ],
-            ],
-            'data' => $query,
-        ];
-
-        return view('administrator.pembagian-dosen.belum-dibagi', $data);
     }
 
     public function edit(TugasAkhir $tugasAkhir) 

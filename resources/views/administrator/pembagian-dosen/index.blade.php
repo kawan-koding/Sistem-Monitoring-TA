@@ -5,23 +5,6 @@
 <div class="row">
     <div class="col-md-12 col-sm-12 col-g-12">
         <div class="card">
-            @can('read-pembagian-dosen')
-            <ul class="nav nav-tabs nav-tabs-custom nav-justified mt-1 mb-1" role="tablist">
-                <li class="nav-item">
-                    <a class="nav-link active" href="#">
-                        <span class="d-block d-sm-none"><i class="mdi mdi-check-circle-outline"></i></span>
-                        <span class="d-none d-sm-block">Sudah Terbagi</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('apps.pembagian-dosen.belum-dibagi') }}">
-                        <span class="d-block d-sm-none"><i class="mdi mdi-av-timer"></i></span>
-                        <span class="d-none d-sm-block">Belum Terbagi</span>
-                    </a>
-                </li>
-            </ul>
-            @endcan
-
             <div class="card-body">
                 @if(session('success'))
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -58,6 +41,7 @@
                                 <th width="40%">Judul</th>
                                 <th>Mahasiswa</th>
                                 <th>Dosen</th>
+                                <th>Status</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -74,16 +58,41 @@
                                     <td>
                                         <strong>Pembimbing</strong>
                                         <ol>
-                                            @foreach ($item->bimbing_uji->where('jenis', 'pembimbing')->sortBy('urut') as $pembimbing)
-                                                <li>{{ $pembimbing->dosen->name }}</li>
-                                            @endforeach
+                                        @for ($i = 0; $i < 2; $i++)
+                                            @if ($item->bimbing_uji()->where('jenis', 'pembimbing')->count() > $i)
+                                                @foreach ($item->bimbing_uji as $pemb)
+                                                    @if ($pemb->jenis == 'pembimbing' && $pemb->urut == 1 && $i == 0)
+                                                        <li>{{ $pemb->dosen->name ?? '-' }}</li>
+                                                    @endif
+                                                    @if ($pemb->jenis == 'pembimbing' && $pemb->urut == 2 && $i == 1)
+                                                        <li>{{ $pemb->dosen->name ?? '-' }}</li>
+                                                    @endif
+                                                @endforeach
+                                            @else
+                                                <li>-</li>
+                                            @endif
+                                        @endfor
                                         </ol>
                                         <strong>Penguji</strong>
                                         <ol>
-                                          @foreach ($item->bimbing_uji->where('jenis', 'penguji')->sortBy('urut') as $penguji)
-                                            <li>{{ $penguji->dosen->name }}</li>
-                                        @endforeach
+                                        @for ($i = 0; $i < 2; $i++)
+                                            @if ($item->bimbing_uji()->where('jenis', 'penguji')->count() > $i)    
+                                                @foreach ($item->bimbing_uji as $pemb)
+                                                    @if ($pemb->jenis == 'penguji' && $pemb->urut == 1 && $i == 0)
+                                                        <li>{{ $pemb->dosen->name ?? '-' }}</li>
+                                                    @endif
+                                                    @if ($pemb->jenis == 'penguji' && $pemb->urut == 2 && $i == 1)
+                                                        <li>{{ $pemb->dosen->name ?? '-' }}</li>
+                                                    @endif
+                                                @endforeach
+                                            @else
+                                                <li>-</li>
+                                            @endif
+                                        @endfor
                                         </ol>
+                                    </td>
+                                    <td>
+                                    <div class="badge {{ $item->is_complete ? 'badge-soft-success' : 'badge-soft-dark' }}">{{ $item->is_complete ? 'Sudah Dibagi' : 'Belum Dibagi' }}</div>
                                     </td>
                                     <td>
                                         @can('update-pembagian-dosen')
