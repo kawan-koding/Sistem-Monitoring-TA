@@ -437,7 +437,24 @@ class PengajuanTAController extends Controller
             // dd($e->getMessage());
             return redirect()->back()->with('error', $e->getMessage());
         }
+    }
 
+    public function cancel(TugasAkhir $pengajuanTA, Request $request)
+    {
+        $request->validate([
+            'catatan' => 'nullable'
+        ]);
+
+        try {
+            $pengajuanTA->update([
+                'status' => 'cancel',
+                'catatan' => $request->catatan
+            ]);
+
+            return redirect()->back()->with('success', 'Pengajuan TA telah di batalkan');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
     
 }
