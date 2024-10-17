@@ -78,6 +78,7 @@
                                                 <li>{{ $pembimbing->dosen->name }}</li>
                                             @empty
                                                 <li>-</li>
+                                                <li>-</li>
                                             @endforelse
                                         </ol>
                                         <strong>Penguji</strong>
@@ -85,6 +86,7 @@
                                             @forelse ($item->bimbing_uji->where('jenis', 'penguji')->sortBy('urut') as $penguji)
                                                 <li>{{ $penguji->dosen->name }}</li>
                                             @empty
+                                            <li>-</li>
                                             <li>-</li>
                                             @endforelse
                                         </ol>

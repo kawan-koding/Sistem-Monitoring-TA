@@ -229,4 +229,7 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::get('lembar-penilaian',[TemplateController::class, 'lembarPenilaian'])->name('apps.templates.lembar-penilaian');
     });
     
+    Route::get('penilaian', function(){
+        return view('administrator.template.lembar-penilaian');
+    }); 
 });
