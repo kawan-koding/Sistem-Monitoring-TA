@@ -69,7 +69,7 @@ class PengajuanTAController extends Controller
                     'url' => route('apps.dashboard')
                 ],
                 [
-                    'title' => 'Pengajuan Tugas Akhir',
+                    'title' => getInfoLogin()->hasRole('Mahasiswa') ? 'Tugas Akhir' : 'Pengajuan Tugas Akhir',
                     'is_active' => true
                 ]
             ],
@@ -115,8 +115,8 @@ class PengajuanTAController extends Controller
                     'url' => route('apps.dashboard')
                 ],
                 [
-                    'title' => 'Pengajuan Tugas Akhir',
-                    'url' => route('apps.pengajuan-ta')
+                    'title' => getInfoLogin()->hasRole('Mahasiswa') ? 'Tugas Akhir' : 'Pengajuan Tugas Akhir',
+                    'url' => route('apps.pengajuan-ta'),
                 ],
                 [
                     'title' => 'Tambah Pengajuan Tugas Akhir',
@@ -244,7 +244,7 @@ class PengajuanTAController extends Controller
                     'url' => route('apps.dashboard')
                 ],
                 [
-                    'title' => 'Pengajuan Tugas Akhir',
+                    'title' => getInfoLogin()->hasRole('Mahasiswa') ? 'Tugas Akhir' : 'Pengajuan Tugas Akhir',
                     'url' => route('apps.pengajuan-ta'),
                 ],
                 [
@@ -361,11 +361,11 @@ class PengajuanTAController extends Controller
                     'url' => route('apps.dashboard')
                 ],
                 [
-                    'title' => 'Pengajuan Tugas Akhir',
+                    'title' => getInfoLogin()->hasRole('Mahasiswa') ? 'Tugas Akhir' : 'Pengajuan Tugas Akhir',
                     'url' => route('apps.pengajuan-ta')
                 ],
                 [
-                    'title' => 'Detail Pengajuan Tugas Akhir',
+                    'title' => getInfoLogin()->hasRole('Mahasiswa') ? 'Detail Tugas Akhir' : 'Detail Pengajuan Tugas Akhir',
                     'is_active' => true
                 ]
             ],
@@ -383,13 +383,8 @@ class PengajuanTAController extends Controller
     public function unggah_berkas(TugasAkhir $pengajuanTA, Request $request)
     {
         $request->validate([
-            'file_pengesahan' => 'nullable|mimes:pdf,docx|max:51200',
-            'file_proposal' => 'nullable|mimes:docx,pdf',
             'dokumen_pemb_2' => 'nullable|mimes:docx,pdf',
         ],[
-            'file_pengesahan.mimes' => 'File pengesahan harus dalam format PDF atau DOCX',
-            'file_pengesahan.max' => 'File pengesahan melebihi batas upload, maksimal 5MB',
-            'file_proposal.mimes' => 'Fiel proposal harus dalam format PDF atau DOCX',
             'file_pemb_2.mimes' => 'Fiel proposal harus dalam format PDF atau DOCX',
             'file_pemb_2.max' => 'File proposal melebihi batas upload, maksimal 5MB',
         ]);
@@ -398,25 +393,16 @@ class PengajuanTAController extends Controller
             $data = TugasAkhir::where('id', $pengajuanTA->id)->first();
             // dd($data);
 
-            if($request->hasFile('file_pengesahan')){
-                $file = $request->file('file_pengesahan');
-                $filePengesahan = 'Pengesahan_' . rand(0, 999999999) . '.' . $file->getClientOriginalExtension();
-                $file->move(public_path('storage/files/tugas-akhir'), $filePengesahan);
-            }
-            if($request->hasFile('file_proposal')){
-                $file = $request->file('file_proposal');
-                $fileProposal = 'Proposal_' . rand(0, 999999999) . '.' . $file->getClientOriginalExtension();
-                $file->move(public_path('storage/files/tugas-akhir'), $fileProposal);
-            }
             if($request->hasFile('dokumen_pemb_2')){
                 $file = $request->file('dokumen_pemb_2');
                 $dokumenPemb2 = 'Pembimbing2_' . rand(0, 999999999) . '.' . $file->getClientOriginalExtension();
                 $file->move(public_path('storage/files/tugas-akhir'), $dokumenPemb2);
+                if($pengajuanTA->file_persetujuan_pemb2) {
+                    File::delete(public_path('storage/files/tugas-akhir/'.$pengajuanTA->file_persetujuan_pemb_2));
+                }
             }
             
             $data->update([
-                'file_pengesahan' => $filePengesahan,
-                'file_proposal' => $fileProposal,
                 'file_persetujuan_pemb_2' => $dokumenPemb2,
             ]);
 

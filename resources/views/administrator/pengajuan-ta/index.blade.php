@@ -5,10 +5,6 @@
         <div class="col-md-12 col-sm-12 col-g-12">
             <div class="card">
                 <div class="card-body">
-                    {{-- @if (!isset($dataTA[0]['id'])) --}}
-                    {{-- <a href="{{route('mahasiswa.pengajuan-ta.create')}}" class="btn btn-primary"><i class="fa fa-plus"></i> Tambah</a> --}}
-                    {{-- <hr> --}}
-                    {{-- @endif --}}
                     @if (session('success'))
                         <div class="alert alert-success alert-dismissible fade show" role="alert">
                             <i class="mdi mdi-check-all me-2"></i> {{ session('success') }}
@@ -37,11 +33,11 @@
                     @can('create-pengajuan-tugas-akhir')
                         @if ($dataTA->whereIn('status', ['reject','cancel'])->count() > 0 || $dataTA->count() == 0)
                             <a href="{{ route('apps.pengajuan-ta.create') }}" class="btn btn-primary mb-2"><i
-                                    class="fa fa-plus"></i> Tambah</a>
+                                    class="fa fa-upload me-1"></i> Ajukan TA</a>
                         @endif
                     @endcan
-                    <a href="{{ getSetting('app_template_mentor_one') }}" target="_blank" class="btn btn-success mb-2"><i
-                            class="far fa-file-alt"></i> Template Persetujuan Pemb 1</a>
+                    <a href="{{ getSetting('app_template_mentor') }}" target="_blank" class="btn btn-success mb-2"><i
+                            class="far fa-file-alt"></i> Template Persetujuan Pembimbing</a>
                     <a href="{{ getSetting('app_template_summary') }}" target="_blank" class="btn btn-secondary mb-2"><i
                             class="far fa-file-alt"></i> Template Ringkasan</a>
                     <hr>
@@ -52,10 +48,8 @@
                                     <th width="2%">No</th>
                                     <th min-width="250px">Judul</th>
                                     <th>Mahasiswa</th>
-                                    {{-- <th>Topik</th> --}}
                                     <th min-width="200px">Dosen</th>
                                     <th>Status</th>
-                                    {{-- <th min-width="200px">Catatan</th> --}}
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
@@ -123,7 +117,6 @@
                                                     @endif
                                                 @endif
                                             </td>
-                                            {{-- <td>{{$item->catatan}}</td> --}}
                                             <td class="mb-3">
                                                 @if (getInfoLogin()->hasRole('Kaprodi'))
                                                     @if ($item->status == 'draft')
@@ -148,30 +141,19 @@
                                                     <a href="javascript:void(0);"
                                                         onclick="uploadFile('{{ $item->id }}','{{ route('apps.pengajuan-ta.unggah-berkas', $item->id) }}')"
                                                         class="btn btn-sm btn-outline-secondary unggah-berkas mx-1 my-1"
-                                                        title="Unggah Berkas"><i class="far fa-file-alt"></i></a>
+                                                        title="Unggah Berkas Pembimbing 2"><i class="far fa-file-alt"></i></a>
                                                 @endif
                                                 <a href="{{ route('apps.pengajuan-ta.show', ['pengajuanTA' => $item->id]) }}"
                                                     class="btn btn-sm btn-outline-warning mx-1 my-1" title="Detail"><i
                                                         class="bx bx-show"></i></a>
-                                                @can('cancel-pengajuan-tugas-akhir')    
+                                                @can('cancel-pengajuan-tugas-akhir')
+                                                @if($item->status == 'acc')
                                                 <a href= "javascript:void(0);"
                                                     onclick="cancelTA('{{ $item->id }}', '{{ route('apps.pengajuan-ta.cancel', $item->id) }}')"
                                                     class="btn btn-sm btn-outline-danger mx-1 my-1"
                                                     title="Batalkan Tugas Akhir"><i class="bx bxs-no-entry"></i></a>
+                                                @endif
                                                 @endcan
-
-                                                {{-- @if ($timer == 'selesai') --}}
-
-                                                {{-- <a href="{{route('apps.pengajuan-ta.print_nilai', ['id' => $item->id])}}" class="btn btn-sm btn-success mb-3" title="Nilai"><i class="fas fa-file-alt"></i></a>
-                                    <a href="{{route('apps.pengajuan-ta.print_rekap', ['id' => $item->id])}}" class="btn btn-sm btn-success mb-3" title="Rekapitulasi"><i class="far fa-file-alt"></i></a>
-                                    <a href="{{route('apps.pengajuan-ta.print_revisi', ['id' => $item->id])}}" class="btn btn-sm btn-success mb-3" title="Revisi"><i class="fas fa-file-invoice"></i></a> --}}
-                                                {{-- @endif --}}
-                                                {{-- @if (isset($item_pemb_1))
-                                    <a href="{{route('apps.pengajuan-ta.print_pemb1', ['id' => $item->id])}}" class="btn btn-sm btn-success mb-3" title="Print Persetujuan Dosen"><i class="fas fa-file-invoice"></i></a>
-                                    @endif
-                                    @if (isset($item_pemb_2))
-                                    <a href="{{route('apps.pengajuan-ta.print_pemb2', ['id' => $item->id])}}" class="btn btn-sm btn-success mb-3" title="Print Persetujuan Dosen"><i class="fas fa-file-invoice"></i></a>
-                                    @endif --}}
                                             </td>
                                         </tr>
                                     @endforeach
@@ -201,20 +183,11 @@
                     @csrf
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label for="">File Pengesahan</label>
-                            <input type="file" name="file_pengesahan" class="form-control filepond">
-                        </div>
-                        <div class="mb-3">
-                            <label for="">File Proposal</label>
-                            <input type="file" name="file_proposal" class="form-control filepond">
-                        </div>
-                        <div class="mb-3">
                             <label for="">Dokumen Pembimbing 2</label>
                             <input type="file" name="dokumen_pemb_2" class="form-control filepond">
                         </div>
                     </div>
                     <div class="modal-footer">
-                        {{-- <button type="button" class="btn btn-secondary waves-effect waves-light" data-bs-dismiss="modal">Keluar</button> --}}
                         <button type="submit" class="btn btn-primary waves-effect waves-light">Simpan</button>
                     </div>
                 </form>

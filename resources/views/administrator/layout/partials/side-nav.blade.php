@@ -80,7 +80,7 @@
                     <li>
                         <a href="{{ route('apps.pengajuan-ta')}}" class=" waves-effect">
                             <i class="mdi mdi-calendar-text"></i>
-                            <span>Pengajuan TA</span>
+                            <span>Tugas akhir</span>
                         </a>
                     </li>
                     @endif

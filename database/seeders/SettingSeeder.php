@@ -58,9 +58,9 @@ class SettingSeeder extends Seeder
             ],
             [
                 'type' => 'general',
-                'key' => 'app_template_mentor_one',
-                'name' => 'Template Persetujuan Pembimbing 1',
-                'value' => 'https://drive.google.com/file/d/1ldapUYIdj04TKkkUG4hRfzaa4oSxJ05r/view?usp=sharing'
+                'key' => 'app_template_mentor',
+                'name' => 'Template Persetujuan Pembimbing',
+                'value' => 'https://drive.google.com/file/d/1bWSKpAuqVDlee8WK_rwDrCc6Gn5nNbh_/view?usp=sharing'
             ],
             [
                 'type' => 'general',

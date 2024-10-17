@@ -27,6 +27,11 @@
             <hr>
             <table class="ms-3" cellpadding="4">
                 <tr>
+                    <th>Nama Mahasiswa</th>
+                    <td>:</td>
+                    <td>{{isset($dataTA->mahasiswa) ? $dataTA->mahasiswa->nama_mhs : '-'}}</td>
+                </tr>
+                <tr>
                     <th>Pembimbing 1</th>
                     <td>:</td>
                     <td>{{isset($pembimbing1) ? $pembimbing1->dosen->name : '-'}}</td>
@@ -61,13 +66,16 @@
             <div class="d-md-flex d-none">
                 <div class="w-100 px-4 py-3 fw-bold text-center border-top {{isset($dataTA->status) ? ($dataTA->status == 'draft' ? 'border-primary bg-soft-primary text-primary' : ($dataTA->status == 'acc' ? 'border-success bg-soft-success text-success' : 'border-danger bg-soft-danger text-danger')) : 'border-secondary bg-soft-secondary text-secondary'}}" style="white-space: nowrap">
                     <i class="bx {{$dataTA->status == 'acc' ? 'bx-check' : ($dataTA->status == 'reject' ? 'bx-x' : 'bx-timer')}}"></i> 
-                Pengajuan Topik</div>
-                <div class="w-100 px-4 py-3 fw-bold text-center border-top {{isset($dataTA->status_seminar) ? ($dataTA->status_seminar == 'revisi' ? 'border-primary bg-soft-primary text-primary' : ($dataTA->status_seminar == 'acc' ? 'border-success bg-soft-success text-success' : 'border-danger bg-soft-danger text-danger')) : 'border-secondary bg-soft-secondary text-secondary'}}" style="white-space: nowrap">
+                    Pengajuan Topik
+                    <br>
+                    <span class="small">{{$dataTA->status == 'acc' ? 'Selesai' : ($dataTA->status == 'reject' ? 'Ditolak' : ($dataTA->status == 'draft' ? 'Sedang Berlangsung': 'Tidak Dilanjutkan'))}}</span>
+                </div>
+                <div class="w-100 px-4 py-3 fw-bold text-center border-top {{isset($dataTA->status_seminar) || $dataTA->status == 'acc' ? ($dataTA->status_seminar == 'revisi' || $dataTA->status == 'acc' ? 'border-primary bg-soft-primary text-primary' : ($dataTA->status_seminar == 'acc' ? 'border-success bg-soft-success text-success' : 'border-danger bg-soft-danger text-danger')) : 'border-secondary bg-soft-secondary text-secondary'}}" style="white-space: nowrap">
                     <i class="bx {{$dataTA->status_seminar == 'acc' ? 'bx-check' : ($dataTA->status_seminar == 'reject' ? 'bx-x' : 'bx-timer')}}"></i> 
-                Seminar Proposal</div>
-                {{-- <div class="w-100 px-4 py-3 fw-bold text-center border-top {{isset($dataTA->status) ? ($dataTA->status == 'draft' ? 'border-primary bg-soft-primary text-primary' : ($dataTA->status == 'acc' ? 'border-success bg-soft-success text-success' : 'border-danger bg-soft-danger text-danger')) : 'border-secondary bg-soft-secondary text-secondary'}}" style="white-space: nowrap">
-                    <i class="bx {{$dataTA->status == 'acc' ? 'bx-check' : ($dataTA->status == 'reject' ? 'bx-x' : 'bx-timer')}}"></i> 
-                Sidang Akhir</div> --}}
+                    Seminar Proposal
+                    <br>
+                    <span class="small">{{$dataTA->status_seminar == 'acc' ? 'Selesai' : ($dataTA->status_seminar == 'reject' ? 'Ditolak' : 'Sedang Berlangsung')}}</span>
+                </div>
                 <div class="w-100 px-4 py-3 fw-bold text-center border-top border-secondary bg-soft-secondary text-secondary" style="white-space: nowrap"><i class="bx bx-timer"></i> Sidang Akhir</div>
             </div>
             <br><br>
@@ -81,7 +89,7 @@
                             Pengajuan Tugas Akhir
                         </button>
                     </h2>
-                    <div id="collapsePengajuanTA" class="accordion-collapse collapse" aria-labelledby="headingPengajuanTA" data-bs-parent="#accordionExample">
+                    <div id="collapsePengajuanTA" class="accordion-collapse collapse show" aria-labelledby="headingPengajuanTA" data-bs-parent="#accordionExample">
                         <div class="accordion-body">
                             <div class="d-flex flex-wrap">
                                 <div class="col-md-3 col-sm-6 col-12 border p-3 text-center">
@@ -99,7 +107,7 @@
                                     <strong>Dokumen Pembimbing 2</strong>
                                     @if (isset($dataTA->file_persetujuan_pemb_2))
                                     <i class="mdi mdi-file-pdf-box-outline text-danger d-block" style="font-size: 56px;"></i>
-                                    <a href="{{asset('storage/files/tugas-akhir/'. $dataTA->dokumen_pemb_2)}}" target="_blank" class="btn btn-secondary btn-sm"><i class="bx bx-show-alt"></i> Lihat Dokumen</a>
+                                    <a href="{{asset('storage/files/tugas-akhir/'. $dataTA->file_persetujuan_pemb_2)}}" target="_blank" class="btn btn-secondary btn-sm"><i class="bx bx-show-alt"></i> Lihat Dokumen</a>
                                     @else    
                                     <br><br>
                                     <br><br><br>
