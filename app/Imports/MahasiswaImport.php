@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Mahasiswa;
 use App\Models\ProgramStudi;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
@@ -25,20 +26,47 @@ class MahasiswaImport implements ToModel, WithHeadingRow
         $programStudiId = $programStudi ? $programStudi->id : null;
         $mahasiswa = Mahasiswa::where('nim', $row['nim'])->orWhere('email', $row['email'])->first();
         if ($mahasiswa) {
-            $mahasiswa->update(['kelas' => $row['kelas'],'nim' => $row['nim'],'nama_mhs' => $row['nama_mahasiswa'],'email' => $row['email'],'jenis_kelamin' => $gender,'telp' => $row['telp'], 'program_studi_id' => $programStudiId]);
+            $mahasiswa->update([
+                'kelas' => $row['kelas'],
+                'nim' => $row['nim'],
+                'nama_mhs' => $row['nama_mahasiswa'],
+                'email' => $row['email'],
+                'jenis_kelamin' => $gender,
+                'telp' => $row['telp'],
+                'program_studi_id' => $programStudiId
+            ]);
         } else {
-            $mahasiswa = new Mahasiswa(['kelas' => $row['kelas'],'nim' => $row['nim'],'nama_mhs' => $row['nama_mahasiswa'],'email' => $row['email'],'jenis_kelamin' => $gender,'telp' => $row['telp'], 'program_studi_id' => $programStudiId]);
-            $mahasiswa->save();
+            $mahasiswa = Mahasiswa::create([
+                'kelas' => $row['kelas'],
+                'nim' => $row['nim'],
+                'nama_mhs' => $row['nama_mahasiswa'],
+                'email' => $row['email'],
+                'jenis_kelamin' => $gender,
+                'telp' => $row['telp'],
+                'program_studi_id' => $programStudiId
+            ]);
         }
-        $existingUser = User::where('email', $row['email'])->orWhere('username', $row['nim'])->first();
-        if ($existingUser) {
-            if (is_null($existingUser->userable_type) && is_null($existingUser->userable_id)) {
-                $existingUser->update(['userable_type' => Mahasiswa::class,'userable_id' => $mahasiswa->id]);
-            }
-        } else {
-            $user = User::create(['name' => $row['nama_mahasiswa'],'username' => $row['nim'],'email' => $row['email'],'password' => Hash::make($row['nim']),'userable_type' => Mahasiswa::class,'userable_id' => $mahasiswa->id]);
+        $existingUser = User::where('email', $row['email'])->orWhere('username', $row['nim'])->first();   
+        if (!$existingUser) {
+            $user = User::create([
+                'name' => $row['nama_mahasiswa'],
+                'username' => $row['nim'],
+                'email' => $row['email'],
+                'password' => Hash::make($row['nim']),
+                'userable_type' => Mahasiswa::class,
+                'userable_id' => $mahasiswa->id
+            ]);
             $user->assignRole('Mahasiswa');
+        } else {
+            if (is_null($existingUser->userable_type) && is_null($existingUser->userable_id)) {
+                $existingUser->update([
+                    'userable_type' => Mahasiswa::class,
+                    'userable_id' => $mahasiswa->id
+                ]);
+            }
         }
+
         return $mahasiswa;
     }
+
 }

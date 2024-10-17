@@ -8,11 +8,11 @@ use App\Models\BimbingUji;
 use App\Models\KuotaDosen;
 use App\Models\TugasAkhir;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use DB;
 class PembagianDosenController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $dosen = Dosen::where('id', getInfoLogin()->userable_id)->first();
         $prodi = $dosen->programStudi->nama;
@@ -23,8 +23,17 @@ class PembagianDosenController extends Controller
                 $query->whereHas('programStudi', function($q) use ($prodi) {
                     $q->where('nama', $prodi);
                 });
-            })->where('status', 'acc')->where('periode_ta_id', $periode->id)->get();
+            })->where('status', 'acc')->where('periode_ta_id', $periode->id);
+
+            if($request->has('is_completed')) {
+                $query = $query->where('is_completed', $request->is_completed);
+            } else {
+                $query = $query->where('is_completed', 1);
+            }
+
+            $query = $query->get();
         }
+
 
         $data = [
             'title' => 'Pembagian Dosen',
@@ -218,7 +227,7 @@ class PembagianDosenController extends Controller
 
             DB::commit();
             return redirect()->route('apps.pembagian-dosen')->with('success', 'Berhasil menyimpan data');
-        } catch(Exception $e){
+        } catch(\Exception $e){
             return redirect()->back()->with('error', $e->getMessage());
         }
     }

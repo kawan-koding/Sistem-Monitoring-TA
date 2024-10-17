@@ -30,7 +30,7 @@ class RekomendasiTopikController extends Controller
         }
 
         $data = [
-            'title' => 'Rekomendasi Topik TA',
+            'title' => 'Tawaran Tugas Akhir',
             'mods' => 'rekomendasi_topik',
             'breadcrumbs' => [
                 [
@@ -113,7 +113,7 @@ class RekomendasiTopikController extends Controller
         $rekomendasiTopik->ambilTawaran;
 
         $data = [
-            'title' => 'Detail Rekomendasi Topik',
+            'title' => 'Detail Tawaran Tugas Akhir',
             'mods' => 'rekomendasi_topik',
             'breadcrumbs' => [
                 [
@@ -121,11 +121,11 @@ class RekomendasiTopikController extends Controller
                     'url' => route('apps.dashboard')
                 ],
                 [
-                    'title' => 'Rekomendasi Topik',
+                    'title' => 'Tawaran Topik',
                     'url' => route('apps.rekomendasi-topik')
                 ],
                 [
-                    'title' => 'Detail Rekomendasi Topik',
+                    'title' => 'Detail Tawaran Topik',
                     'is_active' => true
                 ]
             ],
@@ -254,12 +254,12 @@ class RekomendasiTopikController extends Controller
     public function deleteMhs(AmbilTawaran $ambilTawaran)
     {  
         try {
-            $rekomendasiTopik = $ambilTawaran->rekomendasi_topik_id;
+            $topik = $ambilTawaran->rekomendasi_topik_id;
             if($ambilTawaran->file) {
                 File::delete(public_path('storage/files/apply-topik/'. $ambilTawaran->file));
             }
             $ambilTawaran->delete();
-            $rekomendasiTopik = RekomendasiTopik::where('id', $rekomendasiTopikId)->first();
+            $rekomendasiTopik = RekomendasiTopik::where('id', $topik->id)->first();
             if ($rekomendasiTopik) {
                 $rekomendasiTopik->increment('kuota');
             }
