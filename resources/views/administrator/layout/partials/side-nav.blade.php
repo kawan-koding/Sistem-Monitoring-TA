@@ -48,31 +48,34 @@
                 </li>
                 @endcan
 
+                
+                @if (in_array(session('switchRoles'), ['Dosen','Mahasiswa','Developer']))  
                 @can(['read-rekomendasi-topik'])
                 <li>
                     <a href="{{route('apps.rekomendasi-topik')}}" class=" waves-effect">
                         <i class="mdi mdi-book-open"></i>
-                        <span>Rekomendasi Topik</span>
+                        <span>Tawaran Tugas Akhir</span>
                     </a>
                 </li>
                 @endcan
+                @endif
 
                 {{-- @can(['read-jadwal-bimbingan']) --}}
-                <li>
+                {{-- <li>
                     <a href="#" class=" waves-effect">
                         <i class="mdi mdi-file-edit-outline"></i>
                         <span>Daftar Bimbingan</span>
                     </a>
-                </li>
+                </li> --}}
                 {{-- @endcan --}}
 
                 {{-- @can(['read-jadwal-uji']) --}}
-                <li>
+                {{-- <li>
                     <a href="#" class=" waves-effect">
                         <i class="mdi mdi-calendar-text"></i>
                         <span>Jadwal Uji</span>
                     </a>
-                </li>
+                </li> --}}
                 {{-- @endcan --}}
                 
                 @can(['read-pengajuan-tugas-akhir'])

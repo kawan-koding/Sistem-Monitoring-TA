@@ -38,7 +38,7 @@ class RekomendasiTopikController extends Controller
                     'url' => route('apps.dashboard')
                 ],
                 [
-                    'title' => 'Rekomendasi Topik',
+                    'title' => 'Tawaran Tugas Akhir',
                     'is_active' => true
                 ]
             ],
@@ -110,7 +110,9 @@ class RekomendasiTopikController extends Controller
 
     public function detail(RekomendasiTopik $rekomendasiTopik) 
     {
-        $rekomendasiTopik->ambilTawaran;
+        $rekomendasiTopik->load(['ambilTawaran' => function($query) {
+            $query->where('status', '!=', 'Ditolak');
+        }]);
 
         $data = [
             'title' => 'Detail Tawaran Tugas Akhir',
@@ -121,7 +123,7 @@ class RekomendasiTopikController extends Controller
                     'url' => route('apps.dashboard')
                 ],
                 [
-                    'title' => 'Tawaran Topik',
+                    'title' => 'Tawaran Tugas Akhir',
                     'url' => route('apps.rekomendasi-topik')
                 ],
                 [
@@ -224,32 +226,40 @@ class RekomendasiTopikController extends Controller
         }
     }
 
-    public function accept(RekomendasiTopik $rekomendasiTopik, Request $request)
-    { 
+   public function accept(AmbilTawaran $ambilTawaran)
+    {
         try {
             DB::beginTransaction();
-            $selected = $request->input('selected_items');
-            if(!$selected) {
-                return redirect()->back()->with('error', 'Pilih setidaknya 1 untuk disetujui.');
+            $rekomendasiTopik = $ambilTawaran->rekomendasiTopik;
+            $ambilTawaran->update(['status' => 'Disetujui']);
+            $mahasiswa = $ambilTawaran->mahasiswa;
+            if ($mahasiswa) {
+                Mail::to($mahasiswa->email)->send(new RekomendasiTopikMail($rekomendasiTopik, $mahasiswa));
             }
-            foreach ($selected as $id) {
-                $item = AmbilTawaran::find($id);
-                if($item) {
-                    $item->update(['status' => 'Disetujui']);
-                }
-                $mahasiswa = $item->mahasiswa;
-                if ($mahasiswa) {
-                   Mail::to($mahasiswa->email)->send(new RekomendasiTopikMail($rekomendasiTopik, $mahasiswa));
-                }
-            }
-            $rekomendasiTopik->update(['kuota' => $rekomendasiTopik->kuota - count($selected),]);
-
+            $rekomendasiTopik->decrement('kuota', 1);
+            
             DB::commit();
-            return redirect()->route('apps.rekomendasi-topik.detail', $rekomendasiTopik->id)->with('success', 'Berhasil menyetujui data');
+            return redirect()->route('apps.rekomendasi-topik.detail', $rekomendasiTopik->id)->with('success', 'Berhasil menyetujui data.');
         } catch (\Exception $e) {
-            return redirect()->back()->with($e->getMessage());
+            DB::rollBack();
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
+
+    public function reject(AmbilTawaran $ambilTawaran)
+    {
+        try {
+            DB::beginTransaction();
+            $rekomendasiTopik = $ambilTawaran->rekomendasiTopik;
+            $ambilTawaran->update(['status' => 'Ditolak']);
+            DB::commit();
+            return redirect()->route('apps.rekomendasi-topik.detail', $rekomendasiTopik->id)->with('success', 'Berhasil menolak data.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
 
     public function deleteMhs(AmbilTawaran $ambilTawaran)
     {  
@@ -259,35 +269,15 @@ class RekomendasiTopikController extends Controller
                 File::delete(public_path('storage/files/apply-topik/'. $ambilTawaran->file));
             }
             $ambilTawaran->delete();
-            $rekomendasiTopik = RekomendasiTopik::where('id', $topik->id)->first();
-            if ($rekomendasiTopik) {
-                $rekomendasiTopik->increment('kuota');
+            if ($ambilTawaran->status === 'Disetujui') {
+                $rekomendasiTopik = RekomendasiTopik::find($topik);
+                if ($rekomendasiTopik) {
+                    $rekomendasiTopik->increment('kuota');
             }
-         
+            }
             return $this->successResponse('Berhasil menghapus data');
         } catch(\Exception $e) {
             return $this->exceptionResponse($e);
-        }
-    }
-
-    public function reject(RekomendasiTopik $rekomendasiTopik, Request $request)
-    {
-        try {
-            DB::beginTransaction();
-            $selected = $request->input('selected_items');
-            if (!$selected) {
-                return redirect()->back()->with('error', 'Pilih setidaknya 1 untuk ditolak.');
-            }
-            foreach ($selected as $id) {
-                $item = AmbilTawaran::find($id);
-                if ($item) {
-                    $item->update(['status' => 'Ditolak']);
-                }
-            }
-            DB::commit();
-            return redirect()->route('apps.rekomendasi-topik.detail', $rekomendasiTopik)->with('success', 'Berhasil menolak data');
-        } catch(\Exception $e) {
-            return redirect()->back()->with('error', $e->getMessage());
         }
     }
 

@@ -10,13 +10,13 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('apps.rekomendasi-topik') }}">
                         <span class="d-block d-sm-none"><i class="mdi mdi-book-open"></i></span>
-                        <span class="d-none d-sm-block">Rekomendasi Topik</span>
+                        <span class="d-none d-sm-block">Tawaran Tugas Akhir</span>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link active" href="#">
                         <span class="d-block d-sm-none"><i class="mdi mdi-note-plus-outline"></i></span>
-                        <span class="d-none d-sm-block">Topik Yang Anda Ambil</span>
+                        <span class="d-none d-sm-block">Tugas Akhir Diambil</span>
                     </a>
                 </li>
             </ul>

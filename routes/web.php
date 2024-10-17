@@ -157,18 +157,18 @@ Route::prefix('apps')->middleware('auth')->group(function () {
     });
 
     Route::prefix('rekomendasi-topik')->middleware('can:read-rekomendasi-topik')->group(function () {
-       Route::get('', [RekomendasiTopikController::class, 'index'])->name('apps.rekomendasi-topik'); 
-       Route::post('store', [RekomendasiTopikController::class, 'store'])->name('apps.rekomendasi-topik.store')->middleware('can:create-rekomendasi-topik');
-       Route::get('{rekomendasiTopik}/show', [RekomendasiTopikController::class, 'show'])->name('apps.rekomendasi-topik.show'); 
-       Route::post('{rekomendasiTopik}/update', [RekomendasiTopikController::class, 'update'])->name('apps.rekomendasi-topik.update')->middleware('can:update-rekomendasi-topik'); 
-       Route::delete('{rekomendasiTopik}/delete', [RekomendasiTopikController::class, 'destroy'])->name('apps.rekomendasi-topik.delete')->middleware('can:delete-rekomendasi-topik'); 
-       Route::post('{rekomendasiTopik}/mengambil-topik', [RekomendasiTopikController::class, 'ambilTopik'])->name('apps.ambil-topik');
-       Route::get('{rekomendasiTopik}/detail', [RekomendasiTopikController::class, 'detail'])->name('apps.rekomendasi-topik.detail'); 
-       Route::post('{rekomendasiTopik}/accept', [RekomendasiTopikController::class, 'accept'])->name('apps.rekomendasi-topik.accept'); 
-       Route::get('topik-yang-diambil', [RekomendasiTopikController::class, 'apply'])->name('apps.topik-yang-diambil');
-       Route::delete('{ambilTawaran}/hapus-topik', [RekomendasiTopikController::class, 'deleteTopik'])->name('apps.hapus-topik-yang-diambil');
-       Route::post('{rekomendasiTopik}/tolak-mahasiswa-terkait', [RekomendasiTopikController::class, 'reject'])->name('apps.tolak-mahasiswa-yang-terkait');
-       Route::delete('{ambilTawaran}/hapus-mahasiswa-terkait', [RekomendasiTopikController::class, 'deleteMhs'])->name('apps.hapus-mahasiswa-yang-terkait');
+        Route::get('', [RekomendasiTopikController::class, 'index'])->name('apps.rekomendasi-topik'); 
+        Route::post('store', [RekomendasiTopikController::class, 'store'])->name('apps.rekomendasi-topik.store')->middleware('can:create-rekomendasi-topik');
+        Route::get('{rekomendasiTopik}/show', [RekomendasiTopikController::class, 'show'])->name('apps.rekomendasi-topik.show'); 
+        Route::post('{rekomendasiTopik}/update', [RekomendasiTopikController::class, 'update'])->name('apps.rekomendasi-topik.update')->middleware('can:update-rekomendasi-topik'); 
+        Route::delete('{rekomendasiTopik}/delete', [RekomendasiTopikController::class, 'destroy'])->name('apps.rekomendasi-topik.delete')->middleware('can:delete-rekomendasi-topik'); 
+        Route::post('{rekomendasiTopik}/mengambil-topik', [RekomendasiTopikController::class, 'ambilTopik'])->name('apps.ambil-topik');
+        Route::get('{rekomendasiTopik}/detail', [RekomendasiTopikController::class, 'detail'])->name('apps.rekomendasi-topik.detail'); 
+        Route::get('topik-yang-diambil', [RekomendasiTopikController::class, 'apply'])->name('apps.topik-yang-diambil');
+        Route::delete('{ambilTawaran}/hapus-topik', [RekomendasiTopikController::class, 'deleteTopik'])->name('apps.hapus-topik-yang-diambil');
+        Route::post('{ambilTawaran}/accept', [RekomendasiTopikController::class, 'accept'])->name('apps.rekomendasi-topik.accept');
+        Route::post('{ambilTawaran}/reject', [RekomendasiTopikController::class, 'reject'])->name('apps.rekomendasi-topik.reject');
+        Route::delete('{ambilTawaran}/hapus-mahasiswa-terkait', [RekomendasiTopikController::class, 'deleteMhs'])->name('apps.hapus-mahasiswa-terkait');
     });
     
     Route::prefix('dosen')->middleware('can:read-dosen')->group(function () {

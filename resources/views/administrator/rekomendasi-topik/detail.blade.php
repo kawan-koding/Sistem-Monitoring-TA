@@ -18,48 +18,48 @@
 @endif
 <div class="card">
     <div class="card-body">
-        <p><strong>Judul : {{ $data->judul}}</strong></p>
-        <p style="text-align: justify"><strong>Deskripsi : </strong>{{ $data->deskripsi}}</p>
-        <hr>
+        <p class="mb-3"><strong>Judul : </strong>{{ $data->judul}}</p>   
        <form id="approveForm" method="POST" action="">
             @csrf
-            @forelse ($data->ambilTawaran as $item)
-                <div class="faq-box d-flex align-items-start mb-4">
-                    @if($item->status == 'Menunggu')
-                    <div class="faq-icon me-3">
-                        <input type="checkbox" name="selected_items[]" value="{{ $item->id }}" class="approve-checkbox">
-                    </div>
-                    @else 
-                    <div class="me-3">
-                        <button type="button" data-toggle="delete-mhs" data-url="{{ route('apps.hapus-mahasiswa-yang-terkait', $item->id)}}" class="btn btn-sm" title="Hapus"><i class="fas fa-trash-alt text-danger"></i></button>
-                    </div>
-                    @endif
-                    <div class="flex-1">
-                        <div class="row">
-                            <div class="col-md-6 col-sm-6">
-                                <h5 class="font-size-15">{{ $item->mahasiswa->nama_mhs }} <span class="badge {{ isset($item->status) ? ($item->status == 'Disetujui' ? 'badge-soft-success' : ($item->status == 'Menunggu' ? 'bg-dark-subtle text-body' : 'badge-soft-danger')) : ''}} small">{{ ucfirst($item->status) }}</span></h5>
+            <table class="table table-centered mb-0">
+                <tbody>
+                    @forelse ($data->ambilTawaran as $item)
+                    <tr>
+                        <td>
+                            <div class="row">
+                               <div class="col-md-8 ">
+                                    <h5 class="font-size-14 text-dark m-0">{{ $item->mahasiswa->nama_mhs }}</h5>
+                                </div>
+                                <div class="col-md-4 text-end  d-none d-sm-block">
+                                    @if($item->status == 'Menunggu')
+                                        <a href="#" data-toggle="approve-mhs" data-url="{{ route('apps.rekomendasi-topik.accept', $item->id) }}" class="badge rounded-pill bg-success font-size-11">Setujui</a>
+                                        <a href="#" data-toggle="reject-mhs" data-url="{{ route('apps.rekomendasi-topik.reject', $item->id) }}" class="badge rounded-pill bg-danger font-size-11">Tolak</a>
+                                    @elseif($item->status == 'Disetujui')
+                                        <a href="#" data-toggle="delete-mhs" data-url="{{ route('apps.hapus-mahasiswa-terkait', $item->id) }}" class="badge rounded-pill bg-warning font-size-11">Hapus</a>
+                                    @endif
+                                </div>
                             </div>
-                            <div class="col-md-6 col-sm-6 d-flex justify-content-start justify-content-sm-end">
-                                <p class="small">{{ \Carbon\Carbon::parse($item->date)->locale('id')->isoFormat('D MMMM Y') }}</p>
+                            <p class="m-0" style="text-align: justify">{{ $item->description }}</p>
+                            <a href="{{ asset('storage/files/apply-topik/' . $item->file )}}" target="_blank" class="nav-link text-primary mt-1"><span>Lihat Cv/Portofolio</span></a>
+                            <div class="d-sm-none">
+                                @if($item->status == 'Menunggu')
+                                    <a href="#" data-toggle="approve-mhs" data-url="{{ route('apps.rekomendasi-topik.accept', $item->id) }}" class="badge rounded-pill bg-success font-size-11">Setujui</a>
+                                    <a href="#" data-toggle="reject-mhs" data-url="{{ route('apps.rekomendasi-topik.reject', $item->id) }}" class="badge rounded-pill bg-danger font-size-11">Tolak</a>
+                                @elseif($item->status == 'Disetujui')
+                                    <a href="#" data-toggle="delete-mhs" data-url="{{ route('apps.hapus-mahasiswa-terkait', $item->id) }}" class="badge rounded-pill bg-warning font-size-11">Hapus</a>
+                                @endif
                             </div>
-                        </div>
-                        <p class="text-muted m-0">{{ $item->description }}</p>
-                        <a href="{{ asset('storage/files/apply-topik/' . $item->file )}}" target="_blank" class="nav-link text-primary mt-1"><span>Lihat Cv/Portofolio</span></a>
-                    </div>
-                </div>
-            @empty
-                <div class="text-center">
-                    <p class="text-muted">Tidak ada data</p>
-                </div>
-            @endforelse
-
-            <div class="text-end">
-                <a href="{{ route('apps.rekomendasi-topik') }}" class="btn btn-light">Kembali</a>
-                @if($data->ambilTawaran->count() > 0)
-                <button type="submit" data-url="{{ route('apps.tolak-mahasiswa-yang-terkait', $data->id) }}" data-toggle="reject-mhs" class="btn btn-danger">Tolak</button>
-                <button type="submit" data-url="{{ route('apps.rekomendasi-topik.accept', $data->id) }}" data-toggle="approve-mhs" class="btn btn-primary">Setujui</button>
-                @endif
-            </div>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td class="text-center">
+                            <h5 class="font-size-14 text-dark m-0">Belum ada mahasiswa yang ambil</h5>
+                        </td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
         </form>
     </div>
 </div>

@@ -332,7 +332,10 @@ class PengajuanTAController extends Controller
                 'dokumen_pemb_1' => $fileDocPemb1,
                 'dokumen_ringkasan' => $fileDocRing,    
                 'status' => $status,
+                'catatan' => null,
             ]);
+
+
 
             BimbingUji::where('tugas_akhir_id', $pengajuanTA->id)->where('jenis', 'pembimbing')->where('urut', 1)->update(
                 [
@@ -430,7 +433,7 @@ class PengajuanTAController extends Controller
                 'status' => 'belum_terjadwal'
             ]);
 
-            return redirect()->route('apps.pengajuan-ta')->with('success', 'Pengajuan TA telah di acc');
+            return redirect()->route('apps.pengajuan-ta')->with('success', 'Berhasil menyetujui pengajuan TA');
         } catch (\Exception $e) {
             // dd($e->getMessage());
             return redirect()->back()->with('error', $e->getMessage());
@@ -452,7 +455,7 @@ class PengajuanTAController extends Controller
                 'catatan' => $request->catatan
             ]);
 
-            return redirect()->route('apps.pengajuan-ta')->with('success', 'Pengajuan TA telah di acc');
+            return redirect()->route('apps.pengajuan-ta')->with('success', 'Berhasil menolak pengajuan TA');
         } catch (\Exception $e) {
             // dd($e->getMessage());
             return redirect()->back()->with('error', $e->getMessage());

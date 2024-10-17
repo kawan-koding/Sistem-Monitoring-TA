@@ -26,14 +26,11 @@
                                     <li>{{ $error }}</li>
                                 @endforeach
                             </ul>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-                            </button>
                         </div>
                     @endif
                     @can('create-pengajuan-tugas-akhir')
-                        @if ($dataTA->whereIn('status', ['reject','cancel'])->count() > 0 || $dataTA->count() == 0)
-                            <a href="{{ route('apps.pengajuan-ta.create') }}" class="btn btn-primary mb-2"><i
-                                    class="fa fa-upload me-1"></i> Ajukan TA</a>
+                        @if (!$dataTA->whereNotIn('status', ['reject','cancel'])->count() > 0 || $dataTA->count() == 0)
+                            <a href="{{ route('apps.pengajuan-ta.create') }}" class="btn btn-primary mb-2"><i class="fa fa-upload me-1"></i> Ajukan TA</a>
                         @endif
                     @endcan
                     <a href="{{ getSetting('app_template_mentor') }}" target="_blank" class="btn btn-success mb-2"><i
@@ -133,15 +130,19 @@
                                                     @endif
                                                 @endif
                                                 @if (getInfoLogin()->hasRole('Mahasiswa'))
+                                                    @if($item->status !== 'cancel')
                                                     @can('update-pengajuan-tugas-akhir')
                                                         <a href="{{ route('apps.pengajuan-ta.edit', ['pengajuanTA' => $item->id]) }}"
                                                             class="btn btn-sm btn-outline-primary my-1 mx-1" title="Edit"><i
                                                                 class="bx bx-edit-alt"></i></a>
                                                     @endcan
+                                                    @endif
+                                                    @if($item->bimbing_uji()->where('jenis', 'pembimbing')->where('urut', 2)->count() > 0 && $item->status == 'acc')
                                                     <a href="javascript:void(0);"
                                                         onclick="uploadFile('{{ $item->id }}','{{ route('apps.pengajuan-ta.unggah-berkas', $item->id) }}')"
                                                         class="btn btn-sm btn-outline-secondary unggah-berkas mx-1 my-1"
-                                                        title="Unggah Berkas Pembimbing 2"><i class="far fa-file-alt"></i></a>
+                                                        title="Unggah Berkas Pembimbing 2"><i class="bx bx-file"></i></a>
+                                                    @endif
                                                 @endif
                                                 <a href="{{ route('apps.pengajuan-ta.show', ['pengajuanTA' => $item->id]) }}"
                                                     class="btn btn-sm btn-outline-warning mx-1 my-1" title="Detail"><i
