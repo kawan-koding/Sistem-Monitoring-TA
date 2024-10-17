@@ -36,6 +36,8 @@ class PengajuanTARequest extends FormRequest
             'tipe' => 'required',
             'dokumen_pembimbing_1' => $this->routeName == 'apps.pengajuan-ta.store' ? 'required|mimes:docx,pdf|max:5120' : 'nullable|mimes:docx,pdf|max:5120',
             'dokumen_ringkasan' => $this->routeName == 'apps.pengajuan-ta.store' ? 'required|mimes:docx,pdf|max:5120' : 'nullable|mimes:docx,pdf|max:5120',
+            'topik_ta_new' => 'nullable',
+            'jenis_ta_new' => 'nullable',
         ];
     }
 

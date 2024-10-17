@@ -21,3 +21,24 @@ function cancelTA(id) {
     $('#myModal').modal('show');
 
 }
+
+
+$(document).ready(function () {
+     $('select[name="jenis_ta_id"]').on('change', function () {
+        let selectedValue = $(this).val();
+        if (selectedValue === 'lainnya') {
+            $('#new_jenis').show();
+        } else {
+            $('#new_jenis').hide();
+        }
+    });
+
+    $('select[name="topik"]').on('change', function () {
+        let selectedValue = $(this).val();
+        if (selectedValue === 'lainnya') {
+            $('#new_topik').show();
+        } else {
+            $('#new_topik').hide();
+        }
+    });
+});

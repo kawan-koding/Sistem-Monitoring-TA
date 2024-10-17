@@ -36,16 +36,7 @@
                             <textarea name="judul" class="form-control" required>{{isset($editedData) ? $editedData->judul : ''}}</textarea>
                         </div>
                         <div class="row">
-                            <div class="col-sm-12 col-md-6 col-lg-6">
-                                <div class="mb-3">
-                                    <label for="jenis_ta_id">Jenis TA <span class="text-danger">*</span></label>
-                                    <select name="jenis_ta_id" class="form-control" required>
-                                        <option value="">Pilih Jenis TA</option>
-                                        @foreach ($dataJenis as $item)
-                                            <option value="{{$item->id}}" {{ isset($editedData) ? $editedData->jenis_ta_id == $item->id ? "selected" : '' : ''}}>{{$item->nama_jenis}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                            <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="pembimbing_1">Pembimbing 1 <span class="text-danger">*</span></label>
                                     <select name="pembimbing_1" class="form-control" required>
@@ -55,24 +46,8 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="mb-3">
-                                    <label for="">Dokumen Pembimbing 1 <span class="text-danger">*</span></label>
-                                    <input type="file" name="dokumen_pembimbing_1" class="form-control filepond">
-                                    @if(isset($editedData) && !is_null($editedData->dokumen_pemb_1))
-                                        <a href="{{ asset('storage/files/tugas-akhir/'.$editedData->dokumen_pemb_1) }}" target="_blank" class="nav-link small text-primary mt-1"><i>Lihat Dokumen Pembimbing 1</i></a>
-                                    @endif
-                                </div>
                             </div>
-                            <div class="col-sm-12 col-md-6 col-lg-6">
-                                <div class="mb-3">
-                                    <label for="topik">Topik <span class="text-danger">*</span></label>
-                                    <select name="topik" class="form-control" required>
-                                        <option value="">Pilih Topik</option>
-                                        @foreach ($dataTopik as $item)
-                                            <option value="{{$item->id}}" {{ isset($editedData) ? $editedData->topik_id == $item->id ? "selected" : '' : ''}}>{{$item->nama_topik}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                            <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="tipe">Tipe <span class="text-danger">*</span></label>
                                     <select name="tipe" class="form-control" required>
@@ -81,6 +56,53 @@
                                         <option value="I" {{isset($editedData) && $editedData->tipe ? "selected" : ''}}>Individu</option>
                                     </select>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="jenis_ta_id">Jenis TA <span class="text-danger">*</span></label>
+                                    <select name="jenis_ta_id" class="form-control" required>
+                                        <option value="">Pilih Jenis TA</option>
+                                        @foreach ($dataJenis as $item)
+                                            <option value="{{$item->id}}" {{ isset($editedData) ? $editedData->jenis_ta_id == $item->id ? "selected" : '' : ''}}>{{$item->nama_jenis}}</option>
+                                        @endforeach
+                                        <option value="lainnya">Lainnya</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3" id="new_jenis" style="display: none;">
+                                    <label for="">Masukkan Jenis Baru</label>
+                                    <input type="text" class="form-control" id="jenis_ta_new" name="jenis_ta_new" placeholder="Masukkan jenis">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="topik">Topik <span class="text-danger">*</span></label>
+                                    <select name="topik" class="form-control" required>
+                                        <option value="">Pilih Topik</option>
+                                        @foreach ($dataTopik as $item)
+                                        <option value="{{$item->id}}" {{ isset($editedData) ? $editedData->topik_id == $item->id ? "selected" : '' : ''}}>{{$item->nama_topik}}</option>
+                                        @endforeach
+                                        <option value="lainnya">Lainnya</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3" id="new_topik" style="display: none;">
+                                    <label for="">Masukkan Topik Baru</label>
+                                    <input type="text" class="form-control" id="topik_ta_new" name="topik_ta_new" placeholder="Masukkan topik">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="">Dokumen Pembimbing 1 <span class="text-danger">*</span></label>
+                                    <input type="file" name="dokumen_pembimbing_1" class="form-control filepond">
+                                    @if(isset($editedData) && !is_null($editedData->dokumen_pemb_1))
+                                        <a href="{{ asset('storage/files/tugas-akhir/'.$editedData->dokumen_pemb_1) }}" target="_blank" class="nav-link small text-primary mt-1"><i>Lihat Dokumen Pembimbing 1</i></a>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="dokumen_ringkasan">Dokumen Ringkasan <span class="text-danger">*</span></label>
                                     <input type="file" name="dokumen_ringkasan" class="form-control filepond">
@@ -91,8 +113,10 @@
                             </div>
                         </div>
                         <hr>
-                        <a href="{{route('apps.pengajuan-ta')}}" class="btn btn-secondary">Kembali</a>
-                        <button type="submit" class="btn btn-primary">Simpan</button>
+                        <div class="text-end">
+                            <a href="{{route('apps.pengajuan-ta')}}" class="btn btn-secondary">Kembali</a>
+                            <button type="submit" class="btn btn-primary">Simpan</button>
+                        </div>
                     </form>
                 </div>
             </div>

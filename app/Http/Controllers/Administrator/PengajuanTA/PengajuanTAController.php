@@ -108,6 +108,7 @@ class PengajuanTAController extends Controller
             'dataTopik'   => Topik::all(),
             'dataDosen'   => $dosen,
             'dosenKuota'   => $dosen,
+            'mods' => 'pengajuan_ta',
             'breadcrumbs' => [
                 [
                     'title' => 'Dashboard',
@@ -167,9 +168,24 @@ class PengajuanTAController extends Controller
                 $fileDocRing = null;
             }
 
+            if($request->jenis_ta_new !== null) {
+                $newJenis =JenisTa::create(['nama_jenis' => $request->jenis_ta_new]);
+                $jenis = $newJenis->id;
+            } else {
+                $jenis = $request->jenis_ta_id;
+            }
+
+            if($request->topik_ta_new !== null) {
+                $newTopik =Topik::create(['nama_topik' => $request->topik_ta_new]);
+                $topik = $newTopik->id;
+
+            } else {
+                $topik = $request->topik;
+            }
+
             $result = TugasAkhir::create([
-                'jenis_ta_id' => $request->jenis_ta_id,
-                'topik_id' => $request->topik,
+                'jenis_ta_id' => $jenis,
+                'topik_id' => $topik,
                 'mahasiswa_id' =>$mahasiswa->id,
                 'periode_ta_id' => $periode->id,
                 'judul' => $request->judul,
@@ -220,6 +236,7 @@ class PengajuanTAController extends Controller
             'dataTopik'   => Topik::all(),
             'dataDosen'   => $dosen,
             'dosenKuota'   => $dosen,
+            'mods' => 'pengajuan_ta',
             'editedData' => $pengajuanTA,
             'breadcrumbs' => [
                 [
@@ -290,9 +307,26 @@ class PengajuanTAController extends Controller
                 $fileDocRing = $pengajuanTA->dokumen_ringkasan;
             }
 
+            
+            if($request->jenis_ta_new !== null) {
+                $newJenis =JenisTa::create(['nama_jenis' => $request->jenis_ta_new]);
+                $jenis = $newJenis->id;
+            } else {
+                $jenis = $request->jenis_ta_id;
+            }
+
+            if($request->topik_ta_new !== null) {
+                $newTopik =Topik::create(['nama_topik' => $request->topik_ta_new]);
+                $topik = $newTopik->id;
+
+            } else {
+                $topik = $request->topik;
+            }
+
+
             $pengajuanTA->update([
-                'jenis_ta_id' => $request->jenis_ta_id,
-                'topik_id' => $request->topik,
+                'jenis_ta_id' => $jenis,
+                'topik_id' => $topik,
                 'judul' => $request->judul,
                 'tipe' => $request->tipe,
                 'dokumen_pemb_1' => $fileDocPemb1,
