@@ -8,14 +8,14 @@
                 @csrf
                 <div class="modal-body">
                     <div class="mb-2">
-                        <label for="">Deskripsi <span class="text-danger">*</span></label>
+                        <label for="">Alasan Tertarik Dengan Topik ini <span class="text-danger">*</span></label>
                         <textarea name="description" id="description" class="form-control" required></textarea>
-                        <i><span class="text-danger small">*Jelaskan bidang keahlian anda secara singkat</span></i>
+                        <i><span class="text-danger small">*Jelaskan secara singkat mengapa memilih topik ini</span></i>
                     </div>
                     <div class="mb-2">
                         <label for="">Lampiran <span class="text-danger">*</span></label>
                         <input type="file" name="document" id="document" class="form-control filepond">
-                        <i><span class="text-danger small">*Lampirkan CV/Portofilio anda</span></i>
+                        <i><span class="text-danger small">*Lampirkan CV/Portofilio</span></i>
                     </div>
                 </div>
                 <div class="modal-footer">
