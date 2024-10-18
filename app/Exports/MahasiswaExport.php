@@ -2,16 +2,22 @@
 
 namespace App\Exports;
 
-use App\Models\Mahasiswa;
-use Maatwebsite\Excel\Concerns\FromCollection;
+use App\Exports\HeadingMahasiswa;
+use App\Exports\ProgramStudiExport;
+use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 
-class MahasiswaExport implements FromCollection
+class MahasiswaExport implements WithMultipleSheets
 {
     /**
     * @return \Illuminate\Support\Collection
     */
-    public function collection()
+
+    public function sheets(): array 
     {
-        return Mahasiswa::all();
+        $sheets = [];
+        $sheets[] = new HeadingMahasiswa();
+        $sheets[] = new ProgramStudiExport();
+        return $sheets;
     }
+    
 }

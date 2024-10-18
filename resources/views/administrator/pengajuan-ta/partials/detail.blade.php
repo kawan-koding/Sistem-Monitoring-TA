@@ -63,7 +63,7 @@
                 </tr>
             </table>
             <br><br>
-            <div class="d-md-flex d-none">
+            <div class="d-flex flex-column flex-md-row">
                 <div class="w-100 px-4 py-3 fw-bold text-center border-top {{isset($dataTA->status) ? ($dataTA->status == 'draft' ? 'border-primary bg-soft-primary text-primary' : ($dataTA->status == 'acc' ? 'border-success bg-soft-success text-success' : 'border-danger bg-soft-danger text-danger')) : 'border-secondary bg-soft-secondary text-secondary'}}" style="white-space: nowrap">
                     <i class="bx {{$dataTA->status == 'acc' ? 'bx-check' : ($dataTA->status == 'reject' ? 'bx-x' : 'bx-timer')}}"></i> 
                     Pengajuan Topik

@@ -2,20 +2,21 @@
 
 namespace App\Http\Controllers\Administrator\Dosen;
 
-use Illuminate\Http\Request;
+use App\Models\User;
 use App\Models\Dosen;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\Dosen\DosenRequest;
-use App\Models\User;
-use App\Imports\DosenImport;
 use App\Models\Jurusan;
+use App\Exports\DosenExport;
+use App\Imports\DosenImport;
 use App\Models\ProgramStudi;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Maatwebsite\Excel\Facades\Excel;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Hash;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Http\Requests\Dosen\DosenRequest;
 
 class DosenController extends Controller
 {
@@ -162,16 +163,21 @@ class DosenController extends Controller
         try {
             if ($request->hasFile('file')) {
                 $file = $request->file('file');
-                $filename = 'Dosen_'. rand(0, 999999999) .'_'. rand(0, 999999999) .'.'. $file->getClientOriginalExtension();
-                $file->move(public_path('storage/files/dosen'), $filename);
+                // $filename = 'Dosen_'. rand(0, 999999999) .'_'. rand(0, 999999999) .'.'. $file->getClientOriginalExtension();
+                // $file->move(public_path('storage/files/dosen'), $filename);
             }
             
-            Excel::import(new DosenImport, public_path('storage/files/dosen/'. $filename));
+            // Excel::import(new DosenImport, public_path('storage/files/dosen/'. $filename));
+            Excel::import(new DosenImport, $file);
             
             return redirect()->route('apps.dosen')->with('success', 'Berhasil import dosen');
         } catch (\Exception $e) {
             return redirect()->route('apps.dosen')->with('error', $e->getMessage());
         }
+    }
+
+    public function exportExcel() {
+        return Excel::download(new DosenExport, 'Data Dosen.xlsx');
     }
     
     // public function tarikData(){

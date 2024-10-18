@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Administrator\DaftarTA;
 
+use File;
 use App\Models\Dosen;
 use App\Models\Topik;
 use App\Models\JenisTa;
@@ -9,13 +10,13 @@ use App\Models\PeriodeTa;
 use App\Models\BimbingUji;
 use App\Models\KuotaDosen;
 use App\Models\TugasAkhir;
+use App\Models\ProgramStudi;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use File;
 
 class DaftarTAController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $periode = PeriodeTa::where('is_active', 1)->first();
         $dataTa = TugasAkhir::with(['mahasiswa','bimbing_uji','periode_ta','topik','jenis_ta'])->where('periode_ta_id', $periode->id);    
@@ -24,6 +25,11 @@ class DaftarTAController extends Controller
         } 
         if (getInfoLogin()->hasRole('Kaprodi')) {
             $dataTa->where('status', 'acc');
+        }
+        if ($request->has('tipe') && $request->tipe != 'Semua') {
+            $dataTa->whereHas('mahasiswa', function($query) use ($request) {
+                $query->where('program_studi_id', $request->tipe);
+            });
         }
         $dataTa = $dataTa->get();
         $data = [
@@ -44,6 +50,7 @@ class DaftarTAController extends Controller
                 ]
             ],
             'data' => $dataTa,
+            'prodi' => ProgramStudi::all(),
         ];
         
         return view('administrator.daftar-ta.index', $data);

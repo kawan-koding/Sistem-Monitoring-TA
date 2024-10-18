@@ -5,6 +5,20 @@
     <div class="col-md-12 col-sm-12 col-g-12">
         <div class="card">
             <div class="card-body">
+                <form method="GET" action="{{ route('apps.daftar-ta') }}">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12">
+                            <select name="tipe" id="tipe" class="form-control" onchange="this.form.submit()">
+                                <option value="Semua" {{ request('tipe') == 'Semua' ? 'selected' : '' }}>Semua</option>
+                                @foreach ($prodi as $item)
+                                    <option value="{{ $item->id }}" {{ request('tipe') == $item->id ? 'selected' : '' }}>{{ $item->nama }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                </form>
+
+                <hr>
                 @if(session('success'))
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
                         <i class="mdi mdi-check-all me-2"></i> {{ session('success') }}

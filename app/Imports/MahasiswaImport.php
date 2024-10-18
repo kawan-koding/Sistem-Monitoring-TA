@@ -18,41 +18,42 @@ class MahasiswaImport implements ToModel, WithHeadingRow
     * @return \Illuminate\Database\Eloquent\Model|null
     */
     
+    
     public function model(array $row)
     {
-        $gender = strtoupper($row['jenis_kelamin']) === 'L' ? 'Laki-laki' : (strtoupper($row['jenis_kelamin']) === 'P' ? 'Perempuan' : 'Lainnya');
-        $programStudiName = $row['program_studi'] === 'TRPL' ? 'S1 Terapan Teknologi Rekayasa Perangkat Lunak' : ($row['program_studi'] === 'TRK' ? 'S1 Terapan Teknologi Rekayasa Komputer' : ($row['program_studi'] === 'BD' ? 'S1 Terapan Bisnis Digital' : null));
-        $programStudi = $programStudiName ? ProgramStudi::where('nama', $programStudiName)->first() : null;
+        // dd($row);
+        $gender = isset($row['jenis_kelamin']) && strtoupper($row['jenis_kelamin']) === 'L' ? 'Laki-laki' : (isset($row['jenis_kelamin']) && strtoupper($row['jenis_kelamin']) === 'P' ? 'Perempuan' : 'Lainnya');
+        $programStudi = isset($row['kode_prodi']) ? ProgramStudi::where('kode', strval($row['kode_prodi']))->first() : null;
         $programStudiId = $programStudi ? $programStudi->id : null;
-        $mahasiswa = Mahasiswa::where('nim', $row['nim'])->orWhere('email', $row['email'])->first();
+        $mahasiswa = isset($row['nim']) ? Mahasiswa::where('nim', $row['nim'])->first() : null;
         if ($mahasiswa) {
             $mahasiswa->update([
-                'kelas' => $row['kelas'],
-                'nim' => $row['nim'],
-                'nama_mhs' => $row['nama_mahasiswa'],
-                'email' => $row['email'],
+                'kelas' => isset($row['kelas']) ? $row['kelas'] : null,
+                'nim' => isset($row['nim']) ? $row['nim'] : null,
+                'nama_mhs' => isset($row['nama_mahasiswa']) ? $row['nama_mahasiswa'] : null,
+                'email' => isset($row['email']) ? $row['email'] : null,
                 'jenis_kelamin' => $gender,
-                'telp' => $row['telp'],
+                'telp' => isset($row['telp']) ? $row['telp'] : null,
                 'program_studi_id' => $programStudiId
             ]);
         } else {
             $mahasiswa = Mahasiswa::create([
-                'kelas' => $row['kelas'],
-                'nim' => $row['nim'],
-                'nama_mhs' => $row['nama_mahasiswa'],
-                'email' => $row['email'],
+                'kelas' => isset($row['kelas']) ? $row['kelas'] : null,
+                'nim' => isset($row['nim']) ? $row['nim'] : null,
+                'nama_mhs' => isset($row['nama_mahasiswa']) ? $row['nama_mahasiswa'] : null,
+                'email' => isset($row['email']) ? $row['email'] : null,
                 'jenis_kelamin' => $gender,
-                'telp' => $row['telp'],
+                'telp' => isset($row['telp']) ? $row['telp'] : null,
                 'program_studi_id' => $programStudiId
             ]);
         }
-        $existingUser = User::where('email', $row['email'])->orWhere('username', $row['nim'])->first();   
-        if (!$existingUser) {
+        $existingUser = User::where('username', $mahasiswa->nim)->first();   
+        if (is_null($existingUser)) {
             $user = User::create([
-                'name' => $row['nama_mahasiswa'],
-                'username' => $row['nim'],
-                'email' => $row['email'],
-                'password' => Hash::make($row['nim']),
+                'name' => $mahasiswa->nama_mhs,
+                'username' => $mahasiswa->nim,
+                'email' => $mahasiswa->email,
+                'password' => Hash::make($mahasiswa->nim),
                 'userable_type' => Mahasiswa::class,
                 'userable_id' => $mahasiswa->id
             ]);

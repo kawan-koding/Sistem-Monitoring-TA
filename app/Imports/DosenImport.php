@@ -18,26 +18,54 @@ class DosenImport implements ToModel, WithHeadingRow
     */
     public function model(array $row)
     {
-        $gender = strtoupper($row['jenis_kelamin']) === 'P' ? 'P' : 'L';
-        $programStudiName = $row['program_studi'] === 'TRPL' ? 'S1 Terapan Teknologi Rekayasa Perangkat Lunak' : ($row['program_studi'] === 'TRK' ? 'S1 Terapan Teknologi Rekayasa Komputer' : ($row['program_studi'] === 'BD' ? 'S1 Terapan Bisnis Digital' : null));
-        $programStudi = $programStudiName ? ProgramStudi::where('nama', $programStudiName)->first() : null;
+        $gender = isset($row['jenis_kelamin']) && strtoupper($row['jenis_kelamin']) === 'P' ? 'P' : 'L';
+        $programStudi = isset($row['kode_prodi']) ? ProgramStudi::where('nama', strval($row['kode_prodi']))->first() : null;
         $programStudiId = $programStudi ? $programStudi->id : null;
-        $dosen = Dosen::where('nidn', $row['nidn'])->first();
+        $dosen = isset($row['nidn']) ? Dosen::where('nidn', $row['nidn'])->first() : null;
         if ($dosen) {
-            $dosen->update(['nip' => $row['nip'],'name' => $row['name'],'email' => $row['email'],'jenis_kelamin' => $gender,'telp' => $row['telp'],'alamat' => $row['alamat'],'program_studi_id' => $programStudiId]);
+            $dosen->update([
+                'nip' => isset($row['nip']) ? $row['nip'] : null,
+                'name' => isset($row['nama_dosen']) ? $row['nama_dosen'] : null,
+                'email' => isset($row['email']) ? $row['email'] : null,
+                'jenis_kelamin' => $gender,
+                'telp' => isset($row['telp']) ? $row['telp'] : null,
+                'alamat' => isset($row['alamat']) ? $row['alamat'] : null,
+                'program_studi_id' => $programStudiId
+            ]);
         } else {
-            $dosen = new Dosen(['nip' => $row['nip'], 'nidn' => $row['nidn'], 'name' => $row['name'],'email' => $row['email'],'jenis_kelamin' => $gender,'telp' => $row['telp'], 'alamat' => $row['alamat'], 'program_studi_id' => $programStudiId]);
+            $dosen = new Dosen([
+                'nip' => isset($row['nip']) ? $row['nip'] : null,
+                'nidn' => isset($row['nidn']) ? $row['nidn'] : null,
+                'name' => isset($row['nama_dosen']) ? $row['nama_dosen'] : null,
+                'email' => isset($row['email']) ? $row['email'] : null,
+                'jenis_kelamin' => $gender,
+                'telp' => isset($row['telp']) ? $row['telp'] : null,
+                'alamat' => isset($row['alamat']) ? $row['alamat'] : null,
+                'program_studi_id' => $programStudiId
+            ]);
             $dosen->save();
         }
-        $existingUser = User::where('email', $row['email'])->orWhere('username', $row['nidn'])->first();
+
+        $existingUser = User::where('username', $dosen->nidn)->first();
         if ($existingUser) {
             if (is_null($existingUser->userable_type) && is_null($existingUser->userable_id)) {
-                $existingUser->update(['userable_type' => Dosen::class, 'userable_id' => $dosen->id]);
+                $existingUser->update([
+                    'userable_type' => Dosen::class,
+                    'userable_id' => $dosen->id
+                ]);
             }
         } else {
-            $user = User::create(['name' => $row['name'],'username' => $row['nidn'],'email' => $row['email'],'password' => Hash::make($row['nidn']),'userable_type' => Dosen::class,'userable_id' => $dosen->id]);
+            $user = User::create([
+                'name' => $dosen->name,
+                'username' => $dosen->nidn,
+                'email' => $dosen->email,
+                'password' => Hash::make($dosen->nidn),
+                'userable_type' => Dosen::class,
+                'userable_id' => $dosen->id
+            ]);
             $user->assignRole('Dosen');
         }
+
         return $dosen;
     }
 }

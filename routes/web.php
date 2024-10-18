@@ -86,6 +86,7 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::post('{mahasiswa}/update', [MahasiswaController::class, 'update'])->name('apps.mahasiswa.update')->middleware('can:update-mahasiswa');
         Route::get('{mahasiswa}/destroy', [MahasiswaController::class, 'destroy'])->name('apps.mahasiswa.delete')->middleware('can:delete-mahasiswa');
         Route::post('import', [MahasiswaController::class, 'import'])->name('apps.mahasiswa.import')->middleware('can:import-mahasiswa');
+        Route::get('export',[MahasiswaController::class, 'exportExcel'])->name('apps.mahasiswa.export');
     });
 
     Route::prefix('jurusan')->middleware('can:read-jurusan')->group(function () {
@@ -179,6 +180,7 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::delete('{dosen}/destroy', [DosenController::class, 'destroy'])->name('apps.dosen.delete');
         Route::post('import', [DosenController::class, 'import'])->name('apps.dosen.import');
         Route::get('tarik-data', [DosenController::class, 'tarikData'])->name('apps.dosen.tarik-data');
+        Route::get('export', [DosenController::class, 'exportExcel'])->name('apps.dosen.export');
     });
 
     Route::prefix('kuota-dosen')->middleware('can:read-kuota')->group( function() {

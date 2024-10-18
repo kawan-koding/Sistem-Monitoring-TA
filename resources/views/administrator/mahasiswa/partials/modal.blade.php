@@ -70,7 +70,7 @@
             <form action="" enctype="multipart/form-data" id="myImportFormulir" method="post">
                 @csrf
                 <div class="modal-body">
-                    <a href="{{ asset('assets/files/Mahasiswa.xlsx')}}" class="btn btn-sm btn-success"><i class="fa fa-file-excel"></i> Template</a>
+                    <a href="{{ route('apps.mahasiswa.export') }}" target="_blank" class="btn btn-sm btn-success"><i class="fa fa-file-excel"></i> Unduh Template</a>
                     <hr>
                     <div>
                         <label for="">File</label>

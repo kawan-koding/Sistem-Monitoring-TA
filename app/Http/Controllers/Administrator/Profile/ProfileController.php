@@ -90,7 +90,7 @@ class ProfileController extends Controller
                 $user->userable->name = $request->name;
                 $user->userable->telp = $request->telp;
                 $user->userable->jenis_kelamin = $request->jenis_kelamin;
-                $user->userable->bidang_keahlian = implode(', ',$request->bidang_keahlian);
+                $user->userable->bidang_keahlian = $request->bidang_keahlian ? implode(', ', $request->bidang_keahlian) : null;
                 if($request->hasFile('foto_profile')) {
                     $file = $request->file('foto_profile');
                     $filename = 'Dosen_'. rand(0, 999999999) .'_'. rand(0, 999999999) .'.'. $file->getClientOriginalExtension();

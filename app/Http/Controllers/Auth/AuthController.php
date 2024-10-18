@@ -111,6 +111,7 @@ class AuthController extends Controller
 
     protected function authAfterSso($response)
     {
+        
         if (!isset($response['access_token'])) {
             return redirect()->route('login');
         }
@@ -133,6 +134,7 @@ class AuthController extends Controller
                     'password' => Hash::make($SSOUser['username']),
                     'image' => 'default.jpg',
                 ]);
+
                 $roles = unserialize($SSOUser['role']); 
                 foreach ($roles as $roleName) {
                     $formattedRoleName = ucfirst(strtolower($roleName));

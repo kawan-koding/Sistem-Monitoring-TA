@@ -21,7 +21,7 @@ class ProgramStudiSeeder extends Seeder
             ],
             [
                 'jurusan_id' => 1,
-                'kode' => '5540',
+                'kode' => '55401',
                 'nama' => 'S1 Terapan Teknologi Rekayasa Perangkat Lunak',
             ],
             [

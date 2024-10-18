@@ -3,15 +3,18 @@
 namespace App\Exports;
 
 use App\Models\Dosen;
-use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 
-class DosenExport implements FromCollection
+class DosenExport implements WithMultipleSheets
 {
     /**
     * @return \Illuminate\Support\Collection
     */
-    public function collection()
+       public function sheets(): array 
     {
-        return Dosen::all();
+        $sheets = [];
+        $sheets[] = new HeadingDosen();
+        $sheets[] = new ProgramStudiExport();
+        return $sheets;
     }
 }
