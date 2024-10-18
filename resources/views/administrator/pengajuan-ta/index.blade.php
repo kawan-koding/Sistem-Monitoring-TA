@@ -211,7 +211,7 @@
                         <div class="mb-3">
                             <label for="">Catatan</label>
                             <textarea name="catatan" class="form-control"></textarea>
-                            <i>Silahkan tuliskan catatan anda (opsional):</i>
+                            <i>Silahkan tuliskan catatan (opsional):</i>
                         </div>
                     </div>
                     <div class="modal-footer">

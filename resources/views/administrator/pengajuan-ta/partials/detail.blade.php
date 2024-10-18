@@ -74,7 +74,7 @@
                     <i class="bx {{$dataTA->status_seminar == 'acc' ? 'bx-check' : ($dataTA->status_seminar == 'reject' ? 'bx-x' : 'bx-timer')}}"></i> 
                     Seminar Proposal
                     <br>
-                    <span class="small">{{isset($dataTA->status_seminar) ? ($dataTA->status_seminar == 'acc' ? 'Selesai' : ($dataTA->status_seminar == 'reject' ? 'Ditolak' : 'Sedang Berlangsung')) : ''}}</span>
+                    <span class="small">{{isset($dataTA->status_seminar) ? ($dataTA->status_seminar == 'acc' ? 'Selesai' : ($dataTA->status_seminar == 'revisi' ? 'Sedang Berlangsung' : 'Ditolak')) : ($dataTA->status == 'acc' ? 'Sedang Berlangsung' : '')}}</span>
                 </div>
                 <div class="w-100 px-4 py-3 fw-bold text-center border-top border-secondary bg-soft-secondary text-secondary" style="white-space: nowrap"><i class="bx bx-timer"></i> Sidang Akhir</div>
             </div>

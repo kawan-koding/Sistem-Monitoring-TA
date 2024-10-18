@@ -70,11 +70,11 @@
                                         <td class="font-size-13">{{ $profile->userable->nim ?? '-'}}</td>
                                     </tr>
                                 @endif
-                                <tr>
+                                {{-- <tr>
                                     <td class="font-size-13 fw-bold text-end">Email</td>
                                     <td class="font-size-13">:</td>
                                     <td class="font-size-13">{{ $profile->userable->email ?? '-'}}</td>
-                                </tr>
+                                </tr> --}}
                                 @if ($profile->hasRole('Mahasiswa'))
                                     <tr>
                                         <td class="font-size-13 fw-bold text-end">Kelas</td>
@@ -92,10 +92,19 @@
                         </div>
                         <div class="col-sm-12 col-md-8 col-lg-8">
                             <div class="row">
-                                <div class="mb-3">
-                                    <label for="">Nama <span class="text-danger">*</span></label>
-                                    <input type="text" name="name" id="name" class="form-control"
-                                        value="{{ $profile->userable->nama_mhs ?? ($profile->userable->name ?? '') }}">
+                                <div class="col-sm-12 col-md-6 col-lg-6">
+                                    <div class="mb-3">
+                                        <label for="">Nama <span class="text-danger">*</span></label>
+                                        <input type="text" name="name" id="name" class="form-control"
+                                            value="{{ $profile->userable->nama_mhs ?? ($profile->userable->name ?? '') }}">
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 col-md-6 col-lg-6">
+                                    <div class="mb-3">
+                                        <label for="">Email <span class="text-danger">*</span></label>
+                                        <input type="email" name="email" id="email" class="form-control"
+                                            value="{{ $profile->userable->email ?? '' }}">
+                                    </div>
                                 </div>
                                 <div class="col-sm-12 col-md-6 col-lg-6">
                                     <div class="mb-3">

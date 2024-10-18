@@ -39,7 +39,7 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="pembimbing_1">Pembimbing 1 <span class="text-danger">*</span></label>
-                                    <select name="pembimbing_1" class="form-control" required>
+                                    <select name="pembimbing_1" class="form-control" required {{isset($editedData) ? 'disabled' : ''}}>
                                         <option value="">Pilih Dosen Pembimbing 1</option>
                                         @foreach ($dataDosen as $item)
                                         <option value="{{$item->id}}" {{ isset($editedData) ? $editedData->bimbing_uji()->where('tugas_akhir_id', $editedData->id)->first()->dosen->id == $item->id ? "selected" : '' : ''}}>({{($item->kuota_pembimbing_1-$item->total_pembimbing_1)}}) {{$item->nidn}} - {{$item->name}}</option>

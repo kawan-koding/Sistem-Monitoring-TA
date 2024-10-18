@@ -58,22 +58,29 @@ class ProfileController extends Controller
                 ];
                 $request->validate([
                     'name' => 'required',
+                    'email' => 'required|email',
                     'telp' => 'required',
                     'jenis_kelamin' => 'required',
                 ],
                 [
                     'name.required' => 'Nama harus diisi',
+                    'email.required' => 'Email harus diisi',
+                    'email.email' => 'Email tidak valid',
                     'telp.required' => 'Telp harus diisi',
                     'jenis_kelamin.required' => 'Jenis Kelamin harus diisi',
                 ]);
                 
                 $user->name = $request->name;
                 $user->userable->nama_mhs = $request->name;
+                $user->email = $request->email;
+                $user->userable->email = $request->email;
+                $user->userable->nama_mhs = $request->name;
                 $user->userable->telp = $request->telp;
                 $user->userable->jenis_kelamin = $jenisKelamin[$request->jenis_kelamin];
             } else if($user->hasRole(['Dosen', 'Admin', 'Kaprodi'])) {
                 $request->validate([
                     'name' => 'required',
+                    'email' => 'required|email',
                     'telp' => 'required',
                     'jenis_kelamin' => 'required',
                     'file' => 'nullable|mimes:png,jpg,jpeg',
@@ -81,13 +88,18 @@ class ProfileController extends Controller
                 ],
                 [
                     'name.required' => 'Nama harus diisi',
+                    'email.required' => 'Email harus diisi',
+                    'email.email' => 'Email tidak valid',
                     'telp.required' => 'Telp harus diisi',
                     'jenis_kelamin.required' => 'Jenis Kelamin harus diisi',
                     'file.mimes' => 'File harus berupa png, jpg, atau jpeg',
                 ]);
 
+                dd($user);
                 $user->name = $request->name;
                 $user->userable->name = $request->name;
+                $user->email = $request->email;
+                $user->userable->email = $request->email;
                 $user->userable->telp = $request->telp;
                 $user->userable->jenis_kelamin = $request->jenis_kelamin;
                 $user->userable->bidang_keahlian = $request->bidang_keahlian ? implode(', ', $request->bidang_keahlian) : null;
