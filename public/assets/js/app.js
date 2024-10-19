@@ -66,44 +66,6 @@ setTimeout(function () {
     $('.alert-danger').fadeOut('slow');
 }, 5000);
 
-function confirmDelete(title, url) {
-    Swal.fire({
-        title: "Hapus " + title + " ?",
-        text: "Apakah kamu yakin untuk menghapus data ini!",
-        type: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Ya, Hapus!"
-    }).then((result) => {
-        if (result.value) {
-            $.ajax({
-                url: url,
-                type: "DELETE",
-                data: {
-                    _token: $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function (data) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Berhasil!',
-                        text: data.message
-                    }).then(() => {
-                        window.location.reload();
-                    });
-                },
-                error: function (xhr) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: xhr.responseJSON.message
-                    });
-                }
-            });
-        }
-    });
-}
-
 function confirmAlert({title, text, confirmButton, data = {}, url}) {
     Swal.fire({
         title: title,
@@ -160,3 +122,13 @@ $('.modal').on('hidden.bs.modal', function () {
         FilePond.find(this).removeFiles();
     });
 });
+
+function refreshCsrfToken() {
+    $.get('/refresh-csrf').done(function (data) {
+        $('meta[name="csrf-token"]').attr('content', data.token);
+        if (callback) callback(data.token);
+    }).fail(function () {
+        console.error('Failed to refresh CSRF token.');
+    });
+}
+setInterval(refreshCsrfToken, 300000);

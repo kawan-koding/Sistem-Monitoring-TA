@@ -101,9 +101,10 @@ class MahasiswaController extends Controller
     {
         try {
             $mahasiswa->user()->delete();
-            $mahasiswa->delete();       
+            $mahasiswa->delete();   
+            return $this->successResponse('Data berhasil di hapus');    
         } catch (\Exception $e) {
-            return redirect()->route('apps.mahasiswa')->with('error', $e->getMessage());
+            return $this->exceptionResponse($e);
         }
     }
 
@@ -119,11 +120,7 @@ class MahasiswaController extends Controller
         try {
             if ($request->hasFile('file')) {
                 $file = $request->file('file');
-                // $filename = 'Mahasiswa_'. rand(0, 999999999) .'_'. rand(0, 999999999) .'.'. $file->getClientOriginalExtension();
-                // $file->move(public_path('storage/files/mahasiswa'), $filename);
-            }
-            
-            // Excel::import(new MahasiswaImport, public_path('storage/files/mahasiswa/'. $filename));
+            }            
             Excel::import(new MahasiswaImport, $file);
             
             return redirect()->route('apps.mahasiswa')->with('success', 'Berhasil import mahasiswa');

@@ -67,6 +67,7 @@ class RoleSeeder extends Seeder
             'read-pengajuan-tugas-akhir', 'acc-pengajuan-tugas-akhir', 'reject-pengajuan-tugas-akhir', 'cancel-pengajuan-tugas-akhir',
             'read-pembagian-dosen','update-pembagian-dosen',
             'read-daftar-ta',
+            'read-rekomendasi-topik','validate-rekomendasi-topik',
         ]);
         
         $dosen->givePermissionTo([

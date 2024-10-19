@@ -51,7 +51,7 @@
                                     <a href="javascript:void(0);" onclick="editTopik('{{ $item->id }}', '{{route('apps.topik.show', ['id' => $item->id])}}')" class="btn btn-outline-primary btn-sm mx-1 my-1"><i class="bx bx-edit-alt"></i></a>
                                     @endcan
                                     @can('delete-topik')
-                                    <button  type="button" data-url="{{route('apps.topik.delete', $item->id) }}" data-toggle="delete" class="btn btn-outline-dark btn-sm mx-1 my-1"><i class="bx bx-trash"></i></button>
+                                    <a href="javascript:void(0);" onclick="hapusTopik('{{ $item->id }}', '{{route('apps.topik.delete', ['id' => $item->id])}}')" class="btn btn-outline-dark btn-sm mx-1 my-1"><i class="bx bx-trash"></i></a>
                                     @endcan
                                 </td>
                             </tr>

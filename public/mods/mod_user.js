@@ -10,12 +10,9 @@ function tambahData() {
     $('#myModal').modal('show')
 }
 
-
 function editData(id, urlShow) {
-    // alert(urlShow)
     $('#myFormulir').attr("action", `${BASE_URL}/apps/users/${id}/update`);
     $('#myModalLabel').html('Edit Pengguna')
-
     $.ajax({
         url: urlShow,
         type: "GET",
@@ -32,7 +29,6 @@ function editData(id, urlShow) {
             console.error(xhr.responseText);
         }
     });
-
     $('#myModal').modal('show')
 }
 
@@ -55,6 +51,5 @@ function hapusData(e, url) {
                 }
             })
         }
-    })
-
+    });
 }

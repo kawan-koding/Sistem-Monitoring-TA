@@ -5,7 +5,7 @@
 <div class="row">
     <div class="col-md-12 col-sm-12 col-g-12">
         <div class="card">
-            @if(auth()->user()->hasRole('Mahasiswa') || auth()->user()->hasRole('Developer'))
+            @if(getInfoLogin()->hasRole('Mahasiswa') || getInfoLogin()->hasRole('Developer'))
             <ul class="nav nav-tabs nav-tabs-custom nav-justified mt-1 mb-1" role="tablist">
                 <li class="nav-item">
                     <a class="nav-link active" href="#">
@@ -22,9 +22,11 @@
             </ul>
             @endif
             <div class="card-body">
-                @if (!auth()->user()->hasRole('Mahasiswa'))
-                <button onclick="tambahData()" class="btn btn-primary"><i class="fa fa-plus"></i> Tambah</button>
-                <hr>
+                @if (!getInfoLogin()->hasRole('Mahasiswa') && session('switchRoles') !== 'Kaprodi')
+                    @can('create-rekomendasi-topik')
+                    <button onclick="tambahData()" class="btn btn-primary"><i class="fa fa-plus"></i> Tambah</button>
+                    <hr>
+                    @endcan
                 @endif
                 @if(session('success'))
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -59,10 +61,15 @@
                                 <th >Topik</th>
                                 <th>Jenis Penyelesaian</th>
                                 <th>Jenis Topik</th>
-                                @if(auth()->user()->hasRole('Dosen') || auth()->user()->hasRole('Developer'))
-                                <th>Pengambil:</th>
+                                @if(in_array(session('switchRoles'), ['Dosen','Developer']))
+                                    @if(getInfoLogin()->hasRole('Dosen') || getInfoLogin()->hasRole('Developer'))
+                                    <th>Pengambil:</th>
+                                    @endif
                                 @endif
-                                @if(auth()->user()->hasRole('Mahasiswa') || auth()->user()->hasRole('Developer'))
+                                @if(getInfoLogin()->hasRole('Dosen') || getInfoLogin()->hasRole('Developer') || getInfoLogin()->hasRole('Kaprodi'))
+                                <th>Status:</th>
+                                @endif
+                                @if(getInfoLogin()->hasRole('Mahasiswa') || getInfoLogin()->hasRole('Developer'))
                                 <th>Nama Dosen</th>
                                 @endif
                                 <th>Aksi</th>
@@ -75,6 +82,9 @@
                                 <td>
                                     <p class="fw-bold m-0">{{ $item->judul }}</p>
                                     <p class="m-0 text-muted small"><strong>Deskripsi :</strong> {{ $item->deskripsi ?? '-' }}</p>
+                                    @if($item->catatan != null)
+                                    <p class="m-0 text-muted small"><strong>Catatan :</strong> <span class="text-danger"> {{ $item->catatan }}</span></p>
+                                    @endif
                                 </td>
                                 <td>
                                     <div class="d-flex align-items-center">
@@ -85,35 +95,53 @@
                                         </div>
                                 </td>
                                 <td>{{ $item->jenisTa->nama_jenis }}</td>
-                                @if(auth()->user()->hasRole('Dosen') || auth()->user()->hasRole('Developer'))
-                                <td>
-                                    @if($item->ambilTawaran->isEmpty())
+                                @if(in_array(session('switchRoles'), ['Dosen','Developer']))
+                                    @if(getInfoLogin()->hasRole('Dosen') || getInfoLogin()->hasRole('Developer'))
+                                    <td>
+                                        @if($item->ambilTawaran->isEmpty())
                                         -
-                                    @else
+                                        @else
                                         <ul>
                                             @foreach ($item->ambilTawaran as $tawaran)
-                                                <li>{{ $tawaran->mahasiswa->nama_mhs }}</li>
+                                            <li>{{ $tawaran->mahasiswa->nama_mhs }}</li>
                                             @endforeach
                                         </ul>
+                                        @endif
+                                    </td>
                                     @endif
+                                @endif
+                                @if(getInfoLogin()->hasRole('Dosen') || getInfoLogin()->hasRole('Developer') || getInfoLogin()->hasRole('Kaprodi'))
+                                <td>
+                                    <span class="badge {{ isset($item->status) ? ($item->status == 'Menunggu' ? 'bg-dark-subtle text-body' : ($item->status == 'Disetujui' ? 'badge-soft-success' : 'badge-soft-danger')) : '-'}}">{{ $item->status ?? '-' }}</span>
                                 </td>
                                 @endif
-                                @if(auth()->user()->hasRole('Mahasiswa') || auth()->user()->hasRole('Developer'))
+                                @if(getInfoLogin()->hasRole('Mahasiswa') || getInfoLogin()->hasRole('Developer'))
                                 <td>{{ $item->dosen->name}}</td>
                                 @endif
                                 <td>
-                                    @if (auth()->user()->hasRole('Dosen') || auth()->user()->hasRole('Developer'))
-                                        @can('update-rekomendasi-topik')
-                                        <button onclick="editData('{{ $item->id }}', '{{route('apps.rekomendasi-topik.show', $item->id)}}')" class="btn btn-outline-primary btn-sm mx-1 my-1" title="Edit"><i class="bx bx-edit-alt"></i></button>
-                                        @endcan
-                                        @can('delete-rekomendasi-topik')
-                                        <button class="btn btn-outline-dark btn-sm mx-1 my-1" data-toggle="delete" data-url="{{ route('apps.rekomendasi-topik.delete', $item->id) }}" title="Hapus"><i class="bx bx-trash"></i></button>
-                                        @endcan
-                                        <a href="{{ route('apps.rekomendasi-topik.detail', $item->id) }}" class="btn btn-outline-warning btn-sm mx-1 my-1" title="Detail"><i class="bx bx-show"></i></a>
+                                    @if (session('switchRoles') === 'Dosen')
+                                        @if (getInfoLogin()->hasRole('Dosen') || getInfoLogin()->hasRole('Developer'))
+                                            @can('update-rekomendasi-topik')
+                                                <button onclick="editData('{{ $item->id }}', '{{route('apps.rekomendasi-topik.show', $item->id)}}')" class="btn btn-outline-primary btn-sm mx-1 my-1" title="Edit"><i class="bx bx-edit-alt"></i></button>
+                                            @endcan
+                                            @can('delete-rekomendasi-topik')
+                                                <button class="btn btn-outline-dark btn-sm mx-1 my-1" data-toggle="delete" data-url="{{ route('apps.rekomendasi-topik.delete', $item->id) }}" title="Hapus"><i class="bx bx-trash"></i></button>
+                                            @endcan
+                                            <a href="{{ route('apps.rekomendasi-topik.detail', $item->id) }}" class="btn btn-outline-warning btn-sm mx-1 my-1" title="Detail"><i class="bx bx-show"></i></a>
+                                        @endif
                                     @endif
-
-                                    @if(auth()->user()->hasRole('Mahasiswa') || auth()->user()->hasRole('Developer'))
+                                    @if(getInfoLogin()->hasRole('Mahasiswa') || getInfoLogin()->hasRole('Developer'))
                                         <button class="btn btn-outline-success btn-sm mx-1 my-1" data-toggle="get-topik" data-id="{{ $item->id }}" title="Ambil Topik"><i class="bx bx-check-circle"></i></button>
+                                    @endif
+                                    @if (session('switchRoles') === 'Kaprodi')
+                                        @if(getInfoLogin()->hasRole('Kaprodi') || getInfoLogin()->hasRole('Developer'))
+                                            @if($item->status !== 'Disetujui')
+                                            <button class="btn btn-outline-success btn-sm mx-1 my-1" data-toggle="acc" data-url="{{ route('apps.rekomendasi-topik.acc', $item->id) }}" title="Setujui"><i class="bx bx-check-circle"></i></button>
+                                            <button class="btn btn-outline-danger btn-sm mx-1 my-1" data-toggle="reject-topik" data-url="{{ route('apps.rekomendasi-topik.rejcet-topik', $item->id) }}" title="Tolak"><i class="bx bx-x"></i></button>
+                                            @else
+                                            -
+                                            @endif
+                                        @endif
                                     @endif
                                 </td>
                             </tr>
@@ -128,4 +156,26 @@
 </div>
 @include('administrator.rekomendasi-topik.partials.modal')
 @include('administrator.rekomendasi-topik.partials.modal-apply')
+ <div class="modal fade" id="modalReject" tabindex="-1" role="dialog" aria-labelledby="myModalAccLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title mt-0"></h5>
+            </div>
+            <form action="" method="post">
+                @csrf
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="">Catatan</label>
+                        <textarea name="catatan" class="form-control"></textarea>
+                        <i>Silahkan tuliskan catatan (opsional):</i>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary waves-effect waves-light">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 @endsection

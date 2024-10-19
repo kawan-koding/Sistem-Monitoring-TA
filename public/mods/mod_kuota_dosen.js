@@ -12,7 +12,7 @@ const procedUpdate = setTimeLoad((name, field, periode, dosen) => {
         url: `${BASE_URL}/apps/kuota-dosen/store`,
         type: "POST",
         data: {
-            _token: $('meta[name="csrf-token"]').attr('content'),
+            _token: token,
             field: name,
             value: kuota,
             periode_ta_id: periode,

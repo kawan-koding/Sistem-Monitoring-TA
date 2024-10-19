@@ -33,7 +33,7 @@ function editData(id, urlShow) {
 }
 
 $(document).ready(function() {
-    $('*[data-toggle="get-topik"]').on('click', function() {
+    $(document).on('click', '*[data-toggle="get-topik"]', function () {
         const id = $(this).data('id');
         $('#myImportFormulir').attr('action', `${BASE_URL}/apps/rekomendasi-topik/${id}/mengambil-topik`);
         $('#myModalLabelApply').html('Ambil Topik');
@@ -41,30 +41,169 @@ $(document).ready(function() {
         $('#myModalApply').modal('show');
     });
 
-    $('*[data-toggle="delete"]').on('click', function () {
+    $(document).on('click', '*[data-toggle="delete"]', function () {
         const url = $(this).data('url');
-        confirmDelete('Topik Yang Ditawarkan', url);
+        Swal.fire({
+            title: "Hapus Topik yang ditawarkan?",
+            text: "Apakah kamu yakin untuk menghapus data ini!",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Ya, Hapus!"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    url: url,
+                    type: "DELETE",
+                    data: {
+                        _token: token
+                    },
+                    success: function (data) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil!',
+                            text: data.message
+                        }).then(() => {
+                            window.location.reload();
+                        });
+                    },
+                    error: function (xhr) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: xhr.responseJSON.message
+                        });
+                    }
+                });
+            }
+        });
     });
 
-    $('*[data-toggle="delete-topik"]').on('click', function () {
+    $(document).on('click', '*[data-toggle="delete-topik"]', function () {
         const url = $(this).data('url');
-        confirmDelete('Topik Yang Diambil', url);
-    });
-    $('*[data-toggle="delete-mhs"]').on('click', function () {
-        const url = $(this).data('url');
-        confirmDelete('Mahasiswa', url);
+        Swal.fire({
+            title: "Hapus Topik yang diambil?",
+            text: "Apakah kamu yakin untuk menghapus data ini!",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Ya, Hapus!"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    url: url,
+                    type: "DELETE",
+                    data: {
+                        _token: token
+                    },
+                    success: function (data) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil!',
+                            text: data.message
+                        }).then(() => {
+                            window.location.reload();
+                        });
+                    },
+                    error: function (xhr) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: xhr.responseJSON.message
+                        });
+                    }
+                });
+            }
+        });
     });
 
-    $('*[data-toggle="reject-mhs"]').on('click', function (e) {
+    $(document).on('click', '*[data-toggle="delete-mhs"]', function () {
+        const url = $(this).data('url');
+        Swal.fire({
+            title: "Hapus Mahasiswa?",
+            text: "Apakah kamu yakin untuk menghapus data ini!",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Ya, Hapus!"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    url: url,
+                    type: "DELETE",
+                    data: {
+                        _token: token
+                    },
+                    success: function (data) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil!',
+                            text: data.message
+                        }).then(() => {
+                            window.location.reload();
+                        });
+                    },
+                    error: function (xhr) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: xhr.responseJSON.message
+                        });
+                    }
+                });
+            }
+        });
+    });
+
+    $(document).on('click', '*[data-toggle="reject-mhs"]', function (e) {
         e.preventDefault();
         const url = $(this).data('url');
         $('#approveForm').attr('action', url).attr('method', 'POST').submit();
     });
 
-    $('*[data-toggle="approve-mhs"]').on('click', function (e) {
+    $(document).on('click', '*[data-toggle="approve-mhs"]', function (e) {
         e.preventDefault();
         const url = $(this).data('url');
         $('#approveForm').attr('action', url).attr('method', 'POST').submit();;
+    });
+    
+    $(document).on('click', '*[data-toggle="reject-topik"]', function (e) {
+        e.preventDefault();
+        const url = $(this).data('url');
+        $('#modalReject').find('form').attr('action', url);
+        $('#modalReject').find('.modal-title').html('Tolak Topik?');
+        $('#modalReject').modal('show');
+        $('#catatan').val('');
+    });
+
+    $(document).on('click', '*[data-toggle="acc"]', function (e) {
+        e.preventDefault();
+        const url = $(this).data('url');
+        Swal.fire({
+            title: "Setujui Topik?",
+            text: "Apakah kamu yakin untuk menyetujui data ini!",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Ya, Saya Yakin!"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    url: url,
+                    type: "POST",
+                    data: {
+                        _token: token
+                    },
+                    success: function (data) {
+                        window.location.reload();
+                    }
+                });
+            }
+        });
     });
 
     $('#jenis_ta_id').on('change', function () {

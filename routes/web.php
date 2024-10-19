@@ -64,6 +64,10 @@ Route::prefix('apps')->middleware('auth')->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('apps.dashboard');
     Route::get('profile', [ProfileController::class, 'index'])->name('apps.profile');
     Route::post('{user}/update', [ProfileController::class, 'update'])->name('apps.profile.update');
+    Route::get('/refresh-csrf', function () {
+        return response()->json(['token' => csrf_token()]);
+    });
+
 
     Route::prefix('users')->middleware('can:read-users')->group(function () {
         Route::get('', [UserController::class, 'index'])->name('apps.users');
@@ -84,7 +88,7 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::post('store', [MahasiswaController::class, 'store'])->name('apps.mahasiswa.store')->middleware('can:create-mahasiswa');
         Route::get('{mahasiswa}/show', [MahasiswaController::class, 'show'])->name('apps.mahasiswa.show');
         Route::post('{mahasiswa}/update', [MahasiswaController::class, 'update'])->name('apps.mahasiswa.update')->middleware('can:update-mahasiswa');
-        Route::get('{mahasiswa}/destroy', [MahasiswaController::class, 'destroy'])->name('apps.mahasiswa.delete')->middleware('can:delete-mahasiswa');
+        Route::delete('{mahasiswa}/destroy', [MahasiswaController::class, 'destroy'])->name('apps.mahasiswa.delete')->middleware('can:delete-mahasiswa');
         Route::post('import', [MahasiswaController::class, 'import'])->name('apps.mahasiswa.import')->middleware('can:import-mahasiswa');
         Route::get('export',[MahasiswaController::class, 'exportExcel'])->name('apps.mahasiswa.export');
     });
@@ -165,6 +169,8 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::delete('{rekomendasiTopik}/delete', [RekomendasiTopikController::class, 'destroy'])->name('apps.rekomendasi-topik.delete')->middleware('can:delete-rekomendasi-topik'); 
         Route::post('{rekomendasiTopik}/mengambil-topik', [RekomendasiTopikController::class, 'ambilTopik'])->name('apps.ambil-topik');
         Route::get('{rekomendasiTopik}/detail', [RekomendasiTopikController::class, 'detail'])->name('apps.rekomendasi-topik.detail'); 
+        Route::post('{rekomendasiTopik}/acc', [RekomendasiTopikController::class, 'acc'])->name('apps.rekomendasi-topik.acc');
+        Route::post('{rekomendasiTopik}/reject-topik', [RekomendasiTopikController::class, 'rejectTopik'])->name('apps.rekomendasi-topik.rejcet-topik');
         Route::get('topik-yang-diambil', [RekomendasiTopikController::class, 'apply'])->name('apps.topik-yang-diambil');
         Route::delete('{ambilTawaran}/hapus-topik', [RekomendasiTopikController::class, 'deleteTopik'])->name('apps.hapus-topik-yang-diambil');
         Route::post('{ambilTawaran}/accept', [RekomendasiTopikController::class, 'accept'])->name('apps.rekomendasi-topik.accept');

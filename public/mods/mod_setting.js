@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    $('button[data-toggle="edit"]').on('click', function () {
+    $(document).on('click', 'button[data-toggle="edit"]', function () {
         const url = $(this).data('url');
         const id = $(this).data('id');   
         $('#myFormulir').attr("action", `${BASE_URL}/apps/settings/${id}/update`);

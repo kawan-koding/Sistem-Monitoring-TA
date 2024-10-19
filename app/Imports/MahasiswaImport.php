@@ -5,13 +5,22 @@ namespace App\Imports;
 use App\Models\User;
 use App\Models\Mahasiswa;
 use App\Models\ProgramStudi;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 
-class MahasiswaImport implements ToModel, WithHeadingRow
+class MahasiswaImport implements ToModel, WithHeadingRow, WithMultipleSheets
 {
+    public function sheets(): array
+    {
+        // Kembalikan hanya sheet pertama untuk diproses
+        return [
+            0 => $this, // Index 0 adalah sheet pertama
+        ];
+    }
+
     /**
     * @param array $row
     *
@@ -21,7 +30,10 @@ class MahasiswaImport implements ToModel, WithHeadingRow
     
     public function model(array $row)
     {
-        // dd($row);
+        if (!isset($row['nim']) || empty(trim($row['nim']))) {
+            return null;
+        }
+
         $gender = isset($row['jenis_kelamin']) && strtoupper($row['jenis_kelamin']) === 'L' ? 'Laki-laki' : (isset($row['jenis_kelamin']) && strtoupper($row['jenis_kelamin']) === 'P' ? 'Perempuan' : 'Lainnya');
         $programStudi = isset($row['kode_prodi']) ? ProgramStudi::where('kode', strval($row['kode_prodi']))->first() : null;
         $programStudiId = $programStudi ? $programStudi->id : null;

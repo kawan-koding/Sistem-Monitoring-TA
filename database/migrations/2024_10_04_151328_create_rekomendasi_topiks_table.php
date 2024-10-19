@@ -17,6 +17,8 @@ return new class extends Migration
             $table->foreignId('jenis_ta_id')->nullable()->references('id')->on('jenis_tas')->onDelete('cascade');
             $table->text('judul');
             $table->text('deskripsi');
+            $table->enum('status',['Menunggu','Ditolak','Disetujui']);
+            $table->text('catatan')->nullable();
             $table->enum('tipe',['Kelompok','Individu']);
             $table->bigInteger('kuota');
             $table->timestamps();

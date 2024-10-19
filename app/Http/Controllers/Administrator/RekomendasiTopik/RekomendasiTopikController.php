@@ -23,12 +23,16 @@ class RekomendasiTopikController extends Controller
     {
         $user = Auth::user();
         $dosen = Dosen::where('id', $user->userable_id)->first();
-        if($user->hasRole('Dosen')) {
-            $query = RekomendasiTopik::with(['dosen', 'jenisTa', 'ambilTawaran'])->where('dosen_id', $dosen->id)->get();
-        } else {
-            $query = RekomendasiTopik::with(['dosen', 'jenisTa', 'ambilTawaran.mahasiswa'])->where('kuota', '!=', '0')->get();
+        $query = RekomendasiTopik::with(['dosen', 'jenisTa', 'ambilTawaran']);
+        if ($user->hasRole('Dosen')) {
+            $query->where('dosen_id', $dosen->id);
         }
+        if ($user->hasRole('Mahasiswa')) {
+            $query->where('kuota', '!=', '0')->where('status', 'Disetujui');
+        }
+        $q = $query->get();
 
+        // dd($q);
         $data = [
             'title' => 'Tawaran Tugas Akhir',
             'mods' => 'rekomendasi_topik',
@@ -42,7 +46,7 @@ class RekomendasiTopikController extends Controller
                     'is_active' => true
                 ]
             ],
-            'data' => $query,
+            'data' => $q,
             'jenisTa' => JenisTa::all(),
         ];
         return view('administrator.rekomendasi-topik.index', $data);
@@ -66,8 +70,8 @@ class RekomendasiTopikController extends Controller
             }
 
             $kuota = (int) $request->kuota;
-            $request->merge(['dosen_id' => $dosen->id, 'kuota' => $kuota, 'jenis_ta_id' => $jenis]);                   
-            RekomendasiTopik::create($request->only(['dosen_id','jenis_ta_id', 'judul', 'tipe', 'kuota', 'deskripsi']));
+            $request->merge(['dosen_id' => $dosen->id, 'kuota' => $kuota, 'jenis_ta_id' => $jenis, 'status' => 'Menunggu']);                   
+            RekomendasiTopik::create($request->only(['dosen_id','jenis_ta_id', 'judul', 'tipe', 'kuota', 'deskripsi', 'status']));
             return redirect()->route('apps.rekomendasi-topik')->with('success', 'Data berhasil ditambahkan');
         } catch (\Exception $e) {
             return redirect()->route('apps.rekomendasi-topik')->with('error', $e->getMessage());
@@ -90,8 +94,8 @@ class RekomendasiTopikController extends Controller
                 $jenis = $request->jenis_ta_id;
             }
             $kuota = (int) $request->kuota;
-            $request->merge(['kuota' => $kuota, 'jenis_ta_id' => $jenis]);   
-            $rekomendasiTopik->update($request->only(['jenis_ta_id', 'judul', 'tipe', 'kuota']));
+            $request->merge(['kuota' => $kuota, 'jenis_ta_id' => $jenis, 'status' => 'Menunggu']);   
+            $rekomendasiTopik->update($request->only(['jenis_ta_id', 'judul', 'tipe', 'kuota', 'deskripsi', 'status']));
             return redirect()->route('apps.rekomendasi-topik')->with('success', 'Data berhasil diperbarui');
         } catch (\Exception $e) {
             return redirect()->route('apps.rekomendasi-topik')->with('error', $e->getMessage());
@@ -185,6 +189,11 @@ class RekomendasiTopikController extends Controller
                 return redirect()->route('apps.rekomendasi-topik')->with('error','Anda belum terdaftar sebagai mahasiswa');
             }
 
+            $existingTawaran = AmbilTawaran::where('mahasiswa_id', $mhs->id)->where('status', '!=', 'Ditolak')->first();
+            if ($existingTawaran) {
+                return redirect()->route('apps.rekomendasi-topik')->with('error', 'Anda sudah mengambil topik');
+            }
+            
             $exists = AmbilTawaran::where('mahasiswa_id', $mhs->id)->where('rekomendasi_topik_id', $rekomendasiTopik->id)->first();
             if ($exists) {
                 return redirect()->route('apps.rekomendasi-topik')->with('error','Anda sudah mengambil topik ini');
@@ -278,6 +287,30 @@ class RekomendasiTopikController extends Controller
             return $this->successResponse('Berhasil menghapus data');
         } catch(\Exception $e) {
             return $this->exceptionResponse($e);
+        }
+    }
+
+    public function acc(RekomendasiTopik $rekomendasiTopik)
+    {
+        try {
+            $rekomendasiTopik->update(['status' => 'Disetujui', 'catatan' => null]);
+            return redirect()->route('apps.rekomendasi-topik')->with('success', 'Berhasil menyetujui data');
+        } catch (\Exception $e) {
+            return redirect()->route('apps.rekomendasi-topik')->with($e->getMessage());
+        }
+    }
+
+    public function rejectTopik(Request $request, RekomendasiTopik $rekomendasiTopik)
+    {  
+        $request->validate([
+            'catatan' => 'nullable',
+        ]);
+
+        try {
+            $rekomendasiTopik->update(['status' => 'Ditolak', 'catatan' => $request->catatan]);
+            return redirect()->route('apps.rekomendasi-topik')->with('success', 'Berhasil menolak data');
+        } catch (\Exception $e) {
+            return redirect()->route('apps.rekomendasi-topik')->with($e->getMessage());
         }
     }
 

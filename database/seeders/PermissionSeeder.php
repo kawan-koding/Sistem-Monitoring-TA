@@ -65,6 +65,7 @@ class PermissionSeeder extends Seeder
             ["name" => "read-rekomendasi-topik", "display_name" => "Lihat Rekomendasi Topik"],
             ["name" => "create-rekomendasi-topik", "display_name" => "Buat Rekomendasi Topik"],
             ["name" => "update-rekomendasi-topik", "display_name" => "Ubah Rekomendasi Topik"],
+            ["name" => "validate-rekomendasi-topik", "display_name" => "Validasi Rekomendasi Topik"],
             ["name" => "delete-rekomendasi-topik", "display_name" => "Hapus Rekomendasi Topik"],            
             ["name" => "take-rekomendasi-topik", "display_name" => "Mengambil Rekomendasi Topik"],            
             ["name" => "read-topik-yang-diambil", "display_name" => "Lihat Topik Yang Diambil"],

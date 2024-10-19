@@ -8,9 +8,19 @@ use App\Models\ProgramStudi;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 
-class DosenImport implements ToModel, WithHeadingRow
+class DosenImport implements ToModel, WithHeadingRow, WithMultipleSheets
 {
+
+    public function sheets(): array
+    {
+        // Kembalikan hanya sheet pertama untuk diproses
+        return [
+            0 => $this, // Index 0 adalah sheet pertama
+        ];
+    }
+
     /**
     * @param array $row
     *
@@ -18,8 +28,12 @@ class DosenImport implements ToModel, WithHeadingRow
     */
     public function model(array $row)
     {
+        if (!isset($row['nidn']) || empty(trim($row['nidn']))) {
+            return null;
+        }
+        
         $gender = isset($row['jenis_kelamin']) && strtoupper($row['jenis_kelamin']) === 'P' ? 'P' : 'L';
-        $programStudi = isset($row['kode_prodi']) ? ProgramStudi::where('nama', strval($row['kode_prodi']))->first() : null;
+        $programStudi = isset($row['kode_prodi']) ? ProgramStudi::where('kode', strval($row['kode_prodi']))->first() : null;
         $programStudiId = $programStudi ? $programStudi->id : null;
         $dosen = isset($row['nidn']) ? Dosen::where('nidn', $row['nidn'])->first() : null;
         if ($dosen) {

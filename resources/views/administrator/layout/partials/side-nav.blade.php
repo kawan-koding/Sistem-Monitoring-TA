@@ -49,7 +49,6 @@
                 @endcan
 
                 
-                @if (in_array(session('switchRoles'), ['Dosen','Mahasiswa','Developer']))  
                 @can(['read-rekomendasi-topik'])
                 <li>
                     <a href="{{route('apps.rekomendasi-topik')}}" class=" waves-effect">
@@ -58,7 +57,6 @@
                     </a>
                 </li>
                 @endcan
-                @endif
 
                 {{-- @can(['read-jadwal-bimbingan']) --}}
                 {{-- <li>

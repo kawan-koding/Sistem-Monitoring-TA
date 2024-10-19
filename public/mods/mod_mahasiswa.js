@@ -43,25 +43,43 @@ function editData(id, urlShow) {
     $('#myModal').modal('show')
 }
 
-function hapusData(e, url) {
-    Swal.fire({
-        title: "Are you sure ?",
-        text: "Deleted data can not be restored!",
-        type: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!"
-    }).then((result) => {
-        if (result.value) {
-            $.ajax({
-                url: url,
-                type: "get",
-                success: function (data) {
-                    window.location.reload();
-                }
-            })
-        }
-    })
-
-}
+$(document).ready(function () {
+     $(document).on('click', '*[data-toggle="delete"]', function () {
+        const url = $(this).data('url');
+        Swal.fire({
+            title: "Hapus Mahasiswa?",
+            text: "Apakah kamu yakin untuk menghapus data ini!",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Ya, Hapus!"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    url: url,
+                    type: "DELETE",
+                    data: {
+                        _token: token
+                    },
+                    success: function (data) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil!',
+                            text: data.message
+                        }).then(() => {
+                            window.location.reload();
+                        });
+                    },
+                    error: function (xhr) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: xhr.responseJSON.message
+                        });
+                    }
+                });
+            }
+        });
+    });
+});
