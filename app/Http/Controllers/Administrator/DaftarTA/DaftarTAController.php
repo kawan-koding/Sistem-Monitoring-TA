@@ -24,8 +24,17 @@ class DaftarTAController extends Controller
             $dataTa->where('status', '!=', 'draft');
         } 
         if (getInfoLogin()->hasRole('Kaprodi')) {
-            $dataTa->where('status', 'acc');
+            $user = getInfoLogin()->userable;
+            $prodi = $user->programStudi->id;
+            if($prodi) {
+                $dataTa->where('status', 'acc')->whereHas('mahasiswa', function($query) use ($prodi) {
+                    $query->where('program_studi_id', $prodi);
+                });
+            } else {
+                $dataTa->where('status', 'acc');
+            }
         }
+
         if ($request->has('tipe') && $request->tipe != 'Semua') {
             $dataTa->whereHas('mahasiswa', function($query) use ($request) {
                 $query->where('program_studi_id', $request->tipe);
@@ -193,6 +202,8 @@ class DaftarTAController extends Controller
             'tipe' => 'required',
             'doc_pemb_1' => 'nullable|mimes:pdf,docx,doc|max:5120',
             'doc_ringkasan' => 'nullable|mimes:docx,pdf|max:5120',
+            'topik_ta_new' => 'nullable',
+            'jenis_ta_new' => 'nullable',
         ],[
             'judul' => 'Judul Tugas Akhir harus diisi.',
             'pembimbing_1' => 'Pembimbing 1 harus diisi.',
@@ -253,7 +264,22 @@ class DaftarTAController extends Controller
                 $filename2 = $tugasAkhir->dokumen_ringkasan;
             }
 
-            $request->merge(['dokumen_ringkasan' => $filename2, 'dokumen_pemb_1' => $filename1, 'status' => $status]);
+             
+            if($request->jenis_ta_new !== null) {
+                $newJenis = JenisTa::create(['nama_jenis' => $request->jenis_ta_new]);
+                $jenis = $newJenis->id;
+            } else {
+                $jenis = $request->jenis_ta_id;
+            }
+
+            if($request->topik_ta_new !== null) {
+                $newTopik = Topik::create(['nama_topik' => $request->topik_ta_new]);
+                $topik = $newTopik->id;
+            } else {
+                $topik = $request->topik_id;
+            }
+
+            $request->merge(['dokumen_ringkasan' => $filename2, 'dokumen_pemb_1' => $filename1, 'status' => $status, 'jenis_ta_id' => $jenis, 'topik_id' => $topik]);
             $tugasAkhir->update($request->only(['jenis_ta_id', 'topik_id', 'judul', 'tipe', 'dokumen_pemb_1', 'dokumen_ringkasan', 'status']));
             $data = [
                 ['jenis' => 'pembimbing', 'urut' => 1, 'dosen_id' => $request->pembimbing_1],

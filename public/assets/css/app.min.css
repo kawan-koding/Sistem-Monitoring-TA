@@ -3661,3 +3661,27 @@ table.dataTable.dtr-inline.collapsed > tbody > tr > td.dtr-control:before {
 .select2-container {
     display: block !important;
 }
+
+
+/* Custom */
+
+.border-success {
+  border: 2px solid #007bff; 
+  border-radius: 15px; 
+  padding: 5px; 
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+}
+
+.border-reject {
+  border: 2px solid #FF0000; 
+  border-radius: 15px; 
+  padding: 5px; 
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+}
+
+.border-draft {
+  border: 2px solid #7D7C7C; 
+  border-radius: 15px; 
+  padding: 5px; 
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+}

@@ -47,7 +47,7 @@ $(document).ready(function () {
                     url: url,
                     type: "DELETE",
                     data: {
-                        _token: token
+                        _token: $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function (data) {
                         Swal.fire({
@@ -69,4 +69,23 @@ $(document).ready(function () {
             }
         });
     });
+});
+
+
+$('#jenis').on('change', function () {
+    let selectedValue = $(this).val();
+    if (selectedValue === 'Lainnya') {
+        $('#new_jenis').show();
+    } else {
+        $('#new_jenis').hide();
+    }
+});
+
+$('#topik').on('change', function () {
+    let selectedValue = $(this).val();
+    if (selectedValue === 'Lainnya') {
+        $('#new_topik').show();
+    } else {
+        $('#new_topik').hide();
+    }
 });

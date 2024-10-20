@@ -101,7 +101,12 @@
                                     @foreach ($jenis as $item)
                                     <option value="{{$item->id}}" {{ isset($data) && $data->jenis_ta_id == $item->id ? 'selected' : ' ' }}>{{$item->nama_jenis}}</option>
                                     @endforeach
+                                    <option value="Lainnya">Lainnya</option>
                                 </select>
+                            </div>
+                            <div class="mb-3" id="new_jenis" style="display: none;">
+                                <label for="">Masukkan Jenis</label>
+                                <input type="text" class="form-control" id="jenis_ta_new" name="jenis_ta_new" placeholder="Masukkan jenis topik">
                             </div>
                         </div>
                         <div class="col-lg-4 col-md-4 col-sm-12">
@@ -112,7 +117,12 @@
                                     @foreach ($topik as $item)
                                     <option value="{{$item->id}}" {{ isset($data) && $data->topik_id == $item->id ? 'selected' : ' ' }}>{{$item->nama_topik}}</option>
                                     @endforeach
+                                    <option value="Lainnya">Lainnya</option>
                                 </select>
+                            </div>
+                            <div class="mb-3" id="new_topik" style="display: none;">
+                                <label for="">Masukkan Topik</label>
+                                <input type="text" class="form-control" id="topik_ta_new" name="topik_ta_new" placeholder="Masukkan nama topik">
                             </div>
                         </div>
                         <div class="col-lg-4 col-md-4 col-sm-12">

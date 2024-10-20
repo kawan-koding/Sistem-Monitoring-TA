@@ -83,7 +83,7 @@
                                     <p class="fw-bold m-0">{{ $item->judul }}</p>
                                     <p class="m-0 text-muted small"><strong>Deskripsi :</strong> {{ $item->deskripsi ?? '-' }}</p>
                                     @if($item->catatan != null)
-                                    <p class="m-0 text-muted small"><strong>Catatan :</strong> <span class="text-danger"> {{ $item->catatan }}</span></p>
+                                    <p class="m-0 text-muted small">Catatan : <span class="text-danger"> {{ $item->catatan }}</span></p>
                                     @endif
                                 </td>
                                 <td>

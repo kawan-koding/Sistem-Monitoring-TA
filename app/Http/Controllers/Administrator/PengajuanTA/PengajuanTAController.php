@@ -398,7 +398,7 @@ class PengajuanTAController extends Controller
 
             if($request->hasFile('dokumen_pemb_2')){
                 $file = $request->file('dokumen_pemb_2');
-                $dokumenPemb2 = 'Pembimbing2_' . rand(0, 999999999) . '.' . $file->getClientOriginalExtension();
+                $dokumenPemb2 = 'Pembimbing_2_' . rand(0, 999999999) . '.' . $file->getClientOriginalExtension();
                 $file->move(public_path('storage/files/tugas-akhir'), $dokumenPemb2);
                 if($pengajuanTA->file_persetujuan_pemb2) {
                     File::delete(public_path('storage/files/tugas-akhir/'.$pengajuanTA->file_persetujuan_pemb_2));

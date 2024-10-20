@@ -30,7 +30,7 @@ class SettingSeeder extends Seeder
                 'type' => 'general',
                 'key' => 'app_copyright',
                 'name' => 'Copyright Aplikasi',
-                'value' => 'Copyright © 2022. All rights reserved.'
+                'value' => 'Copyright © 2024. All rights reserved.'
             ],
             [
                 'type' => 'file',

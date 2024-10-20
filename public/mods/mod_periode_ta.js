@@ -47,7 +47,7 @@ $(document).ready(function () {
                     url: url,
                     type: "DELETE",
                     data: {
-                        _token: token
+                        _token: $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function (data) {
                         Swal.fire({

@@ -61,7 +61,9 @@
                                                 <h5 class="fw-bold m-0">{{ $item->judul }}</h5>
                                                 <p class="m-0 text-muted small">{{ $item->topik->nama_topik }} -
                                                     {{ $item->jenis_ta->nama_jenis }}</p>
-                                                <p class="m-0 text-muted small">Catatan : {{ $item->catatan ?? '-' }}</p>
+                                                @if($item->catatan != null)                                                    
+                                                    <p class="m-0 text-muted small">Catatan : <span class="text-danger">{{ $item->catatan ?? '-' }}</span></p>
+                                                @endif
                                             </td>
                                             <td>{{$item->mahasiswa->nama_mhs}}</td> 
                                             <td>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Administrator\User;
 use File;
 use App\Models\Role;
 use App\Models\User;
+use App\Models\Dosen;
 use App\Models\Mahasiswa;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -92,8 +93,13 @@ class UserController extends Controller
                 $user->update($request->only(['name', 'username', 'email', 'image']));
             }
             $user->syncRoles($request->roles);
-            $mahasiswa = $user->userable;
-            $mahasiswa->update(['nama_mhs' => $user->name,'email' => $user->email,'nim' => $user->username]);
+            if($user->userable_type === Mahasiswa::class) {
+                $mahasiswa = $user->userable;
+                $mahasiswa->update(['nama_mhs' => $user->name,'email' => $user->email,'nim' => $user->username]);
+            } elseif($user->userable_type === Dosen::class) {
+                $dosen = $user->userable;
+                $dosen->update(['name' => $user->name, 'email' => $user->email, 'nidn' => $user->username]);
+            }
             
             return redirect()->route('apps.users')->with('success', 'Data berhasil diupdate');
         } catch (\Exception $e) {

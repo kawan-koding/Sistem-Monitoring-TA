@@ -94,8 +94,8 @@ class RekomendasiTopikController extends Controller
                 $jenis = $request->jenis_ta_id;
             }
             $kuota = (int) $request->kuota;
-            $request->merge(['kuota' => $kuota, 'jenis_ta_id' => $jenis, 'status' => 'Menunggu']);   
-            $rekomendasiTopik->update($request->only(['jenis_ta_id', 'judul', 'tipe', 'kuota', 'deskripsi', 'status']));
+            $request->merge(['kuota' => $kuota, 'jenis_ta_id' => $jenis, 'status' => 'Menunggu', 'catatan' => null]);   
+            $rekomendasiTopik->update($request->only(['jenis_ta_id', 'judul', 'tipe', 'kuota', 'deskripsi', 'status', 'catatan']));
             return redirect()->route('apps.rekomendasi-topik')->with('success', 'Data berhasil diperbarui');
         } catch (\Exception $e) {
             return redirect()->route('apps.rekomendasi-topik')->with('error', $e->getMessage());
