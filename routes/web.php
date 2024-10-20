@@ -64,9 +64,6 @@ Route::prefix('apps')->middleware('auth')->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('apps.dashboard');
     Route::get('profile', [ProfileController::class, 'index'])->name('apps.profile');
     Route::post('{user}/update', [ProfileController::class, 'update'])->name('apps.profile.update');
-    Route::get('/refresh-csrf', function () {
-        return response()->json(['token' => csrf_token()]);
-    });
 
 
     Route::prefix('users')->middleware('can:read-users')->group(function () {
@@ -74,7 +71,7 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::post('store', [UserController::class, 'store'])->name('apps.users.store')->middleware('can:create-users');
         Route::get('{user}/show', [UserController::class, 'show'])->name('apps.users.show');
         Route::post('{user}/update', [UserController::class, 'update'])->name('apps.users.update')->middleware('can:update-users');
-        Route::get('{user}/delete', [UserController::class, 'destroy'])->name('apps.users.delete')->middleware('can:delete-users');
+        Route::delete('{user}/delete', [UserController::class, 'destroy'])->name('apps.users.delete')->middleware('can:delete-users');
     });
 
     Route::prefix('roles')->middleware('can:read-roles')->group(function() {

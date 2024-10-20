@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Administrator\User;
 
+use File;
 use App\Models\Role;
 use App\Models\User;
+use App\Models\Mahasiswa;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\User\UserRequest;
-use File;
 
 class UserController extends Controller
 {
@@ -72,11 +73,11 @@ class UserController extends Controller
     public function update(UserRequest $request, User $user)
     {
         try {
-            if($request->hasFile('file')) {
-                $file = $request->file('file');
+            if($request->hasFile('picture')) {
+                $file = $request->file('picture');
                 $filename = 'Users_'. rand(0, 999999999) .'_'. rand(0, 999999999) .'.'. $file->getClientOriginalExtension();
                 $file->move(public_path('storage/images/users'), $filename);
-                if($user->image !== 'default.jpg') {
+                if($user->image !== 'default.png') {
                     File::delete(public_path('storage/images/users/'. $user->image));
                 }
             } else {
@@ -84,8 +85,15 @@ class UserController extends Controller
             }
 
             $request->merge(['image' => $filename]);
-            $user->update($request->only(['name', 'username', 'email', 'image']));
+            if ($request->filled('password')) {
+                $request->merge(['password' => Hash::make($request->password)]);
+                $user->update($request->only(['name', 'username', 'email', 'image', 'password']));
+            } else {
+                $user->update($request->only(['name', 'username', 'email', 'image']));
+            }
             $user->syncRoles($request->roles);
+            $mahasiswa = $user->userable;
+            $mahasiswa->update(['nama_mhs' => $user->name,'email' => $user->email,'nim' => $user->username]);
             
             return redirect()->route('apps.users')->with('success', 'Data berhasil diupdate');
         } catch (\Exception $e) {
@@ -96,10 +104,14 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         try {
+            if ($user->userable_type === Mahasiswa::class) {
+                $mahasiswa = $user->userable;
+                $mahasiswa->delete();
+            }
             $user->delete();
-            return redirect()->route('apps.users')->with('success', 'Data berhasil dihapus');
+            return $this->successResponse('Data berhasil di hapus');
         } catch (\Exception $e) {
-            return redirect()->route('apps.users')->with('error', $e->getMessage());
+            return $this->exceptionResponse($e);
         }
     }
 }

@@ -16,7 +16,7 @@ class ProgramStudiSeeder extends Seeder
         ProgramStudi::insert([
             [
                 'jurusan_id' => 1,
-                'kode' => '0891',
+                'kode' => '58302',
                 'nama' => 'S1 Terapan Teknologi Rekayasa Komputer',
             ],
             [
@@ -26,7 +26,7 @@ class ProgramStudiSeeder extends Seeder
             ],
             [
                 'jurusan_id' => 1,
-                'kode' => '3253',
+                'kode' => '61316',
                 'nama' => 'S1 Terapan Bisnis Digital',
             ],
 

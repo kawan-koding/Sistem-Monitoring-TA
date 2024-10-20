@@ -15,7 +15,6 @@ class ProfileController extends Controller
     public function index()
     {
         $user = Auth::user();
-
         $bidangKeahlian = $user->userable->bidang_keahlian ? explode(',', $user->userable->bidang_keahlian) : [];
         $data = [
             'title' => 'Profile',
@@ -94,8 +93,6 @@ class ProfileController extends Controller
                     'jenis_kelamin.required' => 'Jenis Kelamin harus diisi',
                     'file.mimes' => 'File harus berupa png, jpg, atau jpeg',
                 ]);
-
-                dd($user);
                 $user->name = $request->name;
                 $user->userable->name = $request->name;
                 $user->email = $request->email;

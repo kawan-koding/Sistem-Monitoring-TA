@@ -65,7 +65,7 @@
                                <td>{{ implode(', ', $item->getRoleNames()->toArray()) }}</td>
                                 <td>
                                     <a href="javascript:void(0);" onclick="editData('{{ $item->id }}', '{{route('apps.users.show', $item->id)}}')" class="btn btn-outline-primary btn-sm mx-1 my-1"><i class="bx bx-edit-alt"></i></a>
-                                    <a href="javascript:void(0);" onclick="hapusData('{{ $item->id }}', '{{route('apps.users.delete', $item->id)}}')" class="btn btn-outline-dark btn-sm mx-1 my-1"><i class="bx bx-trash"></i></a>
+                                    <button data-toggle="delete" data-url="{{route('apps.users.delete', $item->id)}}" class="btn btn-outline-dark btn-sm mx-1 my-1"><i class="bx bx-trash"></i></a>
                                 </td>
                             </tr>
                             @endforeach

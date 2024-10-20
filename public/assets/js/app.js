@@ -122,13 +122,3 @@ $('.modal').on('hidden.bs.modal', function () {
         FilePond.find(this).removeFiles();
     });
 });
-
-function refreshCsrfToken() {
-    $.get('/refresh-csrf').done(function (data) {
-        $('meta[name="csrf-token"]').attr('content', data.token);
-        if (callback) callback(data.token);
-    }).fail(function () {
-        console.error('Failed to refresh CSRF token.');
-    });
-}
-setInterval(refreshCsrfToken, 300000);
