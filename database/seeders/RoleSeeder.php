@@ -75,6 +75,8 @@ class RoleSeeder extends Seeder
             'read-rekomendasi-topik','create-rekomendasi-topik','update-rekomendasi-topik','delete-rekomendasi-topik',
             'read-nilai', 'create-nilai',
             'read-rekapitulasi-nilai', 'create-rekapitulasi-nilai',
+            'read-daftar-bimbingan',
+            'read-jadwal',
         ]);
 
         $mahasiswa->givePermissionTo([

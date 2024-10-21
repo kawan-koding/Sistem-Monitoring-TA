@@ -58,22 +58,22 @@
                 </li>
                 @endcan
 
-                {{-- @can(['read-jadwal-bimbingan']) --}}
-                {{-- <li>
+                @can(['read-daftar-bimbingan'])
+                <li>
                     <a href="#" class=" waves-effect">
                         <i class="mdi mdi-file-edit-outline"></i>
                         <span>Daftar Bimbingan</span>
                     </a>
-                </li> --}}
-                {{-- @endcan --}}
+                </li>
+                @endcan
 
-                {{-- @can(['read-jadwal-uji']) --}}
-                {{-- <li>
-                    <a href="#" class=" waves-effect">
+                {{-- @can(['read-jadwal']) --}}
+                <li>
+                    <a href="{{route('apps.jadwal')}}" class=" waves-effect">
                         <i class="mdi mdi-calendar-text"></i>
-                        <span>Jadwal Uji</span>
+                        <span>Jadwal</span>
                     </a>
-                </li> --}}
+                </li>
                 {{-- @endcan --}}
                 
                 @can(['read-pengajuan-tugas-akhir'])

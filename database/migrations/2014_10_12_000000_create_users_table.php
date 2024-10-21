@@ -19,7 +19,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->nullable();
             $table->string('image')->nullable()->default('default.png');
-            $table->tinyInteger('is_active')->nullable()->default(true);
+            $table->boolean('is_active')->nullable()->default(true);
             $table->string('userable_type')->nullable();
             $table->bigInteger('userable_id')->nullable();
             $table->rememberToken();

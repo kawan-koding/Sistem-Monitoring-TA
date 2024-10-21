@@ -17,6 +17,7 @@ use App\Http\Controllers\Administrator\Role\RoleController;
 use App\Http\Controllers\Administrator\User\UserController;
 use App\Http\Controllers\Administrator\Dosen\DosenController;
 
+use App\Http\Controllers\Administrator\Jadwal\JadwalController;
 use App\Http\Controllers\Administrator\JenisTA\JenisTAController;
 use App\Http\Controllers\Administrator\Jurusan\JurusanController;
 use App\Http\Controllers\Administrator\Profile\ProfileController;
@@ -234,6 +235,9 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::get('lembar-penilaian',[TemplateController::class, 'lembarPenilaian'])->name('apps.templates.lembar-penilaian');
     });
     
+    Route::prefix('jadwal')->group( function(){
+        Route::get('',[JadwalController::class, 'index'])->name('apps.jadwal');
+    });
     Route::get('penilaian', function(){
         return view('administrator.template.lembar-penilaian');
     }); 
