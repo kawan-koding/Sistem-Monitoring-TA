@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\Dosen;
 use App\Models\Mahasiswa;
 use App\Models\User;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
@@ -118,6 +120,32 @@ class ProfileController extends Controller
             return redirect()->route('apps.profile')->with('success', 'Data berhasil diperbarui');
         } catch (\Exception $e) {
             return redirect()->route('apps.profile')->with('error', $e->getMessage());
+        }
+    }
+
+    public function updatePassword(User $user, Request $request)
+    {
+        $request->validate([
+            'passwordOld' => 'required',
+            'passwordNew' => 'required',
+            'confirmPassword' => 'required|same:passwordNew',
+        ],[
+            'passwordOld.required' => 'Password lama harus diisi',
+            'passwordNew.required' => 'Password baru harus diisi',
+            'confirmPassword.required' => 'Konfirmasi password harus diisi',
+            'confirmPassword.same' => 'Konfirmasi password tidak sama dengan password baru',
+        ]);
+
+        try {
+            if(Hash::check($request->passwordOld, $user->password)) {
+                $user->update([
+                    'password' => Hash::make($request->passwordNew)
+                ]);
+            }
+
+            return redirect()->back()->with('success', 'Password berhasil diperbarui');
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
 }
