@@ -8,13 +8,20 @@
                 @if (getInfoLogin()->hasRole('Admin'))
                     <form method="GET" action="{{ route('apps.daftar-ta') }}">
                         <div class="row">
-                            <div class="col-md-6 col-sm-12">
-                                <select name="tipe" id="tipe" class="form-control" onchange="this.form.submit()">
-                                    <option value="Semua" {{ request('tipe') == 'Semua' ? 'selected' : '' }}>Semua</option>
-                                    @foreach ($prodi as $item)
-                                        <option value="{{ $item->id }}" {{ request('tipe') == $item->id ? 'selected' : '' }}>{{ $item->nama }}</option>
-                                    @endforeach
-                                </select>
+                            <div class="col-md-5 col-sm-12">
+                                <div class="position-relative">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Filter :</span>
+                                        </div>
+                                        <select name="tipe" id="tipe" class="form-control" onchange="this.form.submit()">
+                                            <option value="Semua" {{ request('tipe') == 'Semua' ? 'selected' : '' }}>Semua</option>
+                                            @foreach ($prodi as $item)
+                                                <option value="{{ $item->id }}" {{ request('tipe') == $item->id ? 'selected' : '' }}>{{ $item->nama }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </form>

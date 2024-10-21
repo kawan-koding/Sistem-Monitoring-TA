@@ -33,13 +33,15 @@
                     <label for="">Filter Tanggal</label>
                     <div class="inner mb-3 row">
                         <div class="col-md-8 col-sm-6">
-                            <input type="date" name="tanggal" class="inner form-control" placeholder="cari berdasarkan tanggal">
-                        </div>
-                        <div class="col-md-2 col-sm-3">
-                            <button type="submit" class="btn btn-primary w-100 inner">Filter</button>
-                        </div>
-                        <div class="col-md-2 col-sm-3">
-                            <a href="{{route('apps.jadwal-seminar')}}" class="btn btn-secondary w-100 inner">Reset</a>
+                            <div class="position-relative">
+                                <div class="input-group">
+                                    <input type="date" name="tanggal" class="inner form-control" placeholder="cari berdasarkan tanggal">
+                                    <div class="input-group-prepend">
+                                        <button type="submit" class="btn btn-primary input-group-text inner">Filter</button>
+                                        <a href="{{route('apps.jadwal-seminar')}}" class="btn btn-secondary input-group-text inner">Reset</a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </form>

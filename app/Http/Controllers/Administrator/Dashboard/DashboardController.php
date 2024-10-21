@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Administrator\Dashboard;
 
+use App\Models\Dosen;
+use App\Models\Mahasiswa;
 use App\Models\TugasAkhir;
 use Illuminate\Http\Request;
 use App\Models\RekomendasiTopik;
@@ -11,7 +13,15 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $dataMahasiswa = $this->mahasiswa();
+        $dataMahasiswa = null;
+        $admin = null;
+        if(getInfoLogin()->hasRole('Mahasiswa')){
+            $dataMahasiswa = $this->mahasiswa();
+        }
+        if(getInfoLogin()->hasRole('Admin')){
+            $admin = $this->admin();
+        }
+
         $data = [
             'title' => 'Dashboard',
             'breadcrumbs' => [
@@ -21,6 +31,7 @@ class DashboardController extends Controller
                 ],
             ],
             'dataMahasiswa' => $dataMahasiswa,
+            'admin' => $admin,
         ];
 
         return view('administrator.dashboard.index', $data);
@@ -35,6 +46,19 @@ class DashboardController extends Controller
             'mhs' => $mhs,
             'topik' => $topik,
             'tugasAkhir' => $tugasAkhir
+        ];
+    }
+
+    private function admin()
+    {
+        $dosen = Dosen::all();
+        $mhs = Mahasiswa::all();
+        $tugasAkhir = TugasAkhir::all();
+
+        return [
+            'dosen' => $dosen,
+            'mhs' => $mhs,
+            'ta' => $tugasAkhir
         ];
     }
 }

@@ -20,9 +20,9 @@ class DaftarTAController extends Controller
     {
         $periode = PeriodeTa::where('is_active', 1)->first();
         $dataTa = TugasAkhir::with(['mahasiswa','bimbing_uji','periode_ta','topik','jenis_ta'])->where('periode_ta_id', $periode->id);    
-        if (getInfoLogin()->hasRole('Admin')) {
-            $dataTa->where('status', '!=', 'draft');
-        } 
+        // if (getInfoLogin()->hasRole('Admin')) {
+        //     $dataTa->where('status', '!=', 'draft');
+        // } 
         if (getInfoLogin()->hasRole('Kaprodi')) {
             $user = getInfoLogin()->userable;
             $prodi = $user->programStudi->id;
