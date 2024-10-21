@@ -64,6 +64,7 @@ Route::prefix('apps')->middleware('auth')->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('apps.dashboard');
     Route::get('profile', [ProfileController::class, 'index'])->name('apps.profile');
     Route::post('{user}/update', [ProfileController::class, 'update'])->name('apps.profile.update');
+    Route::post('{user}/updatePassword', [ProfileController::class, 'updatePassword'])->name('apps.profile.update-password');
 
 
     Route::prefix('users')->middleware('can:read-users')->group(function () {
