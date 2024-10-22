@@ -18,8 +18,10 @@
                                 <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
                             </button>
                             <div class="dropdown-menu dropdown-menu-end">
-                                @if(!getInfoLogin()->hasRole('Admin') &&  session('switch_role') != 'Admin' || !getInfoLogin()->hasRole('Developer') && session('switch_role') != 'Developer')
-                                    <a class="dropdown-item" href="{{route('apps.profile')}}"><i class="bx bx-user font-size-16 align-middle me-1"></i> Profile</a>
+                                <!-- item-->
+                                @if((session('switchRoles') != 'Admin' && getInfoLogin()->hasRole('Admin')) || (session('switchRoles') != 'Developer' && getInfoLogin()->hasRole('Developer')))
+                                <a class="dropdown-item" href="{{route('apps.profile')}}"><i class="bx bx-user font-size-16 align-middle me-1"></i>
+                                    Profile</a>
                                 @endif
                                 @if(session('switchRoles') == 'Admin' ||session('switchRoles') == 'Developer')
                                     <a class="dropdown-item" href="{{ route('apps.settings')}}"><i class="bx bx-cog font-size-16 align-middle me-1"></i>Pengaturan</a>

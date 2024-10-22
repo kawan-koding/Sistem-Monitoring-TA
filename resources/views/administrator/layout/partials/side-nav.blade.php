@@ -84,6 +84,12 @@
                             <span>Tugas akhir</span>
                         </a>
                     </li>
+                    <li>
+                        <a href="{{ route('apps.jadwal-seminar')}}" class=" waves-effect">
+                            <i class="bx bx-calendar"></i>
+                            <span>Jadwal Seminar</span>
+                        </a>
+                    </li>
                     @endif
                 @endcan
 
@@ -154,9 +160,11 @@
                                 @can(['read-pembagian-dosen'])
                                 <li><a href="{{route('apps.pembagian-dosen')}}">Pembagian Dosen</a></li>
                                 @endcan
-                                @can('read-jadwal-seminar')
-                                <li><a href="{{route('apps.jadwal-seminar')}}">Jadwal Seminar</a></li>
-                                @endcan
+                                @if ((getInfoLogin()->hasRole('Admin') && (session('switchRoles') == 'Admin') || getInfoLogin()->hasRole('Mahasiswa')))    
+                                    @can('read-jadwal-seminar')
+                                    <li><a href="{{route('apps.jadwal-seminar')}}">Jadwal Seminar</a></li>
+                                    @endcan
+                                @endif
                             </ul>
                         </li>
                     @endcanany

@@ -55,7 +55,7 @@
                             JPG/JPEG/PNG
                         </p>
                         <div class="row">
-                            @if (session('switchRoles') == 'Dosen' || session('switchRoles') == 'Kaprodi')
+                            @if (getInfoLogin()->hasRole('Dosen') || getInfoLogin()->hasRole('Kaprodi'))
                                 <div class="col-sm-12 col-md-6 col-lg-6">
                                     <div class="mb-3">
                                         <label for="">NIP/NIPPPK/NIK <span class="text-danger">*</span></label>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Administrator\JadwalSeminar;
 
 use App\Http\Controllers\Controller;
 use App\Models\JadwalSeminar;
+use App\Models\Mahasiswa;
 use App\Models\PeriodeTa;
 use App\Models\Ruangan;
 use Illuminate\Http\Request;
@@ -31,6 +32,17 @@ class JadwalSeminarController extends Controller
             $query = $query->get();
 
             // dd($query);
+        }
+        if(getInfoLogin()->hasRole('Mahasiswa')) {
+            $myId = getInfoLogin()->userable;
+            $mahasiswa = Mahasiswa::where('id', $myId->id)->first();
+            // dd($myId);
+            if($mahasiswa) {
+                $query = JadwalSeminar::whereHas('tugas_akhir', function ($q) use($periode, $mahasiswa) {
+                    $q->where('periode_ta_id', $periode->id)->where('mahasiswa_id', $mahasiswa->id);
+                })->get();
+                // dd($query);
+            }
         }
 
         $data = [
