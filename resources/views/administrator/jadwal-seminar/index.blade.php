@@ -51,19 +51,19 @@
             <ul class="nav nav-tabs nav-tabs-custom nav-justified mt-1 mb-2" role="tablist">
                 <li class="nav-item">
                     <a class="nav-link @if(url()->full() == route('apps.jadwal-seminar')) active @endif" href="{{ route('apps.jadwal-seminar')}}">
-                        <span class="d-block d-sm-none"><i class="mdi mdi-check-circle-outline"></i></span>
+                        <span class="d-block d-sm-none"><i class="bx bx-timer"></i></span>
                         <span class="d-none d-sm-block">Belum Terjadwal</span>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link @if(url()->full() == route('apps.jadwal-seminar', ['status' => 'sudah_terjadwal'])) active @endif" href="{{ route('apps.jadwal-seminar', ['status' => 'sudah_terjadwal']) }}">
-                        <span class="d-block d-sm-none"><i class="mdi mdi-av-timer"></i></span>
+                        <span class="d-block d-sm-none"><i class="bx bx-list-check"></i></span>
                         <span class="d-none d-sm-block">Sudah Terjadwal</span>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link @if(url()->full() == route('apps.jadwal-seminar', ['status' => 'telah_seminar'])) active @endif" href="{{ route('apps.jadwal-seminar', ['status' => 'telah_seminar']) }}">
-                        <span class="d-block d-sm-none"><i class="mdi mdi-av-timer"></i></span>
+                        <span class="d-block d-sm-none"><i class="bx bx-check-circle"></i></span>
                         <span class="d-none d-sm-block">Telah Diseminarkan</span>
                     </a>
                 </li>
@@ -137,8 +137,8 @@
                             </td>
                             <td>
                                 <strong>{{isset($item->ruangan->nama_ruangan) ? $item->ruangan->nama_ruangan : '-'}}</strong>
-                                <p class="m-0">Tanggal :{{$item->tanggal ? Carbon\Carbon::parse($item->tanggal)->format('d/m/Y') : ' -'}}</p>
-                                <p class="m-0">Waktu :{{$item->jam_mulai ? Carbon\Carbon::parse($item->jam_mulai)->format('H:i') : ''}} - {{$item->jam_selesai ? Carbon\Carbon::parse($item->jam_selesai)->format('H:i') : ''}}</p>
+                                <p class="m-0">Tanggal: {{$item->tanggal ? Carbon\Carbon::parse($item->tanggal)->format('d/m/Y') : ' -'}}</p>
+                                <p class="m-0">Waktu: {{$item->jam_mulai ? Carbon\Carbon::parse($item->jam_mulai)->format('H:i') : ''}} - {{$item->jam_selesai ? Carbon\Carbon::parse($item->jam_selesai)->format('H:i') : ''}}</p>
                             </td>
                             @if (getInfoLogin()->hasRole('Admin'))
                             <td class="text-align-center justify-content-center">
@@ -157,12 +157,13 @@
                                 @if (getInfoLogin()->hasRole('Admin'))
                                 @can('update-jadwal-seminar')
                                     <a href="{{route('apps.jadwal-seminar.edit', ['jadwalSeminar' => $item->id])}}" class="btn btn-sm btn-primary mb-1"><i class="bx bx-calendar-event"></i></a>
-                                    @if ($item->status == 'sudah_terjadwal')
+                                    {{-- @if ($item->status == 'sudah_terjadwal')
                                         <a href="" class="btn btn-sm btn-primary mb-1"><i class="bx bx-check"></i></a>
-                                    @endif
+                                    @endif --}}
                                 @endcan
                                 @else
-                                <a href="#" class="btn btn-sm btn-primary mb-1"><i class="bx bx-search" style="font-size: 18px"></i></a>
+                                <a href="#" class="btn btn-sm btn-outline-primary mb-1"><i class="bx bx-search"></i></a>
+                                <a href="#" class="btn btn-sm btn-outline-secondary mb-1"><i class="bx bx-file"></i></a>
                                 @endif
                             </td>
                         </tr>

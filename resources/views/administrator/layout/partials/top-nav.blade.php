@@ -44,7 +44,7 @@
                             </button>
                             <div class="dropdown-menu dropdown-menu-end">
                                 <!-- item-->
-                                @if(session('switchRoles') != 'Admin' ||session('switchRoles') != 'Developer')
+                                @if((session('switchRoles') != 'Admin' && getInfoLogin()->hasRole('Admin')) || (session('switchRoles') != 'Developer' && getInfoLogin()->hasRole('Developer')))
                                 <a class="dropdown-item" href="{{route('apps.profile')}}"><i class="bx bx-user font-size-16 align-middle me-1"></i>
                                     Profile</a>
                                 @endif
