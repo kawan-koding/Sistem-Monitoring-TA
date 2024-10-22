@@ -243,7 +243,7 @@ class RekomendasiTopikController extends Controller
             $ambilTawaran->update(['status' => 'Disetujui']);
             $mahasiswa = $ambilTawaran->mahasiswa;
             if ($mahasiswa) {
-                Mail::to($mahasiswa->email)->send(new RekomendasiTopikMail($rekomendasiTopik, $mahasiswa));
+                // Mail::to($mahasiswa->email)->send(new RekomendasiTopikMail($rekomendasiTopik, $mahasiswa));
             }
             $rekomendasiTopik->decrement('kuota', 1);
             
