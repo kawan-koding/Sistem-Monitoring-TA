@@ -163,7 +163,11 @@
                                 @endcan
                                 @else
                                 <a href="#" class="btn btn-sm btn-outline-primary mb-1"><i class="bx bx-search"></i></a>
-                                <a href="#" class="btn btn-sm btn-outline-secondary mb-1"><i class="bx bx-file"></i></a>
+                                <a href="javascript:void(0);" 
+                                    onclick="uploadFileSeminar('{{$item->id}}', '{{route('apps.jadwal-seminar.unggah-berkas', $item->id)}}')" 
+                                    class="btn btn-sm btn-outline-secondary mb-1">
+                                        <i class="bx bx-file"></i>
+                                </a>
                                 @endif
                             </td>
                         </tr>

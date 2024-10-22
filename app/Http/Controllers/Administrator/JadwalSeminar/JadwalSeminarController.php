@@ -181,4 +181,9 @@ class JadwalSeminarController extends Controller
             return redirect()->back()->with(['error' => $e->getMessage()]);
         }
     }
+
+    // public function uploadFile(Request $request)
+    // {
+
+    // }
 }

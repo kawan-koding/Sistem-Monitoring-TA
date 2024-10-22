@@ -82,7 +82,7 @@ class RoleSeeder extends Seeder
             'read-rekomendasi-topik','take-rekomendasi-topik',
             'read-topik-yang-diambil','cancel-topik-yang-diambil',
             'read-pengajuan-tugas-akhir', 'create-pengajuan-tugas-akhir', 'update-pengajuan-tugas-akhir',
-            'read-jadwal-seminar',
+            'read-jadwal-seminar', 
             'read-rekapitulasi-nilai',
 
         ]);
