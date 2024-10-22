@@ -28,7 +28,8 @@ class DosenImport implements ToModel, WithHeadingRow, WithMultipleSheets
     */
     public function model(array $row)
     {
-        if (!isset($row['nidn']) || empty(trim($row['nidn']))) {
+        $nidn = isset($row['nidn']) && !empty(trim($row['nidn'])) ? $row['nidn'] : (isset($row['nip']) ? $row['nip'] : null);
+        if (!$nidn) {
             return null;
         }
         
@@ -49,7 +50,7 @@ class DosenImport implements ToModel, WithHeadingRow, WithMultipleSheets
         } else {
             $dosen = new Dosen([
                 'nip' => isset($row['nip']) ? $row['nip'] : null,
-                'nidn' => isset($row['nidn']) ? $row['nidn'] : null,
+                'nidn' => $nidn,
                 'name' => isset($row['nama_dosen']) ? $row['nama_dosen'] : null,
                 'email' => isset($row['email']) ? $row['email'] : null,
                 'jenis_kelamin' => $gender,

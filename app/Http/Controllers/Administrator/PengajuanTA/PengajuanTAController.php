@@ -262,27 +262,12 @@ class PengajuanTAController extends Controller
     public function update(PengajuanTARequest $request, TugasAkhir $pengajuanTA)
     {
         try {
-            $ta = $pengajuanTA;
-            $fileDocPemb1 = $ta->dokumen_pemb_1;
-            $fileDocRing = $ta->dokumen_ringkasan;
-
-            $kuota = KuotaDosen::where('dosen_id', $request->pembimbing_1)->where('periode_ta_id', $ta->periode_ta_id)->first();
-            $bimbingUji = BimbingUji::with(['tugas_akhir', 'dosen'])->where('jenis', 'pembimbing')->where('urut', 1)->where('dosen_id', $request->pembimbing_1)->whereHas('tugas_akhir', function ($q) use($ta){
-                $q->where('periode_ta_id', $ta->periode_ta_id);
-            })->count();
-            $cekPemb1 = BimbingUji::where('tugas_akhir_id', $pengajuanTA->id)->where('jenis', 'pembimbing')->where('urut', 1)->first();
-
-            if($cekPemb1->dosen_id != $request->pembimbing_1){
-                if($bimbingUji >= $kuota->pembimbing_1){
-                    return redirect()->back()->with('error', 'Kuota dosen pembimbing 1 yang di pilih telah mencapai batas');
-
-                }
-            }
-
-            if($ta->status == 'reject'){
+            $fileDocPemb1 = $pengajuanTA->dokumen_pemb_1;
+            $fileDocRing = $pengajuanTA->dokumen_ringkasan;
+            if($pengajuanTA->status == 'reject'){
                 $status = 'draft';
             }else{
-                $status = $ta->status;
+                $status = $pengajuanTA->status;
             }
 
             if($request->hasFile('dokumen_pembimbing_1')){
@@ -323,7 +308,6 @@ class PengajuanTAController extends Controller
                 $topik = $request->topik;
             }
 
-
             $pengajuanTA->update([
                 'jenis_ta_id' => $jenis,
                 'topik_id' => $topik,
@@ -335,13 +319,6 @@ class PengajuanTAController extends Controller
                 'catatan' => null,
             ]);
 
-
-
-            BimbingUji::where('tugas_akhir_id', $pengajuanTA->id)->where('jenis', 'pembimbing')->where('urut', 1)->update(
-                [
-                    'dosen_id' => $request->pembimbing_1,
-                ]
-            );
             return redirect()->route('apps.pengajuan-ta')->with('success', 'Data berhasil ditambahkan');
         } catch (\Exception $e) {
             // dd($e->getMessage());

@@ -29,7 +29,7 @@ class PengajuanTARequest extends FormRequest
     public function rules(): array
     {
         return [
-            'pembimbing_1' => 'required',
+            'pembimbing_1' => $this->routeName == 'apps.pengajuan-ta.store' ? 'required' : 'nullable',
             'jenis_ta_id' => 'required',
             'topik' => 'required',
             'judul' => 'required',

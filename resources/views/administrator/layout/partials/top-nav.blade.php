@@ -30,7 +30,7 @@
                                     <a class="dropdown-item text-danger" href="{{route('logout')}}"><i class="bx bx-power-off font-size-16 align-middle me-1 text-danger"></i> Logout</a>
                             </div>
                         </div>
-
+                        
 
                     </div>
                     <div>

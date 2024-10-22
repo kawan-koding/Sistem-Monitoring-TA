@@ -67,7 +67,6 @@ Route::prefix('apps')->middleware('auth')->group(function () {
     Route::post('{user}/update', [ProfileController::class, 'update'])->name('apps.profile.update');
     Route::post('{user}/updatePassword', [ProfileController::class, 'updatePassword'])->name('apps.profile.update-password');
 
-
     Route::prefix('users')->middleware('can:read-users')->group(function () {
         Route::get('', [UserController::class, 'index'])->name('apps.users');
         Route::post('store', [UserController::class, 'store'])->name('apps.users.store')->middleware('can:create-users');
@@ -97,7 +96,7 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::post('store', [JurusanController::class, 'store'])->name('apps.jurusan.store')->middleware('can:create-jurusan');
         Route::get('{jurusan}/show', [JurusanController::class, 'show'])->name('apps.jurusan.show');
         Route::post('{jurusan}/update', [JurusanController::class, 'update'])->name('apps.jurusan.update')->middleware('can:update-jurusan');
-        Route::delete('{jurusan}/destroy', [JurusanController::class, 'destroy'])->name('apps.jurusan.delete')->middleware('can:delete-jurusan');
+        Route::get('{jurusan}/destroy', [JurusanController::class, 'destroy'])->name('apps.jurusan.delete')->middleware('can:delete-jurusan');
     });
 
     Route::prefix('program-studi')->middleware('can:read-program-studi')->group(function () {
@@ -165,7 +164,7 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::post('store', [RekomendasiTopikController::class, 'store'])->name('apps.rekomendasi-topik.store')->middleware('can:create-rekomendasi-topik');
         Route::get('{rekomendasiTopik}/show', [RekomendasiTopikController::class, 'show'])->name('apps.rekomendasi-topik.show'); 
         Route::post('{rekomendasiTopik}/update', [RekomendasiTopikController::class, 'update'])->name('apps.rekomendasi-topik.update')->middleware('can:update-rekomendasi-topik'); 
-        Route::delete('{rekomendasiTopik}/delete', [RekomendasiTopikController::class, 'destroy'])->name('apps.rekomendasi-topik.delete')->middleware('can:delete-rekomendasi-topik'); 
+        Route::get('{rekomendasiTopik}/delete', [RekomendasiTopikController::class, 'destroy'])->name('apps.rekomendasi-topik.delete')->middleware('can:delete-rekomendasi-topik'); 
         Route::post('{rekomendasiTopik}/mengambil-topik', [RekomendasiTopikController::class, 'ambilTopik'])->name('apps.ambil-topik');
         Route::get('{rekomendasiTopik}/detail', [RekomendasiTopikController::class, 'detail'])->name('apps.rekomendasi-topik.detail'); 
         Route::post('{rekomendasiTopik}/acc', [RekomendasiTopikController::class, 'acc'])->name('apps.rekomendasi-topik.acc');

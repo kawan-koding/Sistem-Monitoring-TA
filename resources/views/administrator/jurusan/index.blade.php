@@ -6,10 +6,11 @@
             <div class="card">
                 <div class="card-body">
                     @can('create-jurusan')
-                    <a href="javascript:void(0);" onclick="tambahData()" class="btn btn-primary"><i class="fa fa-plus"></i> Tambah</a>
+                        <a href="javascript:void(0);" onclick="tambahData()" class="btn btn-primary"><i class="fa fa-plus"></i>
+                            Tambah</a>
                     @endcan
                     <hr>
-                    @if(session('success'))
+                    @if (session('success'))
                         <div class="alert alert-success alert-dismissible fade show" role="alert">
                             <i class="mdi mdi-check-all me-2"></i> {{ session('success') }}
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
@@ -17,14 +18,14 @@
                         </div>
                     @endif
 
-                    @if(session('error'))
+                    @if (session('error'))
                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
                             <i class="mdi mdi-block-helper me-2"></i>{{ session('error') }}
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
                             </button>
                         </div>
                     @endif
-                    
+
                     @if ($errors->any())
                         <div class="alert alert-error alert-danger alert-dismissible fade show" role="alert">
                             <ul>
@@ -48,19 +49,27 @@
                             </thead>
                             <tbody>
                                 @foreach ($jurusan as $item)
-                                <tr>
-                                    <td>{{$loop->iteration}}</td>
-                                    <td>{{$item->kode}}</td>
-                                    <td>{{$item->nama}}</td>
-                                    <td>
-                                        @can('update-jurusan')
-                                        <a href="javascript:void(0);" onclick="editData('{{ $item->id }}', '{{route('apps.jurusan.show', $item->id)}}')" class="btn btn-outline-primary btn-sm mx-1 my-1"><i class="bx bx-edit-alt"></i></a>
-                                        @endcan
-                                        @can('delete-jurusan')
-                                        <button class="btn btn-outline-dark btn-sm mx-1 my-1" data-toggle="delete" data-url="{{ route('apps.jurusan.delete', $item->id) }}"><i class="bx bx-trash"></i></button>
-                                        @endcan
-                                    </td>
-                                </tr>
+                                    <tr>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $item->kode }}</td>
+                                        <td>{{ $item->nama }}</td>
+                                        <td>
+                                            @can('update-jurusan')
+                                                <a href="javascript:void(0);"
+                                                    onclick="editData('{{ $item->id }}', '{{ route('apps.jurusan.show', $item->id) }}')"
+                                                    class="btn btn-outline-primary btn-sm mx-1 my-1"><i
+                                                        class="bx bx-edit-alt"></i></a>
+                                            @endcan
+                                            @can('delete-jurusan')
+                                                <a href="javascript:void(0);"
+                                                    onclick="hapusJurusan('{{ $item->id }}', '{{ route('apps.jurusan.delete', $item->id) }}')"
+                                                    class="btn btn-outline-dark btn-sm mx-1 my-1"><i
+                                                        class="bx bx-trash"></i></a>
+                                                {{-- <button class="btn btn-outline-dark btn-sm mx-1 my-1" data-toggle="delete" data-url="{{ route('apps.jurusan.delete', $item->id) }}"><i class="bx bx-trash"></i></button> --}}
+                                                {{-- <button class="btn btn-outline-dark btn-sm mx-1 my-1" data-toggle="delete" data-url="{{ route('apps.jurusan.delete', $item->id) }}"><i class="bx bx-trash"></i></button> --}}
+                                            @endcan
+                                        </td>
+                                    </tr>
                                 @endforeach
                             </tbody>
                         </table>
@@ -70,5 +79,5 @@
         </div>
     </div>
 
-@include('administrator.jurusan.partials.modal')
+    @include('administrator.jurusan.partials.modal')
 @endsection

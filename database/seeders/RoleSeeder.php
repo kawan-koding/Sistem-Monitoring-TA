@@ -25,6 +25,11 @@ class RoleSeeder extends Seeder
             'guard_name' => 'web'
         ]);
 
+        $admin = Role::create([
+            'name' => 'Kajur',
+            'guard_name' => 'web'
+        ]);
+
         $kaprodi = Role::create([
             'name' => 'Kaprodi',
             'guard_name' => 'web'
@@ -78,6 +83,12 @@ class RoleSeeder extends Seeder
             'read-daftar-bimbingan',
             'read-jadwal',
             'create-revisi','create-penilaian',
+        ]);
+
+        $kajur->givePermissionTo([
+            'read-dashboard',
+            'read-rekomendasi-topik',
+            'read-daftar-ta',
         ]);
 
         $mahasiswa->givePermissionTo([
