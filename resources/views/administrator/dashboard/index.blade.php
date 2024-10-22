@@ -3,13 +3,11 @@
 
 @if(getInfoLogin()->hasRole('Mahasiswa'))
 
-
-
     <div class="row">
         <div class="col-md-4 col-sm-12">
-        <div class="card text-center border-{{ 
+            <div class="card text-center border-{{ 
                 isset($dataMahasiswa['tugasAkhir']) ? 
-                ($dataMahasiswa['tugasAkhir']->status == 'acc' ? 'success' : 
+                ($dataMahasiswa['tugasAkhir']->status == 'acc' ? 'accept' : 
                 ($dataMahasiswa['tugasAkhir']->status == 'draft' ? 'draft' : 'reject')) 
                 : 'draft' 
             }}">
@@ -116,6 +114,40 @@
     </div>
 @endif
 
+<div class="row">
+    <div class="col-lg-3 col-md-6 col-sm-12">
+        <div class="card text-center" style="border-radius: 15px">
+            <div class="card-body">
+                <p class="mb-2 fs-5">Total Mahasiswa Bimbingan</p>
+                <h4 class="mb-0">50</h4>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-12">
+        <div class="card text-center" style="border-radius: 15px">
+            <div class="card-body">
+                <p class="mb-2 fs-5">Total Mahasiswa Uji</p>
+                <h4 class="mb-0">50</h4>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-12">
+        <div class="card text-center" style="border-radius: 15px">
+            <div class="card-body">
+                <p class="mb-2 fs-5">Telah Seminar Proposal</p>
+                <h4 class="mb-0">50</h4>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-12">
+        <div class="card text-center" style="border-radius: 15px">
+            <div class="card-body">
+                <p class="mb-2 fs-5">Telah Sidang Akhir</p>
+                <h4 class="mb-0">50</h4>
+            </div>
+        </div>
+    </div>
+</div>
 
 @if(getInfoLogin()->hasRole('Kaprodi') && session('switchRoles') == 'Kaprodi')
 <div class="row">
@@ -154,41 +186,43 @@
 </div>
 @endif
 
+
+
 @if(getInfoLogin()->hasRole('Admin'))
-    <div class="row">
-        <div class="col-lg-3">
-            <div class="card text-center" style="border-radius: 15px">
-                <div class="card-body">
-                    <p class="mb-2 fs-5">Total Dosen</p>
-                    <h4 class="mb-0">{{ $admin['dosen']->count() }} </h4>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3">
-            <div class="card text-center" style="border-radius: 15px">
-                <div class="card-body">
-                    <p class="mb-2 fs-5">Total Mahasiswa</p>
-                    <h4 class="mb-0">{{ $admin['mhs']->count() }}</h4>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3">
-            <div class="card text-center" style="border-radius: 15px">
-                <div class="card-body">
-                    <p class="mb-2 fs-5">Total Tugas Akhir</p>
-                    <h4 class="mb-0">{{ $admin['ta']->count() }}</h4>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3">
-            <div class="card text-center" style="border-radius: 15px">
-                <div class="card-body">
-                    <p class="mb-2 fs-5">Total Topik Belum Disetujui</p>
-                    <h4 class="mb-0">50</h4>
-                </div>
+<div class="row">
+    <div class="col-lg-3 col-md-6">
+        <div class="card text-center" style="border-radius: 15px">
+            <div class="card-body">
+                <p class="mb-2 fs-5">Total Dosen</p>
+                <h4 class="mb-0">{{ $admin['dosen']->count() }} </h4>
             </div>
         </div>
     </div>
+    <div class="col-lg-3 col-md-6">
+        <div class="card text-center" style="border-radius: 15px">
+            <div class="card-body">
+                <p class="mb-2 fs-5">Total Mahasiswa</p>
+                <h4 class="mb-0">{{ $admin['mhs']->count() }}</h4>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+        <div class="card text-center" style="border-radius: 15px">
+            <div class="card-body">
+                <p class="mb-2 fs-5">Total Tugas Akhir</p>
+                <h4 class="mb-0">{{ $admin['ta']->count() }}</h4>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+        <div class="card text-center" style="border-radius: 15px">
+            <div class="card-body">
+                <p class="mb-2 fs-5">Total Topik Belum Disetujui</p>
+                <h4 class="mb-0">50</h4>
+            </div>
+        </div>
+    </div>
+</div>
 @endif
 
 @endsection

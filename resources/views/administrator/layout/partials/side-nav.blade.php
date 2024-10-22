@@ -67,14 +67,14 @@
                 </li>
                 @endcan
 
-                {{-- @can(['read-jadwal']) --}}
+                @can(['read-jadwal'])
                 <li>
                     <a href="{{route('apps.jadwal')}}" class=" waves-effect">
                         <i class="mdi mdi-calendar-text"></i>
                         <span>Jadwal</span>
                     </a>
                 </li>
-                {{-- @endcan --}}
+                @endcan
                 
                 @can(['read-pengajuan-tugas-akhir'])
                     @if(getInfoLogin()->hasRole('Mahasiswa') || getInfoLogin()->hasRole('Developer'))

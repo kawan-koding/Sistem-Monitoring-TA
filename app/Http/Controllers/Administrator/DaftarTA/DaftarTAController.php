@@ -240,8 +240,7 @@ class DaftarTAController extends Controller
                     return redirect()->back()->with('error', 'Kuota untuk dosen ' . $validasi['tipe'] . ' ' . $validasi['urut'] . ' telah penuh.');
                 }
             }
-            $status = ($tugasAkhir->status == 'reject') ? 'draft' : $tugasAkhir->status;
-            
+
             if($request->hasFile('doc_pemb_1')) {
                 $file = $request->file('doc_pemb_1');
                 $filename1 = 'TugasAkhir_'. rand(0, 999999999) .'_'. rand(0, 999999999) .'.'. $file->getClientOriginalExtension();
@@ -279,8 +278,8 @@ class DaftarTAController extends Controller
                 $topik = $request->topik_id;
             }
 
-            $request->merge(['dokumen_ringkasan' => $filename2, 'dokumen_pemb_1' => $filename1, 'status' => $status, 'jenis_ta_id' => $jenis, 'topik_id' => $topik]);
-            $tugasAkhir->update($request->only(['jenis_ta_id', 'topik_id', 'judul', 'tipe', 'dokumen_pemb_1', 'dokumen_ringkasan', 'status']));
+            $request->merge(['dokumen_ringkasan' => $filename2, 'dokumen_pemb_1' => $filename1, 'jenis_ta_id' => $jenis, 'topik_id' => $topik]);
+            $tugasAkhir->update($request->only(['jenis_ta_id', 'topik_id', 'judul', 'tipe', 'dokumen_pemb_1', 'dokumen_ringkasan']));
             $data = [
                 ['jenis' => 'pembimbing', 'urut' => 1, 'dosen_id' => $request->pembimbing_1],
                 ['jenis' => 'pembimbing', 'urut' => 2, 'dosen_id' => $request->pembimbing_2],

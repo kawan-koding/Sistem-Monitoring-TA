@@ -77,6 +77,7 @@ class RoleSeeder extends Seeder
             'read-rekapitulasi-nilai', 'create-rekapitulasi-nilai',
             'read-daftar-bimbingan',
             'read-jadwal',
+            'create-revisi','create-penilaian',
         ]);
 
         $mahasiswa->givePermissionTo([
@@ -86,8 +87,6 @@ class RoleSeeder extends Seeder
             'read-pengajuan-tugas-akhir', 'create-pengajuan-tugas-akhir', 'update-pengajuan-tugas-akhir',
             'read-jadwal-seminar',
             'read-rekapitulasi-nilai',
-
         ]);
-
     }
 }

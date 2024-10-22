@@ -18,23 +18,17 @@ class JadwalController extends Controller
             $query = BimbingUji::with(['tugas_akhir','dosen'])->where('dosen_id', $user->id)->whereHas('tugas_akhir', function($q) use ($periode) {
                 $q->where('periode_ta_id', $periode->id);
             })->get();
-            
-            dd(json_encode($query, JSON_PRETTY_PRINT));
         }
         $data = [
-            'title' => 'Jurusan',
-            'mods' => 'jurusan',
+            'title' => 'Jadwal',
+            'mods' => 'jadwal',
             'breadcrumbs' => [
                 [
                     'title' => 'Dashboard',
                     'url' => route('apps.dashboard')
                 ],
                 [
-                    'title' => 'Master Data',
-                    'is_active' => true
-                ],
-                [
-                    'title' => 'Jurusan',
+                    'title' => 'Jadwal',
                     'is_active' => true
                 ]
             ],

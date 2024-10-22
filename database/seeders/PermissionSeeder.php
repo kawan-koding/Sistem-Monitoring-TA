@@ -97,6 +97,8 @@ class PermissionSeeder extends Seeder
             ["name" => "delete-kategori-nilai", "display_name" => "Hapus Kategori Nilai"],
             ["name" => "read-daftar-bimbingan", "display_name" => "Lihat Daftar Bimbingan"],
             ["name" => "read-jadwal", "display_name" => "Lihat Jadwal"],
+            ["name" => "create-revisi", "display_name" => "Buat Revisi"],
+            ["name" => "create-penilaian", "display_name" => "Buat Penilaian"],
         ]);
         $this->insertPermission($permissions);
     }

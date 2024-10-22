@@ -236,9 +236,10 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::get('lembar-penilaian',[TemplateController::class, 'lembarPenilaian'])->name('apps.templates.lembar-penilaian');
     });
     
-    Route::prefix('jadwal')->group( function(){
+    Route::prefix('jadwal')->middleware('read-jadwal')->group( function(){
         Route::get('',[JadwalController::class, 'index'])->name('apps.jadwal');
     });
+
     Route::get('penilaian', function(){
         return view('administrator.template.lembar-penilaian');
     }); 
