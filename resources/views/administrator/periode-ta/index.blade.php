@@ -74,8 +74,8 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <button onclick="editData('{{ $item->id }}', '{{route('apps.periode.show', $item->id)}}')" class="btn btn-outline-primary btn-sm mx-1 my-1"><i class="bx bx-edit-alt"></i></button>
-                                    <button class="btn btn-outline-dark btn-sm mx-1 my-1" data-toggle="delete" data-url="{{ route('apps.periode.delete', $item->id) }}"><i class="bx bx-trash"></i></button>
+                                    <button onclick="editData('{{ $item->id }}', '{{route('apps.periode.show', $item->id)}}')" class="btn btn-outline-primary btn-sm mx-1 my-1" title="Edit"><i class="bx bx-edit-alt"></i></button>
+                                    <button class="btn btn-outline-dark btn-sm mx-1 my-1" onclick="editData('{{ $item->id }}', '{{route('apps.periode.delete', $item->id)}}')" title="Hapus"><i class="bx bx-trash"></i></button>
                                 </td>
                             </tr>
 

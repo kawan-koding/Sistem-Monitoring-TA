@@ -30,50 +30,43 @@ function editData(id, urlShow) {
     $('#myModal').modal('show')
 }
 
-$(document).ready(function () {
-    $(document).on('click', '*[data-toggle="delete"]', function () {
-        const url = $(this).data('url');
-        Swal.fire({
-            title: "Hapus Periode?",
-            text: "Apakah kamu yakin untuk menghapus data ini!",
-            type: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Ya, Hapus!"
-        }).then((result) => {
-            if (result.value) {
-                $.ajax({
-                    url: url,
-                    type: "DELETE",
-                    data: {
-                        _token: $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function (data) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Berhasil!',
-                            text: data.message
-                        }).then(() => {
-                            window.location.reload();
-                        });
-                    },
-                    error: function (xhr) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: xhr.responseJSON.message
-                        });
-                    }
-                });
-            }
-        });
+function hapusPeriode(e, url) {
+    Swal.fire({
+        title: "Hapus Periode?",
+        text: "Apakah kamu yakin untuk menghapus data ini!",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Ya, Hapus!"
+    }).then((result) => {
+        if (result.value) {
+            $.ajax({
+                url: url,
+                type: "GET",
+                success: function (data) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil!',
+                        text: data.message
+                    }).then(() => {
+                        window.location.reload();
+                    });
+                },
+                error: function (xhr) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: xhr.responseJSON.message
+                    });
+                }
+            });
+        }
     });
-});
+}
 
 function changeIsActive(url, currentStatus) {
     let active = currentStatus == 0 ? 1 : 0;
-
     Swal.fire({
         title: 'Konfirmasi',
         text: active === 1 ? "Apakah Anda yakin ingin mengaktifkan periode ini?" : "Apakah Anda yakin ingin menonaktifkan periode ini?",
@@ -88,9 +81,6 @@ function changeIsActive(url, currentStatus) {
             $.ajax({
                 url: url + `?is=` + active,
                 type: "get",
-                data: {
-                    _token: token
-                },
                 success: function (data) {
                     Swal.fire({
                         icon: 'success',

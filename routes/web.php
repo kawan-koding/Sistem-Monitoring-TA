@@ -72,7 +72,7 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::post('store', [UserController::class, 'store'])->name('apps.users.store')->middleware('can:create-users');
         Route::get('{user}/show', [UserController::class, 'show'])->name('apps.users.show');
         Route::post('{user}/update', [UserController::class, 'update'])->name('apps.users.update')->middleware('can:update-users');
-        Route::delete('{user}/delete', [UserController::class, 'destroy'])->name('apps.users.delete')->middleware('can:delete-users');
+        Route::get('{user}/delete', [UserController::class, 'destroy'])->name('apps.users.delete')->middleware('can:delete-users');
     });
 
     Route::prefix('roles')->middleware('can:read-roles')->group(function() {
@@ -86,7 +86,7 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::post('store', [MahasiswaController::class, 'store'])->name('apps.mahasiswa.store')->middleware('can:create-mahasiswa');
         Route::get('{mahasiswa}/show', [MahasiswaController::class, 'show'])->name('apps.mahasiswa.show');
         Route::post('{mahasiswa}/update', [MahasiswaController::class, 'update'])->name('apps.mahasiswa.update')->middleware('can:update-mahasiswa');
-        Route::delete('{mahasiswa}/destroy', [MahasiswaController::class, 'destroy'])->name('apps.mahasiswa.delete')->middleware('can:delete-mahasiswa');
+        Route::get('{mahasiswa}/destroy', [MahasiswaController::class, 'destroy'])->name('apps.mahasiswa.delete')->middleware('can:delete-mahasiswa');
         Route::post('import', [MahasiswaController::class, 'import'])->name('apps.mahasiswa.import')->middleware('can:import-mahasiswa');
         Route::get('export',[MahasiswaController::class, 'exportExcel'])->name('apps.mahasiswa.export');
     });
@@ -104,7 +104,7 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::post('store', [ProgramStudiController::class, 'store'])->name('apps.program-studi.store')->middleware('can:create-program-studi');
         Route::get('{programStudi}/show', [ProgramStudiController::class, 'show'])->name('apps.program-studi.show');
         Route::post('{programStudi}/update', [ProgramStudiController::class, 'update'])->name('apps.program-studi.update')->middleware('can:update-program-studi');
-        Route::delete('{programStudi}/destroy', [ProgramStudiController::class, 'destroy'])->name('apps.program-studi.delete')->middleware('can:delete-program-studi');
+        Route::get('{programStudi}/destroy', [ProgramStudiController::class, 'destroy'])->name('apps.program-studi.delete')->middleware('can:delete-program-studi');
     });
 
     Route::prefix('ruangan')->middleware('can:read-ruangan')->group(function () {
@@ -112,7 +112,7 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::post('store', [RuanganController::class, 'store'])->name('apps.ruangan.store')->middleware('can:create-ruangan');
         Route::get('show/{id}', [RuanganController::class, 'show'])->name('apps.ruangan.show');
         Route::post('update/{id}', [RuanganController::class, 'update'])->name('apps.ruangan.update')->middleware('can:update-ruangan');
-        Route::delete('destroy/{id}', [RuanganController::class, 'destroy'])->name('apps.ruangan.delete')->middleware('can:delete-ruangan');
+        Route::get('destroy/{id}', [RuanganController::class, 'destroy'])->name('apps.ruangan.delete')->middleware('can:delete-ruangan');
     });
 
     Route::prefix('topik')->middleware('can:read-topik')->group(function () {
@@ -120,7 +120,7 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::post('/store', [TopikTAController::class, 'store'])->name('apps.topik.store')->middleware('can:create-topik');
         Route::get('/show/{id}', [TopikTAController::class, 'show'])->name('apps.topik.show');
         Route::post('/update/{id}', [TopikTAController::class, 'update'])->name('apps.topik.update')->middleware('can:update-topik');
-        Route::delete('/destroy/{id}', [TopikTAController::class, 'destroy'])->name('apps.topik.delete')->middleware('can:delete-topik');
+        Route::get('/destroy/{id}', [TopikTAController::class, 'destroy'])->name('apps.topik.delete')->middleware('can:delete-topik');
     });
 
     Route::prefix('jenis-ta')->middleware('can:read-jenis')->group(function () {
@@ -136,7 +136,7 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::post('store', [PeriodeTAController::class, 'store'])->name('apps.periode.store')->middleware('can:create-periode');
         Route::get('{periode}/show', [PeriodeTAController::class, 'show'])->name('apps.periode.show');
         Route::post('{periode}/update', [PeriodeTAController::class, 'update'])->name('apps.periode.update')->middleware('can:update-periode');
-        Route::delete('{periode}/destroy', [PeriodeTAController::class, 'destroy'])->name('apps.periode.delete')->middleware('can:delete-periode');
+        Route::get('{periode}/destroy', [PeriodeTAController::class, 'destroy'])->name('apps.periode.delete')->middleware('can:delete-periode');
         Route::get('{periode}/change', [PeriodeTAController::class, 'change'])->name('apps.periode.change')->middleware('can:change-periode');
     });
 
@@ -170,10 +170,10 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::post('{rekomendasiTopik}/acc', [RekomendasiTopikController::class, 'acc'])->name('apps.rekomendasi-topik.acc');
         Route::post('{rekomendasiTopik}/reject-topik', [RekomendasiTopikController::class, 'rejectTopik'])->name('apps.rekomendasi-topik.rejcet-topik');
         Route::get('topik-yang-diambil', [RekomendasiTopikController::class, 'apply'])->name('apps.topik-yang-diambil');
-        Route::delete('{ambilTawaran}/hapus-topik', [RekomendasiTopikController::class, 'deleteTopik'])->name('apps.hapus-topik-yang-diambil');
+        Route::get('{ambilTawaran}/hapus-topik', [RekomendasiTopikController::class, 'deleteTopik'])->name('apps.hapus-topik-yang-diambil');
         Route::post('{ambilTawaran}/accept', [RekomendasiTopikController::class, 'accept'])->name('apps.rekomendasi-topik.accept');
         Route::post('{ambilTawaran}/reject', [RekomendasiTopikController::class, 'reject'])->name('apps.rekomendasi-topik.reject');
-        Route::delete('{ambilTawaran}/hapus-mahasiswa-terkait', [RekomendasiTopikController::class, 'deleteMhs'])->name('apps.hapus-mahasiswa-terkait');
+        Route::get('{ambilTawaran}/hapus-mahasiswa-terkait', [RekomendasiTopikController::class, 'deleteMhs'])->name('apps.hapus-mahasiswa-terkait');
     });
     
     Route::prefix('dosen')->middleware('can:read-dosen')->group(function () {
@@ -181,7 +181,7 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::post('store', [DosenController::class, 'store'])->name('apps.dosen.store');
         Route::get('{dosen}/show', [DosenController::class, 'show'])->name('apps.dosen.show');
         Route::post('{dosen}/update', [DosenController::class, 'update'])->name('apps.dosen.update');
-        Route::delete('{dosen}/destroy', [DosenController::class, 'destroy'])->name('apps.dosen.delete');
+        Route::get('{dosen}/destroy', [DosenController::class, 'destroy'])->name('apps.dosen.delete');
         Route::post('import', [DosenController::class, 'import'])->name('apps.dosen.import');
         Route::get('tarik-data', [DosenController::class, 'tarikData'])->name('apps.dosen.tarik-data');
         Route::get('export', [DosenController::class, 'exportExcel'])->name('apps.dosen.export');
@@ -210,7 +210,7 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::get('{tugasAkhir}/show', [DaftarTaController::class, 'show'])->name('apps.daftar-ta.show')->middleware('can:read-daftar-ta');
         Route::get('{tugasAkhir}/edit', [DaftarTaController::class, 'edit'])->name('apps.daftar-ta.edit');
         Route::post('{tugasAkhir}/update', [DaftarTaController::class, 'update'])->name('apps.daftar-ta.update')->middleware('can:update-daftar-ta');
-        Route::delete('{tugasAkhir}/destroy', [DaftarTaController::class, 'destroy'])->name('apps.daftar-ta.delete')->middleware('can:delete-daftar-ta');
+        Route::get('{tugasAkhir}/destroy', [DaftarTaController::class, 'destroy'])->name('apps.daftar-ta.delete')->middleware('can:delete-daftar-ta');
     });
 
     Route::prefix('jadwal-seminar')->middleware('can:read-jadwal-seminar')->group( function() {
@@ -228,7 +228,7 @@ Route::prefix('apps')->middleware('auth')->group(function () {
        Route::post('store', [KategoriNilaiController::class, 'store'])->name('apps.kategori-nilai.store')->middleware('can:create-kategori-nilai');
        Route::get('{kategoriNilai}/show', [KategoriNilaiController::class, 'show'])->name('apps.kategori-nilai.show');
        Route::post('{kategoriNilai}/update', [KategoriNilaiController::class, 'update'])->name('apps.kategori-nilai.update')->middleware('can:update-kategori-nilai');
-       Route::delete('{kategoriNilai}/destroy', [KategoriNilaiController::class, 'destroy'])->name('apps.kategori-nilai.delete')->middleware('can:delete-kategori-nilai'); 
+       Route::get('{kategoriNilai}/destroy', [KategoriNilaiController::class, 'destroy'])->name('apps.kategori-nilai.delete')->middleware('can:delete-kategori-nilai'); 
     });
 
     Route::prefix('templates')->group( function(){

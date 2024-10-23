@@ -5,8 +5,8 @@
     <div class="col-md-12 col-sm-12 col-g-12">
         <div class="card">
             <div class="card-body">
-                <a href="javascript:void(0);" onclick="tambahData()" class="btn btn-primary"><i class="fa fa-plus"></i> Tambah</a>
-                <a href="javascript:void(0);" onclick="importData()" class="btn btn-success"><i class="fa fa-file-excel"></i> Import</a>
+                <button onclick="tambahData()" class="btn btn-primary"><i class="fa fa-plus"></i> Tambah</button>
+                <button onclick="importData()" class="btn btn-success"><i class="fa fa-file-excel"></i> Import</button>
                 {{-- <a href="{{route('apps.dosen.tarik-data')}}" class="btn btn-secondary"><i class="fas fa-hand-paper"></i> Tarik Data</a> --}}
                 <hr>
                 @if(session('success'))
@@ -76,14 +76,13 @@
                                 <td class="text-center">
                                     @if (isset($item->ttd))
                                     <a href="{{asset('storage/images/dosen/' .  $item->ttd)}}" target="_blank"><i class="bx bx-file"></i> Lihat</a>
-                                    {{-- <img src="{{asset('storage/images/dosen/' .  $item->ttd)}}" width="100px" class="rounded-circle"> --}}
                                     @else
                                     <span> - </span>
                                     @endif
                                 </td>
                                 <td class="text-center">
                                     <button onclick="editData('{{ $item->id }}', '{{route('apps.dosen.show', $item->id)}}')" class="btn btn-outline-primary btn-sm"><i class="bx bx-edit-alt"></i></a>
-                                    <button class="btn btn-outline-dark btn-sm mx-1 my-1" data-toggle="delete" data-url="{{ route('apps.dosen.delete', $item->id) }}"><i class="bx bx-trash"></i></button>
+                                    <button class="btn btn-outline-dark btn-sm mx-1 my-1" onclick="hapusDosen('{{ $item->id }}', '{{ route('apps.dosen.delete', $item->id)}}')"><i class="bx bx-trash"></i></button>
                                 </td>
                             </tr>
                             @endforeach

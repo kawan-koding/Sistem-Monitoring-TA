@@ -6,7 +6,7 @@
             <div class="card">
                 <div class="card-body">
                     @can('create-jurusan')
-                    <a href="javascript:void(0);" onclick="tambahData()" class="btn btn-primary"><i class="fa fa-plus"></i> Tambah</a>
+                    <button onclick="tambahData()" class="btn btn-primary"><i class="fa fa-plus"></i> Tambah</button>
                     @endcan
                     <hr>
                     @if(session('success'))
@@ -61,10 +61,10 @@
                                     </td>
                                     <td>
                                         @can('update-program-studi')
-                                        <a href="javascript:void(0);" onclick="editData('{{ $item->id }}', '{{route('apps.program-studi.show', $item->id)}}')" class="btn btn-outline-primary btn-sm mx-1 my-1"><i class="bx bx-edit-alt"></i></a>
+                                        <button onclick="editData('{{ $item->id }}', '{{route('apps.program-studi.show', $item->id)}}')" class="btn btn-outline-primary btn-sm mx-1 my-1" title="Edit"><i class="bx bx-edit-alt"></i></button>
                                         @endcan
                                         @can('delete-program-studi')
-                                        <button class="btn btn-outline-dark btn-sm mx-1 my-1" data-toggle="delete" data-url="{{ route('apps.program-studi.delete', $item->id) }}"><i class="bx bx-trash"></i></button>
+                                        <button class="btn btn-outline-dark btn-sm mx-1 my-1" onclick="hapusProdi('{{ $item->id }}', '{{ route('apps.program-studi.delete', $item->id) }}')" title="Hapus"><i class="bx bx-trash"></i></button>                                        
                                         @endcan
                                     </td>
                                 </tr>

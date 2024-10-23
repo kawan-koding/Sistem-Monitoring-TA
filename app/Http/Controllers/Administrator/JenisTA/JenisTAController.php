@@ -81,13 +81,10 @@ class JenisTAController extends Controller
     {
         //
         try {
-            // Potensi kode yang dapat menyebabkan pengecualian
             JenisTa::where('id', $id)->delete();
-
+            return $this->successResponse('Berhasil menghapus data');
         } catch (\Exception $e) {
-
-            // dd($e->getMessage());
-            return redirect()->route('apps.jenis-ta')->with('error', $e->getMessage());
+            return $this->exceptionResponse($e);
         }
     }
 }

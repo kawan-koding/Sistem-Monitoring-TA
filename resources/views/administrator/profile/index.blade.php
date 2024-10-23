@@ -27,8 +27,6 @@
                         <li>{{ $error }}</li>
                     @endforeach
                 </ul>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-                </button>
             </div>
         @endif
             <form action="{{ route('apps.profile.update', $profile->id) }}" id="myFormulir" method="post"

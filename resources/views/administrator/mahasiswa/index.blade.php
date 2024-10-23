@@ -6,10 +6,10 @@
             <div class="card">
                 <div class="card-body">
                     @can('create-mahasiswa')
-                    <a href="javascript:void(0);" onclick="tambahData()" class="btn btn-primary"><i class="fa fa-plus"></i> Tambah</a>
+                    <button onclick="tambahData()" class="btn btn-primary"><i class="fa fa-plus"></i> Tambah</button>
                     @endcan
                     @can('import-mahasiswa')
-                    <a href="javascript:void(0);" onclick="importData()" class="btn btn-success"><i class="fa fa-file-excel"></i> Import</a>
+                    <button onclick="importData()" class="btn btn-success"><i class="fa fa-file-excel"></i> Import</button>
                     @endcan
                     <hr>
                     @if(session('success'))
@@ -77,10 +77,10 @@
                                     <td>{{ $item->programStudi->nama ?? '' }}</td>
                                     <td>
                                         @can('update-mahasiswa')
-                                        <a href="javascript:void(0);" title="Edit" onclick="editData('{{ $item->id }}', '{{route('apps.mahasiswa.show', $item->id)}}')" class="btn btn-outline-primary btn-sm mx-1 my-1"><i class="bx bx-edit-alt"></i></a>
+                                        <button title="Edit" onclick="editData('{{ $item->id }}', '{{route('apps.mahasiswa.show', $item->id)}}')" class="btn btn-outline-primary btn-sm mx-1 my-1"><i class="bx bx-edit-alt"></i></button>
                                         @endcan
                                         @can('delete-mahasiswa')
-                                        <button data-toggle="delete" data-url="{{ route('apps.mahasiswa.delete', $item->id) }}" title="Hapus" class="btn btn-outline-dark btn-sm mx-1 my-1"><i class="bx bx-trash"></i></button>
+                                        <button onclick="hapusMahasiswa('{{ $item->id }}', '{{ route('apps.mahasiswa.delete', $item->id) }}')" title="Hapus" class="btn btn-outline-dark btn-sm mx-1 my-1"><i class="bx bx-trash"></i></button>
                                         @endcan
                                     </td>
                                 </tr>

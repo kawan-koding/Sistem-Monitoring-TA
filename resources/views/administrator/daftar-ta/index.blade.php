@@ -98,7 +98,7 @@
                                         <a href="{{ route('apps.daftar-ta.show', $item)}}" class="btn btn-sm btn-outline-warning mb-3" title="Detail"><i class="bx bx-show"></i></a>
                                         @endcan
                                         @can('delete-daftar-ta')
-                                        <button type="button" data-url="{{ route('apps.daftar-ta.delete', $item)}}" class="btn btn-sm btn-outline-dark mb-3" data-toggle="delete" title="Hapus"><i class="bx bx-trash"></i></button>
+                                        <button onclick="hapusDaftarTa('{{ $item->id }}', '{{ route('apps.daftar-ta.delete', $item->id) }}')" class="btn btn-sm btn-outline-dark mb-3" title="Hapus"><i class="bx bx-trash"></i></button>
                                         @endcan
                                     </td>
                                 </tr>

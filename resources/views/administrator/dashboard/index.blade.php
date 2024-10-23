@@ -114,7 +114,7 @@
     </div>
 @endif
 
-<div class="row">
+{{-- <div class="row">
     <div class="col-lg-3 col-md-6 col-sm-12">
         <div class="card text-center" style="border-radius: 15px">
             <div class="card-body">
@@ -146,7 +146,7 @@
                 <h4 class="mb-0">50</h4>
             </div>
         </div>
-    </div>
+    </div> --}}
 </div>
 
 @if(getInfoLogin()->hasRole('Kaprodi') && session('switchRoles') == 'Kaprodi')

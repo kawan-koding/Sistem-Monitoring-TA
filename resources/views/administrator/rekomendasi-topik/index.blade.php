@@ -125,8 +125,7 @@
                                                 <button onclick="editData('{{ $item->id }}', '{{route('apps.rekomendasi-topik.show', $item->id)}}')" class="btn btn-outline-primary btn-sm mx-1 my-1" title="Edit"><i class="bx bx-edit-alt"></i></button>
                                             @endcan
                                             @can('delete-rekomendasi-topik')
-                                                <a href="javascript:void(0);" onclick="hapusRekomendasi('{{ $item->id }}', '{{ route('apps.rekomendasi-topik.delete', $item->id) }}')" class="btn btn-outline-dark btn-sm mx-1 my-1"><i class="bx bx-trash"></i></a>
-                                                {{-- <button class="btn btn-outline-dark btn-sm mx-1 my-1" data-toggle="delete" data-url="{{ route('apps.rekomendasi-topik.delete', $item->id) }}" title="Hapus"><i class="bx bx-trash"></i></button> --}}
+                                                <button onclick="hapusRekomendasi('{{ $item->id }}', '{{ route('apps.rekomendasi-topik.delete', $item->id) }}')" class="btn btn-outline-dark btn-sm mx-1 my-1" title="Hapus"><i class="bx bx-trash"></i></button>
                                             @endcan
                                             <a href="{{ route('apps.rekomendasi-topik.detail', $item->id) }}" class="btn btn-outline-warning btn-sm mx-1 my-1" title="Detail"><i class="bx bx-show"></i></a>
                                         @endif

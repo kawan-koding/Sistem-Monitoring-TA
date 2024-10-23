@@ -89,8 +89,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @if($data->count() > 0)
-                        @foreach ($data as $item)
+                        @forelse ($data as $item)
                             @foreach ($item->tugas_akhir->bimbing_uji as $bimuj)
                                 @if ($bimuj->jenis == 'pembimbing' && $bimuj->urut == 1)
                                     @php
@@ -171,12 +170,11 @@
                                 @endif
                             </td>
                         </tr>
-                        @endforeach
-                        @else
+                        @empty
                         <tr class="text-center">
                             <td colspan="7">No data available in table</td>
                         </tr>
-                        @endif
+                        @endforelse
                     </tbody>
                 </table>
             </div>

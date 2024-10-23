@@ -35,7 +35,7 @@
                                         <a href="#" data-toggle="approve-mhs" data-url="{{ route('apps.rekomendasi-topik.accept', $item->id) }}" class="badge rounded-pill bg-success font-size-11">Setujui</a>
                                         <a href="#" data-toggle="reject-mhs" data-url="{{ route('apps.rekomendasi-topik.reject', $item->id) }}" class="badge rounded-pill bg-danger font-size-11">Tolak</a>
                                     @elseif($item->status == 'Disetujui')
-                                        <a href="#" data-toggle="delete-mhs" data-url="{{ route('apps.hapus-mahasiswa-terkait', $item->id) }}" class="badge rounded-pill bg-warning font-size-11">Hapus</a>
+                                        <a href="#" onclick="hapusMahasiswaTerkait('{{ $item->id }}', '{{ route('apps.program-studi.delete', $item->id) }}')" class="badge rounded-pill bg-warning font-size-11">Hapus</a>
                                     @endif
                                 </div>
                             </div>
@@ -46,7 +46,7 @@
                                     <a href="#" data-toggle="approve-mhs" data-url="{{ route('apps.rekomendasi-topik.accept', $item->id) }}" class="badge rounded-pill bg-success font-size-11">Setujui</a>
                                     <a href="#" data-toggle="reject-mhs" data-url="{{ route('apps.rekomendasi-topik.reject', $item->id) }}" class="badge rounded-pill bg-danger font-size-11">Tolak</a>
                                 @elseif($item->status == 'Disetujui')
-                                    <a href="#" data-toggle="delete-mhs" data-url="{{ route('apps.hapus-mahasiswa-terkait', $item->id) }}" class="badge rounded-pill bg-warning font-size-11">Hapus</a>
+                                    <a href="#" onclick="hapusMahasiswaTerkait('{{ $item->id }}', '{{ route('apps.program-studi.delete', $item->id) }}')" class="badge rounded-pill bg-warning font-size-11">Hapus</a>
                                 @endif
                             </div>
                         </td>

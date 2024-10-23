@@ -5,7 +5,7 @@
     <div class="col-md-12 col-sm-12 col-g-12">
         <div class="card">
             <div class="card-body">
-                <a href="javascript:void(0);" onclick="tambahData()" class="btn btn-primary"><i class="fa fa-plus"></i> Tambah</a>
+                <button onclick="tambahData()" class="btn btn-primary"><i class="fa fa-plus"></i> Tambah</button>
                 <hr>
                 @if(session('success'))
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -48,10 +48,10 @@
                                 <td>{{$item->nama_topik}}</td>
                                 <td>
                                     @can('update-topik')
-                                    <a href="javascript:void(0);" onclick="editTopik('{{ $item->id }}', '{{route('apps.topik.show', ['id' => $item->id])}}')" class="btn btn-outline-primary btn-sm mx-1 my-1"><i class="bx bx-edit-alt"></i></a>
+                                    <button onclick="editTopik('{{ $item->id }}', '{{route('apps.topik.show', $item->id)}}')" class="btn btn-outline-primary btn-sm mx-1 my-1"><i class="bx bx-edit-alt"></i></button>
                                     @endcan
                                     @can('delete-topik')
-                                    <a href="javascript:void(0);" onclick="hapusTopik('{{ $item->id }}', '{{route('apps.topik.delete', ['id' => $item->id])}}')" class="btn btn-outline-dark btn-sm mx-1 my-1"><i class="bx bx-trash"></i></a>
+                                    <button onclick="hapusTopik('{{ $item->id }}', '{{route('apps.topik.delete', $item->id)}}')" class="btn btn-outline-dark btn-sm mx-1 my-1"><i class="bx bx-trash"></i></button>
                                     @endcan
                                 </td>
                             </tr>

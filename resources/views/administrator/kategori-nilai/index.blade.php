@@ -5,7 +5,7 @@
     <div class="col-md-12 col-sm-12 col-g-12">
         <div class="card">
             <div class="card-body">
-                <a href="javascript:void(0);" onclick="tambahData()" class="btn btn-primary"><i class="fa fa-plus"></i> Tambah</a>
+                <button onclick="tambahData()" class="btn btn-primary"><i class="fa fa-plus"></i> Tambah</button>
                 <hr>
                 @if(session('success'))
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -48,10 +48,10 @@
                                 <td>{{$item->nama}}</td>
                                 <td>
                                     @can('update-kategori-nilai')
-                                    <button  onclick="editData('{{ $item->id }}', '{{ route('apps.kategori-nilai.show', $item->id) }}')" class="btn btn-outline-primary btn-sm mx-1 my-1"><i class="bx bx-edit-alt"></i></button>
+                                    <button  onclick="editData('{{ $item->id }}', '{{ route('apps.kategori-nilai.show', $item->id) }}')" class="btn btn-outline-primary btn-sm mx-1 my-1" title="Edit"><i class="bx bx-edit-alt"></i></button>
                                     @endcan
                                     @can('delete-kategori-nilai')
-                                    <button  type="button" data-url="{{route('apps.kategori-nilai.delete', $item) }}" data-toggle="delete" class="btn btn-outline-dark btn-sm mx-1 my-1"><i class="bx bx-trash"></i></button>
+                                    <button onclick="hapusKategoriNilai('{{ $item->id }}', '{{ route('apps.kategori-nilai.delete', $item->id) }}')" class="btn btn-outline-dark btn-sm mx-1 my-1" title="Hapus"><i class="bx bx-trash"></i></button>
                                     @endcan
                                 </td>
                             </tr>

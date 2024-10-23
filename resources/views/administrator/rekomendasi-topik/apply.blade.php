@@ -54,7 +54,7 @@
                                 </td>
                                 <td>
                                     @if($item->status == 'Menunggu')
-                                    <button title="Hapus" class="btn btn-outline-dark btn-sm mx-1 my-1" data-toggle="delete-topik" data-url="{{ route('apps.hapus-topik-yang-diambil', $item->id) }}"><i class="bx bx-trash"></i></button>
+                                    <button title="Hapus" class="btn btn-outline-dark btn-sm mx-1 my-1" onclick="hapusMahasiswaTerkait('{{ $item->id }}', '{{ route('apps.program-studi.delete', $item->id) }}')"><i class="bx bx-trash"></i></button>
                                     @else
                                     -
                                     @endif

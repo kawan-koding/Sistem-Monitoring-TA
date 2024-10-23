@@ -6,7 +6,7 @@
     <div class="col-md-12 col-sm-12 col-g-12">
         <div class="card">
             <div class="card-body">
-                <a href="javascript:void(0);" onclick="tambahData()" class="btn btn-primary"><i class="fa fa-plus"></i> Tambah</a>
+                <button onclick="tambahData()" class="btn btn-primary"><i class="fa fa-plus"></i> Tambah</button>
                 <hr>
                 @if(session('success'))
                             <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -41,8 +41,8 @@
                                 <td>{{$item->nama_ruangan}}</td>
                                 <td>{{$item->lokasi}}</td>
                                 <td>
-                                    <a href="javascript:void(0);" onclick="editData('<?= $item->id?>', '{{route('apps.ruangan.show', ['id' => $item->id])}}')" class="btn btn-outline-primary btn-sm mx-1 my-1"><i class="bx bx-edit-alt"></i></a>
-                                    <button  type="button" data-url="{{route('apps.ruangan.delete', $item->id) }}" data-toggle="delete" class="btn btn-outline-dark btn-sm mx-1 my-1"><i class="bx bx-trash"></i></button>
+                                    <button onclick="editData('{{ $item->id }}', '{{route('apps.ruangan.show', $item->id)}}')" title="Edit" class="btn btn-outline-primary btn-sm mx-1 my-1"><i class="bx bx-edit-alt"></i></button>
+                                    <button onclick="hapusRuangan('{{ $item->id }}', '{{route('apps.ruangan.delete', $item->id)}}')" title="Hapus" class="btn btn-outline-dark btn-sm mx-1 my-1"><i class="bx bx-trash"></i></button>
                                 </td>
                             </tr>
                             @endforeach

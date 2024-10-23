@@ -41,123 +41,6 @@ $(document).ready(function() {
         $('#myModalApply').modal('show');
     });
 
-    // $(document).on('click', '*[data-toggle="delete"]', function () {
-    //     const url = $(this).data('url');
-    //     Swal.fire({
-    //         title: "Hapus Topik yang ditawarkan?",
-    //         text: "Apakah kamu yakin untuk menghapus data ini!",
-    //         type: "warning",
-    //         showCancelButton: true,
-    //         confirmButtonColor: "#3085d6",
-    //         cancelButtonColor: "#d33",
-    //         confirmButtonText: "Ya, Hapus!"
-    //     }).then((result) => {
-    //         if (result.value) {
-    //             $.ajax({
-    //                 url: url,
-    //                 type: "DELETE",
-    //                 data: {
-    //                     _token: $('meta[name="csrf-token"]').attr('content')
-    //                 },
-    //                 success: function (data) {
-    //                     Swal.fire({
-    //                         icon: 'success',
-    //                         title: 'Berhasil!',
-    //                         text: data.message
-    //                     }).then(() => {
-    //                         window.location.reload();
-    //                     });
-    //                 },
-    //                 error: function (xhr) {
-    //                     Swal.fire({
-    //                         icon: 'error',
-    //                         title: 'Oops...',
-    //                         text: xhr.responseJSON.message
-    //                     });
-    //                 }
-    //             });
-    //         }
-    //     });
-    // });
-
-    $(document).on('click', '*[data-toggle="delete-topik"]', function () {
-        const url = $(this).data('url');
-        Swal.fire({
-            title: "Hapus Topik yang diambil?",
-            text: "Apakah kamu yakin untuk menghapus data ini!",
-            type: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Ya, Hapus!"
-        }).then((result) => {
-            if (result.value) {
-                $.ajax({
-                    url: url,
-                    type: "DELETE",
-                    data: {
-                        _token: $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function (data) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Berhasil!',
-                            text: data.message
-                        }).then(() => {
-                            window.location.reload();
-                        });
-                    },
-                    error: function (xhr) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: xhr.responseJSON.message
-                        });
-                    }
-                });
-            }
-        });
-    });
-
-    $(document).on('click', '*[data-toggle="delete-mhs"]', function () {
-        const url = $(this).data('url');
-        Swal.fire({
-            title: "Hapus Mahasiswa?",
-            text: "Apakah kamu yakin untuk menghapus data ini!",
-            type: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Ya, Hapus!"
-        }).then((result) => {
-            if (result.value) {
-                $.ajax({
-                    url: url,
-                    type: "DELETE",
-                    data: {
-                        _token: $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function (data) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Berhasil!',
-                            text: data.message
-                        }).then(() => {
-                            window.location.reload();
-                        });
-                    },
-                    error: function (xhr) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: xhr.responseJSON.message
-                        });
-                    }
-                });
-            }
-        });
-    });
-
     $(document).on('click', '*[data-toggle="reject-mhs"]', function (e) {
         e.preventDefault();
         const url = $(this).data('url');
@@ -251,3 +134,72 @@ function hapusRekomendasi(e, url) {
     });
 }
 
+function hapusTopikTerkait(e, url) {
+    Swal.fire({
+        title: "Hapus Topik yang diambil?",
+        text: "Apakah kamu yakin untuk menghapus data ini!",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Ya, Hapus!"
+    }).then((result) => {
+        if (result.value) {
+            $.ajax({
+                url: url,
+                type: "GET",
+                success: function (data) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil!',
+                        text: data.message
+                    }).then(() => {
+                        window.location.reload();
+                    });
+                },
+                error: function (xhr) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: xhr.responseJSON.message
+                    });
+                }
+            });
+        }
+    });
+}
+
+function hapusMahasiswaTerkait(e, url) {
+     Swal.fire({
+         title: "Hapus Mahasiswa?",
+         text: "Apakah kamu yakin untuk menghapus data ini!",
+         type: "warning",
+         showCancelButton: true,
+         confirmButtonColor: "#3085d6",
+         cancelButtonColor: "#d33",
+         confirmButtonText: "Ya, Hapus!"
+     }).then((result) => {
+         if (result.value) {
+             $.ajax({
+                 url: url,
+                 type: "GET",
+                 success: function (data) {
+                     Swal.fire({
+                         icon: 'success',
+                         title: 'Berhasil!',
+                         text: data.message
+                     }).then(() => {
+                         window.location.reload();
+                     });
+                 },
+                error: function (xhr) {
+                    Swal.fire({
+                         icon: 'error',
+                         title: 'Oops...',
+                         text: xhr.responseJSON.message
+                    });
+                }
+            });
+        }
+    });
+};

@@ -29,47 +29,47 @@ function updateOptions() {
     });
 }
 
-
-$(document).ready(function () {
-    $(document).on('click', '*[data-toggle="delete"]', function () {
-        const url = $(this).data('url');
-        Swal.fire({
-            title: "Hapus Tugas Akhir?",
-            text: "Apakah kamu yakin untuk menghapus data ini!",
-            type: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Ya, Hapus!"
-        }).then((result) => {
-            if (result.value) {
-                $.ajax({
-                    url: url,
-                    type: "DELETE",
-                    data: {
-                        _token: $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function (data) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Berhasil!',
-                            text: data.message
-                        }).then(() => {
-                            window.location.reload();
-                        });
-                    },
-                    error: function (xhr) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: xhr.responseJSON.message
-                        });
-                    }
-                });
-            }
-        });
+function hapusDaftarTa(e, url) {
+    Swal.fire({
+        title: "Hapus Tugas Akhir?",
+        text: "Apakah kamu yakin untuk menghapus data ini!",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Ya, Hapus!"
+    }).then((result) => {
+        if (result.value) {
+            $.ajax({
+                url: url,
+                type: "GET",
+                success: function (data) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil!',
+                        text: data.message
+                    }).then(() => {
+                        window.location.reload();
+                    });
+                },
+/*************  ✨ Codeium Command ⭐  *************/
+        /**
+         * Handle error response from server
+         *
+         * @param {jqXHR} xhr - The jqXHR object
+         */
+/******  af278c4f-fe56-4ce6-8d3a-8905ceb8411b  *******/
+                error: function (xhr) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: xhr.responseJSON.message
+                    });
+                }
+            });
+        }
     });
-});
+};
 
 
 $('#jenis').on('change', function () {

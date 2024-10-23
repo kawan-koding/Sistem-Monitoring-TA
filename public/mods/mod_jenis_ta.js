@@ -41,12 +41,24 @@ function hapusJenis(e, url) {
         if (result.value) {
             $.ajax({
                 url: url,
-                type: "get",
+                type: "GET",
                 success: function (data) {
-                    window.location.reload();
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil!',
+                        text: data.message
+                    }).then(() => {
+                        window.location.reload();
+                    });
+                },
+                error: function (xhr) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: xhr.responseJSON.message
+                    });
                 }
-            })
+            });
         }
     })
-
 }

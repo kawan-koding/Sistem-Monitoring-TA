@@ -51,8 +51,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @if ($dataTA->count() > 0)
-                                    @foreach ($dataTA as $item)
+                                    @forelse ($dataTA as $item)
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
                                             <td>
@@ -120,15 +119,15 @@
                                                 @if (getInfoLogin()->hasRole('Kaprodi'))
                                                     @if ($item->status == 'draft')
                                                         @can('acc-pengajuan-tugas-akhir')
-                                                            <a href="javascript:void(0);"
+                                                            <button
                                                                 onclick="acceptTA('{{ $item->id }}', '{{ route('apps.pengajuan-ta.accept', $item->id) }}')"
                                                                 class="btn btn-outline-primary btn-sm mx-1 my-1"
-                                                                title="Acc"><i class="bx bx-check-double"></i></a>
+                                                                title="Acc"><i class="bx bx-check-double"></i></button>
                                                         @endcan
-                                                        <a href="javascript:void(0);"
+                                                        <button
                                                             onclick="rejectTA('{{ $item->id }}', '{{ route('apps.pengajuan-ta.reject', $item->id) }}')"
                                                             class="btn btn-outline-danger btn-sm mx-1 my-1"
-                                                            title="Reject"><i class="bx bx-x"></i></a>
+                                                            title="Reject"><i class="bx bx-x"></i></button>
                                                     @endif
                                                 @endif
                                                 @if (getInfoLogin()->hasRole('Mahasiswa'))
@@ -140,10 +139,10 @@
                                                     @endcan
                                                     @endif
                                                     @if($item->bimbing_uji()->where('jenis', 'pembimbing')->where('urut', 2)->count() > 0 && $item->status == 'acc')
-                                                    <a href="javascript:void(0);"
+                                                    <button
                                                         onclick="uploadFile('{{ $item->id }}','{{ route('apps.pengajuan-ta.unggah-berkas', $item->id) }}')"
                                                         class="btn btn-sm btn-outline-secondary unggah-berkas mx-1 my-1"
-                                                        title="Unggah Berkas Pembimbing 2"><i class="bx bx-file"></i></a>
+                                                        title="Unggah Berkas Pembimbing 2"><i class="bx bx-file"></i></button>
                                                     @endif
                                                 @endif
                                                 <a href="{{ route('apps.pengajuan-ta.show', ['pengajuanTA' => $item->id]) }}"
@@ -151,20 +150,19 @@
                                                         class="bx bx-show"></i></a>
                                                 @can('cancel-pengajuan-tugas-akhir')
                                                 @if($item->status == 'acc')
-                                                <a href= "javascript:void(0);"
+                                                <button
                                                     onclick="cancelTA('{{ $item->id }}', '{{ route('apps.pengajuan-ta.cancel', $item->id) }}')"
                                                     class="btn btn-sm btn-outline-danger mx-1 my-1"
-                                                    title="Batalkan Tugas Akhir"><i class="bx bxs-no-entry"></i></a>
+                                                    title="Batalkan Tugas Akhir"><i class="bx bxs-no-entry"></i></button>
                                                 @endif
                                                 @endcan
                                             </td>
                                         </tr>
-                                    @endforeach
-                                @else
+                                    @empty
                                     <tr class="text-center">
                                         <td colspan="7">No data available in table</td>
                                     </tr>
-                                @endif
+                                    @endforelse
                             </tbody>
                         </table>
                     </div>

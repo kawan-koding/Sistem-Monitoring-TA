@@ -6,7 +6,7 @@
         <div class="card">
             <div class="card-body">
                 @can('update-kuota')
-                    <a href="javascript:void(0);" onclick="tambahData()" class="btn btn-primary"><i class="fa fa-plus"></i> Tambah</a>
+                    <button onclick="tambahData()" class="btn btn-primary"><i class="fa fa-plus"></i> Tambah</button>
                 @endcan
                     <hr>
                     @if(session('success'))
