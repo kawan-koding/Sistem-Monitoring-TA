@@ -19,11 +19,11 @@
                             </button>
                             <div class="dropdown-menu dropdown-menu-end">
                                 <!-- item-->
-                                @if(!getInfoLogin()->hasRole('Admin') || !getInfoLogin()->hasRole('Developer'))
+                                @if(!getInfoLogin()->hasAnyRole(['Admin', 'Developer']))
                                 <a class="dropdown-item" href="{{route('apps.profile')}}"><i class="bx bx-user font-size-16 align-middle me-1"></i>
                                     Profile</a>
                                 @endif
-                                @if(session('switchRoles') == 'Admin' ||session('switchRoles') == 'Developer')
+                                @if(getInfoLogin()->hasAnyRole(['Admin', 'Developer']))
                                     <a class="dropdown-item" href="{{ route('apps.settings')}}"><i class="bx bx-cog font-size-16 align-middle me-1"></i>Pengaturan</a>
                                 @endif
                                     <div class="dropdown-divider"></div>

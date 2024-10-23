@@ -23,6 +23,7 @@ class UserSeeder extends Seeder
             'image' => 'default.png',
             'is_active' => 1
         ])->assignRole('Developer');
+        
         $admin = User::create([
             'name' => 'admin',
             'username' => 'admin',

@@ -89,6 +89,10 @@ class RoleSeeder extends Seeder
             'read-dashboard',
             'read-rekomendasi-topik',
             'read-daftar-ta',
+            'read-mahasiswa',
+            'read-dosen',
+            'read-jurusan',
+            'read-program-studi',
         ]);
 
         $mahasiswa->givePermissionTo([

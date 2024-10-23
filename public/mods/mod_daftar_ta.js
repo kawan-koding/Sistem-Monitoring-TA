@@ -52,13 +52,6 @@ function hapusDaftarTa(e, url) {
                         window.location.reload();
                     });
                 },
-/*************  ✨ Codeium Command ⭐  *************/
-        /**
-         * Handle error response from server
-         *
-         * @param {jqXHR} xhr - The jqXHR object
-         */
-/******  af278c4f-fe56-4ce6-8d3a-8905ceb8411b  *******/
                 error: function (xhr) {
                     Swal.fire({
                         icon: 'error',
