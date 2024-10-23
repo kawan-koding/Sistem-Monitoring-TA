@@ -50,14 +50,13 @@ use App\Http\Controllers\Administrator\RekomendasiTopik\RekomendasiTopikControll
 
 Route::get('/', function() {
     return view('index');
-});
-Route::get('login', [AuthController::class, 'index'])->name('login');
-Route::post('login', [AuthController::class, 'authenticate'])->name('login.process');
+})->middleware('guest');
+Route::get('login', [AuthController::class, 'index'])->name('login')->middleware('guest');
+Route::post('login', [AuthController::class, 'authenticate'])->name('login.process')->middleware('guest');
 Route::get('logout', [AuthController::class, 'logout'])->name('logout');
-    
-Route::get('oauth', [AuthController::class, 'redirect'])->name('oauth.redirect');
-Route::get('oauth/callback', [AuthController::class, 'callback'])->name('oauth.callback');
-Route::get('oauth/refresh', [AuthController::class, 'refresh'])->name('oauth.refresh');
+Route::get('oauth', [AuthController::class, 'redirect'])->name('oauth.redirect')->middleware('guest');
+Route::get('oauth/callback', [AuthController::class, 'callback'])->name('oauth.callback')->middleware('guest');
+Route::get('oauth/refresh', [AuthController::class, 'refresh'])->name('oauth.refresh')->middleware('guest');
 
 Route::prefix('apps')->middleware('auth')->group(function () {
     Route::get('switching', [AuthController::class, 'switching'])->name('apps.switching');
