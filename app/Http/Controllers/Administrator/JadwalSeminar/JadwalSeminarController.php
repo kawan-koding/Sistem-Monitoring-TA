@@ -182,8 +182,31 @@ class JadwalSeminarController extends Controller
         }
     }
 
-    // public function uploadFile(Request $request)
-    // {
-
-    // }
+    public function detail(JadwalSeminar $jadwalSeminar)
+    {
+        $data = [
+            'title' => 'Jadwal Seminar',
+            'breadcrumbs' => [
+                [
+                    'title' => 'Dashboard',
+                    'url' => route('apps.dashboard'),
+                ],
+                [
+                    'title' => 'Tugas Akhir',
+                    'is_active' => true,
+                ],
+                [
+                    'title' => 'Jadwal Seminar',
+                    'is_active' => true,
+                ],
+                [
+                    'title' => 'Detail Penilaian',
+                    'is_active' => true
+                ]
+            ],
+            'data' => $jadwalSeminar
+        ];
+        
+        return view('administrator.jadwal-seminar.detail', $data);
+    }
 }
