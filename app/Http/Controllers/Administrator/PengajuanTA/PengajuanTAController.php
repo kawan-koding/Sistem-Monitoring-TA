@@ -319,7 +319,7 @@ class PengajuanTAController extends Controller
                 'catatan' => null,
             ]);
 
-            return redirect()->route('apps.pengajuan-ta')->with('success', 'Data berhasil ditambahkan');
+            return redirect()->route('apps.pengajuan-ta')->with('success', 'Data berhasil diperbarui');
         } catch (\Exception $e) {
             // dd($e->getMessage());
             return redirect()->back()->with('error', $e->getMessage());
