@@ -72,7 +72,7 @@
                     <li>
                         <a href="{{route('apps.jadwal')}}" class=" waves-effect">
                             <i class="mdi mdi-calendar-text"></i>
-                            <span>Jadwal</span>
+                            <span>Jadwal Seminar</span>
                         </a>
                     </li>
                     @endcan

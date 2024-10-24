@@ -28,4 +28,7 @@ class TugasAkhir extends Model
     public function bimbing_uji(){
         return $this->hasMany(BimbingUji::class);
     }
+    public function jadwal_seminar(){
+        return $this->hasMany(JadwalSeminar::class);
+    }
 }

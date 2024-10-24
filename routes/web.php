@@ -242,8 +242,10 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::get('lembar-penilaian',[TemplateController::class, 'lembarPenilaian'])->name('apps.templates.lembar-penilaian');
     });
     
-    Route::prefix('jadwal')->middleware('read-jadwal')->group( function(){
-        Route::get('',[JadwalController::class, 'index'])->name('apps.jadwal');
+    Route::prefix('jadwal')->middleware('can:read-jadwal')->group( function(){
+        Route::get('{jenis?}',[JadwalController::class, 'index'])->name('apps.jadwal');
+        Route::get('{jadwal}/nilai',[JadwalController::class, 'rating'])->name('apps.jadwal.nilai');
+        // Route::post('{jadwal}/revisi',[JadwalController::class, 'revisi'])->name('apps.jadwal.revisi');
     });
 
     Route::get('penilaian', function(){
