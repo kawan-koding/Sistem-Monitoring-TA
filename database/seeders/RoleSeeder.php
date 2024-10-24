@@ -44,6 +44,13 @@ class RoleSeeder extends Seeder
             'name' => 'Mahasiswa',
             'guard_name' => 'web'
         ]);
+
+        $kajur = Role::create([
+
+            'name' => 'Kajur',
+            'guard_name' => 'Web'
+        ]);
+        
         $developer->givePermissionTo(Permission::all());
         $admin->givePermissionTo([
             'read-dashboard',
