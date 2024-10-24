@@ -15,11 +15,16 @@ class DashboardController extends Controller
     {
         $dataMahasiswa = null;
         $admin = null;
+        $kaprodi = null;
         if(getInfoLogin()->hasRole('Mahasiswa')){
             $dataMahasiswa = $this->mahasiswa();
         }
         if(getInfoLogin()->hasRole('Admin')){
             $admin = $this->admin();
+        }
+
+        if(session('switchRoles') == 'Kaprodi'){
+            $kaprodi = $this->kaprodi();
         }
 
         $data = [
@@ -32,6 +37,7 @@ class DashboardController extends Controller
             ],
             'dataMahasiswa' => $dataMahasiswa,
             'admin' => $admin,
+            'kaprodi' => $kaprodi,
         ];
 
         return view('administrator.dashboard.index', $data);
@@ -59,6 +65,26 @@ class DashboardController extends Controller
             'dosen' => $dosen,
             'mhs' => $mhs,
             'ta' => $tugasAkhir
+        ];
+    }
+
+    private function kaprodi()
+    {
+        $user = getInfoLogin()->userable;
+        $prodi = $user->programStudi->id;
+        $belumAcc = RekomendasiTopik::where('status','Menunggu')->get();
+        $sudahAcc = RekomendasiTopik::where('status','Disetujui')->get();
+        $taDraft = TugasAkhir::where('status','draft')->whereHas('mahasiswa', function($query) use ($prodi) {
+            $query->where('program_studi_id', $prodi);
+        })->get();
+        $taAcc = TugasAkhir::where('status','acc')->whereHas('mahasiswa', function($query) use ($prodi) {
+            $query->where('program_studi_id', $prodi);
+        })->get();
+        return [
+            'belumAcc' => $belumAcc,
+            'sudahAcc' => $sudahAcc,
+            'taDraft' => $taDraft,
+            'taAcc' => $taAcc
         ];
     }
 }

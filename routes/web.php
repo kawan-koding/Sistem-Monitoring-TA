@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OAuthController;
 use App\Http\Controllers\TopikController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Home\HomeController;
 use App\Http\Controllers\RumpunIlmuController;
 use App\Http\Controllers\Login\LoginController;
 use App\Http\Controllers\DaftarTaAdminController;
@@ -15,8 +16,8 @@ use App\Http\Controllers\PengajuanTaMahasiswaController;
 use App\Http\Controllers\JadwalSeminarMahasiswaController;
 use App\Http\Controllers\Administrator\Role\RoleController;
 use App\Http\Controllers\Administrator\User\UserController;
-use App\Http\Controllers\Administrator\Dosen\DosenController;
 
+use App\Http\Controllers\Administrator\Dosen\DosenController;
 use App\Http\Controllers\Administrator\Jadwal\JadwalController;
 use App\Http\Controllers\Administrator\JenisTA\JenisTAController;
 use App\Http\Controllers\Administrator\Jurusan\JurusanController;
@@ -37,6 +38,8 @@ use App\Http\Controllers\Administrator\KategoriNilai\KategoriNilaiController;
 use App\Http\Controllers\Administrator\PembagianDosen\PembagianDosenController;
 use App\Http\Controllers\Administrator\RekomendasiTopik\RekomendasiTopikController;
 
+use App\Http\Controllers\RekomendasiTopik\RekomendasiTopikController as GuestRekomendasiTopikController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -48,9 +51,13 @@ use App\Http\Controllers\Administrator\RekomendasiTopik\RekomendasiTopikControll
 |
 */
 
-Route::get('/', function() {
-    return view('index');
-})->middleware('guest');
+Route::middleware('guest')->group(function() {
+    Route::get('',[HomeController::class, 'index'])->name('home');
+    Route::prefix('tawaran-topik')->group( function() {
+        Route::get('',[GuestRekomendasiTopikController::class, 'index'])->name('guest.rekomendasi-topik');
+    });
+});
+
 Route::get('login', [AuthController::class, 'index'])->name('login')->middleware('guest');
 Route::post('login', [AuthController::class, 'authenticate'])->name('login.process')->middleware('guest');
 Route::get('logout', [AuthController::class, 'logout'])->name('logout');
@@ -138,7 +145,6 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::get('{periode}/destroy', [PeriodeTAController::class, 'destroy'])->name('apps.periode.delete')->middleware('can:delete-periode');
         Route::get('{periode}/change', [PeriodeTAController::class, 'change'])->name('apps.periode.change')->middleware('can:change-periode');
     });
-
 
     Route::prefix('pengajuan-ta')->middleware('can:read-pengajuan-tugas-akhir')->group(function () {
         Route::get('', [PengajuanTAController::class, 'index'])->name('apps.pengajuan-ta');

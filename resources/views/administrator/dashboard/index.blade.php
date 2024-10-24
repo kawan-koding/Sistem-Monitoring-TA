@@ -37,7 +37,7 @@
                             ($dataMahasiswa['tugasAkhir']->status == 'draft' ? 'Menunggu' : 
                             ($dataMahasiswa['tugasAkhir']->status == 'reject' ? 'Ditolak' : 
                             ($dataMahasiswa['tugasAkhir']->status == 'cancel' ? 'Tidak Dilanjutkan' : 'Menunggu')))) 
-                            : 'Menunggu' 
+                            : 'Belum Diajukan' 
                         }}
                     </h5>
                 </div>
@@ -147,39 +147,39 @@
             </div>
         </div>
     </div> --}}
-</div>
+{{-- </div> --}}
 
 @if(getInfoLogin()->hasRole('Kaprodi') && session('switchRoles') == 'Kaprodi')
 <div class="row">
     <div class="col-lg-3">
         <div class="card text-center" style="border-radius: 15px">
             <div class="card-body">
-                <p class="mb-2 fs-5">Total Pengajuan Penawaran Topik</p>
-                <h4 class="mb-0">50</h4>
+                <p class="mb-2 fs-5">Tawaran Topik Yang Belum Divalidasi</p>
+                <h4 class="mb-0">{{ $kaprodi['belumAcc']->count() }}</h4>
             </div>
         </div>
     </div>
     <div class="col-lg-3">
         <div class="card text-center" style="border-radius: 15px">
             <div class="card-body">
-                <p class="mb-2 fs-5">Total Pengajuan Topik TA</p>
-                <h4 class="mb-0">50</h4>
+                <p class="mb-2 fs-5">Tawaran Topik Yang Sudah Divalidasi</p>
+                <h4 class="mb-0">{{ $kaprodi['sudahAcc']->count() }}</h4>
             </div>
         </div>
     </div>
     <div class="col-lg-3">
         <div class="card text-center" style="border-radius: 15px">
             <div class="card-body">
-                <p class="mb-2 fs-5">Total Topik Yang Disetujui</p>
-                <h4 class="mb-0">50</h4>
+                <p class="mb-2 fs-5">Pengajuan TA Yang Belum Divalidasi</p>
+                <h4 class="mb-0">{{ $kaprodi['taDraft']->count() }}</h4>
             </div>
         </div>
     </div>
     <div class="col-lg-3">
         <div class="card text-center" style="border-radius: 15px">
             <div class="card-body">
-                <p class="mb-2 fs-5">Total Topik Belum Disetujui</p>
-                <h4 class="mb-0">50</h4>
+                <p class="mb-2 fs-5">Pengajuan TA Yang Sudah Divalidasi</p>
+                <h4 class="mb-0">{{ $kaprodi['taAcc']->count() }}</h4>
             </div>
         </div>
     </div>
