@@ -115,7 +115,9 @@
                         <tr>
                             <td>{{$loop->iteration}}</td>
                             <td>
-                                <span class="badge bg-soft-primary small mb-1">{{$item->tugas_akhir->tipe == 'I' ? 'Individu' : 'Kelompok'}}</span>
+                                @if($item->status == "telah_seminar")
+                                <span class="badge bg-soft-primary small mb-1">{{$item->tugas_akhir->status_seminar}}</span>
+                                @endif
                                 <h5 class="fw-bold m-0">{{$item->tugas_akhir->judul}}</h5>
                                 <p class="m-0 text-muted small">{{$item->tugas_akhir->topik->nama_topik}} - {{$item->tugas_akhir->jenis_ta->nama_jenis}}</p>
                             </td>
@@ -142,12 +144,12 @@
                             @if (getInfoLogin()->hasRole('Admin'))
                             <td class="text-align-center justify-content-center">
                                 @if ($item->status == 'belum_terjadwal')
-                                <span class="badge rounded-pill badge-soft-secondary font-size-12">{{$item->status}}</span>
+                                <span class="badge rounded-pill badge-soft-secondary font-size-12">Belum Terjadwal</span>
                                 @else
                                     @if ($item->status == 'sudah_terjadwal')
-                                    <span class="badge rounded-pill badge-soft-primary font-size-12">{{$item->status}}</span>
+                                    <span class="badge rounded-pill badge-soft-primary font-size-12">Sudah Terjadwal</span>
                                     @else
-                                    <span class="badge rounded-pill badge-soft-success font-size-12">{{$item->status}}</span>
+                                    <span class="badge rounded-pill badge-soft-success font-size-12">Telah Seminar</span>
                                     @endif
                                 @endif
                             </td>
@@ -160,12 +162,13 @@
                                         <a href="" class="btn btn-sm btn-primary mb-1"><i class="bx bx-check"></i></a>
                                     @endif --}}
                                 @endcan
-                                @else
-                                <a href="#" class="btn btn-sm btn-outline-primary mb-1"><i class="bx bx-search"></i></a>
+                                @endif
+                                @if(getInfoLogin()->hasRole('Mahasiswa'))
+                                <a href="{{route('apps.jadwal-seminar.detail', $item->id)}}" class="btn btn-sm btn-outline-primary mb-1"><i class="bx bx-search"></i></a>
                                 <a href="javascript:void(0);" 
                                     onclick="uploadFileSeminar('{{$item->id}}', '{{route('apps.jadwal-seminar.unggah-berkas', $item->id)}}')" 
                                     class="btn btn-sm btn-outline-secondary mb-1">
-                                        <i class="bx bx-file"></i>
+                                    <i class="bx bx-file"></i>
                                 </a>
                                 @endif
                             </td>
