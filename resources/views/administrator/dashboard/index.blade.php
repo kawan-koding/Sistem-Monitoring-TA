@@ -92,11 +92,9 @@
                             <a>
                                 <div class="d-flex align-items-start">
                                     <div class="flex-1 overflow-hidden">
-                                        <p class="mb-1"><strong>{{ $item->judul }}</strong></p>
-                                        <p class="text-truncate mb-0">{{ Str::limit($item->deskripsi, 150) }}</p>
-                                    </div>
-                                    <div class="font-size-12 ms-auto">
-                                        {{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y') }}
+                                        <h6 class="m-0"><b>{{ $item->judul }}</b></h4>
+                                        <p class="m-0" style="font-size: 14px">{{ Str::limit($item->deskripsi, 150) }}</p>
+                                        <p class="text-muted small m-0"><span class="me-2"><i class="bx bx-user me-1"></i> {{ $item->dosen->name }}</span> <i class="bx bx-group me-1"></i>{{ $item->ambilTawaran()->count() }}/{{ $item->kuota }} Kuota</p>
                                     </div>
                                 </div>
                             </a>

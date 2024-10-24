@@ -9,7 +9,7 @@
             <ul class="nav nav-tabs nav-tabs-custom nav-justified mt-1 mb-1" role="tablist">
                 <li class="nav-item">
                     <a class="nav-link active" href="#">
-                        <span class="d-block d-sm-none"><i class="mdi mdi-open-book"></i></span>
+                        <span class="d-block d-sm-none"><i class="mdi mdi-book-open"></i></span>
                         <span class="d-none d-sm-block">Tawaran Tugas Akhir</span>
                     </a>
                 </li>
