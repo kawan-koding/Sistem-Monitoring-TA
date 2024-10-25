@@ -25,4 +25,14 @@ class BimbingUji extends Model
     {
         return $this->belongsTo(Dosen::class);
     }
+
+    public function penilaian()
+    {
+        return $this->hasMany(Penilaian::class);
+    }
+
+    public function revisi()
+    {
+        return $this->hasMany(Revisi::class);
+    }
 }

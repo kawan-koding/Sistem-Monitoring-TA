@@ -77,9 +77,9 @@
         </div>
 
         <div class="social-links order-first order-lg-last mb-3 mb-lg-0">
-          <a href="#" class="youtube"><i class="bi bi-youtube"></i></a>
-          <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
-          <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
+          <a href="{{ getSetting('app_youtube')}}" class="youtube"><i class="bi bi-youtube"></i></a>
+          <a href="{{ getSetting('app_facebook')}}" class="facebook"><i class="bi bi-facebook"></i></a>
+          <a href="{{ getSetting('app_instagram')}}" class="instagram"><i class="bi bi-instagram"></i></a>
         </div>
       </div>
     </div>

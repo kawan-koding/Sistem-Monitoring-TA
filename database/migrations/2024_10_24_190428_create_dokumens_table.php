@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('detail_nilais', function (Blueprint $table) {
+        Schema::create('dokumens', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('nilai_id');
-            $table->foreign('nilai_id')->references('id')->on('nilais')->onDelete('cascade');
-            $table->text('aspek');
-            $table->double('angka');
-            $table->string('huruf', 45);
+            $table->string('model_type')->nullable();
+            $table->bigInteger('model_id')->nullable();
+            $table->string('nama')->nullable();
+            $table->enum('jenis',['Seminar','Sidang'])->nullable();
+            $table->string('file')->nullable();
             $table->timestamps();
         });
     }
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('detail_nilais');
+        Schema::dropIfExists('dokumens');
     }
 };

@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\Models\Role;
 use App\Models\User;
+use App\Models\Dosen;
+use App\Models\Mahasiswa;
 use App\Models\PeriodeTa;
 use Illuminate\Http\Request;
 use App\Models\JadwalSeminar;
@@ -127,15 +129,51 @@ class AuthController extends Controller
                 $user->token()->delete();
                 return 0;
             } else {
-                $user = User::create([
-                    'name' => $SSOUser['name'],
-                    'username' => $SSOUser['username'],
-                    'email' => $SSOUser['email'],
-                    'password' => Hash::make($SSOUser['username']),
-                    'image' => 'default.jpg',
-                ]);
+                $roles = unserialize($SSOUser['role']);
+                $isMahasiswa = false;
+                $isDosen = false;
+                foreach ($roles as $roleName) {
+                    $formattedRoleName = ucfirst(strtolower($roleName));
 
-                $roles = unserialize($SSOUser['role']); 
+                    if (stripos($formattedRoleName, 'Mahasiswa') !== false) {
+                        $isMahasiswa = true;
+                    } elseif (stripos($formattedRoleName, 'Dosen') !== false) {
+                        $isDosen = true;
+                    }
+                }
+                if ($isMahasiswa) {
+                    $mhs = Mahasiswa::create([
+                        'nama_mhs' => $SSOUser['name'],
+                        'nim' => $SSOUser['username'],
+                        'email' => $SSOUser['email'],
+                    ]);
+
+                    $user = User::create([
+                        'name' => $mhs->nama_mhs,
+                        'username' => $mhs->nim,
+                        'email' => $mhs->email,
+                        'password' => Hash::make($mhs->nim), 
+                        'image' => 'default.png',
+                        'userable_type' => Mahasiswa::class,
+                        'userable_id' => $mhs->id
+                    ]);
+                } elseif ($isDosen) {
+                    $dosen = Dosen::create([
+                        'name' => $SSOUser['name'],
+                        'nidn' => $SSOUser['username'],
+                        'email' => $SSOUser['email'],
+                    ]);
+                    $user = User::create([
+                        'name' => $dosen->name,
+                        'username' => $dosen->nidn,
+                        'email' => $dosen->email,
+                        'password' => Hash::make($dosen->nidn),
+                        'image' => 'default.jpg',
+                        'userable_type' => Dosen::class,
+                        'userable_id' => $dosen->id
+                    ]);
+                }
+
                 foreach ($roles as $roleName) {
                     $formattedRoleName = ucfirst(strtolower($roleName));
                     $role = Role::where('name', $formattedRoleName)->first();
@@ -143,7 +181,8 @@ class AuthController extends Controller
                         $role = Role::create(['name' => $formattedRoleName]);
                     }
                     $user->assignRole($role);
-                }            
+                }
+                
                 Auth::login($user,true);
                 $user->token()->delete();
                 return 0;

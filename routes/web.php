@@ -53,9 +53,7 @@ use App\Http\Controllers\RekomendasiTopik\RekomendasiTopikController as GuestRek
 
 Route::middleware('guest')->group(function() {
     Route::get('',[HomeController::class, 'index'])->name('home');
-    Route::prefix('tawaran-topik')->group( function() {
-        Route::get('',[GuestRekomendasiTopikController::class, 'index'])->name('guest.rekomendasi-topik');
-    });
+    Route::get('tawaran-topik',[GuestRekomendasiTopikController::class, 'index'])->name('guest.rekomendasi-topik');
 });
 
 Route::get('login', [AuthController::class, 'index'])->name('login')->middleware('guest');
@@ -242,7 +240,7 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::get('lembar-penilaian',[TemplateController::class, 'lembarPenilaian'])->name('apps.templates.lembar-penilaian');
     });
     
-    Route::prefix('jadwal')->middleware('read-jadwal')->group( function(){
+    Route::prefix('jadwal')->middleware('can:read-jadwal')->group( function(){
         Route::get('',[JadwalController::class, 'index'])->name('apps.jadwal');
     });
 
