@@ -33,32 +33,63 @@
                             </button>
                         </div>
                     @endif
+                    <ul class="nav nav-tabs nav-tabs-custom nav-justified mt-1 mb-2" role="tablist">
+                        <li class="nav-item">
+                            <a href="{{route('apps.jadwal')}}" class="nav-link @if(url()->full() == route('apps.jadwal')) active @endif">
+                                <span class="d-block d-sm-none small">Mahasiswa Bimbing</span>
+                                <span class="d-none d-sm-block fw-bold">Mahasiswa Bimbing</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('apps.jadwal', ['jenis' => 'penguji']) }}" class="nav-link @if(url()->full() == route('apps.jadwal', ['jenis' => 'penguji'])) active @endif">
+                                <span class="d-block d-sm-none small">Mahasiswa Uji</span>
+                                <span class="d-none d-sm-block fw-bold">Mahasiswa Uji</span>
+                            </a>
+                        </li>
+                    </ul>
                     <div class="table-responsive">
                         <table class="table table-striped" id="datatable">
                             <thead>
                                 <tr>
-                                    <th width="5%">No</th>
-                                    <th>Kode</th>
-                                    <th>Nama</th>
+                                    <th width="2%">No</th>
+                                    <th>Judul</th>
+                                    <th>Ruangan</th>
+                                    <th>Status</th>
                                     <th width="20%">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {{-- @foreach ($jurusan as $item)
+                                @foreach ($data as $item)
                                 <tr>
                                     <td>{{$loop->iteration}}</td>
-                                    <td>{{$item->kode}}</td>
-                                    <td>{{$item->nama}}</td>
                                     <td>
-                                        @can('update-jurusan')
-                                        <a href="javascript:void(0);" onclick="editData('{{ $item->id }}', '{{route('apps.jurusan.show', $item->id)}}')" class="btn btn-outline-primary btn-sm mx-1 my-1"><i class="bx bx-edit-alt"></i></a>
-                                        @endcan
-                                        @can('delete-jurusan')
-                                        <button class="btn btn-outline-dark btn-sm mx-1 my-1" data-toggle="delete" data-url="{{ route('apps.jurusan.delete', $item->id) }}"><i class="bx bx-trash"></i></button>
-                                        @endcan
+                                        @if ($item->tugas_akhir->jadwal_seminar()->orderBy('id', 'desc')->first()->status == 'belum_terjadwal')
+                                            <span class="badge rounded-pill badge-soft-primary">Belum Terjadwal</span>
+                                        @else
+                                            @if ($item->tugas_akhir->jadwal_seminar()->orderBy('id', 'desc')->first()->status == 'sudah_terjadwal')
+                                                <span class="badge rounded-pill badge-soft-primary">Sudah Terjadwal</span>
+                                                @else
+                                                <span class="badge rounded-pill badge-soft-primary">Telah Seminar</span>
+                                            @endif
+                                        @endif
+                                        <h5>
+                                            {{$item->tugas_akhir->judul}}
+                                        </h5>
+                                        <p>{{$item->tugas_akhir->mahasiswa->nama_mhs}}</p>
+                                    </td>
+                                    <td>
+                                        <strong>{{$item->tugas_akhir->jadwal_seminar()->orderBy('id', 'desc')->first()->ruangan->nama_ruangan}}</strong>
+                                        <p class="mb-0">Tanggal: {{\Carbon\Carbon::createFromFormat('Y-m-d', $item->tugas_akhir->jadwal_seminar()->orderBy('id', 'desc')->first()->tanggal)->locale('id')->translatedFormat('l, d M Y')}}</p>
+                                        <p>Waktu: {{$item->tugas_akhir->jadwal_seminar()->orderBy('id', 'desc')->first()->jam_mulai}} - {{$item->tugas_akhir->jadwal_seminar()->orderBy('id', 'desc')->first()->jam_selesai}}</p>
+                                    </td>
+                                    <td>
+                                        <span class="badge {{isset($item->tugas_akhir->status_seminar) ? ($item->tugas_akhir->status_seminar == 'acc' ? 'badge-soft-success' : ($item->tugas_akhir->status_seminar == 'revisi'  ? 'badge-soft-primary' : 'badge-soft-danger' )) : 'badge-soft-secondary'}}">{{$item->tugas_akhir->status_seminar ?? 'Belum Seminar'}}</span>
+                                    </td>
+                                    <td class="text-center">
+                                        <a href="{{route('apps.jadwal.nilai', $item->id)}}" class="btn btn-outline-primary btn-sm mb-1"><i class="bx bx-clipboard"></i></a>
                                     </td>
                                 </tr>
-                                @endforeach --}}
+                                @endforeach
                             </tbody>
                         </table>
                     </div>

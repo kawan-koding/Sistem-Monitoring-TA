@@ -116,7 +116,7 @@
                             <td>{{$loop->iteration}}</td>
                             <td>
                                 @if($item->status == "telah_seminar")
-                                <span class="badge bg-soft-primary small mb-1">{{$item->tugas_akhir->status_seminar}}</span>
+                                <span class="badge small mb-1 {{isset($item->tugas_akhir->status_seminar) ? ($item->tugas_akhir->status_seminar == 'acc' ? 'badge-soft-success' : ($item->tugas_akhir->status_seminar == 'revisi' ? 'badge-soft-primary' : 'badge-soft-danger')) : ''}}">{{$item->tugas_akhir->status_seminar}}</span>
                                 @endif
                                 <h5 class="fw-bold m-0">{{$item->tugas_akhir->judul}}</h5>
                                 <p class="m-0 text-muted small">{{$item->tugas_akhir->topik->nama_topik}} - {{$item->tugas_akhir->jenis_ta->nama_jenis}}</p>

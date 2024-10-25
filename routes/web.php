@@ -241,7 +241,9 @@ Route::prefix('apps')->middleware('auth')->group(function () {
     });
     
     Route::prefix('jadwal')->middleware('can:read-jadwal')->group( function(){
-        Route::get('',[JadwalController::class, 'index'])->name('apps.jadwal');
+        Route::get('{jenis?}',[JadwalController::class, 'index'])->name('apps.jadwal');
+        Route::get('{jadwal}/nilai',[JadwalController::class, 'rating'])->name('apps.jadwal.nilai');
+        // Route::post('{jadwal}/revisi',[JadwalController::class, 'revisi'])->name('apps.jadwal.revisi');
     });
 
     Route::get('penilaian', function(){
