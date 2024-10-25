@@ -5,7 +5,7 @@
     <div class="col-md-12 col-sm-12 col-g-12">
         <div class="card">
             <div class="card-body">
-                @if (getInfoLogin()->hasRole('Admin'))
+                @if (in_array(session('switchRoles'), ['Admin','Developer','Kajur']))
                     <form method="GET" action="{{ route('apps.daftar-ta') }}">
                         <div class="row">
                             <div class="col-md-5 col-sm-12">

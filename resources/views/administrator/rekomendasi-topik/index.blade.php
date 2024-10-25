@@ -22,7 +22,7 @@
             </ul>
             @endif
             <div class="card-body">
-                @if (!getInfoLogin()->hasRole('Mahasiswa') && session('switchRoles') !== 'Kaprodi')
+                @if (in_array(session('switchRoles'), ['Dosen']))
                     @can('create-rekomendasi-topik')
                     <button onclick="tambahData()" class="btn btn-primary"><i class="fa fa-plus"></i> Tambah</button>
                     <hr>
@@ -72,7 +72,9 @@
                                 @if(getInfoLogin()->hasRole('Mahasiswa') || getInfoLogin()->hasRole('Developer'))
                                 <th>Nama Dosen</th>
                                 @endif
+                                @if(session('switchRoles') !== 'Kajur')
                                 <th>Aksi</th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody>
@@ -118,6 +120,7 @@
                                 @if(getInfoLogin()->hasRole('Mahasiswa') || getInfoLogin()->hasRole('Developer'))
                                 <td>{{ $item->dosen->name}}</td>
                                 @endif
+                                @if(session('switchRoles') !== 'Kajur') 
                                 <td>
                                     @if (session('switchRoles') === 'Dosen')
                                         @if (getInfoLogin()->hasRole('Dosen') || getInfoLogin()->hasRole('Developer'))
@@ -144,6 +147,7 @@
                                         @endif
                                     @endif
                                 </td>
+                                @endif
                             </tr>
                             @endforeach
                         </tbody>

@@ -7,8 +7,8 @@
                 <div class="card-body">
                     @can('create-jurusan')
                     <button onclick="tambahData()" class="btn btn-primary"><i class="fa fa-plus"></i> Tambah</button>
-                    @endcan
                     <hr>
+                    @endcan
                     @if(session('success'))
                         <div class="alert alert-success alert-dismissible fade show" role="alert">
                             <i class="mdi mdi-check-all me-2"></i> {{ session('success') }}
@@ -43,7 +43,9 @@
                                     <th width="5%">No</th>
                                     <th>Kode</th>
                                     <th>Nama</th>
+                                    @if(session('switchRoles') !== 'Kajur')
                                     <th>Aksi</th>
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody>
@@ -59,6 +61,7 @@
                                             </div>
                                         </div>
                                     </td>
+                                    @if(session('switchRoles') !== 'Kajur')
                                     <td>
                                         @can('update-program-studi')
                                         <button onclick="editData('{{ $item->id }}', '{{route('apps.program-studi.show', $item->id)}}')" class="btn btn-outline-primary btn-sm mx-1 my-1" title="Edit"><i class="bx bx-edit-alt"></i></button>
@@ -67,6 +70,7 @@
                                         <button class="btn btn-outline-dark btn-sm mx-1 my-1" onclick="hapusProdi('{{ $item->id }}', '{{ route('apps.program-studi.delete', $item->id) }}')" title="Hapus"><i class="bx bx-trash"></i></button>                                        
                                         @endcan
                                     </td>
+                                    @endif
                                 </tr>
                                 @endforeach
                             </tbody>

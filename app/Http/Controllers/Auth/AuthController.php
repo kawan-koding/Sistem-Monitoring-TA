@@ -177,10 +177,9 @@ class AuthController extends Controller
                 foreach ($roles as $roleName) {
                     $formattedRoleName = ucfirst(strtolower($roleName));
                     $role = Role::where('name', $formattedRoleName)->first();
-                    if (!$role) {
-                        $role = Role::create(['name' => $formattedRoleName]);
+                    if ($role) {
+                        $user->assignRole($role);
                     }
-                    $user->assignRole($role);
                 }
                 
                 Auth::login($user,true);

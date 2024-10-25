@@ -23,7 +23,7 @@ class DaftarTAController extends Controller
         // if (getInfoLogin()->hasRole('Admin')) {
         //     $dataTa->where('status', '!=', 'draft');
         // } 
-        if (getInfoLogin()->hasRole('Kaprodi')) {
+        if (session('switchRoles') == 'Kaprodi') {
             $user = getInfoLogin()->userable;
             $prodi = $user->programStudi->id;
             if($prodi) {
