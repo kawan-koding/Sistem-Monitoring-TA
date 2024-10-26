@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Lembar Penilaian Seminar Proposal</title>
     <style>
@@ -23,6 +23,7 @@
             font-family: 'Times New Roman', Times, serif,;
             margin: 0 2cm;
             padding: 0;
+            overflow-x: hidden; /* Menghindari scrollbar horizontal */
         }
         
         .header-logo img {
@@ -107,6 +108,42 @@
             width: 50%;
             text-align: center;
         }
+
+        .tag-name {
+            margin: 100px 0 0 0;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                font-size: 0.8em; /* Mengurangi ukuran font di layar kecil */
+                margin: 0 1cm;
+                padding: 0;
+            }
+
+            .header-logo img {
+                height: 0.5cm;
+                width: 0.5cm;
+            }
+
+            .content {
+                margin-top: 40px;
+            }
+            .header-title {
+                font-size: 5px;
+            }
+
+            .document-info table {
+                font-size: 6px;
+            }
+
+            table, .content, .content-2, .criteria-container {
+                font-size: 0.8em; /* Mengurangi ukuran font di tabel */
+            }
+
+            .tag-name {
+                margin: 50px 0 0 0;
+            }
+        }
         
     </style>
 </head>
@@ -145,6 +182,7 @@
     <div class="content">
         <div class="title">
             <h5 style="font-weight: 800; text-align: center">LEMBAR PENILAIAN SEMINAR PROPOSAL</h5>
+            <button id="print" class="no-print">Cetak</button>
             <table>
             <tr>
                 <td width="30%">Nama Mahasiswa</td>
@@ -277,12 +315,17 @@
             <div class="criteria-right">
                 <p>Dosen Pembimbing II,</p>
                 <div class="footer-signature">
-                    <p style="margin: 100px 0px 0px 0px">(Khoirul Umam, S.Pd., M.Kom.)</p>
+                    <p class="tag-name">(Khoirul Umam, S.Pd., M.Kom.)</p>
                     <p style="margin: 0">NIP. 199103112022031006</p>
                 </div>
             </div>
         </div>
     </div>
 
+    <script>
+        document.getElementById('print').addEventListener('click', function() {
+            window.print();
+        });
+    </script>
 </body>
 </html>
