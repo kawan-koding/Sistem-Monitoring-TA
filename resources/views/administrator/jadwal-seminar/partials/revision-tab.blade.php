@@ -16,32 +16,19 @@
         <th></th>
     </thead>
     <tbody>
-        <tr>
-            <td>1.</td>
-            <td style="white-space: nowrap">
-                <strong>Dianni Yusuf, S.Kom., M.Kom.</strong>
-                <p class="m-0 text-muted small">Penguji 1</p>
-            </td>
-            <td>
-                <ol>
-                    <li>Perbaiki penulisan</li>
-                    <li>Perlu dibahas lebih detail terkait metode yang akan digunakan</li>
-                    <li>Pengujian belum mencakup aspek - aspek yang diperlukan dalam mengukur tingkat keberhasilan suatu sistem</li>
-                </ol>
-            </td>
-        </tr>
-        <tr>
-            <td>2.</td>
-            <td style="white-space: nowrap">
-                <strong>Sepyan Purnama Kristanto, S.Kom., M.Kom.</strong>
-                <p class="m-0 text-muted small">Penguji 2</p>
-            </td>
-            <td>
-                <ol>
-                    <li>Perbaiki penulisan</li>
-                    <li>Gambar kurang jelas</li>
-                </ol>
-            </td>
-        </tr>
+        @foreach ($data->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->orderBy('urut', 'asc')->get() as $item)
+            <tr>
+                <td>1.</td>
+                <td style="white-space: nowrap">
+                    <strong>{{ $item->dosen->name }}</strong>
+                    <p class="m-0 text-muted small">Penguji {{ $item->urut }}</p>
+                </td>
+                <td>
+                    {!! is_null($item->revisi()->where('type', 'Seminar')->first())
+                        ? '-'
+                        : $item->revisi()->where('type', 'Seminar')->first()->catatan !!}
+                </td>
+            </tr>
+        @endforeach
     </tbody>
-</table>
+</table>    

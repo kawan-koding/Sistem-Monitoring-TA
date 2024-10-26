@@ -7,6 +7,8 @@ use App\Models\BimbingUji;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\JadwalSeminar;
+use App\Models\Revisi;
+use Exception;
 
 class JadwalController extends Controller
 {
@@ -66,8 +68,33 @@ class JadwalController extends Controller
         return view('administrator.jadwal.nilai', $data);
     }
 
-    // public function revisi(Request $request,JadwalSeminar $jadwal)
-    // {
-    //     dd($request->all());
-    // }
+    public function revisi(Request $request, JadwalSeminar $jadwal)
+    {
+        $request->validate([
+            'revisi' => 'required'
+        ]);
+        
+        try {
+            // get penguji
+            $bimbingUji = $jadwal->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->first();
+
+            // check revisi
+            $check = Revisi::where('bimbing_uji_id', $bimbingUji->id)->where('type', 'Seminar');
+
+            if($check->count() > 0) {
+                $check->update(['catatan' => $request->revisi]);
+            } else {
+                // insert revision
+                Revisi::create([
+                    'bimbing_uji_id' => $bimbingUji->id,
+                    'type' => 'Seminar',
+                    'catatan' => $request->reisi,
+                ]);
+            }
+
+            return redirect()->back()->with(['success' => 'Revisi berhasil disimpan']);
+        } catch(Exception $e) {
+            return redirect()->back()->with(['error' => $e->getMessage()]);
+        }
+    }
 }
