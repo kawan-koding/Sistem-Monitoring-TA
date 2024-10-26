@@ -66,7 +66,7 @@
         <form action="{{ route('apps.jadwal.revisi', $data->id) }}" method="POST">
             @csrf
             {{-- {{dd($data->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->first()->revisi)}} --}}
-            <textarea name="revisi" id="elm1">{{ !is_null($data->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->first()->revisi) ? $data->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->first()->revisi()->where('type', 'Seminar')->first()->catatan : '' }}</textarea>
+            <textarea name="revisi" id="elm1">{{ !is_null($data->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->first()->revisi()->where('type', 'Seminar')->first()) ? $data->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->first()->revisi()->where('type', 'Seminar')->first()->catatan : '' }}</textarea>
             <br>
             <div class="text-end">
                 <button class="btn btn-primary" type="submit">Simpan</button>

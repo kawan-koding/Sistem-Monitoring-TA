@@ -71,7 +71,7 @@
                     @can(['read-jadwal'])
                     <li>
                         <a href="{{route('apps.jadwal')}}" class=" waves-effect">
-                            <i class="mdi mdi-calendar-text"></i>
+                            <i class="bx bx-calendar"></i>
                             <span>Jadwal Seminar</span>
                         </a>
                     </li>

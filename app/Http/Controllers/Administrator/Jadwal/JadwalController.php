@@ -88,7 +88,7 @@ class JadwalController extends Controller
                 Revisi::create([
                     'bimbing_uji_id' => $bimbingUji->id,
                     'type' => 'Seminar',
-                    'catatan' => $request->reisi,
+                    'catatan' => $request->revisi,
                 ]);
             }
 
