@@ -40,7 +40,7 @@ class JadwalController extends Controller
         return view('administrator.jadwal.index', $data);
     }
 
-    public function rating(JadwalSeminar $jadwal)
+    public function evaluation(JadwalSeminar $jadwal)
     {
         $data = [
             'title' => 'Jadwal Seminar',
@@ -65,7 +65,7 @@ class JadwalController extends Controller
             'data' => $jadwal
         ];
         
-        return view('administrator.jadwal.nilai', $data);
+        return view('administrator.jadwal.penilaian', $data);
     }
 
     public function revisi(Request $request, JadwalSeminar $jadwal)
@@ -88,7 +88,7 @@ class JadwalController extends Controller
                 Revisi::create([
                     'bimbing_uji_id' => $bimbingUji->id,
                     'type' => 'Seminar',
-                    'catatan' => $request->reisi,
+                    'catatan' => $request->revisi,
                 ]);
             }
 
@@ -97,4 +97,9 @@ class JadwalController extends Controller
             return redirect()->back()->with(['error' => $e->getMessage()]);
         }
     }
+
+    // public function nilai(Request $request, JadwalSeminar $jadwal)
+    // {
+    //     $request->validate()
+    // }
 }

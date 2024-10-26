@@ -18,7 +18,7 @@
     <tbody>
         @foreach ($data->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->orderBy('urut', 'asc')->get() as $item)
             <tr>
-                <td>1.</td>
+                <td>{{$loop->iteration  }}</td>
                 <td style="white-space: nowrap">
                     <strong>{{ $item->dosen->name }}</strong>
                     <p class="m-0 text-muted small">Penguji {{ $item->urut }}</p>

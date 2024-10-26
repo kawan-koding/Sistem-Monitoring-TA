@@ -97,7 +97,7 @@
                                         </td>
                                         <td class="text-center">
                                             @if (!is_null($item->tugas_akhir->jadwal_seminar()->orderBy('id', 'desc')->first()))
-                                                <a href="{{ route('apps.jadwal.nilai', $item->tugas_akhir->jadwal_seminar()->orderBy('id', 'desc')->first()->id) }}"
+                                                <a href="{{ route('apps.jadwal.penilaian', $item->tugas_akhir->jadwal_seminar()->orderBy('id', 'desc')->first()->id) }}"
                                                     class="btn btn-outline-primary btn-sm mb-1">
                                                     <i class="bx bx-clipboard"></i>
                                                 </a>
