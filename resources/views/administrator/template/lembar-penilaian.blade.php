@@ -115,7 +115,7 @@
 
         @media (max-width: 600px) {
             body {
-                font-size: 0.8em; /* Mengurangi ukuran font di layar kecil */
+                font-size: 0.8em;
                 margin: 0 1cm;
                 padding: 0;
             }

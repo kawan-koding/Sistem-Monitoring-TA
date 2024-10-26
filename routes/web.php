@@ -249,4 +249,10 @@ Route::prefix('apps')->middleware('auth')->group(function () {
     Route::get('penilaian', function(){
         return view('administrator.template.lembar-penilaian');
     }); 
+    Route::get('rekapitulasi', function(){
+        return view('administrator.template.rekapitulasi');
+    }); 
+    Route::get('revisi', function(){
+        return view('administrator.template.revisi');
+    }); 
 });
