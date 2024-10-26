@@ -14,10 +14,6 @@ class Dosen extends Model
 
     protected $guarded = [];
 
-    public function rumpun_ilmu(){
-        return $this->hasMany(RumpunIlmu::class);
-    }
-
     public function user()
     {
         return $this->morphOne(User::class, 'userable');

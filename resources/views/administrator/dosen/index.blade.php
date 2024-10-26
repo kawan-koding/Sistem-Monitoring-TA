@@ -5,10 +5,13 @@
     <div class="col-md-12 col-sm-12 col-g-12">
         <div class="card">
             <div class="card-body">
+                
+                @if(session('switchRoles') !== 'Kajur')
                 <button onclick="tambahData()" class="btn btn-primary"><i class="fa fa-plus"></i> Tambah</button>
                 <button onclick="importData()" class="btn btn-success"><i class="fa fa-file-excel"></i> Import</button>
                 {{-- <a href="{{route('apps.dosen.tarik-data')}}" class="btn btn-secondary"><i class="fas fa-hand-paper"></i> Tarik Data</a> --}}
                 <hr>
+                @endif
                 @if(session('success'))
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
                         <i class="mdi mdi-check-all me-2"></i> {{ session('success') }}
@@ -46,7 +49,9 @@
                                 <th>Program Studi</th>
                                 <th>Bidang Keahlian</th>
                                 <th>Tanda Tangan</th>
+                                @if(session('switchRoles') !== 'Kajur')
                                 <th width="20%">Aksi</th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody>
@@ -80,10 +85,12 @@
                                     <span> - </span>
                                     @endif
                                 </td>
+                                @if(session('switchRoles') !== 'Kajur')
                                 <td class="text-center">
                                     <button onclick="editData('{{ $item->id }}', '{{route('apps.dosen.show', $item->id)}}')" class="btn btn-outline-primary btn-sm"><i class="bx bx-edit-alt"></i></a>
                                     <button class="btn btn-outline-dark btn-sm mx-1 my-1" onclick="hapusDosen('{{ $item->id }}', '{{ route('apps.dosen.delete', $item->id)}}')"><i class="bx bx-trash"></i></button>
                                 </td>
+                                @endif
                             </tr>
                             @endforeach
                         </tbody>

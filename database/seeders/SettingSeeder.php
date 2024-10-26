@@ -52,6 +52,24 @@ class SettingSeeder extends Seeder
             ],
             [
                 'type' => 'general',
+                'key' => 'app_instagram',
+                'name' => 'Instagram',
+                'value' => 'https://www.instagram.com/poliwangi_jinggo/'
+            ],
+            [
+                'type' => 'general',
+                'key' => 'app_youtube',
+                'name' => 'Youtube',
+                'value' => 'https://www.youtube.com/c/poliwangitv'
+            ],
+            [
+                'type' => 'general',
+                'key' => 'app_facebook',
+                'name' => 'Facebook',
+                'value' => 'https://www.facebook.com/polinewangi/'
+            ],
+            [
+                'type' => 'general',
                 'key' => 'app_address',
                 'name' => 'Alamat Aplikasi',
                 'value' => 'Jalan Raya Jember KM 13 Banyuwangi 68461, Jawa Timur - Indonesia'
@@ -69,47 +87,5 @@ class SettingSeeder extends Seeder
                 'value' => 'https://drive.google.com/file/d/1CF7BnMwtpPVVmo3fkdBsJztGabu_I3FE/view?usp=sharing'
             ],
         ]);
-        //
-        // Setting::create([
-        //     'type' => 'general',
-        //     'options' => 'profile',
-        //     'label' => 'logo',
-        //     'value' => "POLIWANGI.png",
-        //     'is_default' => 1,
-        //     'display_suffix' => "-",
-        // ]);
-        // Setting::create([
-        //     'type' => 'general',
-        //     'options' => 'profile',
-        //     'label' => 'icon',
-        //     'value' => "POLIWANGI.png",
-        //     'is_default' => 1,
-        //     'display_suffix' => "-",
-        // ]);
-        // Setting::create([
-        //     'type' => 'general',
-        //     'options' => 'profile',
-        //     'label' => 'name',
-        //     'value' => "POLITEKNIK NEGERI BANYUWANGI",
-        //     'is_default' => 1,
-        //     'display_suffix' => "-",
-        // ]);
-        // Setting::create([
-        //     'type' => 'general',
-        //     'options' => 'profile',
-        //     'label' => 'telephone',
-        //     'value' => "08965789",
-        //     'is_default' => 1,
-        //     'display_suffix' => "-",
-        // ]);
-        // Setting::create([
-        //     'type' => 'general',
-        //     'options' => 'profile',
-        //     'label' => 'address',
-        //     'value' => "lkhjh hhooio",
-        //     'is_default' => 1,
-        //     'display_suffix' => "-",
-        // ]);
-        
     }
 }

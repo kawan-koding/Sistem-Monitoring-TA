@@ -10,8 +10,8 @@
                     @endcan
                     @can('import-mahasiswa')
                     <button onclick="importData()" class="btn btn-success"><i class="fa fa-file-excel"></i> Import</button>
-                    @endcan
                     <hr>
+                    @endcan
                     @if(session('success'))
                         <div class="alert alert-success alert-dismissible fade show" role="alert">
                             <i class="mdi mdi-check-all me-2"></i> {{ session('success') }}
@@ -49,7 +49,9 @@
                                     <th>Email</th>
                                     <th>Jenis Kelamin</th>
                                     <th>Program Studi</th>
+                                    @if(session('switchRoles') !== 'Kajur')
                                     <th>Aksi</th>
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody>
@@ -75,6 +77,7 @@
                                     </td>
                                     <td>{{$item->jenis_kelamin == 'Laki-laki' ? 'Laki-Laki' : ($item->jenis_kelamin == 'Perempuan' ? 'Perempuan' : 'Lainnya')}}</td>
                                     <td>{{ $item->programStudi->nama ?? '' }}</td>
+                                    @if(session('switchRoles') !== 'Kajur')
                                     <td>
                                         @can('update-mahasiswa')
                                         <button title="Edit" onclick="editData('{{ $item->id }}', '{{route('apps.mahasiswa.show', $item->id)}}')" class="btn btn-outline-primary btn-sm mx-1 my-1"><i class="bx bx-edit-alt"></i></button>
@@ -83,6 +86,7 @@
                                         <button onclick="hapusMahasiswa('{{ $item->id }}', '{{ route('apps.mahasiswa.delete', $item->id) }}')" title="Hapus" class="btn btn-outline-dark btn-sm mx-1 my-1"><i class="bx bx-trash"></i></button>
                                         @endcan
                                     </td>
+                                    @endif
                                 </tr>
                                 @endforeach
                             </tbody>

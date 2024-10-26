@@ -25,7 +25,7 @@ class RoleSeeder extends Seeder
             'guard_name' => 'web'
         ]);
 
-        $admin = Role::create([
+        $kajur = Role::create([
             'name' => 'Kajur',
             'guard_name' => 'web'
         ]);
@@ -43,12 +43,6 @@ class RoleSeeder extends Seeder
         $mahasiswa = Role::create([
             'name' => 'Mahasiswa',
             'guard_name' => 'web'
-        ]);
-
-        $kajur = Role::create([
-
-            'name' => 'Kajur',
-            'guard_name' => 'Web'
         ]);
         
         $developer->givePermissionTo(Permission::all());

@@ -18,6 +18,19 @@
             </div>
             @endif
 
+            @if (in_array('Kajur', $roles)) 
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                      <i class="fas fa-user-tie card-icon"></i>
+                      <h5 class="card-title mt-3">Kajur</h5>
+                      <p class="card-text">Masuk sebagai kajur.</p>
+                      <a href="{{ route('apps.switcher', ['role' => 'Kajur']) }}" class="btn btn-primary">Masuk</a>
+                    </div>
+                </div>
+            </div>
+            @endif
+
             @if (in_array('Kaprodi', $roles)) 
             <div class="col-lg-4">
                 <div class="card">

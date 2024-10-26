@@ -53,9 +53,7 @@ use App\Http\Controllers\RekomendasiTopik\RekomendasiTopikController as GuestRek
 
 Route::middleware('guest')->group(function() {
     Route::get('',[HomeController::class, 'index'])->name('home');
-    Route::prefix('tawaran-topik')->group( function() {
-        Route::get('',[GuestRekomendasiTopikController::class, 'index'])->name('guest.rekomendasi-topik');
-    });
+    Route::get('tawaran-topik',[GuestRekomendasiTopikController::class, 'index'])->name('guest.rekomendasi-topik');
 });
 
 Route::get('login', [AuthController::class, 'index'])->name('login')->middleware('guest');

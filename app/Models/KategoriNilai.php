@@ -10,4 +10,10 @@ class KategoriNilai extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    public function penilaian()
+    {
+        return $this->hasMany(Penilaian::class);
+    }
 }
+

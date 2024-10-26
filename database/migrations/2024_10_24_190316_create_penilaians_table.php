@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('revisis', function (Blueprint $table) {
+        Schema::create('penilaians', function (Blueprint $table) {
             $table->id();
             $table->foreignId('bimbing_uji_id')->nullable()->references('id')->on('bimbing_ujis')->onDelete('cascade');
+            $table->foreignId('kategori_nilai_id')->nullable()->references('id')->on('kategori_nilais')->onDelete('cascade');
+            $table->string('nilai');
             $table->enum('type',['Seminar','Sidang']);
-            $table->text('catatan')->nullable();
             $table->timestamps();
         });
     }
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('revisis');
+        Schema::dropIfExists('penilaians');
     }
 };

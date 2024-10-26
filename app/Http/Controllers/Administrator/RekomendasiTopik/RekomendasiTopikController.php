@@ -23,14 +23,14 @@ class RekomendasiTopikController extends Controller
     {
         $user = getInfoLogin()->userable;
         $query = RekomendasiTopik::with(['dosen', 'jenisTa', 'ambilTawaran']);
-        if (getInfoLogin()->hasRole('Dosen') && session('switchRoles') == 'Dosen') {
+        if (session('switchRoles') == 'Dosen') {
             $dosen = Dosen::where('id', $user->id)->first();
             $query->where('dosen_id', $dosen->id);
         }
-        if (getInfoLogin()->hasRole('Mahasiswa')) {
+        if (session('switchRoles') == 'Mahasiswa') {
             $query->where('kuota', '!=', '0')->where('status', 'Disetujui');
         }
-        if (getInfoLogin()->hasRole('Kaprodi')) {
+        if (session('switchRoles') == 'Kaprodi') {
             $prodi = $user->programStudi->id;
             $query->whereHas('dosen', function ($q) use ($prodi) {
                 $q->where('program_studi_id', $prodi);
