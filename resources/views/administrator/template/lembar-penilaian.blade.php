@@ -316,7 +316,7 @@
                 <p>Dosen Pembimbing II,</p>
                 <div class="footer-signature">
                     <p class="tag-name">(Khoirul Umam, S.Pd., M.Kom.)</p>
-                    <p style="margin: 0">NIP. 199103112022031006</p>
+                    <p style="margin: 5px 0;">NIP. 199103112022031006</p>
                 </div>
             </div>
         </div>
