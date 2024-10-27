@@ -88,6 +88,7 @@
         }
         .content-2 table, .content-2 th, .content-2 td {
             border: 1px solid black;
+            padding: 5px;
         }
 
         .content-2 td {
@@ -101,16 +102,19 @@
         }
 
         .criteria-left {
-            width: 50%;
+            width: 60%;
         }
 
         .criteria-right {
-            width: 50%;
-            text-align: center;
+            width: 40%;
         }
 
         .tag-name {
             margin: 100px 0 0 0;
+        }
+
+        .tag-name-2 {
+            margin: 118px 0 0 0;
         }
 
         @media (max-width: 600px) {
@@ -140,8 +144,20 @@
                 font-size: 0.8em; /* Mengurangi ukuran font di tabel */
             }
 
+            .criteria-left {
+                width: 55%;
+            }
+
+            .criteria-right {
+                width: 45%;
+            }
+
             .tag-name {
                 margin: 50px 0 0 0;
+            }
+
+            .tag-name-2 {
+               margin: 60px 0 0 0;
             }
         }
         
@@ -181,7 +197,7 @@
 
     <div class="content">
         <div class="title">
-            <h5 style="font-weight: 800; text-align: center">LEMBAR PENILAIAN SEMINAR PROPOSAL</h5>
+                <h5 style="font-weight: 800; text-align: center">REKAPITULASI NILAI AKHIR SEMINAR PROPOSAL</h5>
             <button id="print" class="no-print">Cetak</button>
             <table>
             <tr>
@@ -195,24 +211,26 @@
                 <td>362055401016</td>
             </tr>
             <tr>
+                <td>Program Studi</td>
+                <td>:</td>
+                <td>Teknologi Rekayasa Perangkat Lunak</td>
+            </tr>
+            <tr>
                 <td>Judul TA</td>
                 <td>:</td>
                 <td>Pengembangan Frontend dan Backend Aplikasi Surat Disposisi Berbasis Web Menggunakan Framework Laravel di Universitas 17 Agustus 1945 Banyuwangi</td>
             </tr>
             <tr>
-                <td>Waktu Pengerjaan TA</td>
+                <td>Dosen Pembimbing I</td>
                 <td>:</td>
-                <td>Februari s/d Juni</td>
+                <td>Dianni Yusuf, S.Kom., M.Kom. </td>
             </tr>
             <tr>
-                <td>Nama Pembimbing</td>
+                <td>Dosen Pembimbing II</td>
                 <td>:</td>
+                <td>Khoirul Umam, S.Pdm., M.Kom.</td>
             </tr>
         </table>
-        <ol style="margin: 0px -20px">
-            <li style="margin: 5px 0">Dianni Yusuf, S.Kom., M.Kom.</li>
-            <li>Khoirul Umam, S.Pdm, M.Kom.</li>
-        </ol>
         </div>
     </div>
 
@@ -221,57 +239,47 @@
             <thead>
                 <tr>
                     <th>NO</th>
-                    <th>AKTIVITAS YANG DINILAI</th>
-                    <th>NILAI ANGKA</th>
-                    <th>NILAI HURUF</th>
+                    <th>PENILAI</th>
+                    <th>NILAI</th>
+                    <th>NILAI TERTIMBANG</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td align="center">1.</td>
-                    <td>Penguasaan Materi</td>
+                    <td>1.</td>
+                    <td>Pembimbing I</td>
                     <td align="center">90</td>
-                    <td align="center">80</td>
+                    <td>30% X 90 = 24.6</td>
                 </tr>
                 <tr>
-                    <td align="center">2.</td>
-                    <td>Tinjauan Pustaka</td>
+                    <td >2.</td>
+                    <td>Pembimbing II</td>
                     <td align="center">100</td>
-                    <td align="center">80</td>
+                    <td >30% X 100 = 30</td>
                 </tr>
                 <tr>
-                    <td align="center">3.</td>
-                    <td>Ketepatan Menjawab Pertanyaan</td>
-                    <td align="center">80</td>
+                    <td >3.</td>
+                    <td>Penguji I</td>
+                    <td align="center">100</td>
+                    <td>20% X 100 = 20</td>
+                </tr>
+                <tr>
+                    <td >4.</td>
+                    <td>Penguji II</td>
+                    <td align="center">100</td>
+                    <td>20% X 100 = 20</td>
+                </tr>
+                <tr>
+                    <td colspan="3" align="center"><strong>JUMLAH</strong></td>
+                    <td align="center"></td>
+                </tr>
+                <tr>
+                    <td colspan="3" align="center"><strong>Nilai Angka</strong></td>
                     <td align="center">82</td>
                 </tr>
                 <tr>
-                    <td align="center">4.</td>
-                    <td>Kedalaman Materi</td>
-                    <td align="center">56</td>
-                    <td align="center">78</td>
-                </tr>
-                <tr>
-                    <td align="center">5.</td>
-                    <td>Etika</td>
-                    <td align="center">98</td>
-                    <td align="center">98</td>
-                </tr>
-                <tr>
-                    <td align="center">6.</td>
-                    <td>Kedisiplinan</td>
-                    <td align="center">56</td>
-                    <td align="center">90</td>
-                </tr>
-                <tr>
-                    <td colspan="2" align="center"><strong>JUMLAH</strong></td>
-                    <td align="center">78</td>
-                    <td align="center">67</td>
-                </tr>
-                <tr>
-                    <td colspan="2" align="center"><strong>RATA - RATA</strong></td>
-                    <td align="center">82</td>
-                    <td align="center">A</td>
+                    <td colspan="3" align="center"><strong>Nilai Huruf</strong></td>
+                    <td align="center">AB</td>
                 </tr>
             </tbody>
         </table>
@@ -280,42 +288,19 @@
     <div class="criteria">
         <div class="criteria-container">
             <div class="criteria-left">
-                <p style="font-weight: 800;margin: 0"><i>Kriteria Penilaian:</i></p>
-                <table>
-                    <tr>
-                        <td>80 – 100</td>
-                        <td>: Huruf Mutu (A)</td>
-                    </tr>
-                    <tr>
-                        <td>75 – 80</td>
-                        <td>: Huruf Mutu (AB)</td>
-                    </tr>
-                    <tr>
-                        <td>65 – 75</td>
-                        <td>: Huruf Mutu (B)</td>
-                    </tr>
-                    <tr>
-                        <td>60 – 65</td>
-                        <td>: Huruf Mutu (BC)</td>
-                    </tr>
-                    <tr>
-                        <td>55 – 60</td>
-                        <td>: Huruf Mutu (C)</td>
-                    </tr>
-                    <tr>
-                        <td>40 – 55</td>
-                        <td>: Huruf Mutu (D)</td>
-                    </tr>
-                    <tr>
-                        <td>< 40</td>
-                        <td>: Huruf Mutu (E)</td>
-                    </tr>
-                </table>
-            </div>
-            <div class="criteria-right">
-                <p>Dosen Pembimbing II,</p>
+                <p style="margin: 5px 0;">Mengetahui,</p>
+                <p style="margin: 5px 0;">Ketua Program Studi</p>
+                <p style="margin: 5px 0;">Teknologi Rekayasa Perangkat Lunak,</p>
                 <div class="footer-signature">
                     <p class="tag-name">(Khoirul Umam, S.Pd., M.Kom.)</p>
+                    <p style="margin: 5px 0;">NIP. 199103112022031006</p>
+                </div>
+            </div>
+            <div class="criteria-right">
+                <p style="margin: 5px 0;">Banyuwangi, 04 Desember 2024</p>
+                <p style="margin: 5px 0;">Dosen Pembimbing,</p>
+                <div class="footer-signature">
+                    <p class="tag-name-2">(Khoirul Umam, S.Pd., M.Kom.)</p>
                     <p style="margin: 5px 0;">NIP. 199103112022031006</p>
                 </div>
             </div>

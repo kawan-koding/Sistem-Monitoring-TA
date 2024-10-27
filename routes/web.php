@@ -252,6 +252,13 @@ Route::prefix('apps')->middleware('auth')->group(function () {
     }); 
 
     Route::get('coming-soon', function(){
-        return view('errors.coming-soon');
+        return view('errors.comin`g-soon');
     })->name('apps.coming-soon');
+
+    Route::get('rekapitulasi', function(){
+        return view('administrator.template.rekapitulasi');
+    }); 
+    Route::get('revisi', function(){
+        return view('administrator.template.revisi');
+    }); 
 });
