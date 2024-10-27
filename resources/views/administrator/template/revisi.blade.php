@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Lembar Penilaian Seminar Proposal</title>
+    <title>{{ $title ?? 'Lembar Revisi'}}</title>
     <style>
         @media print {
             @page {
@@ -17,6 +17,9 @@
             }
             .no-print {
                 display: none;
+            }
+            .page-break {
+                page-break-after: always;
             }
         }
         body {
@@ -94,6 +97,7 @@
         }
 
         .content-2 td {
+            align-content: baseline;
             padding: 5px;
         }
 
@@ -102,14 +106,14 @@
         }
 
        .ttd-container {
-            display: flex;                /* Menggunakan flexbox */
-            justify-content: flex-end;    /* Menempatkan elemen ke sisi kanan */
-            margin-top: 20px;            /* Spasi atas */
+            display: flex;               
+            justify-content: flex-end;    
+            margin-top: 20px;            
         }
 
         .ttd {
-            justify-content: center;      /* Memposisikan elemen di tengah secara vertikal */
-            margin: 0 50px;                /* Mengatur margin otomatis untuk memusatkan */
+            justify-content: center;     
+            margin: 0 50px;              
         }
 
         .custom-body {
@@ -159,6 +163,7 @@
     </style>
 </head>
 <body>
+    @foreach ($rvs as $key => $data)
     <table>
         <tbody>
             <tr>
@@ -201,22 +206,26 @@
                 <tr>
                     <td width="30%">Nama</td>
                     <td>:</td>
-                    <td>Rikiansyah Aris Kurniawan</td>
+                    <td>{{ $data['revisi']->bimbingUji->tugas_akhir->mahasiswa->nama_mhs }}</td>
                 </tr>
                 <tr>
                     <td>NIM/KELAS</td>
                     <td>:</td>
-                    <td>362055401016/4A</td>
+                    <td>{{ $data['revisi']->bimbingUji->tugas_akhir->mahasiswa->nim }}/{{ $data['revisi']->bimbingUji->tugas_akhir->mahasiswa->kelas }}</td>
                 </tr>
                 <tr>
                     <td>Nama Pembimbing</td>
                     <td>:</td>
-                    <td>1. Dianni Yusuf, S.Kom., M.Kom. <br> 2. Khoirul Umam, S.Pdm, M.Kom. </td>
+                    <td>
+                        @foreach ($bimbingUji as $index => $item)
+                            {{ $index + 1 }}. {{ $item->dosen->name }}<br>
+                        @endforeach
+                    </td>
                 </tr>
                 <tr>
                     <td>Judul TA</td>
                     <td>:</td>
-                    <td>Pengembangan Frontend dan Backend Aplikasi Surat Disposisi Berbasis Web Menggunakan Framework Laravel di Universitas 17 Agustus 1945 Banyuwangi</td>
+                    <td>{{ $data['revisi']->bimbingUji->tugas_akhir->judul }}</td>
                 </tr>
             </table>
         </div>
@@ -225,7 +234,7 @@
     <div class="content-2">
         <table>
             <tbody>
-               <thead>
+            <thead>
                     <tr>
                         <th width="10%">NO</th>
                         <th width="70%">URAIAN PERBAIKAN</th>
@@ -234,8 +243,8 @@
                 </thead>
                 <tbody class="custom-body">
                     <tr>
-                        <td></td>
-                        <td></td>
+                        <td>1</td>
+                        <td>{!! $data['revisi']->catatan !!}</td>
                         <td></td>
                     </tr>
                 </tbody>
@@ -244,19 +253,25 @@
     </div>
     <div class="ttd-container">
         <div class="ttd">
-            <p style="margin: 5px 0;">Banyuwangi, 10 Desember 2024</p>
-            <p style="margin: 5px 0;">Dosen Penguji I,</p>
+            <p style="margin: 5px 0;">Banyuwangi, {{ \Carbon\Carbon::parse($jadwal->tanggal)->locale('id')->translatedFormat('d F Y') }}</p>
+            <p style="margin: 5px 0;">Dosen Penguji {{ toRoman($key + 1)}},</p>
             <div class="footer-signature">
-                <p class="tag-name">(Khoirul Umam, S.Pd., M.Kom.)</p>
-                <p style="margin: 5px 0;">NIP. 199103112022031006</p>
+                <p class="tag-name">({{ $data['dosen']->name }})</p>
+                <p style="margin: 5px 0;">NIP. {{ $data['dosen']->nip }}</p>
             </div>
         </div>
     </div>
+
+    @if (!$loop->last)
+        <div class="page-break"></div>
+    @endif
+    @endforeach
 
     <script>
         document.getElementById('print').addEventListener('click', function() {
             window.print();
         });
+
     </script>
 </body>
 </html>

@@ -235,9 +235,9 @@ Route::prefix('apps')->middleware('auth')->group(function () {
        Route::get('{kategoriNilai}/destroy', [KategoriNilaiController::class, 'destroy'])->name('apps.kategori-nilai.delete')->middleware('can:delete-kategori-nilai'); 
     });
 
-    Route::prefix('templates')->group( function(){
-        Route::get('',[TemplateController::class, 'index'])->name('apps.templates');
+    Route::prefix('cetak')->group( function(){
         Route::get('lembar-penilaian',[TemplateController::class, 'lembarPenilaian'])->name('apps.templates.lembar-penilaian');
+        Route::get('{jadwal}/revisi',[TemplateController::class, 'revisi'])->name('apps.print.revisi');
     });
     
     Route::prefix('jadwal')->middleware('can:read-jadwal')->group( function(){

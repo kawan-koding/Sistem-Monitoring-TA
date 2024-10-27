@@ -42,6 +42,7 @@ class JadwalController extends Controller
 
     public function evaluation(JadwalSeminar $jadwal)
     {
+
         $data = [
             'title' => 'Jadwal Seminar',
             'breadcrumbs' => [

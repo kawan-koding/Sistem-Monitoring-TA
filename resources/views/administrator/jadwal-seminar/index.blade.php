@@ -72,7 +72,7 @@
             @endif
 
             <div class="table-responsive">
-                <table class="table table-striped" id="dataTable">
+                <table class="table table-striped" id="datatable">
                     <thead>
                         <tr>
                             <th width="2%">No.</th>

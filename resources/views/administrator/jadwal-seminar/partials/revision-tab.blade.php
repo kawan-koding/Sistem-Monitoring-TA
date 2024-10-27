@@ -4,7 +4,7 @@
         <p class="text-muted small m-0">Lihat uraian revisi yang telah diberikan oleh dosen penguji.</p>
     </div>
     <div class="col-md-3 col-12 text-center">
-        <button class="btn btn-outline-dark btn-sm"><i class="bx bx-printer"></i> Cetak Lembar Revisi</button>
+        <a href="{{ route('apps.print.revisi', $data->id )}}" target="_blank" class="btn btn-outline-dark btn-sm"><i class="bx bx-printer"></i> Cetak Lembar Revisi</a>
     </div>
 </div>
 <hr>

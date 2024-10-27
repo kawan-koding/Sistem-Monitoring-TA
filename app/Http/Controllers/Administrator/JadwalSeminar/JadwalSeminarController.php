@@ -206,6 +206,8 @@ class JadwalSeminarController extends Controller
             ],
             'data' => $jadwalSeminar
         ];
+
+        
         
         return view('administrator.jadwal-seminar.detail', $data);
     }
