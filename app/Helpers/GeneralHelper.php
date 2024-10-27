@@ -54,3 +54,25 @@ if (!function_exists('getSetting')) {
         return $q->value;
     }
 }
+
+if(!function_exists('grade')) {
+    function grade($value) {
+        $grade = 'E';
+
+        if($value > 80) {
+            $grade = 'A';
+        } else if($value > 75) {
+            $grade = 'AB';
+        } else if($value > 65) {
+            $grade = 'B';
+        } else if($value > 60) {
+            $grade = 'BC';
+        } else if($value > 50) {
+            $grade = 'C';
+        } else if($value > 40) {
+            $grade = 'D';
+        }
+
+        return $grade;
+    }
+}

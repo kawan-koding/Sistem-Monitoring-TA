@@ -7,6 +7,8 @@ use App\Models\BimbingUji;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\JadwalSeminar;
+use App\Models\KategoriNilai;
+use App\Models\Penilaian;
 use App\Models\Revisi;
 use Exception;
 
@@ -31,7 +33,7 @@ class JadwalController extends Controller
                     'url' => route('apps.dashboard')
                 ],
                 [
-                    'title' => 'Jadwal',
+                    'title' => 'Jadwal Seminar',
                     'is_active' => true
                 ]
             ],
@@ -42,6 +44,15 @@ class JadwalController extends Controller
 
     public function evaluation(JadwalSeminar $jadwal)
     {
+        $recapPemb1 = $jadwal->tugas_akhir->bimbing_uji()->where('jenis', 'pembimbing')->where('urut', 1)->first()->penilaian()->where('type', 'Seminar')->sum('nilai');
+        $recapPemb1 = $recapPemb1 > 0 ? $recapPemb1 / $jadwal->tugas_akhir->bimbing_uji()->where('jenis', 'pembimbing')->where('urut', 1)->first()->penilaian()->where('type', 'Seminar')->count() : 0;
+        $recapPemb2 = $jadwal->tugas_akhir->bimbing_uji()->where('jenis', 'pembimbing')->where('urut', 2)->first()->penilaian()->where('type', 'Seminar')->sum('nilai');
+        $recapPemb2 = $recapPemb2 > 0 ? $recapPemb2 / $jadwal->tugas_akhir->bimbing_uji()->where('jenis', 'pembimbing')->where('urut', 2)->first()->penilaian()->where('type', 'Seminar')->count() : 0;
+        $recapPenguji1 = $jadwal->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 1)->first()->penilaian()->where('type', 'Seminar')->sum('nilai');
+        $recapPenguji1 = $recapPenguji1 > 0 ? $recapPenguji1 / $jadwal->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 1)->first()->penilaian()->where('type', 'Seminar')->count() : 0;
+        $recapPenguji2 = $jadwal->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 2)->first()->penilaian()->where('type', 'Seminar')->sum('nilai');
+        $recapPenguji2 = $recapPenguji2 > 0 ? $recapPenguji2 / $jadwal->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 2)->first()->penilaian()->where('type', 'Seminar')->count() : 0;
+
         $data = [
             'title' => 'Jadwal Seminar',
             'breadcrumbs' => [
@@ -50,19 +61,21 @@ class JadwalController extends Controller
                     'url' => route('apps.dashboard'),
                 ],
                 [
-                    'title' => 'Tugas Akhir',
-                    'is_active' => true,
-                ],
-                [
                     'title' => 'Jadwal Seminar',
-                    'is_active' => true,
+                    'url' => route('apps.jadwal', strtolower($jadwal->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->first()->jenis))
                 ],
                 [
-                    'title' => 'Detail Penilaian',
+                    'title' => 'Detail',
                     'is_active' => true
                 ]
             ],
-            'data' => $jadwal
+            'data' => $jadwal,
+            'kategoriNilais' => KategoriNilai::all(),
+            'nilais' => $jadwal->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->first()->penilaian()->where('type', 'Seminar')->get(),
+            'recapPemb1' => $recapPemb1,
+            'recapPemb2' => $recapPemb2,
+            'recapPenguji1' => $recapPenguji1,
+            'recapPenguji2' => $recapPenguji2
         ];
         
         return view('administrator.jadwal.penilaian', $data);
@@ -98,8 +111,43 @@ class JadwalController extends Controller
         }
     }
 
-    // public function nilai(Request $request, JadwalSeminar $jadwal)
-    // {
-    //     $request->validate()
-    // }
+    public function nilai(Request $request, JadwalSeminar $jadwal)
+    {
+        try {
+            $categories = KategoriNilai::all();
+            $ratings = [];
+
+            foreach($categories as $category) {
+                $request->validate([
+                    'nilai_'.$category->id => 'required'
+                ]);
+
+                // check if exist
+                $check = $jadwal->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->first()->penilaian()->where('kategori_nilai_id', $category->id)->where('type', 'Seminar')->first();
+
+                if($check) {
+                    $check->update([
+                        'rating' => $request->input('nilai_'.$category->id)
+                    ]);
+                } else {
+                    $ratings[] = [
+                        'bimbing_uji_id' => $jadwal->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->first()->id,
+                        'kategori_nilai_id' => $category->id,
+                        'nilai' => $request->input('nilai_'.$category->id),
+                        'type' => 'Seminar',
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ];
+                }
+            }
+
+            if(count($ratings) > 0) {
+                Penilaian::insert($ratings);
+            }
+
+            return redirect()->back()->with(['success' => 'Nilai berhasil disimpan']);
+        } catch(Exception $e) {
+            return redirect()->back()->with(['error' => $e->getMessage()]);
+        }
+    }
 }

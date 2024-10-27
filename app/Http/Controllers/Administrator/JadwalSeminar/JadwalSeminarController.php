@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Administrator\JadwalSeminar;
 
 use App\Http\Controllers\Controller;
 use App\Models\JadwalSeminar;
+use App\Models\KategoriNilai;
 use App\Models\Mahasiswa;
 use App\Models\PeriodeTa;
 use App\Models\Ruangan;
@@ -53,10 +54,6 @@ class JadwalSeminarController extends Controller
                     'url' => route('apps.dashboard')
                 ],
                 [
-                    'title' => 'Tugas Akhir',
-                    'is_active' => true,
-                ],
-                [
                     'title' => 'Jadwal Seminar',
                     'is_active' => true,
                 ]
@@ -76,10 +73,6 @@ class JadwalSeminarController extends Controller
                 [
                     'title' => 'Dashboard',
                     'url' => route('apps.dashboard'),
-                ],
-                [
-                    'title' => 'Tugas Akhir',
-                    'is_active' => true,
                 ],
                 [
                     'title' => 'Jadwal Seminar',
@@ -184,6 +177,15 @@ class JadwalSeminarController extends Controller
 
     public function detail(JadwalSeminar $jadwalSeminar)
     {
+        $recapPemb1 = $jadwalSeminar->tugas_akhir->bimbing_uji()->where('jenis', 'pembimbing')->where('urut', 1)->first()->penilaian()->where('type', 'Seminar')->sum('nilai');
+        $recapPemb1 = $recapPemb1 > 0 ? $recapPemb1 / $jadwalSeminar->tugas_akhir->bimbing_uji()->where('jenis', 'pembimbing')->where('urut', 1)->first()->penilaian()->where('type', 'Seminar')->count() : 0;
+        $recapPemb2 = $jadwalSeminar->tugas_akhir->bimbing_uji()->where('jenis', 'pembimbing')->where('urut', 2)->first()->penilaian()->where('type', 'Seminar')->sum('nilai');
+        $recapPemb2 = $recapPemb2 > 0 ? $recapPemb2 / $jadwalSeminar->tugas_akhir->bimbing_uji()->where('jenis', 'pembimbing')->where('urut', 2)->first()->penilaian()->where('type', 'Seminar')->count() : 0;
+        $recapPenguji1 = $jadwalSeminar->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 1)->first()->penilaian()->where('type', 'Seminar')->sum('nilai');
+        $recapPenguji1 = $recapPenguji1 > 0 ? $recapPenguji1 / $jadwalSeminar->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 1)->first()->penilaian()->where('type', 'Seminar')->count() : 0;
+        $recapPenguji2 = $jadwalSeminar->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 2)->first()->penilaian()->where('type', 'Seminar')->sum('nilai');
+        $recapPenguji2 = $recapPenguji2 > 0 ? $recapPenguji2 / $jadwalSeminar->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 2)->first()->penilaian()->where('type', 'Seminar')->count() : 0;
+
         $data = [
             'title' => 'Jadwal Seminar',
             'breadcrumbs' => [
@@ -192,19 +194,21 @@ class JadwalSeminarController extends Controller
                     'url' => route('apps.dashboard'),
                 ],
                 [
-                    'title' => 'Tugas Akhir',
-                    'is_active' => true,
-                ],
-                [
                     'title' => 'Jadwal Seminar',
-                    'is_active' => true,
+                    'url' => route('apps.jadwal-seminar'),
                 ],
                 [
-                    'title' => 'Detail Penilaian',
+                    'title' => 'Detail',
                     'is_active' => true
                 ]
             ],
-            'data' => $jadwalSeminar
+            'data' => $jadwalSeminar,
+            'kategoriNilais' => KategoriNilai::all(),
+            'bimbingUjis' => $jadwalSeminar->tugas_akhir->bimbing_uji()->orderBy('jenis', 'desc')->orderBy('urut', 'asc')->get(),
+            'recapPemb1' => $recapPemb1,
+            'recapPemb2' => $recapPemb2,
+            'recapPenguji1' => $recapPenguji1,
+            'recapPenguji2' => $recapPenguji2
         ];
         
         return view('administrator.jadwal-seminar.detail', $data);

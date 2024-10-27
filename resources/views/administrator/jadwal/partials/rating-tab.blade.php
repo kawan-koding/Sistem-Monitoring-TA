@@ -2,10 +2,10 @@
     <div class="card-body">
         <div class="col-12 mb-4">
             <h5 class="mb-0 fw-bold">Lembar Penilaian</h5>
-            <strong>Dianni Yusuf, S.Kom., M.Kom. (Pembimbing 1)</strong>
-            <p class="text-muted small">Berikan nilai untuk : <strong>Putri Indah Lestari</strong></p>
+            <strong>{{ getInfoLogin()->userable->name }} ({{ ucfirst($data->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->first()->jenis) }} {{ $data->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->first()->urut }})</strong>
+            <p class="text-muted small">Berikan nilai untuk : <strong>{{ $data->tugas_akhir->mahasiswa->nama_mhs }}</strong></p>
         </div>
-        <form action="" method="post">
+        <form action="{{ route('apps.jadwal.nilai', $data->id) }}" method="post">
             @csrf
             <table class="table" width="100%">
                 <thead class="bg-light">
@@ -15,63 +15,31 @@
                     <th>Huruf</th>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td width="25">1.</td>
-                        <td>Penguasaan Materi</td>
-                        <td>
-                            <input type="number" class="form-control w-25">
-                        </td>
-                        <td>-</td>
-                    </tr>
-                    <tr>
-                        <td width="25">2.</td>
-                        <td>Tinjauan Pustaka</td>
-                        <td>
-                            <input type="number" class="form-control w-25">
-                        </td>
-                        <td>-</td>
-                    </tr>
-                    <tr>
-                        <td width="25">3.</td>
-                        <td>Ketepatan Menjawab Pertanyaan</td>
-                        <td>
-                            <input type="number" class="form-control w-25">
-                        </td>
-                        <td>-</td>
-                    </tr>
-                    <tr>
-                        <td width="25">4.</td>
-                        <td>Kedalam Materi</td>
-                        <td>
-                            <input type="number" class="form-control w-25">
-                        </td>
-                        <td>-</td>
-                    </tr>
-                    <tr>
-                        <td width="25">5.</td>
-                        <td>Etika</td>
-                        <td>
-                            <input type="number" class="form-control w-25">
-                        </td>
-                        <td>-</td>
-                    </tr>
-                    <tr>
-                        <td width="25">6.</td>
-                        <td>Kedisiplinan</td>
-                        <td>
-                            <input type="number" class="form-control w-25">
-                        </td>
-                        <td>-</td>
-                    </tr>
+                    @if($kategoriNilais->count() > 0)
+                        @foreach ($kategoriNilais as $item)
+                            <tr>
+                                <td width="25">{{ $loop->iteration }}.</td>
+                                <td>{{ $item->nama }}</td>
+                                <td>
+                                    <input type="text" name="nilai_{{ $item->id }}" data-grade-display="#grade-display-{{ $item->id }}" class="form-control numberOnly text-center w-25" value="{{ $nilais->where('kategori_nilai_id', $item->id)->first()->nilai ?? '' }}">
+                                </td>
+                                <td id="grade-display-{{ $item->id }}">{{ grade($nilais->where('kategori_nilai_id', $item->id)->first()->nilai ?? 0) }}</td>
+                            </tr>
+                        @endforeach
+                    @else
+                        <tr>
+                            <td colspan="4" class="text-center">Belum ada aspek nilai.</td>
+                        </tr>
+                    @endif
                 </tbody>
                 <tfoot class="bg-light">
                     <tr>
                         <td colspan="2">Total Nilai Angka</td>
-                        <td colspan="2">-</td>
+                        <td colspan="2" class="average-display">{{ number_format($nilais->sum('nilai') > 0 ? $nilais->sum('nilai') / $nilais->count() : 0, 2, '.', ',') }}</td>
                     </tr>
                     <tr>
                         <td colspan="2">Total Nilai Huruf</td>
-                        <td colspan="2">-</td>
+                        <td colspan="2" class="average-grade-display">{{ grade($nilais->sum('nilai') > 0 ? $nilais->sum('nilai') / $nilais->count() : 0) }}</td>
                     </tr>
                 </tfoot>
             </table>
