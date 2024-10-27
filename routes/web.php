@@ -244,11 +244,17 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::get('{jenis?}',[JadwalController::class, 'index'])->name('apps.jadwal');
         Route::get('{jadwal}/penilaian',[JadwalController::class, 'evaluation'])->name('apps.jadwal.penilaian');
         Route::post('{jadwal}/revisi',[JadwalController::class, 'revisi'])->name('apps.jadwal.revisi');
+        Route::post('{jadwal}/nilai',[JadwalController::class, 'nilai'])->name('apps.jadwal.nilai');
     });
 
     Route::get('penilaian', function(){
         return view('administrator.template.lembar-penilaian');
     }); 
+
+    Route::get('coming-soon', function(){
+        return view('errors.comin`g-soon');
+    })->name('apps.coming-soon');
+
     Route::get('rekapitulasi', function(){
         return view('administrator.template.rekapitulasi');
     }); 

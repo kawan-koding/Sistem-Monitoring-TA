@@ -13,8 +13,10 @@
                     class="nav-link d-block border-start border-primary text-primary px-4 py-2 fw-bold"
                     style="border-width: 3px!important">Revisi</a>
                 <a href="javascript:void(0)" data-toggle="tab" data-target="#ratingTab" class="nav-link d-block px-3 py-2">Penilaian</a>
+                @if($data->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->first()->jenis == 'pembimbing' && $data->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->first()->urut == 1)
                 <a href="javascript:void(0)" data-toggle="tab" data-target="#ratingRecapTab"
                     class="nav-link d-block px-3 py-2">Rekapitulasi Nilai</a>
+                @endif
             </div>
         </div>
         <div class="col-md-9 col-sm-12 col-12">
@@ -54,6 +56,60 @@
         function refreshTab() {
             $('.tab-item').hide()
             $('.tab-item.active').show('fade')
+        }
+
+        // allow input for number only
+        $('.numberOnly').bind('keyup mouseup', function() {
+            // remove zero value in front
+            $(this).val($(this).val().replace(/^0/, ''));
+            $(this).val($(this).val().replace(/[^0-9\.]/g, ''));
+            // max value 100
+            if ($(this).val() > 100) {
+                $(this).val(100);
+            }
+        });
+
+        // display average value for .numberOnly and render in .average-display 
+        $('.numberOnly').bind('keyup mouseup', function() {
+            var sum = 0;
+            $('.numberOnly').each(function() {
+                sum += +$(this).val();
+            });
+            var average = sum / $('.numberOnly').length;
+            // if average NaN render "-"
+            if (isNaN(average)) {
+                average = "-";
+            }
+            $('.average-display').html(average.toFixed(2));
+
+            // set grade where data-grade-display
+            var grade = getGrade($(this).val() || 0);
+            $($(this).data('grade-display')).html(grade);
+            
+            // set average grade in .average-grade-display
+            var averageGrade = getGrade(average);
+            $('.average-grade-display').html(averageGrade);
+        })
+
+        function getGrade(value) {
+            var grade = "E";
+            if (value > 80) {
+                grade = "A";
+            } else if (value > 75) {
+                grade = "AB";
+            } else if (value > 65) {
+                grade = "B";
+            } else if (value > 60) {
+                grade = "BC";
+            } else if (value > 55) {
+                grade = "C";
+            } else if (value > 40) {
+                grade = "D";
+            } else {
+                grade = "E";
+            }
+
+            return grade
         }
     </script>
 @endsection
