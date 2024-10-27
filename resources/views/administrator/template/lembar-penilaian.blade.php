@@ -18,6 +18,9 @@
             .no-print {
                 display: none;
             }
+            .page-break {
+                page-break-after: always;
+            }
         }
         body {
             font-family: 'Times New Roman', Times, serif,;
@@ -148,6 +151,8 @@
     </style>
 </head>
 <body>
+    @foreach ($nilai as $key => $item)
+        
     <table>
         <tbody>
             <tr>
@@ -187,22 +192,22 @@
             <tr>
                 <td width="30%">Nama Mahasiswa</td>
                 <td>:</td>
-                <td>Rikiansyah Aris Kurniawan</td>
+                <td>{{ $jadwal->tugas_akhir->mahasiswa->nama_mhs }}</td>
             </tr>
             <tr>
                 <td>NIM</td>
                 <td>:</td>
-                <td>362055401016</td>
+                <td>{{ $jadwal->tugas_akhir->mahasiswa->nim }}</td>
             </tr>
             <tr>
                 <td>Judul TA</td>
                 <td>:</td>
-                <td>Pengembangan Frontend dan Backend Aplikasi Surat Disposisi Berbasis Web Menggunakan Framework Laravel di Universitas 17 Agustus 1945 Banyuwangi</td>
+                <td>{{ $jadwal->tugas_akhir->judul }}</td>
             </tr>
             <tr>
                 <td>Waktu Pengerjaan TA</td>
                 <td>:</td>
-                <td>Februari s/d Juni</td>
+                <td>-</td>
             </tr>
             <tr>
                 <td>Nama Pembimbing</td>
@@ -210,8 +215,9 @@
             </tr>
         </table>
         <ol style="margin: 0px -20px">
-            <li style="margin: 5px 0">Dianni Yusuf, S.Kom., M.Kom.</li>
-            <li>Khoirul Umam, S.Pdm, M.Kom.</li>
+            @foreach ($bimbingUji as $dsn)
+                <li style="margin: 5px 0">{{ $dsn->dosen->name }}</li>
+            @endforeach
         </ol>
         </div>
     </div>
@@ -227,51 +233,23 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td align="center">1.</td>
-                    <td>Penguasaan Materi</td>
-                    <td align="center">90</td>
-                    <td align="center">80</td>
-                </tr>
-                <tr>
-                    <td align="center">2.</td>
-                    <td>Tinjauan Pustaka</td>
-                    <td align="center">100</td>
-                    <td align="center">80</td>
-                </tr>
-                <tr>
-                    <td align="center">3.</td>
-                    <td>Ketepatan Menjawab Pertanyaan</td>
-                    <td align="center">80</td>
-                    <td align="center">82</td>
-                </tr>
-                <tr>
-                    <td align="center">4.</td>
-                    <td>Kedalaman Materi</td>
-                    <td align="center">56</td>
-                    <td align="center">78</td>
-                </tr>
-                <tr>
-                    <td align="center">5.</td>
-                    <td>Etika</td>
-                    <td align="center">98</td>
-                    <td align="center">98</td>
-                </tr>
-                <tr>
-                    <td align="center">6.</td>
-                    <td>Kedisiplinan</td>
-                    <td align="center">56</td>
-                    <td align="center">90</td>
-                </tr>
+                @foreach ($item['nilai'] as $index => $nilai)
+                    <tr>
+                        <td align="center">{{ $index + 1 }}</td>
+                        <td>{{ $nilai['kategori_nilai'] }}</td>
+                        <td align="center">{{ $nilai['nilai'] }}</td>
+                        <td align="center">{{ $nilai['nilai_huruf'] }}</td>
+                    </tr>
+                @endforeach
                 <tr>
                     <td colspan="2" align="center"><strong>JUMLAH</strong></td>
-                    <td align="center">78</td>
-                    <td align="center">67</td>
+                    <td align="center"></td>
+                    <td align="center"></td>
                 </tr>
                 <tr>
                     <td colspan="2" align="center"><strong>RATA - RATA</strong></td>
-                    <td align="center">82</td>
-                    <td align="center">A</td>
+                    <td align="center">{{ $item['totalNilaiAngka'] }}</td>
+                    <td align="center">{{ $item['totalNilaiHuruf'] }}</td>
                 </tr>
             </tbody>
         </table>
@@ -313,14 +291,18 @@
                 </table>
             </div>
             <div class="criteria-right">
-                <p>Dosen Pembimbing II,</p>
+                <p>Dosen {{ $item['peran']}},</p>
                 <div class="footer-signature">
-                    <p class="tag-name">(Khoirul Umam, S.Pd., M.Kom.)</p>
-                    <p style="margin: 5px 0;">NIP. 199103112022031006</p>
+                    <p class="tag-name">({{ $item['dosen']->name}})</p>
+                    <p style="margin: 5px 0;">NIP. {{ $item['dosen']->nip }}</p>
                 </div>
             </div>
         </div>
     </div>
+    @if (!$loop->last)
+        <div class="page-break"></div>
+    @endif
+    @endforeach
 
     <script>
         document.getElementById('print').addEventListener('click', function() {

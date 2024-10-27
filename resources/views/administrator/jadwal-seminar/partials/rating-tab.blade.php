@@ -6,7 +6,7 @@
                 <p class="text-muted small m-0">Lakukan cetak seluruh lembar penilaian.</p>
             </div>
             <div class="col-4 text-end">
-                <a href="{{ route('apps.coming-soon') }}" class="btn btn-outline-dark btn-sm"><i class="bx bx-printer"></i> Cetak Lembar Penilaian</a>
+                <a href="{{ route('apps.cetak.nilai', $data->id) }}" target="_blank" class="btn btn-outline-dark btn-sm"><i class="bx bx-printer"></i> Cetak Lembar Penilaian</a>
             </div>
         </div>
 

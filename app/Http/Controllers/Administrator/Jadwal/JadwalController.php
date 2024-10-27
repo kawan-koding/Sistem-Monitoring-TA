@@ -179,4 +179,53 @@ class JadwalController extends Controller
 
         return view('administrator.template.revisi', $data);
     }
+    
+    public function cetakNilai(JadwalSeminar $jadwal)
+    {
+        $jdwl = JadwalSeminar::with(['tugas_akhir.bimbing_uji.revisi.bimbingUji.dosen','tugas_akhir.bimbing_uji.revisi.bimbingUji.tugas_akhir.mahasiswa'])->findOrFail($jadwal->id);
+        $query = $jdwl->tugas_akhir->bimbing_uji->map(function ($bimbingUji) {
+            $nilaiSeminar = $bimbingUji->penilaian->filter(function ($nilai) {
+                return $nilai->type == 'Seminar';
+            });
+            $totalNilaiAngka = $nilaiSeminar->avg('nilai');
+            $totalNilaiHuruf = grade($totalNilaiAngka); 
+            $peran = '';
+            if ($bimbingUji->jenis == 'pembimbing') {
+                $peran = 'Pembimbing ' . toRoman($bimbingUji->urut);
+            } elseif ($bimbingUji->jenis == 'penguji') {
+                $peran = 'Penguji ' . toRoman($bimbingUji->urut);
+            }
+            return [
+                'peran' => $peran,
+                'dosen' => $bimbingUji->dosen,
+                'nilai' => $nilaiSeminar->map(function ($nilai) {
+                    return [
+                        'nilai' => $nilai->nilai,
+                        'kategori_nilai' => $nilai->kategori->nama,
+                        'nilai_huruf' => grade($nilai->nilai),
+                    ];
+                })->toArray(),
+                'totalNilaiAngka' => number_format($totalNilaiAngka, 2),
+                'totalNilaiHuruf' => $totalNilaiHuruf,
+            ];
+        });
+        $query = $query->sortBy(function ($item) {
+            $order = [
+                'Pembimbing 1' => 1,
+                'Pembimbing 2' => 2,
+                'Penguji 1' => 3,
+                'Penguji 2' => 4,
+            ];
+            return $order[$item['peran']] ?? 99;
+        })->values()->toArray();
+        $bu = $jadwal->tugas_akhir->bimbing_uji()->where('jenis','pembimbing')->orderBy('urut', 'asc')->get();
+        $data = [
+            'title' => 'Lembar Penilaian',
+            'nilai' => $query,
+            'jadwal' => $jdwl,
+            'bimbingUji' => $bu,
+        ];
+
+        return view('administrator.template.lembar-penilaian', $data);
+    }
 }
