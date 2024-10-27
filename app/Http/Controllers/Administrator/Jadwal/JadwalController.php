@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers\Administrator\Jadwal;
 
+use Exception;
+use App\Models\Dosen;
+use App\Models\Revisi;
+use App\Models\Penilaian;
 use App\Models\PeriodeTa;
 use App\Models\BimbingUji;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use App\Models\JadwalSeminar;
 use App\Models\KategoriNilai;
-use App\Models\Penilaian;
-use App\Models\Revisi;
-use Exception;
+use App\Http\Controllers\Controller;
 
 class JadwalController extends Controller
 {
@@ -227,5 +228,79 @@ class JadwalController extends Controller
         ];
 
         return view('administrator.template.lembar-penilaian', $data);
+    }
+    
+    public function cetakRekap(JadwalSeminar $jadwal)
+    {
+        $jdwl = JadwalSeminar::with(['tugas_akhir.bimbing_uji.revisi.bimbingUji.dosen','tugas_akhir.bimbing_uji.revisi.bimbingUji.tugas_akhir.mahasiswa'])->findOrFail($jadwal->id);
+        $query = $jdwl->tugas_akhir->bimbing_uji->map(function ($bimbingUji) {
+            $nilaiSeminar = $bimbingUji->penilaian->filter(function ($nilai) {
+                return $nilai->type == 'Seminar';
+            });
+            $totalNilaiAngka = $nilaiSeminar->avg('nilai');
+            $totalNilaiHuruf = grade($totalNilaiAngka); 
+            $peran = '';
+            if ($bimbingUji->jenis == 'pembimbing') {
+                $peran = 'Pembimbing ' . toRoman($bimbingUji->urut);
+            } elseif ($bimbingUji->jenis == 'penguji') {
+                $peran = 'Penguji ' . toRoman($bimbingUji->urut);
+            }
+            return [
+                'peran' => $peran,
+                'dosen' => $bimbingUji->dosen,
+                'nilai' => number_format($totalNilaiAngka, 2),
+            ];
+        })->toArray();
+
+        $weights = [
+            'Pembimbing I' => 0.30,
+            'Pembimbing II' => 0.30,
+            'Penguji I' => 0.20,
+            'Penguji II' => 0.20,
+        ];
+
+        $rekap = [];
+        $totalNilai = 0;
+        $totalNilaiTertimbang = 0;
+
+        foreach ($query as $item) {
+            $peran = $item['peran'];
+            if (isset($weights[$peran])) {
+                $weightedValue = $weights[$peran] * $item['nilai'];
+                $rekap[] = [
+                    'penilai' => $peran,
+                    'nilai' => number_format($item['nilai'], 2),
+                    'persentase' => ($weights[$peran] * 100) . '% X ' . number_format($item['nilai'], 2) . ' = ' . number_format($weightedValue, 2),
+                ];
+
+                $totalNilai += $item['nilai'];
+                $totalNilaiTertimbang += $weightedValue;
+            }
+        }
+        $totalNilaiHuruf = grade($totalNilai / count($rekap));
+        $pemb1 = $jadwal->tugas_akhir->bimbing_uji()->where('jenis','pembimbing')->where('urut', 1)->first();        
+        $pemb2 = $jadwal->tugas_akhir->bimbing_uji()->where('jenis','pembimbing')->where('urut', 2)->first(); 
+        
+        $user = getInfoLogin()->userable;
+        $programStudi = $user->programStudi;
+        $dosen = Dosen::where('program_studi_id', $programStudi->id)->whereHas('user', function($q) { 
+            $q->whereHas('roles', function ($q) {
+                $q->where('name', 'Kaprodi');
+            });
+        })->first();
+        $data = [
+            'title' => 'Rekapitulasi Nilai',
+            'rekap' => $rekap,
+            'jumlah' => number_format($totalNilai, 2),
+            'nilai_huruf' => $totalNilaiHuruf,
+            'nilai_angka' => number_format($totalNilaiTertimbang, 2),
+            'jadwal' => $jdwl,
+            'pemb1' => $pemb1,
+            'pemb2' => $pemb2,
+            'kaprodi' => $dosen,
+        ];
+
+        return view('administrator.template.rekapitulasi', $data);
+
     }
 }

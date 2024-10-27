@@ -6,7 +6,7 @@
                 <p class="text-muted small m-0">Lakukan cetak rekapitulasi nilai.</p>
             </div>
             <div class="col-4 text-end">
-                <a href="{{ route('apps.coming-soon') }}" class="btn btn-outline-dark btn-sm"><i class="bx bx-printer"></i> Cetak Rekapitulasi Nilai</a>
+                <a href="{{ route('apps.cetak.rekapitulasi', $data->id) }}" target="_blank" class="btn btn-outline-dark btn-sm"><i class="bx bx-printer"></i> Cetak Rekapitulasi Nilai</a>
             </div>
         </div>
 

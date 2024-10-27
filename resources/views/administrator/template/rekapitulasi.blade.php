@@ -203,32 +203,32 @@
             <tr>
                 <td width="30%">Nama Mahasiswa</td>
                 <td>:</td>
-                <td>Rikiansyah Aris Kurniawan</td>
+                <td>{{ $jadwal->tugas_akhir->mahasiswa->nama_mhs }}</td>
             </tr>
             <tr>
                 <td>NIM</td>
                 <td>:</td>
-                <td>362055401016</td>
+                <td>{{ $jadwal->tugas_akhir->mahasiswa->nim }}</td>
             </tr>
             <tr>
                 <td>Program Studi</td>
                 <td>:</td>
-                <td>Teknologi Rekayasa Perangkat Lunak</td>
+                <td>{{ $jadwal->tugas_akhir->mahasiswa->programStudi->nama }}</td>
             </tr>
             <tr>
                 <td>Judul TA</td>
                 <td>:</td>
-                <td>Pengembangan Frontend dan Backend Aplikasi Surat Disposisi Berbasis Web Menggunakan Framework Laravel di Universitas 17 Agustus 1945 Banyuwangi</td>
+                <td>{{ $jadwal->tugas_akhir->judul }}</td>
             </tr>
             <tr>
                 <td>Dosen Pembimbing I</td>
                 <td>:</td>
-                <td>Dianni Yusuf, S.Kom., M.Kom. </td>
+                <td>{{ $pemb1->dosen->name }}</td>
             </tr>
             <tr>
                 <td>Dosen Pembimbing II</td>
                 <td>:</td>
-                <td>Khoirul Umam, S.Pdm., M.Kom.</td>
+                <td>{{ $pemb2->dosen->name }}</td>
             </tr>
         </table>
         </div>
@@ -245,41 +245,25 @@
                 </tr>
             </thead>
             <tbody>
+                @foreach ($rekap as $item)
                 <tr>
-                    <td>1.</td>
-                    <td>Pembimbing I</td>
-                    <td align="center">90</td>
-                    <td>30% X 90 = 24.6</td>
+                    <td align="center">{{ $loop->iteration }}</td>
+                    <td>{{ $item['penilai'] }}</td>
+                    <td align="center">{{ $item['nilai'] }}</td>
+                    <td align="center">{{ $item['persentase'] }}</td>
                 </tr>
-                <tr>
-                    <td >2.</td>
-                    <td>Pembimbing II</td>
-                    <td align="center">100</td>
-                    <td >30% X 100 = 30</td>
-                </tr>
-                <tr>
-                    <td >3.</td>
-                    <td>Penguji I</td>
-                    <td align="center">100</td>
-                    <td>20% X 100 = 20</td>
-                </tr>
-                <tr>
-                    <td >4.</td>
-                    <td>Penguji II</td>
-                    <td align="center">100</td>
-                    <td>20% X 100 = 20</td>
-                </tr>
+                @endforeach
                 <tr>
                     <td colspan="3" align="center"><strong>JUMLAH</strong></td>
-                    <td align="center"></td>
+                    <td align="center">{{ $jumlah }}</td>
                 </tr>
                 <tr>
                     <td colspan="3" align="center"><strong>Nilai Angka</strong></td>
-                    <td align="center">82</td>
+                    <td align="center">{{ $nilai_angka }}</td>
                 </tr>
                 <tr>
                     <td colspan="3" align="center"><strong>Nilai Huruf</strong></td>
-                    <td align="center">AB</td>
+                    <td align="center">{{ $nilai_huruf }}</td>
                 </tr>
             </tbody>
         </table>
@@ -292,16 +276,16 @@
                 <p style="margin: 5px 0;">Ketua Program Studi</p>
                 <p style="margin: 5px 0;">Teknologi Rekayasa Perangkat Lunak,</p>
                 <div class="footer-signature">
-                    <p class="tag-name">(Khoirul Umam, S.Pd., M.Kom.)</p>
-                    <p style="margin: 5px 0;">NIP. 199103112022031006</p>
+                    <p class="tag-name">({{ $kaprodi->name }})</p>
+                    <p style="margin: 5px 0;">NIP. {{ $kaprodi->nip }}</p>
                 </div>
             </div>
             <div class="criteria-right">
-                <p style="margin: 5px 0;">Banyuwangi, 04 Desember 2024</p>
+                <p style="margin: 5px 0;">Banyuwangi, {{ \Carbon\Carbon::parse($jadwal->tanggal)->locale('id')->translatedFormat('d F Y') }}</p>
                 <p style="margin: 5px 0;">Dosen Pembimbing,</p>
                 <div class="footer-signature">
-                    <p class="tag-name-2">(Khoirul Umam, S.Pd., M.Kom.)</p>
-                    <p style="margin: 5px 0;">NIP. 199103112022031006</p>
+                    <p class="tag-name-2">({{ $pemb1->dosen->name }})</p>
+                    <p style="margin: 5px 0;">NIP. {{ $pemb1->dosen->nip }}</p>
                 </div>
             </div>
         </div>

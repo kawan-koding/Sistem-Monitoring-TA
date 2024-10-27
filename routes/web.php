@@ -243,6 +243,7 @@ Route::prefix('apps')->middleware('auth')->group(function () {
     Route::prefix('cetak')->group( function(){
         Route::get('{jadwal}/revisi',[JadwalController::class, 'cetakRevisi'])->name('apps.cetak.revisi');
         Route::get('{jadwal}/nilai',[JadwalController::class, 'cetakNilai'])->name('apps.cetak.nilai');
+        Route::get('{jadwal}/rekapitulasi',[JadwalController::class, 'cetakRekap'])->name('apps.cetak.rekapitulasi');
     });
 
     Route::get('penilaian', function(){

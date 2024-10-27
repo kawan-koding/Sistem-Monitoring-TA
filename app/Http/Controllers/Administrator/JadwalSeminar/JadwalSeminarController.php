@@ -211,8 +211,6 @@ class JadwalSeminarController extends Controller
             'recapPenguji2' => $recapPenguji2
         ];
 
-        
-        
         return view('administrator.jadwal-seminar.detail', $data);
     }
 }
