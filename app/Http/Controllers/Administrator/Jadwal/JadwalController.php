@@ -154,11 +154,15 @@ class JadwalController extends Controller
     public function cetakRevisi(JadwalSeminar $jadwal) 
     {
         $jdwl = JadwalSeminar::with(['tugas_akhir.bimbing_uji.revisi.bimbingUji.dosen','tugas_akhir.bimbing_uji.revisi.bimbingUji.tugas_akhir.mahasiswa'])->findOrFail($jadwal->id);
-        $allRevisis = $jdwl->tugas_akhir->bimbing_uji->flatMap(function ($bimbingUji) {
+        $allRevisis = $jdwl->tugas_akhir->bimbing_uji->filter(function($bimbingUji) {
+            return $bimbingUji->jenis === 'penguji';
+        })->flatMap(function ($bimbingUji) {
             if ($bimbingUji->revisi->isEmpty()) {
                 return [];
             }
-            return $bimbingUji->revisi->map(function ($revisi) use ($bimbingUji) {
+            return $bimbingUji->revisi->filter(function ($revisi) {
+                return $revisi->type == 'Seminar';
+            })->map(function ($revisi) use ($bimbingUji) {
                 return [
                     'revisi' => $revisi,
                     'dosen' => $bimbingUji->dosen,
