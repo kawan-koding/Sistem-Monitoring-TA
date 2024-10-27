@@ -26,7 +26,6 @@ use App\Http\Controllers\Administrator\Ruangan\RuanganController;
 use App\Http\Controllers\Administrator\Setting\SettingController;
 use App\Http\Controllers\Administrator\TopikTA\TopikTAController;
 use App\Http\Controllers\Administrator\DaftarTA\DaftarTAController;
-use App\Http\Controllers\Administrator\Template\TemplateController;
 use App\Http\Controllers\Administrator\Dashboard\DashboardController;
 use App\Http\Controllers\Administrator\Mahasiswa\MahasiswaController;
 use App\Http\Controllers\Administrator\PeriodeTA\PeriodeTAController;
@@ -234,11 +233,6 @@ Route::prefix('apps')->middleware('auth')->group(function () {
        Route::post('{kategoriNilai}/update', [KategoriNilaiController::class, 'update'])->name('apps.kategori-nilai.update')->middleware('can:update-kategori-nilai');
        Route::get('{kategoriNilai}/destroy', [KategoriNilaiController::class, 'destroy'])->name('apps.kategori-nilai.delete')->middleware('can:delete-kategori-nilai'); 
     });
-
-    Route::prefix('cetak')->group( function(){
-        Route::get('lembar-penilaian',[TemplateController::class, 'lembarPenilaian'])->name('apps.templates.lembar-penilaian');
-        Route::get('{jadwal}/revisi',[TemplateController::class, 'revisi'])->name('apps.print.revisi');
-    });
     
     Route::prefix('jadwal')->middleware('can:read-jadwal')->group( function(){
         Route::get('{jenis?}',[JadwalController::class, 'index'])->name('apps.jadwal');
@@ -246,19 +240,17 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::post('{jadwal}/revisi',[JadwalController::class, 'revisi'])->name('apps.jadwal.revisi');
         Route::post('{jadwal}/nilai',[JadwalController::class, 'nilai'])->name('apps.jadwal.nilai');
     });
+    Route::prefix('cetak')->group( function(){
+        Route::get('{jadwal}/revisi',[JadwalController::class, 'cetakRevisi'])->name('apps.cetak.revisi');
+    });
 
     Route::get('penilaian', function(){
         return view('administrator.template.lembar-penilaian');
     }); 
-
     Route::get('coming-soon', function(){
         return view('errors.coming-soon');
     })->name('apps.coming-soon');
-
     Route::get('rekapitulasi', function(){
         return view('administrator.template.rekapitulasi');
-    }); 
-    Route::get('revisi', function(){
-        return view('administrator.template.revisi');
     }); 
 });

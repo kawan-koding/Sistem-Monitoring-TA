@@ -150,4 +150,29 @@ class JadwalController extends Controller
             return redirect()->back()->with(['error' => $e->getMessage()]);
         }
     }
+
+    public function cetakRevisi(JadwalSeminar $jadwal) 
+    {
+        $jdwl = JadwalSeminar::with(['tugas_akhir.bimbing_uji.revisi.bimbingUji.dosen','tugas_akhir.bimbing_uji.revisi.bimbingUji.tugas_akhir.mahasiswa'])->findOrFail($jadwal->id);
+        $allRevisis = $jdwl->tugas_akhir->bimbing_uji->flatMap(function ($bimbingUji) {
+            if ($bimbingUji->revisi->isEmpty()) {
+                return [];
+            }
+            return $bimbingUji->revisi->map(function ($revisi) use ($bimbingUji) {
+                return [
+                    'revisi' => $revisi,
+                    'dosen' => $bimbingUji->dosen,
+                ];
+            });
+        })->toArray();
+        $bu = $jadwal->tugas_akhir->bimbing_uji()->where('jenis','pembimbing')->orderBy('urut', 'asc')->get();
+        $data = [
+            'title' => 'Lembar Revisi',
+            'jadwal' => $jdwl,
+            'rvs' => $allRevisis,
+            'bimbingUji' => $bu,
+        ];
+
+        return view('administrator.template.revisi', $data);
+    }
 }

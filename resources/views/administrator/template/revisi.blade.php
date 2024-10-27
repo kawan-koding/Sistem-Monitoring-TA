@@ -15,6 +15,7 @@
                 padding: 0;
                 font-size: 12pt;
             }
+
             .no-print {
                 display: none;
             }
@@ -97,8 +98,8 @@
         }
 
         .content-2 td {
-            align-content: baseline;
             padding: 5px;
+            vertical-align: top;
         }
 
         .tag-name {
@@ -150,6 +151,8 @@
             table, .content, .content-2, .criteria-container {
                 font-size: 0.8em;
             }
+
+
 
             .tag-name {
                 margin: 50px 0 0 0;
@@ -243,7 +246,7 @@
                 </thead>
                 <tbody class="custom-body">
                     <tr>
-                        <td>1</td>
+                        <td align="center">1</td>
                         <td>{!! $data['revisi']->catatan !!}</td>
                         <td></td>
                     </tr>

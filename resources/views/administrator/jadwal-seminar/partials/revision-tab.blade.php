@@ -1,10 +1,10 @@
 <div class="row align-items-center">
-    <div class="col-md-9 col-12">
+    <div class="col-md-8 col-12">
         <h5 class="fw-bold mb-0">Lembar Revisi</h5>
         <p class="text-muted small m-0">Lihat uraian revisi yang telah diberikan oleh dosen penguji.</p>
     </div>
-    <div class="col-md-3 col-12 text-center">
-        <a href="{{ route('apps.print.revisi', $data->id )}}" target="_blank" class="btn btn-outline-dark btn-sm"><i class="bx bx-printer"></i> Cetak Lembar Revisi</a>
+    <div class="col-md-4 col-12 text-center">
+        <a href="{{ route('apps.cetak.revisi', $data->id )}}" target="_blank" class="btn btn-outline-dark btn-sm"><i class="bx bx-printer"></i> Cetak Lembar Revisi</a>
     </div>
 </div>
 <hr>
