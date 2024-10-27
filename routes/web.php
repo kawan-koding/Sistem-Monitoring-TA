@@ -252,7 +252,7 @@ Route::prefix('apps')->middleware('auth')->group(function () {
     }); 
 
     Route::get('coming-soon', function(){
-        return view('errors.comin`g-soon');
+        return view('errors.coming-soon');
     })->name('apps.coming-soon');
 
     Route::get('rekapitulasi', function(){
