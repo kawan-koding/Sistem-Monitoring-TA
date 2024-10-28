@@ -20,9 +20,6 @@ class DaftarTAController extends Controller
     {
         $periode = PeriodeTa::where('is_active', 1)->first();
         $dataTa = TugasAkhir::with(['mahasiswa','bimbing_uji','periode_ta','topik','jenis_ta'])->where('periode_ta_id', $periode->id);    
-        // if (getInfoLogin()->hasRole('Admin')) {
-        //     $dataTa->where('status', '!=', 'draft');
-        // } 
         if (session('switchRoles') == 'Kaprodi') {
             $user = getInfoLogin()->userable;
             $prodi = $user->programStudi->id;
@@ -150,7 +147,6 @@ class DaftarTAController extends Controller
                 'sisa_peng_2' => max(0, ($kuota->penguji_2 ?? 0) - $totalPenguji2),
             ];
         });
-        // dd($dosen);
 
         $data = [
             'title' => 'Edit Tugas Akhir',
@@ -218,6 +214,7 @@ class DaftarTAController extends Controller
             'doc_pemb_1.mimes' => 'Dokumen pembimbing 1 harus dalam format PDF atau DOCX.',
             'doc_ringkasan.mimes' => 'Dokumen ringkasan harus dalam format PDF atau DOCX.',
         ]);
+        
         try {
             $kuota = KuotaDosen::where('dosen_id', $request->pembimbing_1)->where('periode_ta_id', $tugasAkhir->periode_ta_id)->first();
             $validasiData = [
@@ -321,5 +318,4 @@ class DaftarTAController extends Controller
             return $this->exceptionResponse($e);
         }
     }
-
 }

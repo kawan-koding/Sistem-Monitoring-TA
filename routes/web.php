@@ -38,7 +38,6 @@ use App\Http\Controllers\Administrator\PembagianDosen\PembagianDosenController;
 use App\Http\Controllers\Administrator\DaftarBimbingan\DaftarBimbinganController;
 
 use App\Http\Controllers\Administrator\RekomendasiTopik\RekomendasiTopikController;
-use App\Http\Controllers\RekomendasiTopik\RekomendasiTopikController as GuestRekomendasiTopikController;
 
 /*
 |--------------------------------------------------------------------------
@@ -53,7 +52,8 @@ use App\Http\Controllers\RekomendasiTopik\RekomendasiTopikController as GuestRek
 
 Route::middleware('guest')->group(function() {
     Route::get('',[HomeController::class, 'index'])->name('home');
-    Route::get('tawaran-topik',[GuestRekomendasiTopikController::class, 'index'])->name('guest.rekomendasi-topik');
+    Route::get('tawaran-topik',[HomeController::class, 'topik'])->name('guest.rekomendasi-topik');
+    Route::get('tugas-akhir',[HomeController::class, 'tugasAkhir'])->name('guest.judul-tugas-akhir');
 });
 
 Route::get('login', [AuthController::class, 'index'])->name('login')->middleware('guest');

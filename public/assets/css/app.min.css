@@ -3662,9 +3662,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr > td.dtr-control:before {
     display: block !important;
 }
 
-
 /* Custom */
-
 .border-accept {
   border: 2px solid #45cb85; 
   border-radius: 15px; 

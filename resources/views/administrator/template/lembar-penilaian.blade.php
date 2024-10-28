@@ -104,12 +104,11 @@
         }
 
         .criteria-left {
-            width: 50%;
+            width: 45%;
         }
 
         .criteria-right {
-            width: 50%;
-            text-align: center;
+            width: 55%;
         }
 
         .tag-name {
@@ -294,7 +293,7 @@
                 <p>Dosen {{ $item['peran']}},</p>
                 <div class="footer-signature">
                     <p class="tag-name">({{ $item['dosen']->name}})</p>
-                    <p style="margin: 5px 0;">NIP. {{ $item['dosen']->nip }}</p>
+                    <p style="margin: 5px 0;">NIP/NIK/NIPPPK. {{ $item['dosen']->nip }}</p>
                 </div>
             </div>
         </div>

@@ -277,7 +277,7 @@
                 <p style="margin: 5px 0;">Teknologi Rekayasa Perangkat Lunak,</p>
                 <div class="footer-signature">
                     <p class="tag-name">({{ $kaprodi->name }})</p>
-                    <p style="margin: 5px 0;">NIP. {{ $kaprodi->nip }}</p>
+                    <p style="margin: 5px 0;">NIP/NIK/NIPPPK. {{ $kaprodi->nip }}</p>
                 </div>
             </div>
             <div class="criteria-right">
@@ -285,7 +285,7 @@
                 <p style="margin: 5px 0;">Dosen Pembimbing,</p>
                 <div class="footer-signature">
                     <p class="tag-name-2">({{ $pemb1->dosen->name }})</p>
-                    <p style="margin: 5px 0;">NIP. {{ $pemb1->dosen->nip }}</p>
+                    <p style="margin: 5px 0;">NIP/NIK/NIPPPK. {{ $pemb1->dosen->nip }}</p>
                 </div>
             </div>
         </div>

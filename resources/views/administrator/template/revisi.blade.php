@@ -260,7 +260,7 @@
             <p style="margin: 5px 0;">Dosen Penguji {{ toRoman($key + 1)}},</p>
             <div class="footer-signature">
                 <p class="tag-name">({{ $data['dosen']->name }})</p>
-                <p style="margin: 5px 0;">NIP. {{ $data['dosen']->nip }}</p>
+                <p style="margin: 5px 0;">NIP/NIK/NIPPPK. {{ $data['dosen']->nip }}</p>
             </div>
         </div>
     </div>
