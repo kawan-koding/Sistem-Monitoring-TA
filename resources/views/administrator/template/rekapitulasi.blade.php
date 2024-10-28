@@ -184,7 +184,7 @@
                 <tr>
                     <td>Kode Dokumen</td>
                     <td>:</td>
-                    <td>FR–PRS-040</td>
+                    <td>FR–PRS-042</td>
                 </tr>
                 <tr>
                     <td>Revisi</td>

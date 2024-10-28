@@ -20,6 +20,7 @@ class DaftarBimbinganDosenController extends Controller
     public function index(Request $request)
     {
         //
+            
         $myId = Auth::guard('web')->user()->id;
         $periode = PeriodeTa::where('is_active', 1)->first();
 

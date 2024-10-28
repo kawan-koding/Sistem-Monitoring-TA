@@ -61,7 +61,7 @@
                 @if(session('switchRoles') === 'Dosen')
                     @can(['read-daftar-bimbingan'])
                     <li>
-                        <a href="#" class=" waves-effect">
+                        <a href="{{route('apps.daftar-bimbingan')}}" class=" waves-effect">
                             <i class="mdi mdi-file-edit-outline"></i>
                             <span>Daftar Bimbingan</span>
                         </a>

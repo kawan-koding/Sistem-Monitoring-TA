@@ -35,8 +35,9 @@ use App\Http\Controllers\Administrator\ProgramStudi\ProgramStudiController;
 use App\Http\Controllers\Administrator\JadwalSeminar\JadwalSeminarController;
 use App\Http\Controllers\Administrator\KategoriNilai\KategoriNilaiController;
 use App\Http\Controllers\Administrator\PembagianDosen\PembagianDosenController;
-use App\Http\Controllers\Administrator\RekomendasiTopik\RekomendasiTopikController;
+use App\Http\Controllers\Administrator\DaftarBimbingan\DaftarBimbinganController;
 
+use App\Http\Controllers\Administrator\RekomendasiTopik\RekomendasiTopikController;
 use App\Http\Controllers\RekomendasiTopik\RekomendasiTopikController as GuestRekomendasiTopikController;
 
 /*
@@ -244,6 +245,11 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::get('{jadwal}/revisi',[JadwalController::class, 'cetakRevisi'])->name('apps.cetak.revisi');
         Route::get('{jadwal}/nilai',[JadwalController::class, 'cetakNilai'])->name('apps.cetak.nilai');
         Route::get('{jadwal}/rekapitulasi',[JadwalController::class, 'cetakRekap'])->name('apps.cetak.rekapitulasi');
+    });
+
+    Route::prefix('daftar-bimbingan')->middleware('can:read-daftar-bimbingan')->group( function(){
+        Route::get('', [DaftarBimbinganController::class, 'index'])->name('apps.daftar-bimbingan');
+        Route::get('{bimbingUji}/show', [DaftarBimbinganController::class, 'show'])->name('apps.daftar-bimbingan.show');
     });
 
     Route::get('penilaian', function(){
