@@ -93,7 +93,7 @@
                                         </td>
                                         <td>
                                             <span
-                                                class="badge {{ isset($item->tugas_akhir->status_seminar) ? ($item->tugas_akhir->status_seminar == 'acc' ? 'badge-soft-success' : ($item->tugas_akhir->status_seminar == 'revisi' ? 'badge-soft-primary' : 'badge-soft-danger')) : 'badge-soft-secondary' }}">{{ $item->tugas_akhir->status_seminar ?? 'Belum Seminar' }}</span>
+                                                class="badge {{ isset($item->tugas_akhir->status_seminar) ? ($item->tugas_akhir->status_seminar == 'acc' ? 'badge-soft-success' : ($item->tugas_akhir->status_seminar == 'revisi' ? 'badge-soft-primary' : 'badge-soft-danger')) : 'badge-soft-secondary' }}">{{ ($item->tugas_akhir->status_seminar == 'acc' ? 'Disetujui' : ($item->tugas_akhir->status_seminar == 'revisi' ? 'Revisi' : 'Ditolak')) ?? 'Belum Seminar' }}</span>
                                         </td>
                                         <td class="text-center">
                                             @if (!is_null($item->tugas_akhir->jadwal_seminar()->orderBy('id', 'desc')->first()))
@@ -101,6 +101,10 @@
                                                     class="btn btn-outline-primary btn-sm mb-1">
                                                     <i class="bx bx-clipboard"></i>
                                                 </a>
+                                            @endif
+                                            @if ($item->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->where('jenis', 'pembimbing')->where('urut', 1) && $item->tugas_akhir->status_seminar != 'acc')
+                                                <button class="btn btn-outline-warning btn-sm mb-1" type="button" data-bs-toggle="modal" data-bs-target="#myModal">Setujui?</button>
+                                                @include('administrator.jadwal.partials.modal')
                                             @endif
                                         </td>
                                     </tr>
@@ -112,5 +116,4 @@
             </div>
         </div>
     </div>
-
 @endsection

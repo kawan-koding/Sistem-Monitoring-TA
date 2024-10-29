@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Administrator\JadwalSeminar;
 
 use App\Http\Controllers\Controller;
+use App\Models\Dokumen;
 use App\Models\JadwalSeminar;
 use App\Models\KategoriNilai;
 use App\Models\Mahasiswa;
@@ -59,6 +60,7 @@ class JadwalSeminarController extends Controller
                 ]
                 ],
             'data' => $query,
+            'documents' => Dokumen::where('model_type', JadwalSeminar::class)->where('model_id', $query[0])->get() 
         ];
 
         return view('administrator.jadwal-seminar.index', $data);

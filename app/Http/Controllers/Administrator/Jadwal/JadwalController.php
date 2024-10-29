@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use App\Models\JadwalSeminar;
 use App\Models\KategoriNilai;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 
 class JadwalController extends Controller
 {
@@ -115,6 +116,7 @@ class JadwalController extends Controller
     public function nilai(Request $request, JadwalSeminar $jadwal)
     {
         try {
+            DB::beginTransaction();
             $categories = KategoriNilai::all();
             $ratings = [];
 
@@ -128,7 +130,7 @@ class JadwalController extends Controller
 
                 if($check) {
                     $check->update([
-                        'rating' => $request->input('nilai_'.$category->id)
+                        'nilai' => $request->input('nilai_'.$category->id)
                     ]);
                 } else {
                     $ratings[] = [
@@ -145,6 +147,8 @@ class JadwalController extends Controller
             if(count($ratings) > 0) {
                 Penilaian::insert($ratings);
             }
+            $jadwal->update(['status' => 'telah_seminar']);
+            DB::commit();
 
             return redirect()->back()->with(['success' => 'Nilai berhasil disimpan']);
         } catch(Exception $e) {
@@ -302,5 +306,22 @@ class JadwalController extends Controller
 
         return view('administrator.template.rekapitulasi', $data);
 
+    }
+
+    public function updateStatus(Request $request, JadwalSeminar $jadwal)
+    {
+        $request->validate([
+            'status' => 'required',
+        ]);
+
+        try {
+            $jadwal->tugas_akhir->update([
+                'status_seminar' => $request->status,
+            ]);
+
+            return redirect()->back()->with(['success' => 'Berhasil mengubah status']);
+        } catch(Exception $e) {
+            return redirect()->back()->with(['error' => $e->getMessage()]);
+        }
     }
 }

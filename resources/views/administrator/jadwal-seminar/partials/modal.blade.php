@@ -4,7 +4,7 @@
             <form action="" id="myUploadFileSeminar" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-header">
-                    <h5 class="modal-title mt-0" id="myModalLabelUploadFile">Unggah Berkas Pendaftaran TA</h5>
+                    <h5 class="modal-title mt-0" id="myModalLabelUploadFile">Unggah Berkas Pendaftaran Seminar Proposal</h5>
                     <button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="close"></button>
                 </div>
                 <div class="modal-body" style="position: relative">
@@ -12,7 +12,7 @@
                     <div class="d-flex align-items-center gap-2 mb-3 ">
                         <i class="file-icon bx bx-check-circle text-success"></i>
                         <div class="w-100 fw-bold">
-                            Formulir Pemenuhan Persyaratan TA
+                            Formulir Pemenuhan Persyaratan Seminar Proposal
                             <p class="file-desc text-muted small m-0 p-0"><a href="">Lihat berkas</a></p>
                         </div>
                         <label for="file1">
