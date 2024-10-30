@@ -104,7 +104,7 @@
                                                     <i class="bx bx-clipboard"></i>
                                                 </a>
                                             @endif
-                                            @if ($item->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->where('jenis', 'pembimbing')->where('urut', 1) && $item->tugas_akhir->status_seminar != 'acc')
+                                            @if ($item->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->where('jenis', 'pembimbing')->where('urut', 1)->count() > 0 && $item->tugas_akhir->status_seminar != 'acc')
                                                 <button class="btn btn-outline-warning btn-sm mb-1" type="button" data-bs-toggle="modal" data-bs-target="#myModal">Setujui?</button>
                                                 @include('administrator.jadwal.partials.modal')
                                             @endif

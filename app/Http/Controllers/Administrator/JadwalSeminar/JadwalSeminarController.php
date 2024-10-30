@@ -10,7 +10,9 @@ use App\Models\Mahasiswa;
 use App\Models\PeriodeTa;
 use App\Models\Ruangan;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 
 class JadwalSeminarController extends Controller
 {
@@ -61,9 +63,9 @@ class JadwalSeminarController extends Controller
                 ]
                 ],
             'data' => $query,
-            // 'documents' => Dokumen::where('model_type', JadwalSeminar::class)->where('model_id', $query[0])->get() 
+            'documents' => $query->count() > 0 ? Dokumen::where('model_type', JadwalSeminar::class)->where('model_id', $query[0]->id)->get() : collect([]), 
         ];
-
+        
         return view('administrator.jadwal-seminar.index', $data);
     }
 
@@ -224,5 +226,42 @@ class JadwalSeminarController extends Controller
         ];
 
         return view('administrator.jadwal-seminar.detail', $data);
+    }
+
+    public function uploadDocument(JadwalSeminar $jadwalSeminar, Request $request) {
+        try {
+            foreach($request->all() as $key => $value) {
+                if($request->hasFile($key)) {
+                    $request->validate([
+                        $key => 'required|mimes:pdf|max:2048'
+                    ]);
+    
+                    $file = $request->file($key);
+                    $filename = 'document_'. rand(0, 999999999) .'_'. rand(0, 999999999) .'.'. $file->getClientOriginalExtension();
+                    $file->move(public_path('storage/files/documents'), $filename);
+    
+                    $check = Dokumen::where('model_type', JadwalSeminar::class)->where('model_id', $jadwalSeminar->id)->where('nama', $key)->first();
+                    if($check) {
+                        File::delete(public_path('storage/files/documents/'. $check->file));
+                        
+                        $check->update([
+                            'file' => $filename
+                        ]);
+                    } else {
+                        Dokumen::create([
+                            'model_type' => JadwalSeminar::class,
+                            'model_id' => $jadwalSeminar->id,
+                            'nama' => $key,
+                            'jenis' => 'Seminar',
+                            'file' => $filename,
+                        ]);
+                    }
+                }
+            }
+
+            return redirect()->back()->with(['success' => 'Dokumen berhasil ditambahkan']);
+        } catch(Exception $e) {
+            return redirect()->back()->with(['error' => $e->getMessage()]);
+        }
     }
 }

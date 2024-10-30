@@ -123,7 +123,7 @@
                                 <td>
                                     @if ($item->status == 'telah_seminar')
                                         <span
-                                            class="badge small mb-1 {{ !is_null($item->tugas_akhir->status_seminar) ? ($item->tugas_akhir->status_seminar == 'acc' ? 'badge-soft-success' : ($item->tugas_akhir->status_seminar == 'revisi' ? 'badge-soft-primary' : 'badge-soft-danger')) : '' }}">{{!is_null($item->tugas_akhir->status_seminar) ? ($item->tugas_akhir->status_seminar == 'acc' ? 'Disetujui' : ($item->tugas_akhir->status_seminar == 'revisi' ? 'Revisi' : 'Ditolak')) : 'Belum Seminar' }}</span>
+                                            class="badge small mb-1 {{ !is_null($item->tugas_akhir->status_seminar) ? ($item->tugas_akhir->status_seminar == 'acc' ? 'badge-soft-success' : ($item->tugas_akhir->status_seminar == 'revisi' ? 'badge-soft-primary' : 'badge-soft-danger')) : '' }}">{{ !is_null($item->tugas_akhir->status_seminar) ? ($item->tugas_akhir->status_seminar == 'acc' ? 'Disetujui' : ($item->tugas_akhir->status_seminar == 'revisi' ? 'Revisi' : 'Ditolak')) : 'Belum Seminar' }}</span>
                                     @endif
                                     <a href="{{ route('apps.jadwal-seminar.detail', $item->id) }}">
                                         <h5 class="fw-bold m-0">{{ $item->tugas_akhir->judul }}</h5>
@@ -174,23 +174,20 @@
                                     </td>
                                 @endif
                                 <td class="mb-3 text-center">
-                                    {{-- <div class="btn-group"> --}}
                                     @if (getInfoLogin()->hasRole('Admin'))
                                         @can('update-jadwal-seminar')
                                             <a href="{{ route('apps.jadwal-seminar.edit', ['jadwalSeminar' => $item->id]) }}"
                                                 class="btn btn-sm btn-primary"><i class="bx bx-calendar-event"></i></a>
-                                            {{-- @if ($item->status == 'sudah_terjadwal')
-                                                <a href="" class="btn btn-sm btn-primary"><i class="bx bx-check"></i></a>
-                                            @endif --}}
                                         @endcan
                                     @endif
+
                                     @if (getInfoLogin()->hasRole('Mahasiswa'))
                                         <a href="{{ route('apps.jadwal-seminar.detail', $item->id) }}"
                                             class="btn btn-sm btn-outline-primary"><i class="bx bx-search my-1"></i></a>
                                         <a href="javascript:void(0);"
                                             onclick="uploadFileSeminar('{{ $item->id }}', '{{ route('apps.jadwal-seminar.unggah-berkas', $item->id) }}')"
                                             class="btn btn-sm btn-outline-dark">
-                                            @if ($item->status == 'sudah_terjadwal')
+                                            @if ($item->status == 'belum_terjadwal')
                                                 <i class="mdi mdi-pencil"></i>
                                                 Daftar
                                             @else
@@ -198,8 +195,8 @@
                                                 Unggah
                                             @endif
                                         </a>
+                                        @include('administrator.jadwal-seminar.partials.modal')
                                     @endif
-                                    {{-- </div> --}}
                                 </td>
                             </tr>
                         @empty
@@ -213,7 +210,6 @@
         </div>
     </div>
 
-    @include('administrator.jadwal-seminar.partials.modal')
 @endsection
 
 @section('js')
@@ -221,7 +217,16 @@
         function uploadFileSeminar(id, url) {
             $('#id_jadwal_seminar').val(id);
             $('#url_unggah_berkas').val(url);
+            $('#myModalUpload').find('form').trigger('reset');
+            $('#myModalUpload').find('form').attr("action", url);
             $('#myModalUpload').modal('show');
+        }
+
+        function changeFile(target) {
+            var filename = $(target).find('[type="file"]').prop('files')[0].name;
+            $(target).find('.file-desc').html(filename);
+            $(target).find('.file-icon').attr('class', 'file-icon mdi mdi-alert-circle-outline text-warning');
+            $(target).find('.file-btn').html('Ganti');
         }
     </script>
 @endsection

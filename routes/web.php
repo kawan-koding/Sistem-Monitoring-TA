@@ -223,7 +223,7 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::get('{jadwalSeminar}/edit', [JadwalSeminarController::class, 'edit'])->name('apps.jadwal-seminar.edit');
         Route::post('{jadwalSeminar}/update', [JadwalSeminarController::class, 'update'])->name('apps.jadwal-seminar.update')->middleware('can:update-jadwal-seminar');
         Route::get('{jadwalSeminar}/show', [JadwalSeminarController::class, 'show'])->name('apps.jadwal-seminar.show');
-        Route::post('{jadwalSeminar}/unggah-berkas', [JadwalSeminarController::class, 'uploadFile'])->name('apps.jadwal-seminar.unggah-berkas');
+        Route::post('{jadwalSeminar}/unggah-berkas', [JadwalSeminarController::class, 'uploadDocument'])->name('apps.jadwal-seminar.unggah-berkas');
         Route::get('{jadwalSeminar}/detail', [JadwalSeminarController::class, 'detail'])->name('apps.jadwal-seminar.detail');
     });
 
