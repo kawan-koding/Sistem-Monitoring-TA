@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\PeriodeTA;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class PeriodeTARequest extends FormRequest

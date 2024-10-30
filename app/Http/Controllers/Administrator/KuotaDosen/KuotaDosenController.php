@@ -74,7 +74,9 @@ class KuotaDosenController extends Controller
             $periode = PeriodeTa::where('is_active', true)->first();
             foreach($dosen as $item) {
                 $existingKuota = KuotaDosen::where('dosen_id', $item->id)->where('periode_ta_id', $periode->id)->first();
-                if(!$existingKuota) {
+                if($existingKuota) {
+                    $existingKuota->update($request->only(['pembimbing_1', 'pembimbing_2', 'penguji_1', 'penguji_2']));
+                } else {
                     $request->merge(['dosen_id' => $item->id,'periode_ta_id' => $periode->id]);
                     $kuota  = KuotaDosen::create($request->only(['dosen_id', 'periode_ta_id', 'pembimbing_1', 'pembimbing_2', 'penguji_1', 'penguji_2']));
                 }

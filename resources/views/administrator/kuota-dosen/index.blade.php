@@ -42,11 +42,11 @@
                             <tr>
                                 <th width="5%">No</th>
                                 <th width="20%">NIP/NIPPPK/NIK</th>
-                                <th width="35%">Nama</th>
-                                <th width="10%">Pembimbing 1</th>
-                                <th width="10%">Pembimbing 2</th>
-                                <th width="10%">Penguji 1</th>
-                                <th width="10%">Penguji 2</th>
+                                <th width="40%">Nama</th>
+                                <th style="width: 15%; white-space: nowrap;">Pembimbing 1</th>
+                                <th style="width: 15%; white-space: nowrap;">Pembimbing 2</th>
+                                <th style="width: 15%; white-space: nowrap;">Penguji 1</th>
+                                <th style="width: 15%; white-space: nowrap;">Penguji 2</th>
                             </tr>
                         </thead>
                         <tbody>

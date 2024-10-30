@@ -1,5 +1,7 @@
 ## SISTEM MONITORING TUGAS AKHIR (SITA)
 Sistem Monitoring Tugas Akhir merupakan sistem informasi yang digunakan untuk mempermudah dalam pengelolaan tugas akhir dari mahasiswa semester akhir.
+<!-- ## SISTEM MONITORING TUGAS AKHIR (SITA)
+Sistem Monitoring Tugas Akhir merupakan sistem informasi yang digunakan untuk mempermudah dalam pengelolaan tugas akhir dari mahasiswa semester akhir.
 
 # Menu
 1. Landing Page 
@@ -42,4 +44,4 @@ Sistem Monitoring Tugas Akhir merupakan sistem informasi yang digunakan untuk me
     Untuk mengakses Sistem Monitoring Tugas Akhir, pengguna harus melakukan login sesuai dengan peran dan kredensial masing-masing. Masukkan Username dan Password menggunakan NIM (untuk Mahasiswa) atau NIDN (untuk Dosen/Kajur/Kaprodi)
     ![Gambar 1](./public/assets/images/documentations/gambar1.jpg)
 3.	Ketika User login sebagai Dosen, user dapat menambahkan tawaran tugas akhir melalui tombol “tambah” yang terdapat pada menu Tawaran Tugas Akhir.
-    ![Gambar 2](./public/assets/images/documentations/gambar2.jpg)
+    ![Gambar 2](./public/assets/images/documentations/gambar2.jpg) -->

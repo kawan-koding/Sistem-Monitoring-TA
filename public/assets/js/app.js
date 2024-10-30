@@ -81,7 +81,7 @@ function confirmAlert({title, text, confirmButton, data = {}, url}) {
                 url: url,
                 type: "POST",
                 data: {
-                    _token: $('meta[name="csrf-token"]').attr('content'),
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
                     ...data
                 },
                 success: function (data) {
@@ -122,3 +122,4 @@ $('.modal').on('hidden.bs.modal', function () {
         FilePond.find(this).removeFiles();
     });
 });
+

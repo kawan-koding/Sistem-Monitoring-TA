@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <link rel="shortcut icon" href="{{ asset('storage/images/settings/' . getSetting('app_favicon')) }}">
+    <link rel="shortcut icon" href="{{ asset('storage/images/settings/' . (getSetting('app_favicon') ?? 'poliwangi.png')) }}">
     <title> {{ $title ?? 'unknown'}} | Administrator {{ getSetting('app_name') }}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -31,11 +31,8 @@
     <!-- App Css-->
     <link href="{{ asset('assets/css/app.min.css') }}" id="app-style" rel="stylesheet" type="text/css" />
     <script>
-        window.fetch = undefined;
         const BASE_URL = "{{ url('/') }}"
         const ASSET_URL = "{{ asset('/') }}"
-        const LANG = 'id'
-        window.translations = []
     </script>
     <style>
         .table-striped thead {

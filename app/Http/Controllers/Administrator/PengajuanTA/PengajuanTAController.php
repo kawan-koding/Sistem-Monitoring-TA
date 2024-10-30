@@ -125,8 +125,6 @@ class PengajuanTAController extends Controller
             ],
         ];
 
-        // dd(JenisTa::all());
-
         return view('administrator.pengajuan-ta.partials.form', $data);
     }
 

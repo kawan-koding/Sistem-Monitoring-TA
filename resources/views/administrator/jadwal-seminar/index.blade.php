@@ -30,18 +30,18 @@
             @if (getInfoLogin()->hasRole('Admin'))
                 <div class="col-md-8 col-sm-12">
                     <form action="">
+                        @if(!is_null($status))
+                        <input type="hidden" name="status" value="{{ $status }}">
+                        @endif
                         <label for="">Filter Tanggal</label>
                         <div class="inner mb-3 row">
                             <div class="col-md-8 col-sm-6">
                                 <div class="position-relative">
                                     <div class="input-group">
-                                        <input type="date" name="tanggal" class="inner form-control"
-                                            placeholder="cari berdasarkan tanggal">
+                                        <input type="date" name="tanggal" class="inner form-control" placeholder="cari berdasarkan tanggal">
                                         <div class="input-group-prepend">
-                                            <button type="submit"
-                                                class="btn btn-primary input-group-text inner">Filter</button>
-                                            <a href="{{ route('apps.jadwal-seminar') }}"
-                                                class="btn btn-secondary input-group-text inner">Reset</a>
+                                            <button type="submit" class="btn btn-primary input-group-text inner">Filter</button>
+                                            <a href="{{ route('apps.jadwal-seminar') }}" class="btn btn-secondary input-group-text inner">Reset</a>
                                         </div>
                                     </div>
                                 </div>

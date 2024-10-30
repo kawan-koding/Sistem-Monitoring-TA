@@ -59,6 +59,8 @@ class JadwalSeminarController extends Controller
                 ]
                 ],
             'data' => $query,
+            'status' => $request->has('status') ? $request->status : null,
+
         ];
 
         return view('administrator.jadwal-seminar.index', $data);
