@@ -223,7 +223,7 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::get('{jadwalSeminar}/edit', [JadwalSeminarController::class, 'edit'])->name('apps.jadwal-seminar.edit');
         Route::post('{jadwalSeminar}/update', [JadwalSeminarController::class, 'update'])->name('apps.jadwal-seminar.update')->middleware('can:update-jadwal-seminar');
         Route::get('{jadwalSeminar}/show', [JadwalSeminarController::class, 'show'])->name('apps.jadwal-seminar.show');
-        Route::post('{jadwalSeminar}/unggah-berkas', [JadwalSeminarController::class, 'uploadFile'])->name('apps.jadwal-seminar.unggah-berkas');
+        Route::post('{jadwalSeminar}/unggah-berkas', [JadwalSeminarController::class, 'uploadDocument'])->name('apps.jadwal-seminar.unggah-berkas');
         Route::get('{jadwalSeminar}/detail', [JadwalSeminarController::class, 'detail'])->name('apps.jadwal-seminar.detail');
     });
 
@@ -240,6 +240,7 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::get('{jadwal}/penilaian',[JadwalController::class, 'evaluation'])->name('apps.jadwal.penilaian');
         Route::post('{jadwal}/revisi',[JadwalController::class, 'revisi'])->name('apps.jadwal.revisi');
         Route::post('{jadwal}/nilai',[JadwalController::class, 'nilai'])->name('apps.jadwal.nilai');
+        Route::post('{jadwal}/update-status',[JadwalController::class, 'updateStatus'])->name('apps.jadwal.update-status');
     });
     Route::prefix('cetak')->group( function(){
         Route::get('{jadwal}/revisi',[JadwalController::class, 'cetakRevisi'])->name('apps.cetak.revisi');

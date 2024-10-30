@@ -3,12 +3,16 @@
 namespace App\Http\Controllers\Administrator\JadwalSeminar;
 
 use App\Http\Controllers\Controller;
+use App\Models\Dokumen;
 use App\Models\JadwalSeminar;
 use App\Models\KategoriNilai;
 use App\Models\Mahasiswa;
 use App\Models\PeriodeTa;
 use App\Models\Ruangan;
+use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 
 class JadwalSeminarController extends Controller
 {
@@ -60,9 +64,9 @@ class JadwalSeminarController extends Controller
                 ],
             'data' => $query,
             'status' => $request->has('status') ? $request->status : null,
-
+            'documents' => $query->count() > 0 ? Dokumen::where('model_type', JadwalSeminar::class)->where('model_id', $query[0]->id)->get() : collect([]), 
         ];
-
+        
         return view('administrator.jadwal-seminar.index', $data);
     }
 
@@ -158,6 +162,15 @@ class JadwalSeminarController extends Controller
             'jam_selesai.required' => 'Jam selesai harus diisi',
         ]);
         try {
+            // dd($request->tanggal);
+            $periode = PeriodeTa::where('is_active', 1)->first();
+            if(!is_null($periode) && Carbon::createFromFormat('Y-m-d',$request->tanggal)->greaterThan(Carbon::parse($periode->akhir_seminar))){
+                return redirect()->back()->with(['error' => 'Jadwal seminar melebihi batas periode']);
+            }
+            if(!is_null($periode) && !Carbon::createFromFormat('Y-m-d', $request->tanggal)->greaterThan(Carbon::parse($periode->mulai_seminar))){
+                return redirect()->back()->with(['error' => 'Periode seminar belum aktif']);
+            }
+
             $check = JadwalSeminar::whereRuanganId($request->ruangan)->whereDate('tanggal', $request->tanggal)->where('jam_mulai', '>=', $request->jam_mulai)->where('jam_selesai', '<=', $request->jam_selesai)->first();
 
             if(!is_null($check)) {
@@ -214,5 +227,42 @@ class JadwalSeminarController extends Controller
         ];
 
         return view('administrator.jadwal-seminar.detail', $data);
+    }
+
+    public function uploadDocument(JadwalSeminar $jadwalSeminar, Request $request) {
+        try {
+            foreach($request->all() as $key => $value) {
+                if($request->hasFile($key)) {
+                    $request->validate([
+                        $key => 'required|mimes:pdf|max:2048'
+                    ]);
+    
+                    $file = $request->file($key);
+                    $filename = 'document_'. rand(0, 999999999) .'_'. rand(0, 999999999) .'.'. $file->getClientOriginalExtension();
+                    $file->move(public_path('storage/files/documents'), $filename);
+    
+                    $check = Dokumen::where('model_type', JadwalSeminar::class)->where('model_id', $jadwalSeminar->id)->where('nama', $key)->first();
+                    if($check) {
+                        File::delete(public_path('storage/files/documents/'. $check->file));
+                        
+                        $check->update([
+                            'file' => $filename
+                        ]);
+                    } else {
+                        Dokumen::create([
+                            'model_type' => JadwalSeminar::class,
+                            'model_id' => $jadwalSeminar->id,
+                            'nama' => $key,
+                            'jenis' => 'Seminar',
+                            'file' => $filename,
+                        ]);
+                    }
+                }
+            }
+
+            return redirect()->back()->with(['success' => 'Dokumen berhasil ditambahkan']);
+        } catch(Exception $e) {
+            return redirect()->back()->with(['error' => $e->getMessage()]);
+        }
     }
 }
