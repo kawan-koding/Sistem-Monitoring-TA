@@ -9,6 +9,7 @@ use App\Models\KategoriNilai;
 use App\Models\Mahasiswa;
 use App\Models\PeriodeTa;
 use App\Models\Ruangan;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class JadwalSeminarController extends Controller
@@ -60,7 +61,7 @@ class JadwalSeminarController extends Controller
                 ]
                 ],
             'data' => $query,
-            'documents' => Dokumen::where('model_type', JadwalSeminar::class)->where('model_id', $query[0])->get() 
+            // 'documents' => Dokumen::where('model_type', JadwalSeminar::class)->where('model_id', $query[0])->get() 
         ];
 
         return view('administrator.jadwal-seminar.index', $data);
@@ -158,6 +159,15 @@ class JadwalSeminarController extends Controller
             'jam_selesai.required' => 'Jam selesai harus diisi',
         ]);
         try {
+            // dd($request->tanggal);
+            $periode = PeriodeTa::where('is_active', 1)->first();
+            if(!is_null($periode) && Carbon::createFromFormat('Y-m-d',$request->tanggal)->greaterThan(Carbon::parse($periode->akhir_seminar))){
+                return redirect()->back()->with(['error' => 'Jadwal seminar melebihi batas periode']);
+            }
+            if(!is_null($periode) && !Carbon::createFromFormat('Y-m-d', $request->tanggal)->greaterThan(Carbon::parse($periode->mulai_seminar))){
+                return redirect()->back()->with(['error' => 'Periode seminar belum aktif']);
+            }
+
             $check = JadwalSeminar::whereRuanganId($request->ruangan)->whereDate('tanggal', $request->tanggal)->where('jam_mulai', '>=', $request->jam_mulai)->where('jam_selesai', '<=', $request->jam_selesai)->first();
 
             if(!is_null($check)) {

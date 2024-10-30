@@ -93,7 +93,9 @@
                                         </td>
                                         <td>
                                             <span
-                                                class="badge {{ isset($item->tugas_akhir->status_seminar) ? ($item->tugas_akhir->status_seminar == 'acc' ? 'badge-soft-success' : ($item->tugas_akhir->status_seminar == 'revisi' ? 'badge-soft-primary' : 'badge-soft-danger')) : 'badge-soft-secondary' }}">{{ ($item->tugas_akhir->status_seminar == 'acc' ? 'Disetujui' : ($item->tugas_akhir->status_seminar == 'revisi' ? 'Revisi' : 'Ditolak')) ?? 'Belum Seminar' }}</span>
+                                            @if($item->tugas_akhir->jadwal_seminar()->orderBy('id', 'desc')->first()->status == 'telah_seminar')
+                                                class="badge {{ !is_null($item->tugas_akhir->status_seminar) ? ($item->tugas_akhir->status_seminar == 'acc' ? 'badge-soft-success' : ($item->tugas_akhir->status_seminar == 'revisi' ? 'badge-soft-primary' : 'badge-soft-danger')) : 'badge-soft-secondary' }}">{{!is_null($item->tugas_akhir->status_seminar) ? ($item->tugas_akhir->status_seminar == 'acc' ? 'Disetujui' : ($item->tugas_akhir->status_seminar == 'revisi' ? 'Revisi' : 'Ditolak')) : 'Belum Seminar' }}</span>
+                                            @endif
                                         </td>
                                         <td class="text-center">
                                             @if (!is_null($item->tugas_akhir->jadwal_seminar()->orderBy('id', 'desc')->first()))

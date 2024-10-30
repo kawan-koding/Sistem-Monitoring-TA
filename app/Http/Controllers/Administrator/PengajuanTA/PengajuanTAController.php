@@ -14,6 +14,7 @@ use App\Models\JenisTa;
 use App\Models\KuotaDosen;
 use App\Models\PeriodeTa;
 use App\Models\Topik;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 
@@ -135,6 +136,14 @@ class PengajuanTAController extends Controller
         // dd($request->all());
         try {
             $periode = PeriodeTa::where('is_active', 1)->first();
+            if(!is_null($periode) && !Carbon::parse($periode->akhir_daftar)->isFuture()){
+                return redirect()->back()->with('error', 'Pengajuan Tugas Akhir melebihi batas periode');
+            }
+
+            if(!is_null($periode) && Carbon::parse($periode->mulai_daftar)->isFuture()){
+                return redirect()->back()->with('error', 'Periode pengajuan Tugas Akhir belum aktif');
+            }
+
             $myId = Auth::user()->username;
             $mahasiswa = Mahasiswa::where('nim', $myId)->first();
             $fileDocPemb1 = null;

@@ -123,7 +123,7 @@
                                 <td>
                                     @if ($item->status == 'telah_seminar')
                                         <span
-                                            class="badge small mb-1 {{ isset($item->tugas_akhir->status_seminar) ? ($item->tugas_akhir->status_seminar == 'acc' ? 'badge-soft-success' : ($item->tugas_akhir->status_seminar == 'revisi' ? 'badge-soft-primary' : 'badge-soft-danger')) : '' }}">{{ ($item->tugas_akhir->status_seminar == 'acc' ? 'Disetujui' : ($item->tugas_akhir->status_seminar == 'revisi' ? 'Revisi' : 'Ditolak')) ?? 'Belum Diseminarkan' }}</span>
+                                            class="badge small mb-1 {{ !is_null($item->tugas_akhir->status_seminar) ? ($item->tugas_akhir->status_seminar == 'acc' ? 'badge-soft-success' : ($item->tugas_akhir->status_seminar == 'revisi' ? 'badge-soft-primary' : 'badge-soft-danger')) : '' }}">{{!is_null($item->tugas_akhir->status_seminar) ? ($item->tugas_akhir->status_seminar == 'acc' ? 'Disetujui' : ($item->tugas_akhir->status_seminar == 'revisi' ? 'Revisi' : 'Ditolak')) : 'Belum Seminar' }}</span>
                                     @endif
                                     <a href="{{ route('apps.jadwal-seminar.detail', $item->id) }}">
                                         <h5 class="fw-bold m-0">{{ $item->tugas_akhir->judul }}</h5>
