@@ -29,7 +29,7 @@
       <div class="container">
         <div class="row">
 
-          <div class="col-lg-4 col-md-6">
+          <div class="col-lg-6 col-md-6">
             <div class="footer-info">
               <div class="" style="width: 60px; height: 60px; overflow: hidden;">
                 <img src="{{ asset('storage/images/settings/' . getSetting('app_logo'))}}" alt="" style="max-width: 100%; max-height: 100%; width: auto; height: auto;">
@@ -42,7 +42,7 @@
               </p>
             </div>
           </div>
-          <div class="col-lg-4 col-md-6 footer-links">
+          <div class="col-lg-6 col-md-6 footer-links">
             <h4>Link</h4>
             <ul>
               <li><i class="bi bi-chevron-right"></i> <a href="{{ route('home')}}">Home</a></li>
@@ -53,16 +53,6 @@
             </ul>
           </div>
 
-          <div class="col-lg-4 col-md-6 footer-links">
-            <h4>Our Services</h4>
-            <ul>
-              <li><i class="bi bi-chevron-right"></i> <a href="#">Web Design</a></li>
-              <li><i class="bi bi-chevron-right"></i> <a href="#">Web Development</a></li>
-              <li><i class="bi bi-chevron-right"></i> <a href="#">Product Management</a></li>
-              <li><i class="bi bi-chevron-right"></i> <a href="#">Marketing</a></li>
-              <li><i class="bi bi-chevron-right"></i> <a href="#">Graphic Design</a></li>
-            </ul>
-          </div>
         </div>
       </div>
     </div>

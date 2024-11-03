@@ -86,6 +86,12 @@ class SettingSeeder extends Seeder
                 'name' => 'Template Ringkasan',
                 'value' => 'https://drive.google.com/file/d/1CF7BnMwtpPVVmo3fkdBsJztGabu_I3FE/view?usp=sharing'
             ],
+            [
+                'type' => 'file',
+                'key' => 'app_bg',
+                'name' => 'Background Foto',
+                'value' => 'bg.jpeg'
+            ]
         ]);
     }
 }

@@ -988,14 +988,14 @@ section {
 /*--------------------------------------------------------------
 # Fullscreen Hero Section
 --------------------------------------------------------------*/
-.hero-fullscreen {
+/* .hero-fullscreen {
   width: 100%;
   min-height: 100vh;
   background: url("../img/bg.jpeg") center center;
   background-size: cover;
   position: relative;
   padding: 120px 0 60px;
-}
+} */
 
 .hero-fullscreen:before {
   content: "";
