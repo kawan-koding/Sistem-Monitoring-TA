@@ -69,9 +69,6 @@
                                 @if(getInfoLogin()->hasRole('Dosen') || getInfoLogin()->hasRole('Developer') || getInfoLogin()->hasRole('Kaprodi'))
                                 <th>Status:</th>
                                 @endif
-                                @if(getInfoLogin()->hasRole('Mahasiswa') || getInfoLogin()->hasRole('Developer'))
-                                <th>Nama Dosen</th>
-                                @endif
                                 @if(session('switchRoles') !== 'Kajur')
                                 <th>Aksi</th>
                                 @endif
@@ -83,6 +80,9 @@
                                 <td>{{ $loop->iteration }}</td>
                                 <td>
                                     <p class="fw-bold m-0">{{ $item->judul }}</p>
+                                    @if(in_array(session('switchRoles'), ['Developer','Kaprodi','Kajur']))
+                                    <p class="m-0 text-muted small"><strong>Nama Dosen :</strong> {{ $item->dosen->name ?? '-' }}</p>
+                                    @endif
                                     <p class="m-0 text-muted small"><strong>Deskripsi :</strong> {{ $item->deskripsi ?? '-' }}</p>
                                     @if($item->catatan != null)
                                     <p class="m-0 text-muted small">Catatan : <span class="text-danger"> {{ $item->catatan }}</span></p>
@@ -112,13 +112,11 @@
                                     </td>
                                     @endif
                                 @endif
+
                                 @if(getInfoLogin()->hasRole('Dosen') || getInfoLogin()->hasRole('Developer') || getInfoLogin()->hasRole('Kaprodi'))
                                 <td>
                                     <span class="badge {{ isset($item->status) ? ($item->status == 'Menunggu' ? 'bg-dark-subtle text-body' : ($item->status == 'Disetujui' ? 'badge-soft-success' : 'badge-soft-danger')) : '-'}}">{{ $item->status ?? '-' }}</span>
                                 </td>
-                                @endif
-                                @if(getInfoLogin()->hasRole('Mahasiswa') || getInfoLogin()->hasRole('Developer'))
-                                <td>{{ $item->dosen->name}}</td>
                                 @endif
                                 @if(session('switchRoles') !== 'Kajur') 
                                 <td>

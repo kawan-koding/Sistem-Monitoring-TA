@@ -15,10 +15,9 @@ class DaftarBimbinganController extends Controller
         $user = getInfoLogin()->userable;
         $periode = PeriodeTa::where('is_active', 1)->first();
         $query = BimbingUji::with(['tugas_akhir', 'dosen'])->where('dosen_id', $user->id)->whereHas('tugas_akhir', function($q) use ($periode){
-            $q->where('periode_ta_id', $periode->id)->where('status', 'acc');
+            $q->where('periode_ta_id', $periode->id)->whereIn('status', ['acc','draft']);
         });
-
-         if ($request->status == 'mahasiswa_uji') {
+        if ($request->status == 'mahasiswa_uji') {
             $query->where('jenis', 'penguji');
         } else {
             $query->where('jenis', 'pembimbing');
