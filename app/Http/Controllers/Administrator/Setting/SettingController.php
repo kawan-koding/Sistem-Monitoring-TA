@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Administrator\Setting;
 use App\Models\Setting;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use File;
+use Illuminate\Support\Facades\File;
+
 class SettingController extends Controller
 {
     public function index()
@@ -51,7 +52,7 @@ class SettingController extends Controller
                     $file = $request->file('file');
                     $filename = time() .'_'. rand(0, 9999999) .'.'. $file->getClientOriginalExtension();
                     $file->move(public_path('storage/images/settings'), $filename);
-                    if(file_exists(public_path('storage/images/settings/'. $setting->value) && $setting->value !== 'poliwangi.png')) {
+                    if(file_exists(public_path('storage/images/settings/'. $setting->value) && $setting->value !== 'poliwangi.png') && $setting->value !== 'default.jpeg') {
                         File::delete(public_path('storage/images/settings/'. $setting->value));
                     }
                     $request->merge(['value' => $filename]);

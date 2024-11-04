@@ -1,6 +1,6 @@
 @extends('layout.app')
 @section('content')
-<section id="hero-fullscreen" class="hero-fullscreen d-flex align-items-center">
+<section id="hero-fullscreen" class="hero-fullscreen d-flex align-items-center" style="background: url('{{ asset('storage/images/settings/' . getSetting('app_bg')) }}') center center; width: 100%; min-height: 100vh; background-size: cover; padding: 120px 0 60px;"  >
   <div class="container d-flex flex-column align-items-center position-relative" data-aos="zoom-out">
       <h2 class="text-white text-center">{{ getSetting('app_name') }}</h2>
       <div class="d-flex justify-content-center" style="width: 100%; max-width: 500px">

@@ -44,7 +44,9 @@
                                 <tr>
                                     <th width="2%">No</th>
                                     <th min-width="250px">Judul</th>
+                                    @if(!getInfoLogin()->hasRole('Mahasiswa'))
                                     <th>Mahasiswa</th>
+                                    @endif
                                     <th min-width="200px">Dosen</th>
                                     <th>Status</th>
                                     <th>Aksi</th>
@@ -64,7 +66,9 @@
                                                     <p class="m-0 text-muted small">Catatan : <span class="text-danger">{{ $item->catatan ?? '-' }}</span></p>
                                                 @endif
                                             </td>
+                                            @if(!getInfoLogin()->hasRole('Mahasiswa'))
                                             <td>{{$item->mahasiswa->nama_mhs}}</td> 
+                                            @endif
                                             <td>
                                                 <strong>Pembimbing</strong>
                                                 <ol>

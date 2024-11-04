@@ -28,11 +28,10 @@
                         <thead>
                             <tr>
                                 <th width="5%">No</th>
-                                <th width="40%">Judul</th>
+                                <th >Judul</th>
                                 <th>Mahasiswa</th>
                                 <th>Periode</th>
-                                <th>Status Seminar</th>
-                                <th>Status Sidang</th>
+                                <th>Status</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -52,36 +51,43 @@
                                         {{ $item->tugas_akhir->periode_ta->nama }}
                                     </td>
                                     <td>
-                                        <span class="badge {{ 
-                                            isset($item->tugas_akhir->status_seminar) ? 
-                                                ($item->tugas_akhir->status_seminar == 'acc' ? 'badge-soft-success' : 
-                                                ($item->tugas_akhir->status_seminar == 'revisi' ? 'badge-soft-warning' : 
-                                                ($item->tugas_akhir->status_seminar == 'reject' ? 'badge-soft-danger' : 'badge-soft-secondary'))) 
-                                                : 'badge-soft-secondary'}} 
-                                                small mb-1">
-                                            {{ 
-                                                isset($item->tugas_akhir->status_seminar) ? 
-                                                ($item->tugas_akhir->status_seminar == 'acc' ? 'Disetujui' : 
-                                                ($item->tugas_akhir->status_seminar == 'revisi' ? 'Revisi' : 
-                                                ($item->tugas_akhir->status_seminar == 'reject' ? 'Ditolak' : '-'))) 
-                                                : '-' 
-                                            }}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span class="badge {{ 
-                                            isset($item->tugas_akhir->status_sidang) ? 
+                                        <span class="badge {{
+                                            isset($item->tugas_akhir->status_sidang) ?
                                                 ($item->tugas_akhir->status_sidang == 'acc' ? 'badge-soft-success' : 
                                                 ($item->tugas_akhir->status_sidang == 'revisi' ? 'badge-soft-warning' : 
-                                                ($item->tugas_akhir->status_sidang == 'reject' ? 'badge-soft-danger' : 'badge-soft-secondary'))) 
-                                                : 'badge-soft-secondary'}} 
-                                                small mb-1">
-                                            {{ 
-                                                isset($item->tugas_akhir->status_sidang) ? 
-                                                ($item->tugas_akhir->status_sidang == 'acc' ? 'Disetujui' : 
-                                                ($item->tugas_akhir->status_sidang == 'revisi' ? 'Revisi' : 
-                                                ($item->tugas_akhir->status_sidang == 'reject' ? 'Ditolak' : '-'))) 
-                                                : '-' 
+                                                ($item->tugas_akhir->status_sidang == 'reject' ? 'badge-soft-danger' : 'badge-soft-secondary')))
+                                            :
+                                            (isset($item->tugas_akhir->status_seminar) ? 
+                                                ($item->tugas_akhir->status_seminar == 'acc' ? 'badge-soft-success' : 
+                                                ($item->tugas_akhir->status_seminar == 'revisi' ? 'badge-soft-warning' : 
+                                                ($item->tugas_akhir->status_seminar == 'reject' ? 'badge-soft-danger' : 'badge-soft-secondary')))
+                                            : 
+                                            (isset($item->tugas_akhir->status) ? 
+                                                ($item->tugas_akhir->status == 'acc' ? 'badge-soft-success' : 
+                                                ($item->tugas_akhir->status == 'draft' ? 'badge-soft-dark' : 
+                                                ($item->tugas_akhir->status == 'reject' ? 'badge-soft-danger' : 
+                                                ($item->tugas_akhir->status == 'cancel' ? 'badge-soft-danger' : 'badge-soft-secondary'))))
+                                                : 'badge-soft-secondary'
+                                            ))
+                                        }} small mb-1">
+                                            {{
+                                                isset($item->tugas_akhir->status_seminar) ? 
+                                                    ($item->tugas_akhir->status_seminar == 'acc' ? 'Disetujui' : 
+                                                    ($item->tugas_akhir->status_seminar == 'revisi' ? 'Revisi' : 
+                                                    ($item->tugas_akhir->status_seminar == 'reject' ? 'Ditolak' : '-')))
+                                                : 
+                                                (isset($item->tugas_akhir->status_sidang) ?
+                                                    ($item->tugas_akhir->status_sidang == 'acc' ? 'Disetujui' : 
+                                                    ($item->tugas_akhir->status_sidang == 'revisi' ? 'Revisi' : 
+                                                    ($item->tugas_akhir->status_sidang == 'reject' ? 'Ditolak' : '-')))
+                                                :
+                                                (isset($item->tugas_akhir->status) ? 
+                                                    ($item->tugas_akhir->status == 'acc' ? 'Disetujui' :
+                                                    ($item->tugas_akhir->status == 'draft' ? 'Menunggu' :
+                                                    ($item->tugas_akhir->status == 'reject' ? 'Ditolak' :
+                                                    ($item->tugas_akhir->status == 'cancel' ? 'Dibatalkan' : '-'))))
+                                                    : '-'
+                                                ))
                                             }}
                                         </span>
                                     </td>
