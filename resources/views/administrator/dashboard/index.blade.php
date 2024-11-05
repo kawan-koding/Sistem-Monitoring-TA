@@ -1,6 +1,23 @@
 @extends('administrator.layout.main')
 @section('content')
 
+<style>
+    .card {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .card-icon {
+        position: absolute;
+        top: 0;
+        right: -2%;
+        transform: translateY(-50%);
+        font-size: 5rem;
+        opacity: 0.3;
+        transform: rotate(25deg);
+    }
+</style>
+
 @if(getInfoLogin()->hasRole('Mahasiswa'))
 
     <div class="row">
@@ -149,54 +166,100 @@
 
 @if(getInfoLogin()->hasRole('Kaprodi') && session('switchRoles') == 'Kaprodi')
 <div class="row">
-    <div class="col-lg-3">
-        <div class="card text-center" style="border-radius: 15px">
+    <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+        <div class="card shadow-sm border-primary" style="border-width: 0px 0px 0px 3px;">
+            <div class="card-icon">
+                <i class="mdi mdi-alert-decagram"></i>
+            </div>
             <div class="card-body">
-                <p class="mb-2 fs-5">Tawaran Topik Yang Belum Divalidasi</p>
-                <h4 class="mb-0">{{ $kaprodi['belumAcc']->count() }}</h4>
+                <h3 class="mb-2">{{ $kaprodi['belumAcc']->count() }} </h3>
+                <p class="mb-0">Tawaran Topik Yang Belum Divalidasi</p>
             </div>
         </div>
     </div>
-    <div class="col-lg-3">
-        <div class="card text-center" style="border-radius: 15px">
+    <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+        <div class="card shadow-sm border-primary" style="border-width: 0px 0px 0px 3px;">
+            <div class="card-icon">
+                <i class="mdi mdi-file-check"></i>
+            </div>
             <div class="card-body">
-                <p class="mb-2 fs-5">Tawaran Topik Yang Sudah Divalidasi</p>
-                <h4 class="mb-0">{{ $kaprodi['sudahAcc']->count() }}</h4>
+                <h3 class="mb-2">{{ $kaprodi['sudahAcc']->count() }} </h3>
+                <p class="mb-0">Tawaran Topik Yang Sudah Divalidasi</p>
             </div>
         </div>
     </div>
-    <div class="col-lg-3">
-        <div class="card text-center" style="border-radius: 15px">
+    <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+        <div class="card shadow-sm border-primary" style="border-width: 0px 0px 0px 3px;">
+            <div class="card-icon">
+                <i class="fa fa-clock"></i>
+            </div>
             <div class="card-body">
-                <p class="mb-2 fs-5">Pengajuan TA Yang Belum Divalidasi</p>
-                <h4 class="mb-0">{{ $kaprodi['taDraft']->count() }}</h4>
+                <h3 class="mb-2">{{ $kaprodi['taDraft']->count() }} </h3>
+                <p class="mb-0">Pengajuan TA Yang Belum Divalidasi</p>
             </div>
         </div>
     </div>
-    <div class="col-lg-3">
-        <div class="card text-center" style="border-radius: 15px">
+    <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+        <div class="card shadow-sm border-primary" style="border-width: 0px 0px 0px 3px;">
+            <div class="card-icon">
+                <i class="fa fa-check-circle"></i>
+            </div>
             <div class="card-body">
-                <p class="mb-2 fs-5">Pengajuan TA Yang Sudah Divalidasi</p>
-                <h4 class="mb-0">{{ $kaprodi['taAcc']->count() }}</h4>
+                <h3 class="mb-2">{{ $kaprodi['taAcc']->count() }} </h3>
+                <p class="mb-0">Pengajuan TA Yang Sudah Divalidasi</p>
             </div>
         </div>
     </div>
 </div>
 @endif
 
-
-
 @if(getInfoLogin()->hasRole('Admin'))
 <div class="row">
-    <div class="col-lg-3 col-md-6">
-        <div class="card text-center" style="border-radius: 15px">
+    <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+        <div class="card shadow-sm border-primary" style="border-width: 0px 0px 0px 3px;">
+            <div class="card-icon">
+                <i class="fa fa-user"></i>
+            </div>
             <div class="card-body">
-                <p class="mb-2 fs-5">Total Dosen</p>
-                <h4 class="mb-0">{{ $admin['dosen']->count() }} </h4>
+                <h3 class="mb-2">{{ $admin['dosen']->count() }} </h3>
+                <p class="mb-0">Total Dosen</p>
             </div>
         </div>
     </div>
-    <div class="col-lg-3 col-md-6">
+    <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+        <div class="card shadow-sm border-primary" style="border-width: 0px 0px 0px 3px;">
+            <div class="card-icon">
+                <i class="fa fa-users"></i>
+            </div>
+            <div class="card-body">
+                <h3 class="mb-2">{{ $admin['mhs']->count() }} </h3>
+                <p class="mb-0">Total Mahasiswa</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+        <div class="card shadow-sm border-primary" style="border-width: 0px 0px 0px 3px;">
+            <div class="card-icon">
+                <i class="fa fa-book-open"></i>
+            </div>
+            <div class="card-body">
+                <h3 class="mb-2">{{ $admin['ta']->count() }} </h3>
+                <p class="mb-0">Total Tugas Akhir</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+        <div class="card shadow-sm border-primary" style="border-width: 0px 0px 0px 3px;">
+            <div class="card-icon">
+                <i class="fa fa-clock"></i>
+            </div>
+            <div class="card-body">
+                <h3 class="mb-2">{{ $admin['topik']->count() }} </h3>
+                <p class="mb-0">Total Topik Belum Disetujui</p>
+            </div>
+        </div>
+    </div>
+    {{-- <div class="col-lg-3 col-md-6">
         <div class="card text-center" style="border-radius: 15px">
             <div class="card-body">
                 <p class="mb-2 fs-5">Total Mahasiswa</p>
@@ -216,7 +279,56 @@
         <div class="card text-center" style="border-radius: 15px">
             <div class="card-body">
                 <p class="mb-2 fs-5">Total Topik Belum Disetujui</p>
-                <h4 class="mb-0">50</h4>
+                <h4 class="mb-0">{{ $admin['topik']->count() }}</h4>
+            </div>
+        </div>
+    </div> --}}
+</div>
+@endif
+
+@if(getInfoLogin()->hasRole('Dosen') && session('switchRoles') == 'Dosen')
+<div class="row">
+    <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+        <div class="card shadow-sm border-primary" style="border-width: 0px 0px 0px 3px;">
+            <div class="card-icon">
+                <i class="fa fa-users"></i>
+            </div>
+            <div class="card-body">
+                <h3 class="mb-2">{{ $dosen['bimbing']->count() }} </h3>
+                <p class="mb-0">Total Mahasiswa Bimbingan</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+        <div class="card shadow-sm border-primary" style="border-width: 0px 0px 0px 3px;">
+            <div class="card-icon">
+                <i class="fa fa-users"></i>
+            </div>
+            <div class="card-body">
+                <h3 class="mb-2">{{ $dosen['uji']->count() }} </h3>
+                <p class="mb-0">Total Mahasiswa Uji</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+        <div class="card shadow-sm border-primary" style="border-width: 0px 0px 0px 3px;">
+            <div class="card-icon">
+                <i class="fa fa-pencil-alt"></i>
+            </div>
+            <div class="card-body">
+                <h3 class="mb-2">{{ $dosen['kuota']->pembimbing_1 }} </h3>
+                <p class="mb-0">Jumlah Kuota Bimbingan</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+        <div class="card shadow-sm border-primary" style="border-width: 0px 0px 0px 3px;">
+            <div class="card-icon">
+                <i class="fa fa-edit"></i>
+            </div>
+            <div class="card-body">
+                <h3 class="mb-2">{{ $dosen['kuota']->pembimbing_1 - $dosen['bimbing']->where('urut', 1)->count() }} </h3>
+                <p class="mb-0">Sisa Kuota Bimbingan</p>
             </div>
         </div>
     </div>

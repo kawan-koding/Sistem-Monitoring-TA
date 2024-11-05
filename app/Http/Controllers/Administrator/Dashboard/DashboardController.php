@@ -8,6 +8,8 @@ use App\Models\TugasAkhir;
 use Illuminate\Http\Request;
 use App\Models\RekomendasiTopik;
 use App\Http\Controllers\Controller;
+use App\Models\BimbingUji;
+use App\Models\KuotaDosen;
 
 class DashboardController extends Controller
 {
@@ -16,6 +18,7 @@ class DashboardController extends Controller
         $dataMahasiswa = null;
         $admin = null;
         $kaprodi = null;
+        $dosen = null;
         if(getInfoLogin()->hasRole('Mahasiswa')){
             $dataMahasiswa = $this->mahasiswa();
         }
@@ -25,6 +28,9 @@ class DashboardController extends Controller
 
         if(session('switchRoles') == 'Kaprodi'){
             $kaprodi = $this->kaprodi();
+        }
+        if(session('switchRoles') == 'Dosen' && getInfoLogin()->hasRole('Dosen')){
+            $dosen = $this->dosen();
         }
 
         $data = [
@@ -38,6 +44,7 @@ class DashboardController extends Controller
             'dataMahasiswa' => $dataMahasiswa,
             'admin' => $admin,
             'kaprodi' => $kaprodi,
+            'dosen' => $dosen,
         ];
 
         return view('administrator.dashboard.index', $data);
@@ -59,14 +66,17 @@ class DashboardController extends Controller
     {
         $dosen = Dosen::all();
         $mhs = Mahasiswa::all();
-        $tugasAkhir = TugasAkhir::all();
+        $tugasAkhir = TugasAkhir::where('status', 'acc');
+        $topik = TugasAkhir::whereStatus('draft');
 
         return [
             'dosen' => $dosen,
             'mhs' => $mhs,
-            'ta' => $tugasAkhir
+            'ta' => $tugasAkhir,
+            'topik' => $topik
         ];
     }
+
 
     private function kaprodi()
     {
@@ -86,5 +96,20 @@ class DashboardController extends Controller
             'taDraft' => $taDraft,
             'taAcc' => $taAcc
         ];
+    }
+
+    private function dosen()
+    {
+        $user = getInfoLogin()->userable;
+        $bimbing = BimbingUji::where('dosen_id', $user->id)->where('jenis', 'pembimbing');
+        $uji = BimbingUji::where('dosen_id', $user->id)->where('jenis', 'penguji');
+        $kuota = KuotaDosen::where('dosen_id', $user->id)->first();
+
+        return[
+            'bimbing' => $bimbing,
+            'uji' => $uji,
+            'kuota' => $kuota,
+        ];
+
     }
 }

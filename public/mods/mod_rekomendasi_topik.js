@@ -44,13 +44,37 @@ $(document).ready(function() {
     $(document).on('click', '*[data-toggle="reject-mhs"]', function (e) {
         e.preventDefault();
         const url = $(this).data('url');
-        $('#approveForm').attr('action', url).attr('method', 'POST').submit();
+        Swal.fire({
+            title: "Tolak Mahasiswa?",
+            text: "Apakah kamu yakin untuk menolak data ini!",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            // cancelButtonColor: "#d33",
+            confirmButtonText: "Ya, Saya Yakin!"
+        }).then((result) => {
+            if (result.value) {
+                $('#approveForm').attr('action', url).attr('method', 'POST').submit();
+            }
+        });
     });
 
     $(document).on('click', '*[data-toggle="approve-mhs"]', function (e) {
         e.preventDefault();
         const url = $(this).data('url');
-        $('#approveForm').attr('action', url).attr('method', 'POST').submit();;
+        Swal.fire({
+            title: "Setujui Mahasiswa?",
+            text: "Apakah kamu yakin untuk menyetujui data ini!",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Ya, Saya Yakin!"
+        }).then((result) => {
+            if (result.value) {
+                $('#approveForm').attr('action', url).attr('method', 'POST').submit();;
+            }
+        });
     });
     
     $(document).on('click', '*[data-toggle="reject-topik"]', function (e) {
