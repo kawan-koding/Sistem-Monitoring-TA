@@ -134,6 +134,7 @@ class PengajuanTAController extends Controller
         // dd($request->all());
         try {
             $periode = PeriodeTa::where('is_active', 1)->first();
+            // dd($periode->akhir_daftar);
             if(!is_null($periode) && !Carbon::parse($periode->akhir_daftar)->isFuture()){
                 return redirect()->back()->with('error', 'Pengajuan Tugas Akhir melebihi batas periode');
             }
