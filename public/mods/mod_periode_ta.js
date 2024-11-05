@@ -3,6 +3,7 @@ function tambahData() {
     $('#myModalLabel').html('Tambah Data')
     $('#nama').val('')
     $('#mulai_daftar').val('')
+    $('#myFormulir')[0].reset()
     $('#akhir_daftar').val('')
     $('#mulai_seminar').val('')
     $('#akhir_seminar').val('')
