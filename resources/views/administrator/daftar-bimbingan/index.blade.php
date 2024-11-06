@@ -23,6 +23,7 @@
                 </ul>
             @endcan
             <div class="card-body">
+                <p >Jumlah Daftar Bimbingan</p>
                 <div class="table-responsive">
                     <table class="table table-striped" id="datatable">
                         <thead>
