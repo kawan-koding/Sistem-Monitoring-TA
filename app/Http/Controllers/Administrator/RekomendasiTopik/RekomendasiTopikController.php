@@ -123,7 +123,7 @@ class RekomendasiTopikController extends Controller
         $rekomendasiTopik->load(['ambilTawaran' => function($query) {
             $query->where('status', '!=', 'Ditolak');
         }]);
-
+    
         $data = [
             'title' => 'Detail Tawaran Tugas Akhir',
             'mods' => 'rekomendasi_topik',
@@ -239,18 +239,26 @@ class RekomendasiTopikController extends Controller
         }
     }
 
-   public function accept(AmbilTawaran $ambilTawaran)
+    public function accept(AmbilTawaran $ambilTawaran)
     {
         try {
             DB::beginTransaction();
+            $kuota = $ambilTawaran->rekomendasiTopik->kuota;
             $rekomendasiTopik = $ambilTawaran->rekomendasiTopik;
+            if($kuota <= 0) {
+                return redirect()->route('apps.rekomendasi-topik.detail', $rekomendasiTopik->id)->with('error', 'Kuota sudah habis');
+            }
             $ambilTawaran->update(['status' => 'Disetujui']);
             $mahasiswa = $ambilTawaran->mahasiswa;
             if ($mahasiswa) {
                 // Mail::to($mahasiswa->email)->send(new RekomendasiTopikMail($rekomendasiTopik, $mahasiswa));
             }
             $rekomendasiTopik->decrement('kuota', 1);
-            
+            if ($rekomendasiTopik->kuota <= 0) {
+            AmbilTawaran::where('rekomendasi_topik_id', $rekomendasiTopik->id)
+                ->where('status', 'Menunggu')
+                ->update(['status' => 'Ditolak']);
+            }
             DB::commit();
             return redirect()->route('apps.rekomendasi-topik.detail', $rekomendasiTopik->id)->with('success', 'Berhasil menyetujui data.');
         } catch (\Exception $e) {

@@ -14,7 +14,6 @@ class HomeController extends Controller
     {
         $tawaran = RekomendasiTopik::with(['dosen'])->where('status','Disetujui')->where('kuota', '!=', 0)->latest()->take(5)->get();
         $tugasAkhir = TugasAkhir::with(['topik','mahasiswa','jenis_ta','bimbing_uji'])->where('status','acc')->latest()->take(5)->get();
-        // dd($tugasAkhir);
         $data = [
             'title' => 'Beranda',
             'tawaran' => $tawaran,

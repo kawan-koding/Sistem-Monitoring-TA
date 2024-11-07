@@ -152,11 +152,8 @@ class PengajuanTAController extends Controller
             $bimbingUji = BimbingUji::with(['tugas_akhir', 'dosen'])->where('jenis', 'pembimbing')->where('urut', 1)->where('dosen_id', $request->pembimbing_1)->whereHas('tugas_akhir', function ($q) use($periode){
                 $q->where('periode_ta_id', $periode->id);
             })->count();
-            // dd(!is_null($kuota) ? $kuota->pemb_1 : 0);
             if($bimbingUji >= (!is_null($kuota) ? $kuota->pembimbing_1 : 0)){
-
                 return redirect()->back()->with('error', 'Kuota dosen pembimbing 1 yang di pilih telah mencapai batas');
-
             }
 
             if($request->hasFile('dokumen_pembimbing_1')){

@@ -22,7 +22,7 @@
           <div class="col-lg-12">
             <h6 class="m-0"><b>{{ $item->judul }}</b></h4>
             <p class="m-0" style="font-size: 14px">{{ Str::limit($item->deskripsi, 150) }}</p>
-            <p class="text-muted small m-0"><span class="me-2"><i class="bx bx-user me-1"></i> {{ $item->dosen->name }}</span> <i class="bx bx-group me-1"></i>{{ $item->ambilTawaran()->count() }}/{{ $item->kuota }} Kuota</p>
+            <p class="text-muted small m-0"><span class="me-2"><i class="bx bx-user me-1"></i> {{ $item->dosen->name }}</span> <i class="bx bx-group me-1"></i>{{ $item->ambilTawaran()->where('status','Disetujui')->count() }}/{{ $item->kuota }} Kuota</p>
           </div>
         </div>
       </div><!-- End Info Item -->
