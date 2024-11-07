@@ -42,7 +42,9 @@
                                     <select name="pembimbing_1" class="form-control select2" required {{isset($editedData) ? 'disabled' : ''}} >
                                         <option value="">Pilih Dosen Pembimbing 1</option>
                                         @foreach ($dataDosen as $item)
+                                        @if(($item->kuota_pembimbing_1-$item->total_pembimbing_1) > 0)
                                         <option value="{{$item->id}}" {{ isset($editedData) ? $editedData->bimbing_uji()->where('tugas_akhir_id', $editedData->id)->first()->dosen->id == $item->id ? "selected" : '' : ''}}>({{($item->kuota_pembimbing_1-$item->total_pembimbing_1)}}) {{$item->nidn}} - {{$item->name}}</option>
+                                        @endif
                                         @endforeach
                                     </select>
                                 </div>
@@ -136,11 +138,13 @@
                             <tbody>
                                 {{-- {{dd($dosenKuota)}} --}}
                                 @foreach ($dosenKuota as $item)
+                                @if($item->kuota_pembimbing_1 != 0)
                                 <tr>
                                         <td>{{$item->nidn}}-{{$item->nama}}</td>    
                                         <td>{{$item->total_pembimbing_1}}/{{$item->kuota_pembimbing_1}}</td>
                                 </tr>
-                                    @endforeach
+                                @endif
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
