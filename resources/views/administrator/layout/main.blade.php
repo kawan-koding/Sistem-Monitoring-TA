@@ -27,6 +27,13 @@
                 </div>
             </div>
 
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <i class="mdi mdi-alert-circle-outline me-2"></i> 
+                <strong>Pemberitahuan:</strong> 
+                <br>Aplikasi akan dilakukan pembaruan pada pukul <strong>18:30</strong> hingga <strong>21:00</strong>. 
+                Mohon untuk tidak melakukan aktivitas apa pun selama waktu tersebut untuk menghindari gangguan pada data dan proses kerja. 
+            </div>
+
             @yield('content')
 
         </div>

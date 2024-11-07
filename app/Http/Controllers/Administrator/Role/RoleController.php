@@ -41,7 +41,13 @@ class RoleController extends Controller
             $explodePermissions = \explode('-', $permission->name);
             $slicePermissions = array_slice($explodePermissions, 1);
             $implodePermissions = \implode('-', $slicePermissions);
-            $permission['is_checked'] = $role->hasPermissionTo($permission->name);
+            // $permission['is_checked'] = $role->hasPermissionTo($permission->name);
+            if ($role->permissions->contains('name', $permission->name)) {
+                $permission['is_checked'] = true;
+            } else {
+                $permission['is_checked'] = false;
+            }
+
             $remappedPermission[$implodePermissions][] = $permission;
         }
 
