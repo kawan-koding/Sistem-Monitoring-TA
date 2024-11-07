@@ -21,14 +21,14 @@
                 </div>
             @endif
             @if ($errors->any())
-            <div class="alert alert-error alert-danger alert-dismissible fade show" role="alert">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
+                <div class="alert alert-error alert-danger alert-dismissible fade show" role="alert">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
             <form action="{{ route('apps.profile.update', $profile->id) }}" id="myFormulir" method="post"
                 enctype="multipart/form-data">
                 @csrf

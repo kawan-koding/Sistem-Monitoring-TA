@@ -197,7 +197,7 @@ class RekomendasiTopikController extends Controller
 
             $existingTawaran = AmbilTawaran::where('mahasiswa_id', $mhs->id)->where('status', '!=', 'Ditolak')->first();
             if ($existingTawaran) {
-                return redirect()->route('apps.rekomendasi-topik')->with('error', 'Anda sudah mengambil topik');
+                return redirect()->route('apps.rekomendasi-topik')->with('error', 'Anda sudah mengambil topik, silahkan menunggu konfirmasi');
             }
             
             $exists = AmbilTawaran::where('mahasiswa_id', $mhs->id)->where('rekomendasi_topik_id', $rekomendasiTopik->id)->first();
@@ -213,7 +213,6 @@ class RekomendasiTopikController extends Controller
                 $filename = null;
             }
 
-            
             AmbilTawaran::create([
                 'mahasiswa_id' => $mhs->id,
                 'rekomendasi_topik_id' => $rekomendasiTopik->id,
@@ -229,7 +228,6 @@ class RekomendasiTopikController extends Controller
         }
     }
     
-
 
     public function deleteTopik(AmbilTawaran $ambilTawaran)
     {

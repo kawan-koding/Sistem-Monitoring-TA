@@ -23,6 +23,7 @@
                 </ul>
             @endcan
             <div class="card-body">
+                <p >Jumlah Daftar Bimbingan</p>
                 <div class="table-responsive">
                     <table class="table table-striped" id="datatable">
                         <thead>
@@ -55,15 +56,17 @@
                                             isset($item->tugas_akhir->status_sidang) ?
                                                 ($item->tugas_akhir->status_sidang == 'acc' ? 'badge-soft-success' : 
                                                 ($item->tugas_akhir->status_sidang == 'revisi' ? 'badge-soft-warning' : 
-                                                ($item->tugas_akhir->status_sidang == 'reject' ? 'badge-soft-danger' : 'badge-soft-secondary')))
+                                                ($item->tugas_akhir->status_sidang == 'reject' ? 'badge-soft-danger' : 
+                                                ($item->tugas_akhir->status_sidang == 'filing' ? 'badge-soft-info' : 'badge-soft-secondary'))))
                                             :
                                             (isset($item->tugas_akhir->status_seminar) ? 
                                                 ($item->tugas_akhir->status_seminar == 'acc' ? 'badge-soft-success' : 
                                                 ($item->tugas_akhir->status_seminar == 'revisi' ? 'badge-soft-warning' : 
-                                                ($item->tugas_akhir->status_seminar == 'reject' ? 'badge-soft-danger' : 'badge-soft-secondary')))
+                                                ($item->tugas_akhir->status_seminar == 'reject' ? 'badge-soft-danger' : 
+                                                ($item->tugas_akhir->status_seminar == 'filing' ? 'badge-soft-info' : 'badge-soft-secondary'))))
                                             : 
                                             (isset($item->tugas_akhir->status) ? 
-                                                ($item->tugas_akhir->status == 'acc' ? 'badge-soft-success' : 
+                                                ($item->tugas_akhir->status == 'acc' ? 'badge-soft-info' : 
                                                 ($item->tugas_akhir->status == 'draft' ? 'badge-soft-dark' : 
                                                 ($item->tugas_akhir->status == 'reject' ? 'badge-soft-danger' : 
                                                 ($item->tugas_akhir->status == 'cancel' ? 'badge-soft-danger' : 'badge-soft-secondary'))))
@@ -71,26 +74,29 @@
                                             ))
                                         }} small mb-1">
                                             {{
-                                                isset($item->tugas_akhir->status_seminar) ? 
-                                                    ($item->tugas_akhir->status_seminar == 'acc' ? 'Disetujui' : 
-                                                    ($item->tugas_akhir->status_seminar == 'revisi' ? 'Revisi' : 
-                                                    ($item->tugas_akhir->status_seminar == 'reject' ? 'Ditolak' : '-')))
-                                                : 
-                                                (isset($item->tugas_akhir->status_sidang) ?
-                                                    ($item->tugas_akhir->status_sidang == 'acc' ? 'Disetujui' : 
-                                                    ($item->tugas_akhir->status_sidang == 'revisi' ? 'Revisi' : 
-                                                    ($item->tugas_akhir->status_sidang == 'reject' ? 'Ditolak' : '-')))
+                                                isset($item->tugas_akhir->status_sidang) ? 
+                                                    ($item->tugas_akhir->status_sidang == 'acc' ? 'Proses pemberkasan' : 
+                                                    ($item->tugas_akhir->status_sidang == 'revisi' ? 'Proses revisi laporan' : 
+                                                    ($item->tugas_akhir->status_sidang == 'reject' ? 'Sidang ditolak' : 
+                                                    ($item->tugas_akhir->status_sidang == 'filing' ? 'Selesai' : '-'))))
+                                                :
+                                                (isset($item->tugas_akhir->status_seminar) ? 
+                                                    ($item->tugas_akhir->status_seminar == 'acc' ? 'Proses pemberkasan' : 
+                                                    ($item->tugas_akhir->status_seminar == 'revisi' ? 'Proses revisi proposal' : 
+                                                    ($item->tugas_akhir->status_seminar == 'reject' ? 'Seminar ditolak' : 
+                                                    ($item->tugas_akhir->status_seminar == 'filing' ? 'Proses penyusunan laporan' : '-'))))
                                                 :
                                                 (isset($item->tugas_akhir->status) ? 
-                                                    ($item->tugas_akhir->status == 'acc' ? 'Disetujui' :
-                                                    ($item->tugas_akhir->status == 'draft' ? 'Menunggu' :
-                                                    ($item->tugas_akhir->status == 'reject' ? 'Ditolak' :
-                                                    ($item->tugas_akhir->status == 'cancel' ? 'Dibatalkan' : '-'))))
+                                                    ($item->tugas_akhir->status == 'acc' ? 'Proses penyusunan proposal' : 
+                                                    ($item->tugas_akhir->status == 'draft' ? 'Proses pengajuan' : 
+                                                    ($item->tugas_akhir->status == 'reject' ? 'Topik ditolak' : 
+                                                    ($item->tugas_akhir->status == 'cancel' ? 'Tidak dilanjutkan' : '-'))))
                                                     : '-'
                                                 ))
                                             }}
                                         </span>
                                     </td>
+
                                     <td>
                                         <a href="{{ route('apps.daftar-bimbingan.show', $item->id)}}" class="btn btn-sm btn-outline-warning mb-3" title="Detail"><i class="bx bx-show"></i></a>
                                     </td>

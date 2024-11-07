@@ -40,6 +40,13 @@ class ProfileController extends Controller
     public function update(User $user, Request $request)
     {
         try {
+            $request->validate([
+                'fileImage' => 'nullable|image|mimes:jpeg,png,jpg,gif',
+            ], [
+                'fileImage.image' => 'File harus berupa gambar',
+                'fileImage.mimes' => 'Format file harus jpeg, png, jpg, atau gif',
+            ]);
+            
             if($request->hasFile('fileImage')) {
                 $file = $request->file('fileImage');
                 $filename = 'Users_'. rand(0, 999999999) .'_'. rand(0, 999999999) .'.'. $file->getClientOriginalExtension();

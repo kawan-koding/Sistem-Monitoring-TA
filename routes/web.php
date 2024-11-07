@@ -31,12 +31,12 @@ use App\Http\Controllers\Administrator\Mahasiswa\MahasiswaController;
 use App\Http\Controllers\Administrator\PeriodeTA\PeriodeTAController;
 use App\Http\Controllers\Administrator\KuotaDosen\KuotaDosenController;
 use App\Http\Controllers\Administrator\PengajuanTA\PengajuanTAController;
+use App\Http\Controllers\Administrator\JenisDokumen\JenisDokumenController;
 use App\Http\Controllers\Administrator\ProgramStudi\ProgramStudiController;
 use App\Http\Controllers\Administrator\JadwalSeminar\JadwalSeminarController;
 use App\Http\Controllers\Administrator\KategoriNilai\KategoriNilaiController;
 use App\Http\Controllers\Administrator\PembagianDosen\PembagianDosenController;
 use App\Http\Controllers\Administrator\DaftarBimbingan\DaftarBimbinganController;
-
 use App\Http\Controllers\Administrator\RekomendasiTopik\RekomendasiTopikController;
 
 /*
@@ -155,11 +155,6 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::post('{pengajuanTA}/accept', [PengajuanTAController::class, 'accept'])->name('apps.pengajuan-ta.accept')->middleware('can:acc-pengajuan-tugas-akhir');
         Route::post('{pengajuanTA}/reject', [PengajuanTAController::class, 'reject'])->name('apps.pengajuan-ta.reject')->middleware('can:reject-pengajuan-tugas-akhir');
         Route::post('{pengajuanTA}/cancel', [PengajuanTAController::class, 'cancel'])->name('apps.pengajuan-ta.cancel')->middleware('can:cancel-pengajuan-tugas-akhir');
-        // Route::get('/print_rekap/{id}', [PengajuanTAController::class, 'print_rekap'])->name('apps.pengajuan-ta.print_rekap');
-        // Route::get('/print_revisi/{id}', [PengajuanTAController::class, 'print_revisi'])->name('apps.pengajuan-ta.print_revisi');
-        // Route::get('/cek-dosen', [PengajuanTAController::class, 'cekDosen'])->name('apps.pengajuan-ta.cekdosen');
-        // Route::get('/print_pemb1/{id}', [PengajuanTAController::class, 'printPembSatu'])->name('apps.pengajuan-ta.print_pemb1');
-        // Route::get('/print_pemb2/{id}', [PengajuanTAController::class, 'printPembDua'])->name('apps.pengajuan-ta.print_pemb2');
     });
 
     Route::prefix('rekomendasi-topik')->middleware('can:read-rekomendasi-topik')->group(function () {
@@ -253,13 +248,11 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::get('{bimbingUji}/show', [DaftarBimbinganController::class, 'show'])->name('apps.daftar-bimbingan.show');
     });
 
-    Route::get('penilaian', function(){
-        return view('administrator.template.lembar-penilaian');
-    }); 
+    Route::prefix('jenis-dokumen')->middleware('can:read-jenis-dokumen')->group( function() {
+        Route::get('',[JenisDokumenController::class,'index'])->name('apps.jenis-dokumen');
+    });
+    
     Route::get('coming-soon', function(){
         return view('errors.coming-soon');
     })->name('apps.coming-soon');
-    Route::get('rekapitulasi', function(){
-        return view('administrator.template.rekapitulasi');
-    }); 
 });

@@ -99,6 +99,10 @@ class PermissionSeeder extends Seeder
             ["name" => "read-jadwal", "display_name" => "Lihat Jadwal"],
             ["name" => "create-revisi", "display_name" => "Buat Revisi"],
             ["name" => "create-penilaian", "display_name" => "Buat Penilaian"],
+            ["name" => 'read-jenis-dokumen', 'display_name' => 'Lihat Jenis Dokumen'],
+            ["name" => 'create-jenis-dokumen', 'display_name' => 'Buat Jenis Dokumen'],
+            ["name" => 'update-jenis-dokumen', 'display_name' => 'Ubah Jenis Dokumen'],
+            ["name" => 'delete-jenis-dokumen', 'display_name' => 'Hapus Jenis Dokumen'],
         ]);
         $this->insertPermission($permissions);
     }

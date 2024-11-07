@@ -81,10 +81,10 @@ class MahasiswaController extends Controller
         try {
             $mahasiswa->update($request->only(['kelas','email','nim','nama_mhs','program_studi_id','jenis_kelamin','telp']));
             $user = $mahasiswa->user;
-            $existingUser = User::where('username', $mahasiswa->nim)->orWhere('email', $mahasiswa->email)->where('id', '!=', $user->id)->first();
+            $existingUser = User::where('username', $mahasiswa->nim)->where('id', '!=', $user->id)->first();
             if(is_null($existingUser)) {
-                $request->merge(['username' => $mahasiswa->nim, 'name'=> $mahasiswa->nama_mhs, 'email' => $mahasiswa->email]);
-                $mahasiswa->user->update($request->only(['name', 'username', 'email']));          
+                $request->merge(['username' => $mahasiswa->nim, 'name'=> $mahasiswa->nama_mhs, 'email' => $mahasiswa->email, 'password' => Hash::make($mahasiswa->nim)]);
+                $mahasiswa->user->update($request->only(['name', 'username', 'email', 'password']));          
             }            
             return redirect()->route('apps.mahasiswa')->with('success', 'Data berhasil diupdate');
         } catch (\Exception $e) {

@@ -29,6 +29,7 @@ class DashboardController extends Controller
         if(session('switchRoles') == 'Kaprodi'){
             $kaprodi = $this->kaprodi();
         }
+        
         if(session('switchRoles') == 'Dosen' && getInfoLogin()->hasRole('Dosen')){
             $dosen = $this->dosen();
         }

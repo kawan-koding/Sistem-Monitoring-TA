@@ -130,6 +130,9 @@
                             @can(['read-kategori-nilai'])
                             <li><a href="{{ route('apps.kategori-nilai')}}">Kategori Nilai</a></li>
                             @endcan
+                            @can(['read-jenis-dokumen'])
+                            <li><a href="{{ route('apps.jenis-dokumen')}}">Jenis Dokumen</a></li>
+                            @endcan
                         </ul>
                     </li>
                     @endcanany

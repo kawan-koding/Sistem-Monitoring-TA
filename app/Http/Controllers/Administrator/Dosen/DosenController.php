@@ -124,8 +124,8 @@ class DosenController extends Controller
             $oldEmail = $dosen->email;
             $dosen->update($request->only(['nip', 'nidn', 'name', 'email', 'jenis_kelamin', 'telp', 'ttd', 'bidang_keahlian', 'program_studi_id','alamat']));
             $user = $dosen->user;
-            $existingUser = User::where('username', $dosen->nidn)->orWhere('email', $dosen->email)->where('id', '!=', $user->id)->first();
-            if(!$existingUser) {
+            $existingUser = User::where('username', $dosen->nidn)->where('id', '!=', $user->id)->first();
+            if(is_null($existingUser)) {
                 $request->merge(['username' => $dosen->nidn, 'password' => Hash::make($dosen->nidn)]);
                 $dosen->user->update($request->only(['name', 'username', 'email', 'password']));
             }

@@ -24,7 +24,8 @@ class DatabaseSeeder extends Seeder
             JurusanSeeder::class,
             ProgramStudiSeeder::class,
             KategoriNilaiSeeder::class,
-            RuanganSeeder::class
+            RuanganSeeder::class,
+            JenisDokumenSeeder::class
         ]);
     }
 }
