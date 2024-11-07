@@ -66,6 +66,9 @@
                                     <th>Pengambil:</th>
                                     @endif
                                 @endif
+                                @if(in_array(session('switchRoles'), ['Mahasiswa','Developer', 'Kaprodi','Kajur']))
+                                <th>Nama Dosen</th>
+                                @endif
                                 @if(getInfoLogin()->hasRole('Dosen') || getInfoLogin()->hasRole('Developer') || getInfoLogin()->hasRole('Kaprodi'))
                                 <th>Status:</th>
                                 @endif
@@ -104,7 +107,7 @@
                                         -
                                         @else
                                         <ul>
-                                            @foreach ($item->ambilTawaran as $tawaran)
+                                            @foreach ($item->ambilTawaran()->where('status','!=','Ditolak')->get() as $tawaran)
                                             <li>{{ $tawaran->mahasiswa->nama_mhs }}</li>
                                             @endforeach
                                         </ul>
@@ -112,7 +115,9 @@
                                     </td>
                                     @endif
                                 @endif
-
+                                @if(in_array(session('switchRoles'), ['Mahasiswa','Developer', 'Kaprodi','Kajur']))
+                                <td>{{ $item->dosen->name}}</td>
+                                @endif
                                 @if(getInfoLogin()->hasRole('Dosen') || getInfoLogin()->hasRole('Developer') || getInfoLogin()->hasRole('Kaprodi'))
                                 <td>
                                     <span class="badge {{ isset($item->status) ? ($item->status == 'Menunggu' ? 'bg-dark-subtle text-body' : ($item->status == 'Disetujui' ? 'badge-soft-success' : 'badge-soft-danger')) : '-'}}">{{ $item->status ?? '-' }}</span>

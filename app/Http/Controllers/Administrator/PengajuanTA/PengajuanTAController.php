@@ -132,9 +132,7 @@ class PengajuanTAController extends Controller
                 $q->where('periode_ta_id', $periode->id);
             })->count();
             if($bimbingUji >= (!is_null($kuota) ? $kuota->pembimbing_1 : 0)){
-
                 return redirect()->back()->with('error', 'Kuota dosen pembimbing 1 yang di pilih telah mencapai batas');
-
             }
             
             if($request->hasFile('dokumen_ringkasan')){

@@ -250,6 +250,10 @@ Route::prefix('apps')->middleware('auth')->group(function () {
 
     Route::prefix('jenis-dokumen')->middleware('can:read-jenis-dokumen')->group( function() {
         Route::get('',[JenisDokumenController::class,'index'])->name('apps.jenis-dokumen');
+        Route::post('store', [JenisDokumenController::class, 'store'])->name('apps.jenis-dokumen.store')->middleware('can:create-jenis-dokumen');
+        Route::get('{jenisDokumen}/show', [JenisDokumenController::class, 'show'])->name('apps.jenis-dokumen.show');
+        Route::post('{jenisDokumen}/update', [JenisDokumenController::class, 'update'])->name('apps.jenis-dokumen.update')->middleware('can:update-jenis-dokumen');
+        Route::get('{jenisDokumen}/destroy', [JenisDokumenController::class, 'destroy'])->name('apps.jenis-dokumen.delete')->middleware('can:delete-jenis-dokumen');
     });
     
     Route::get('coming-soon', function(){

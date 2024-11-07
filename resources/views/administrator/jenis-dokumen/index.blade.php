@@ -50,17 +50,19 @@
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>
-                                        {{ $item->nama }}
-                                        <span class="badge bg-primary">
+                                        <p>
+                                            <span class="badge bg-primary">
                                                 {{ $item->jenis === 'pra_seminar' ? 'Pra Seminar' : ($item->jenis === 'seminar' ? 'Seminar' : ($item->jenis === 'pra_sidang' ? 'Pra Sidang' : ($item->jenis === 'sidang' ? 'Sidang' : '-'))) }}
-                                            </span>
+                                            </span> <br>
+                                            {{ $item->nama }}
+                                        </p>
                                         </td>                                    
                                     <td>
                                         @can('update-jenis-dokumen')
-                                            <button onclick="editData('{{ $item->id }}', '{{ route('apps.jurusan.show', $item->id) }}')" class="btn btn-outline-primary btn-sm mx-1 my-1"><i class="bx bx-edit-alt"></i></button>
+                                            <button onclick="editData('{{ $item->id }}', '{{ route('apps.jenis-dokumen.show', $item->id) }}')" class="btn btn-outline-primary btn-sm mx-1 my-1"><i class="bx bx-edit-alt"></i></button>
                                         @endcan
                                         @can('delete-jenis-dokumen')
-                                            <button onclick="hapusJurusan('{{ $item->id }}', '{{ route('apps.jurusan.delete', $item->id) }}')" class="btn btn-outline-dark btn-sm mx-1 my-1" title="Hapus"><i class="bx bx-trash"></i></button>
+                                            <button onclick="hapusJenisDokumen('{{ $item->id }}', '{{ route('apps.jenis-dokumen.delete', $item->id) }}')" class="btn btn-outline-dark btn-sm mx-1 my-1" title="Hapus"><i class="bx bx-trash"></i></button>
                                         @endcan
                                     </td>
                                     </tr>
@@ -73,5 +75,5 @@
         </div>
     </div>
 
-    @include('administrator.jurusan.partials.modal')
+    @include('administrator.jenis-dokumen.partials.modal')
 @endsection

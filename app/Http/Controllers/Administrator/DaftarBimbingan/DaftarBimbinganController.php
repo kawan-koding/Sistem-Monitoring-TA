@@ -44,12 +44,13 @@ class DaftarBimbinganController extends Controller
 
     public function show(BimbingUji $bimbingUji)
     {
-        $bimbingUji->load('tugas_akhir.mahasiswa','dosen','tugas_akhir.periode_ta');
-        $pembimbing1 = $bimbingUji->where('jenis', 'pembimbing')->where('urut', 1)->first();
-        $pembimbing2 = $bimbingUji->where('jenis', 'pembimbing')->where('urut', 2)->first();
-        $penguji1 = $bimbingUji->where('jenis', 'penguji')->where('urut', 1)->first();
-        $penguji2 = $bimbingUji->where('jenis', 'penguji')->where('urut', 2)->first();
         $query = $bimbingUji->tugas_akhir;
+        $ta = BimbingUji::where('tugas_akhir_id', $query->id)->get();
+        $bimbingUji->load('tugas_akhir.mahasiswa','dosen','tugas_akhir.periode_ta');
+        $pembimbing1 = $ta->where('jenis', 'pembimbing')->where('urut', 1)->first();
+        $pembimbing2 = $ta->where('jenis', 'pembimbing')->where('urut', 2)->first();
+        $penguji1 = $ta->where('jenis', 'penguji')->where('urut', 1)->first();
+        $penguji2 = $ta->where('jenis', 'penguji')->where('urut', 2)->first();
         
         $data = [
             'title' => 'Detail Daftar Bimbingan',
