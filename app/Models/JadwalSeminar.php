@@ -25,8 +25,8 @@ class JadwalSeminar extends Model
     public function ruangan(){
         return $this->belongsTo(Ruangan::class);
     }
-    public function hari(){
-        return $this->belongsTo(Hari::class);
-    }
+    // public function hari(){
+    //     return $this->belongsTo(Hari::class);
+    // }
 }
 

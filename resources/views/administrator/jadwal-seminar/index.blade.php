@@ -123,7 +123,7 @@
                                 <td>
                                     @if ($item->status == 'telah_seminar')
                                         <span
-                                            class="badge small mb-1 {{ !is_null($item->tugas_akhir->status_seminar) ? ($item->tugas_akhir->status_seminar == 'acc' ? 'badge-soft-success' : ($item->tugas_akhir->status_seminar == 'revisi' ? 'badge-soft-primary' : 'badge-soft-danger')) : '' }}">{{ !is_null($item->tugas_akhir->status_seminar) ? ($item->tugas_akhir->status_seminar == 'acc' ? 'Disetujui' : ($item->tugas_akhir->status_seminar == 'revisi' ? 'Revisi' : 'Ditolak')) : 'Belum Seminar' }}</span>
+                                            class="badge small mb-1 {{ !is_null($item->tugas_akhir->status_seminar) ? ($item->tugas_akhir->status_seminar == 'acc' ? 'badge-soft-success' : ($item->tugas_akhir->status_seminar == 'revisi' ? 'badge-soft-success' : 'badge-soft-danger')) : '' }}">{{ !is_null($item->tugas_akhir->status_seminar) ? ($item->tugas_akhir->status_seminar == 'acc' ? 'Disetujui' : ($item->tugas_akhir->status_seminar == 'revisi' ? 'Disetujui dengan revisi' : 'Ditolak')) : 'Belum Seminar' }}</span>
                                     @endif
                                     <a href="{{ route('apps.jadwal-seminar.detail', $item->id) }}">
                                         <h5 class="fw-bold m-0">{{ $item->tugas_akhir->judul }}</h5>
@@ -159,7 +159,7 @@
                                 </td>
                                 @if (getInfoLogin()->hasRole('Admin'))
                                     <td class="text-align-center justify-content-center">
-                                        @if ($item->status == 'belum_terjadwal')
+                                        {{-- @if ($item->status == 'belum_terjadwal')
                                             <span class="badge rounded-pill badge-soft-secondary font-size-12">Belum
                                                 Terjadwal</span>
                                         @else
@@ -170,7 +170,8 @@
                                                 <span class="badge rounded-pill badge-soft-success font-size-12">Telah
                                                     Seminar</span>
                                             @endif
-                                        @endif
+                                        @endif --}}
+                                        <p style="white-space: nowrap" class="font-size-12 {{ $item->document_complete ? 'badge badge-soft-success text-success' : 'badge badge-soft-danger text-danger' }}">{{ $item->document_complete ? 'Berkas sudah lengkap' : 'Berkas belum lengkap' }}</p>
                                     </td>
                                 @endif
                                 <td class="mb-3 text-center">
@@ -187,13 +188,13 @@
                                         <a href="javascript:void(0);"
                                             onclick="uploadFileSeminar('{{ $item->id }}', '{{ route('apps.jadwal-seminar.unggah-berkas', $item->id) }}')"
                                             class="btn btn-sm btn-outline-dark">
-                                            @if ($item->status == 'belum_terjadwal')
+                                            <i class="bx bx-file"></i>
+                                            Unggah
+                                            {{-- @if ($item->status == 'belum_terjadwal')
                                                 <i class="mdi mdi-pencil"></i>
                                                 Daftar
                                             @else
-                                                <i class="bx bx-file"></i>
-                                                Unggah
-                                            @endif
+                                            @endif --}}
                                         </a>
                                         @include('administrator.jadwal-seminar.partials.modal')
                                     @endif

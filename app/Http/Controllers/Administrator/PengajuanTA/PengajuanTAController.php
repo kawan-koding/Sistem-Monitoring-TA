@@ -10,12 +10,15 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\PengajuanTA\PengajuanTARequest;
 use App\Models\BimbingUji;
 use App\Models\Dosen;
+use App\Models\JenisDokumen;
 use App\Models\JenisTa;
 use App\Models\KuotaDosen;
+use App\Models\Pemberkasan;
 use App\Models\PeriodeTa;
 use App\Models\Topik;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 
 class PengajuanTAController extends Controller
@@ -39,27 +42,6 @@ class PengajuanTAController extends Controller
                 });
             })->get();
         }
-
-        // $seminar = null;
-        // if(isset($ta->id)){
-
-        //     $seminar = JadwalSeminar::where('tugas_akhir_id', $ta->id)->first();
-        // }
-        // if ($seminar) {
-        //     $waktu_sekarang = date('Y-m-d H:i:s');
-        //     $tgl_sekarang = date('Y-m-d');
-        //     $wk = ($seminar->tanggal . ' ' . $seminar->jam_selesai);
-        //     if ($waktu_sekarang > $wk && $tgl_sekarang >= $seminar->tanggal) {
-        //         $waktu = 'selesai';
-        //     } else {
-        //         $waktu = 'tidak selesai';
-        //     }
-        // } else {
-        //     $waktu = 'seminar tidak ditemukan';
-        // }        
-        // if($mahasiswa) {
-        //     $query = TugasAkhir::with(['jenis_ta', 'topik'])->where('mahasiswa_id', $mahasiswa->id)->get();
-        // }
 
         $data = [
             'title' => 'Pengajuan Tugas Akhir',
@@ -87,12 +69,10 @@ class PengajuanTAController extends Controller
         $dataDosen = Dosen::all();
         $dosen = [];
         foreach ($dataDosen as $key) {
-            # code...
             $kuota = KuotaDosen::where('dosen_id', $key->id)->where('periode_ta_id', $periode->id)->first();
             $bimbingUji = BimbingUji::with(['tugas_akhir', 'dosen'])->where('dosen_id', $key->id)->where('jenis', 'pembimbing')->where('urut', 1)->whereHas('tugas_akhir', function ($q) use($periode){
                 $q->where('periode_ta_id', $periode->id);
             })->count();
-            // dd($kuota);
             $dosen[] = (object)[
                 'id' => $key->id,
                 'nidn' => $key->nidn,
@@ -103,11 +83,13 @@ class PengajuanTAController extends Controller
             ];
         }
 
+        $docPengajuan = JenisDokumen::where('jenis','pendaftaran')->get();
         $data = [
             'title' => 'Pengajuan Tugas Akhir',
             'dataJenis'   => JenisTa::all(),
             'dataTopik'   => Topik::all(),
             'dataDosen'   => $dosen,
+            'doc' => $docPengajuan,
             'dosenKuota'   => $dosen,
             'mods' => 'pengajuan_ta',
             'breadcrumbs' => [
@@ -131,18 +113,15 @@ class PengajuanTAController extends Controller
 
     public function store(PengajuanTARequest $request)
     {   
-        // dd($request->all());
         try {
+            DB::beginTransaction();
             $periode = PeriodeTa::where('is_active', 1)->first();
-            // dd($periode->akhir_daftar);
             if(!is_null($periode) && !Carbon::parse($periode->akhir_daftar)->isFuture()){
                 return redirect()->back()->with('error', 'Pengajuan Tugas Akhir melebihi batas periode');
             }
-
             if(!is_null($periode) && Carbon::parse($periode->mulai_daftar)->isFuture()){
                 return redirect()->back()->with('error', 'Periode pengajuan Tugas Akhir belum aktif');
             }
-
             $myId = Auth::user()->username;
             $mahasiswa = Mahasiswa::where('nim', $myId)->first();
             $fileDocPemb1 = null;
@@ -155,15 +134,6 @@ class PengajuanTAController extends Controller
             if($bimbingUji >= (!is_null($kuota) ? $kuota->pembimbing_1 : 0)){
                 return redirect()->back()->with('error', 'Kuota dosen pembimbing 1 yang di pilih telah mencapai batas');
             }
-
-            if($request->hasFile('dokumen_pembimbing_1')){
-                $file = $request->file('dokumen_pembimbing_1');
-                $fileDocPemb1 = 'Pembimbing_1_'. rand(0, 999999999) .'_'. rand(0, 999999999) .'.'. $file->getClientOriginalExtension();
-                $file->move(public_path('storage/files/tugas-akhir'), $fileDocPemb1);
-            } else {
-                $fileDocPemb1 = null;
-            }
-            // dd($fileDocPemb1);
             
             if($request->hasFile('dokumen_ringkasan')){
                 $file = $request->file('dokumen_ringkasan');
@@ -195,8 +165,6 @@ class PengajuanTAController extends Controller
                 'periode_ta_id' => $periode->id,
                 'judul' => $request->judul,
                 'tipe' => $request->tipe,
-                'dokumen_pemb_1' => $fileDocPemb1,
-                'dokumen_ringkasan' => $fileDocRing,
                 'status' => 'draft',
             ]);
 
@@ -207,6 +175,27 @@ class PengajuanTAController extends Controller
                 'urut' => 1,
             ]);
 
+            $docPengajuan = JenisDokumen::where('jenis','pendaftaran')->get();
+            foreach($docPengajuan as $item) {
+                $request->validate([
+                    'dokumen_'.$item->id => 'required|mimes:pdf,docx|max:2048'
+                ], [
+                    'dokumen_'. $item->id .'.required' => 'Dokumen '. ucwords(strtolower($item->nama)) .' harus diisi',
+                    'dokumen_'. $item->id .'.mimes' => 'Dokumen harus dalam format PDF atau Docx',
+                    'dokumen_'. $item->id .'.max' => 'Dokumen tidak boleh lebih dari 2 MB',
+                ]);
+                $file = $request->file('dokumen_'.$item->id);
+                $filename = 'document_' . rand(0, 999999999) .'_'. rand(0, 999999999) .'.'. $file->getClientOriginalExtension();
+                $file->move(public_path('storage/files/pemberkasan'), $filename);
+    
+                Pemberkasan::create([
+                    'tugas_akhir_id' => $result->id,
+                    'jenis_dokumen_id' => $item->id,
+                    'filename' => $filename,
+                ]);
+            }
+
+            DB::commit();
             return redirect()->route('apps.pengajuan-ta')->with('success', 'Data berhasil ditambahkan');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
@@ -234,6 +223,7 @@ class PengajuanTAController extends Controller
                 'total_pembimbing_1' => $bimbingUji,
             ];
         }
+        $docPengajuan = JenisDokumen::where('jenis','pendaftaran')->get();
 
         $data = [
             'title' => 'Pengajuan Tugas Akhir',
@@ -243,6 +233,7 @@ class PengajuanTAController extends Controller
             'dosenKuota'   => $dosen,
             'mods' => 'pengajuan_ta',
             'editedData' => $pengajuanTA,
+            'doc' => $docPengajuan,
             'breadcrumbs' => [
                 [
                     'title' => 'Dashboard',
@@ -317,9 +308,7 @@ class PengajuanTAController extends Controller
                 'jenis_ta_id' => $jenis,
                 'topik_id' => $topik,
                 'judul' => $request->judul,
-                'tipe' => $request->tipe,
-                'dokumen_pemb_1' => $fileDocPemb1,
-                'dokumen_ringkasan' => $fileDocRing,    
+                'tipe' => $request->tipe,    
                 'status' => $status,
                 'catatan' => null,
             ]);
@@ -338,6 +327,8 @@ class PengajuanTAController extends Controller
         $pembimbing2 = $bimbingUji->where('jenis', 'pembimbing')->where('urut', 2)->first();
         $penguji1 = $bimbingUji->where('jenis', 'penguji')->where('urut', 1)->first();
         $penguji2 = $bimbingUji->where('jenis', 'penguji')->where('urut', 2)->first();
+        $docPengajuan = JenisDokumen::all();
+
         $data = [
             'title' => 'Detail Pengajuan Tugas Akhir',
             'breadcrumbs' => [
@@ -360,43 +351,44 @@ class PengajuanTAController extends Controller
             'pembimbing2' => $pembimbing2,
             'penguji1' => $penguji1,
             'penguji2' => $penguji2,
+            'doc' => $docPengajuan,
         ];
 
         return view('administrator.pengajuan-ta.partials.detail', $data);
     }
 
-    public function unggah_berkas(TugasAkhir $pengajuanTA, Request $request)
-    {
-        $request->validate([
-            'dokumen_pemb_2' => 'nullable|mimes:docx,pdf',
-        ],[
-            'file_pemb_2.mimes' => 'Fiel proposal harus dalam format PDF atau DOCX',
-            'file_pemb_2.max' => 'File proposal melebihi batas upload, maksimal 5MB',
-        ]);
+    // public function unggah_berkas(TugasAkhir $pengajuanTA, Request $request)
+    // {
+    //     $request->validate([
+    //         'dokumen_pemb_2' => 'nullable|mimes:docx,pdf',
+    //     ],[
+    //         'file_pemb_2.mimes' => 'Fiel proposal harus dalam format PDF atau DOCX',
+    //         'file_pemb_2.max' => 'File proposal melebihi batas upload, maksimal 5MB',
+    //     ]);
 
-        try {
-            $data = TugasAkhir::where('id', $pengajuanTA->id)->first();
-            // dd($data);
+    //     try {
+    //         $data = TugasAkhir::where('id', $pengajuanTA->id)->first();
+    //         // dd($data);
 
-            if($request->hasFile('dokumen_pemb_2')){
-                $file = $request->file('dokumen_pemb_2');
-                $dokumenPemb2 = 'Pembimbing_2_' . rand(0, 999999999) . '.' . $file->getClientOriginalExtension();
-                $file->move(public_path('storage/files/tugas-akhir'), $dokumenPemb2);
-                if($pengajuanTA->file_persetujuan_pemb2) {
-                    File::delete(public_path('storage/files/tugas-akhir/'.$pengajuanTA->file_persetujuan_pemb_2));
-                }
-            }
+    //         if($request->hasFile('dokumen_pemb_2')){
+    //             $file = $request->file('dokumen_pemb_2');
+    //             $dokumenPemb2 = 'Pembimbing_2_' . rand(0, 999999999) . '.' . $file->getClientOriginalExtension();
+    //             $file->move(public_path('storage/files/tugas-akhir'), $dokumenPemb2);
+    //             if($pengajuanTA->file_persetujuan_pemb2) {
+    //                 File::delete(public_path('storage/files/tugas-akhir/'.$pengajuanTA->file_persetujuan_pemb_2));
+    //             }
+    //         }
             
-            $data->update([
-                'file_persetujuan_pemb_2' => $dokumenPemb2,
-            ]);
+    //         $data->update([
+    //             'file_persetujuan_pemb_2' => $dokumenPemb2,
+    //         ]);
 
-            return redirect()->route('apps.pengajuan-ta')->with('success', 'Berkas berhasil diunggah');
-        } catch (\Exception $e) {
-            // dd($e->getMessage());
-            return redirect()->back()->with('error', $e->getMessage());
-        }
-    }
+    //         return redirect()->route('apps.pengajuan-ta')->with('success', 'Berkas berhasil diunggah');
+    //     } catch (\Exception $e) {
+    //         // dd($e->getMessage());
+    //         return redirect()->back()->with('error', $e->getMessage());
+    //     }
+    // }
 
     public function accept(TugasAkhir $pengajuanTA, Request $request) 
     {

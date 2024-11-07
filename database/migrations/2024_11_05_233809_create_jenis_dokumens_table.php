@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('jenis_dokumens', function (Blueprint $table) {
             $table->id();
             $table->string('nama');
-            $table->enum('jenis',['pra_seminar','seminar','pra_sidang','sidang']);
+            $table->enum('jenis',['pra_seminar','seminar','pra_sidang','sidang', 'pendaftaran']);
             $table->timestamps();
         });
     }

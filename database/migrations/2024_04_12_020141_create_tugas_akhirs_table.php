@@ -19,19 +19,12 @@ return new class extends Migration
             $table->foreignId('periode_ta_id')->references('id')->on('periode_tas')->onDelete('cascade');
             $table->text('judul');
             $table->enum('tipe', ['K', 'I']);
-            $table->string('dokumen_pemb_1', 255)->nullable();
-            $table->string('file_persetujuan_pemb_2', 255)->nullable();
             $table->string('dokumen_ringkasan', 255);
-            $table->string('file_proposal', 255)->nullable();
-            $table->string('file_pengesahan', 255)->nullable();
-            $table->string('file_draft', 255)->nullable();
             $table->enum('status', ['draft', 'acc', 'reject','cancel']);
             $table->text('catatan')->nullable();
-            $table->enum('status_seminar', ['revisi', 'acc', 'reject'])->nullable();
-            $table->enum('status_sidang', ['revisi', 'acc', 'reject'])->nullable();
+            $table->enum('status_seminar', ['revisi', 'acc', 'reject', 'complete'])->nullable();
+            $table->enum('status_sidang', ['revisi', 'acc', 'reject', 'complete'])->nullable();
             $table->boolean('is_completed')->nullable()->default(false);
-            // $table->string('periode_mulai', 45);
-            // $table->string('periode_akhir', 45);
             $table->timestamps();
         });
     }

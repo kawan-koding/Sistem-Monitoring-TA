@@ -142,12 +142,12 @@
                                                                 class="bx bx-edit-alt"></i></a>
                                                     @endcan
                                                     @endif
-                                                    @if($item->bimbing_uji()->where('jenis', 'pembimbing')->where('urut', 2)->count() > 0 && $item->status == 'acc')
+                                                    {{-- @if($item->bimbing_uji()->where('jenis', 'pembimbing')->where('urut', 2)->count() > 0 && $item->status == 'acc')
                                                     <button
                                                         onclick="uploadFile('{{ $item->id }}','{{ route('apps.pengajuan-ta.unggah-berkas', $item->id) }}')"
                                                         class="btn btn-sm btn-outline-secondary unggah-berkas mx-1 my-1"
                                                         title="Unggah Berkas Pembimbing 2"><i class="bx bx-file"></i></button>
-                                                    @endif
+                                                    @endif --}}
                                                 @endif
                                                 <a href="{{ route('apps.pengajuan-ta.show', ['pengajuanTA' => $item->id]) }}"
                                                     class="btn btn-sm btn-outline-warning mx-1 my-1" title="Detail"><i
@@ -176,7 +176,7 @@
     </div>
 
     {{-- modal unggah berkas --}}
-    <div id="myModalUploadFile" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    {{-- <div id="myModalUploadFile" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
         aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -198,7 +198,7 @@
                 </form>
             </div>
         </div>
-    </div>
+    </div> --}}
 
     {{-- modal acc TA and reject TA --}}
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalAccLabel"

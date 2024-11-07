@@ -16,3 +16,4 @@ class Pemberkasan extends Model
         return $this->belongsTo(JenisDokumen::class);
     }
 }
+

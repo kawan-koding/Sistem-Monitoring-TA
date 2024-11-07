@@ -93,9 +93,9 @@
                                         </td>
                                         <td>
                                             <span
-                                            @if($item->tugas_akhir->jadwal_seminar()->orderBy('id', 'desc')->first()->status == 'telah_seminar')
-                                                class="badge {{ !is_null($item->tugas_akhir->status_seminar) ? ($item->tugas_akhir->status_seminar == 'acc' ? 'badge-soft-success' : ($item->tugas_akhir->status_seminar == 'revisi' ? 'badge-soft-primary' : 'badge-soft-danger')) : 'badge-soft-secondary' }}">{{!is_null($item->tugas_akhir->status_seminar) ? ($item->tugas_akhir->status_seminar == 'acc' ? 'Disetujui' : ($item->tugas_akhir->status_seminar == 'revisi' ? 'Revisi' : 'Ditolak')) : 'Belum Seminar' }}</span>
-                                            @endif
+                                            {{-- @if($item->tugas_akhir->jadwal_seminar()->orderBy('id', 'desc')->first()->status == 'telah_seminar') --}}
+                                                class="badge {{ !is_null($item->tugas_akhir->status_seminar) ? ($item->tugas_akhir->status_seminar == 'acc' ? 'badge-soft-success' : ($item->tugas_akhir->status_seminar == 'revisi' ? 'badge-soft-success' : 'badge-soft-danger')) : 'badge-soft-secondary' }}">{{!is_null($item->tugas_akhir->status_seminar) ? ($item->tugas_akhir->status_seminar == 'acc' ? 'Disetujui' : ($item->tugas_akhir->status_seminar == 'revisi' ? 'Disetujui dengan revisi' : 'Ditolak')) : '-' }}</span>
+                                            {{-- @endif --}}
                                         </td>
                                         <td class="text-center">
                                             @if (!is_null($item->tugas_akhir->jadwal_seminar()->orderBy('id', 'desc')->first()))
@@ -106,6 +106,7 @@
                                             @endif
                                             @if ($item->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->where('jenis', 'pembimbing')->where('urut', 1)->count() > 0 && $item->tugas_akhir->status_seminar != 'acc')
                                                 <button class="btn btn-outline-warning btn-sm mb-1" type="button" data-bs-toggle="modal" data-bs-target="#myModal">Setujui?</button>
+                                                {{-- @dd($item->tugas_akhir->jadwal_seminar) --}}
                                                 @include('administrator.jadwal.partials.modal')
                                             @endif
                                         </td>
