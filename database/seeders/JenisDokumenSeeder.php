@@ -28,7 +28,7 @@ class JenisDokumenSeeder extends Seeder
             ],
             [
                 'nama' => 'FORMULIR KESEDIAAN PEMBIMBING 1',
-                'jenis' => 'seminar',
+                'jenis' => 'pendaftaran',
             ],
             [
                 'nama' => 'FORMULIR KESEDIAAN PEMBIMBING 2',

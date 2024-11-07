@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Administrator\JadwalSeminar;
 use App\Http\Controllers\Controller;
 use App\Models\Dokumen;
 use App\Models\JadwalSeminar;
+use App\Models\JenisDokumen;
 use App\Models\KategoriNilai;
 use App\Models\Mahasiswa;
+use App\Models\Pemberkasan;
 use App\Models\PeriodeTa;
 use App\Models\Ruangan;
 use Carbon\Carbon;
@@ -36,20 +38,28 @@ class JadwalSeminarController extends Controller
             }
             $query = $query->get();
 
-            // dd($query);
+            $query = $query->map(function($item) {
+                $jenisDocument = JenisDokumen::whereIn('jenis', ['seminar', 'pra_seminar'])->count();
+                $jenisDocumentComplete = JenisDokumen::whereIn('jenis', ['seminar', 'pra_seminar'])->whereHas('pemberkasan', function($q) use ($item) {
+                    $q->where('tugas_akhir_id', $item->tugas_akhir->id);
+                })->count();
+                $item->document_complete = $jenisDocument - $jenisDocumentComplete == 0;
+
+                return $item;
+            });
         }
         if(getInfoLogin()->hasRole('Mahasiswa')) {
             $myId = getInfoLogin()->userable;
             $mahasiswa = Mahasiswa::where('id', $myId->id)->first();
-            // dd($myId);
             if($mahasiswa) {
                 $query = JadwalSeminar::whereHas('tugas_akhir', function ($q) use($periode, $mahasiswa) {
                     $q->where('periode_ta_id', $periode->id)->where('mahasiswa_id', $mahasiswa->id);
                 })->get();
-                // dd($query);
             }
         }
 
+        $docSeminar = JenisDokumen::whereIn('jenis', ['seminar', 'pra_seminar'])->get();
+        // $doc = Pemberkasan::where('jenis_dokumen_id', $docSeminar[0]->id)->get();
         $data = [
             'title' =>  'Jadwal Seminar',
             'breadcrumbs' =>[
@@ -64,7 +74,9 @@ class JadwalSeminarController extends Controller
                 ],
             'data' => $query,
             'status' => $request->has('status') ? $request->status : null,
-            'documents' => $query->count() > 0 ? Dokumen::where('model_type', JadwalSeminar::class)->where('model_id', $query[0]->id)->get() : collect([]), 
+            'document_seminar' => $docSeminar,
+            // 'doc' => $doc->count() > 0 ? $doc[0] : collect([]),
+            // 'documents' => $query->count() > 0 ? Dokumen::where('model_type', JadwalSeminar::class)->where('model_id', $query[0]->id)->get() : collect([]), 
         ];
         
         return view('administrator.jadwal-seminar.index', $data);
@@ -231,33 +243,82 @@ class JadwalSeminarController extends Controller
 
     public function uploadDocument(JadwalSeminar $jadwalSeminar, Request $request) {
         try {
-            foreach($request->all() as $key => $value) {
-                if($request->hasFile($key)) {
-                    $request->validate([
-                        $key => 'required|mimes:pdf|max:2048'
-                    ]);
-    
-                    $file = $request->file($key);
-                    $filename = 'document_'. rand(0, 999999999) .'_'. rand(0, 999999999) .'.'. $file->getClientOriginalExtension();
-                    $file->move(public_path('storage/files/documents'), $filename);
-    
-                    $check = Dokumen::where('model_type', JadwalSeminar::class)->where('model_id', $jadwalSeminar->id)->where('nama', $key)->first();
-                    if($check) {
-                        File::delete(public_path('storage/files/documents/'. $check->file));
-                        
-                        $check->update([
-                            'file' => $filename
-                        ]);
-                    } else {
-                        Dokumen::create([
-                            'model_type' => JadwalSeminar::class,
-                            'model_id' => $jadwalSeminar->id,
-                            'nama' => $key,
-                            'jenis' => 'Seminar',
-                            'file' => $filename,
-                        ]);
+            $documentTypes = JenisDokumen::all();
+            $validates = [];
+            $messages = [];
+            $inserts = [];
+            foreach($documentTypes as $item) {
+                if($jadwalSeminar->status == 'belum_terjadwal') {
+                    if($item->jenis == 'pra_seminar') {
+                        $validates['document_'. $item->id] = '|mimes:pdf|max:2048';
+                        $messages['document_'. $item->id .'.mimes'] = 'Dokumen '. strtolower($item->nama) .' harus dalam format PDF';
+                        $messages['document_'. $item->id .'.max'] = 'Dokumen '. strtolower($item->nama) .' tidak boleh lebih dari 2 MB';
+                    }
+                } else {
+                    if($item->jenis == 'seminar') {
+                        $validates['document_'. $item->id] = '|mimes:pdf|max:2048';
+                        $messages['document_'. $item->id .'.mimes'] = 'Dokumen '. strtolower($item->nama) .' harus dalam format PDF';
+                        $messages['document_'. $item->id .'.max'] = 'Dokumen '. strtolower($item->nama) .' tidak boleh lebih dari 2 MB';
                     }
                 }
+            }
+            
+            // dd($validates);
+            $request->validate($validates, $messages);
+            // dd($request->all());
+            
+            foreach($documentTypes as $item) {
+                if($jadwalSeminar->status == 'belum_terjadwal') {
+                    if($item->jenis == 'pra_seminar' && $request->hasFile('document_'. $item->id)) {
+                        $file = $request->file('document_'. $item->id);
+                        $filename = 'document_'. rand(0, 999999999) .'_'. rand(0, 999999999) .'.'. $file->getClientOriginalExtension();
+                        $file->move(public_path('storage/files/pemberkasan'), $filename);
+    
+                        $document = $item->pemberkasan()->where('tugas_akhir_id', $jadwalSeminar->tugas_akhir->id)->first();
+                        if($document) {
+                            File::delete(public_path('storage/files/pemberkasan/'. $document->filename));
+    
+                            $document->update([
+                                'filename' => $filename
+                            ]);
+                        } else {
+                            $inserts[] = [
+                                'tugas_akhir_id' => $jadwalSeminar->tugas_akhir->id,
+                                'jenis_dokumen_id' => $item->id,
+                                'filename' => $filename,
+                                'updated_at' => now(),
+                                'created_at' => now()
+                            ];
+                        }
+                    }
+                } else {
+                    if($item->jenis == 'seminar' && $request->hasFile('document_'. $item->id)) {
+                        $file = $request->file('document_'. $item->id);
+                        $filename = 'document_'. rand(0, 999999999) .'_'. rand(0, 999999999) .'.'. $file->getClientOriginalExtension();
+                        $file->move(public_path('storage/files/pemberkasan'), $filename);
+    
+                        $document = $item->pemberkasan()->where('tugas_akhir_id', $jadwalSeminar->tugas_akhir->id)->first();
+                        if($document) {
+                            File::delete(public_path('storage/files/pemberkasan/'. $document->filename));
+    
+                            $document->update([
+                                'filename' => $filename
+                            ]);
+                        } else {
+                            $inserts[] = [
+                                'tugas_akhir_id' => $jadwalSeminar->tugas_akhir->id,
+                                'jenis_dokumen_id' => $item->id,
+                                'filename' => $filename,
+                                'updated_at' => now(),
+                                'created_at' => now()
+                            ];
+                        }
+                    }
+                }
+            }
+
+            if(count($inserts) > 0) {
+                Pemberkasan::insert($inserts);
             }
 
             return redirect()->back()->with(['success' => 'Dokumen berhasil ditambahkan']);

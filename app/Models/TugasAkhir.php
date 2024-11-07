@@ -29,6 +29,6 @@ class TugasAkhir extends Model
         return $this->hasMany(BimbingUji::class);
     }
     public function jadwal_seminar(){
-        return $this->hasMany(JadwalSeminar::class);
+        return $this->hasOne(JadwalSeminar::class);
     }
 }

@@ -92,39 +92,19 @@
                     <div id="collapsePengajuanTA" class="accordion-collapse collapse show" aria-labelledby="headingPengajuanTA" data-bs-parent="#accordionExample">
                         <div class="accordion-body">
                             <div class="d-flex flex-wrap">
-                                <div class="col-md-3 col-sm-6 col-12 border p-3 text-center">
-                                    <strong>Dokumen Pembimbing 1</strong>
-                                    @if (isset($dataTA->dokumen_pemb_1))
-                                    <i class="mdi mdi-file-pdf-box-outline text-danger d-block" style="font-size: 56px;"></i>
-                                    <a href="{{asset('storage/files/tugas-akhir/'. $dataTA->dokumen_pemb_1)}}" target="_blank" class="btn btn-secondary btn-sm"><i class="bx bx-show-alt"></i> Lihat Dokumen</a>
-                                    @else
-                                    <br><br>
-                                    <br><br><br>
-                                    <p class="text-muted"><i class="text-danger">*</i>) Belum memiliki dokumen</p>
-                                    @endif
-                                </div>
-                                <div class="col-md-3 col-sm-6 col-12 border p-3 text-center">
-                                    <strong>Dokumen Pembimbing 2</strong>
-                                    @if (isset($dataTA->file_persetujuan_pemb_2))
-                                    <i class="mdi mdi-file-pdf-box-outline text-danger d-block" style="font-size: 56px;"></i>
-                                    <a href="{{asset('storage/files/tugas-akhir/'. $dataTA->file_persetujuan_pemb_2)}}" target="_blank" class="btn btn-secondary btn-sm"><i class="bx bx-show-alt"></i> Lihat Dokumen</a>
-                                    @else    
-                                    <br><br>
-                                    <br><br><br>
-                                    <p class="text-muted"><i class="text-danger">*</i>) Belum memiliki dokumen</p>
-                                    @endif
-                                </div>
-                                <div class="col-md-3 col-sm-6 col-12 border p-3 text-center">
-                                    <strong>Dokumen Ringkasan</strong>
-                                    @if (isset($dataTA->dokumen_ringkasan))
-                                    <i class="mdi mdi-file-pdf-box-outline text-danger d-block" style="font-size: 56px;"></i>
-                                    <a href="{{asset('storage/files/tugas-akhir/'. $dataTA->dokumen_ringkasan)}}" target="_blank" class="btn btn-secondary btn-sm"><i class="bx bx-show-alt"></i> Lihat Dokumen</a>
-                                    @else
-                                    <br><br>
-                                    <br><br><br>
-                                    <p class="text-muted"><i class="text-danger">*</i>) Belum memiliki dokumen</p>
-                                    @endif
-                                </div>
+                                @foreach ($doc->where('jenis', 'pendaftaran')->sortBy(['nama', 'asc']) as $item)
+                                    <div class="col-md-3 col-sm-6 col-12 border p-3 text-center">
+                                        <strong>{{ ucwords(strtolower($item->nama)) }}</strong>
+                                        @if ($item->pemberkasan()->where('tugas_akhir_id', $dataTA->id)->exists())
+                                        <i class="mdi mdi-file-pdf-box-outline text-danger d-block" style="font-size: 56px;"></i>
+                                        <a href="{{asset('storage/files/pemberkasan/'. $item->pemberkasan->where('tugas_akhir_id', $dataTA->id)->first()->filename)}}" target="_blank" class="btn btn-secondary btn-sm"><i class="bx bx-show-alt"></i> Lihat Dokumen</a>
+                                        @else
+                                        <br><br>
+                                        <br><br><br>
+                                        <p class="text-muted"><i class="text-danger">*</i>) Belum memiliki dokumen</p>
+                                        @endif
+                                    </div>
+                                @endforeach
                             </div>
                         </div>
                     </div>
@@ -138,52 +118,19 @@
                     <div id="collapseSeminar" class="accordion-collapse collapse" aria-labelledby="headingSeminar" data-bs-parent="#accordionExample">
                         <div class="accordion-body">
                             <div class="d-flex flex-wrap">
-                                <div class="col-md-3 col-sm-6 col-12 border p-3 text-center">
-                                    <strong>Lembar Penilaian</strong>
-                                    <br><br>
-                                    <br><br><br>
-                                    <p class="text-muted"><i class="text-danger">*</i>) Belum memiliki dokumen</p>
-                                </div>
-                                <div class="col-md-3 col-sm-6 col-12 border p-3 text-center">
-                                    <strong>Rekapitulasi Nilai</strong>
-                                    <br><br>
-                                    <br><br><br>
-                                    <p class="text-muted"><i class="text-danger">*</i>) Belum memiliki dokumen</p>
-                                </div>
-                                <div class="col-md-3 col-sm-6 col-12 border p-3 text-center">
-                                    <strong>Berita Acara</strong>
-                                    <br><br>
-                                    <br><br><br>
-                                    <p class="text-muted"><i class="text-danger">*</i>) Belum memiliki dokumen</p>
-                                </div>
-                                <div class="col-md-3 col-sm-6 col-12 border p-3 text-center">
-                                    <strong>Lembar Revisi</strong>
-                                    <br><br>
-                                    <br><br><br>
-                                    <p class="text-muted"><i class="text-danger">*</i>) Belum memiliki dokumen</p>
-                                </div>
-                                <div class="col-md-3 col-sm-6 col-12 border p-3 text-center">
-                                    <strong>File Proposal</strong>
-                                    @if (isset($dataTA->file_proposal))
-                                    <i class="mdi mdi-file-pdf-box-outline text-danger d-block" style="font-size: 56px;"></i>
-                                    <a href="{{asset('storage/files/tugas-akhir/'. $dataTA->file_propsal)}}" target="_blank" class="btn btn-secondary btn-sm"><i class="bx bx-show-alt"></i> Lihat Dokumen</a>
-                                    @else    
-                                    <br><br>
-                                    <br><br><br>
-                                    <p class="text-muted"><i class="text-danger">*</i>) Belum memiliki dokumen</p>
-                                    @endif
-                                </div>
-                                <div class="col-md-3 col-sm-6 col-12 border p-3 text-center">
-                                    <strong>Lembar Pengesahan</strong>
-                                    @if (isset($dataTA->file_pengesahan))
-                                    <i class="mdi mdi-file-pdf-box-outline text-danger d-block" style="font-size: 56px;"></i>
-                                    <a href="{{asset('storage/files/tugas-akhir/'. $dataTA->file_pengesahan)}}" target="_blank" class="btn btn-secondary btn-sm"><i class="bx bx-show-alt"></i> Lihat Dokumen</a>
-                                    @else    
-                                    <br><br>
-                                    <br><br><br>
-                                    <p class="text-muted"><i class="text-danger">*</i>) Belum memiliki dokumen</p>
-                                    @endif
-                                </div>
+                                @foreach ($doc->whereIn('jenis', ['pra_seminar', 'seminar'])->sortBy(['nama', 'asc']) as $item)
+                                    <div class="col-md-3 col-sm-6 col-12 border p-3 text-center">
+                                        <strong>{{ ucwords(strtolower($item->nama)) }}</strong>
+                                        @if ($item->pemberkasan()->where('tugas_akhir_id', $dataTA->id)->exists())
+                                        <i class="mdi mdi-file-pdf-box-outline text-danger d-block" style="font-size: 56px;"></i>
+                                        <a href="{{asset('storage/files/pemberkasan/'. $item->pemberkasan->where('tugas_akhir_id', $dataTA->id)->first()->filename)}}" target="_blank" class="btn btn-secondary btn-sm"><i class="bx bx-show-alt"></i> Lihat Dokumen</a>
+                                        @else
+                                        <br><br>
+                                        <br><br><br>
+                                        <p class="text-muted"><i class="text-danger">*</i>) Belum memiliki dokumen</p>
+                                        @endif
+                                    </div>
+                                @endforeach
                             </div>
                         </div>
                     </div>
@@ -197,52 +144,19 @@
                     <div id="collapseSidang" class="accordion-collapse collapse" aria-labelledby="headingSidang" data-bs-parent="#accordionExample">
                         <div class="accordion-body">
                             <div class="d-flex flex-wrap">
-                                <div class="col-md-3 col-sm-6 col-12 border p-3 text-center">
-                                    <strong>Lembar Penilaian</strong>
-                                    <br><br>
-                                    <br><br><br>
-                                    <p class="text-muted"><i class="text-danger">*</i>) Belum memiliki dokumen</p>
-                                </div>
-                                <div class="col-md-3 col-sm-6 col-12 border p-3 text-center">
-                                    <strong>Rekapitulasi Nilai</strong>
-                                    <br><br>
-                                    <br><br><br>
-                                    <p class="text-muted"><i class="text-danger">*</i>) Belum memiliki dokumen</p>
-                                </div>
-                                <div class="col-md-3 col-sm-6 col-12 border p-3 text-center">
-                                    <strong>Berita Acara</strong>
-                                    <br><br>
-                                    <br><br><br>
-                                    <p class="text-muted"><i class="text-danger">*</i>) Belum memiliki dokumen</p>
-                                </div>
-                                <div class="col-md-3 col-sm-6 col-12 border p-3 text-center">
-                                    <strong>Lembar Revisi</strong>
-                                    <br><br>
-                                    <br><br><br>
-                                    <p class="text-muted"><i class="text-danger">*</i>) Belum memiliki dokumen</p>
-                                </div>
-                                <div class="col-md-3 col-sm-6 col-12 border p-3 text-center">
-                                    <strong>File Laporan</strong>
-                                    @if (isset($dataTA->file_proposal))
-                                    <i class="mdi mdi-file-pdf-box-outline text-danger d-block" style="font-size: 56px;"></i>
-                                    <a href="{{asset('storage/files/tugas-akhir/'. $dataTA->file_propsal)}}" target="_blank" class="btn btn-secondary btn-sm"><i class="bx bx-show-alt"></i> Lihat Dokumen</a>
-                                    @else    
-                                    <br><br>
-                                    <br><br><br>
-                                    <p class="text-muted"><i class="text-danger">*</i>) Belum memiliki dokumen</p>
-                                    @endif
-                                </div>
-                                <div class="col-md-3 col-sm-6 col-12 border p-3 text-center">
-                                    <strong>Lembar Pengesahan</strong>
-                                    @if (isset($dataTA->file_pengesahan))
-                                    <i class="mdi mdi-file-pdf-box-outline text-danger d-block" style="font-size: 56px;"></i>
-                                    <a href="{{asset('storage/files/tugas-akhir/'. $dataTA->file_pengesahan)}}" target="_blank" class="btn btn-secondary btn-sm"><i class="bx bx-show-alt"></i> Lihat Dokumen</a>
-                                    @else    
-                                    <br><br>
-                                    <br><br><br>
-                                    <p class="text-muted"><i class="text-danger">*</i>) Belum memiliki dokumen</p>
-                                    @endif
-                                </div>
+                                @foreach ($doc->where('jenis', 'pra_sidang', 'sidang')->sortBy(['nama', 'asc']) as $item)
+                                    <div class="col-md-3 col-sm-6 col-12 border p-3 text-center">
+                                        <strong>{{ ucwords(strtolower($item->nama)) }}</strong>
+                                        @if ($item->pemberkasan()->where('tugas_akhir_id', $dataTA->id)->exists())
+                                        <i class="mdi mdi-file-pdf-box-outline text-danger d-block" style="font-size: 56px;"></i>
+                                        <a href="{{asset('storage/files/pemberkasan/'. $item->pemberkasan->where('tugas_akhir_id', $dataTA->id)->first()->filename)}}" target="_blank" class="btn btn-secondary btn-sm"><i class="bx bx-show-alt"></i> Lihat Dokumen</a>
+                                        @else
+                                        <br><br>
+                                        <br><br><br>
+                                        <p class="text-muted"><i class="text-danger">*</i>) Belum memiliki dokumen</p>
+                                        @endif
+                                    </div>
+                                @endforeach
                             </div>
                         </div>
                     </div>

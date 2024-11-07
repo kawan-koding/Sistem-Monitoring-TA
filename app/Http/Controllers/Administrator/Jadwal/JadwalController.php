@@ -28,7 +28,6 @@ class JadwalController extends Controller
         }
         $data = [
             'title' => 'Jadwal',
-            'mods' => 'jadwal',
             'breadcrumbs' => [
                 [
                     'title' => 'Dashboard',
