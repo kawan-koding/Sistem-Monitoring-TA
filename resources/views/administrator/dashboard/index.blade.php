@@ -316,7 +316,7 @@
                 <i class="fa fa-pencil-alt"></i>
             </div>
             <div class="card-body">
-                <h3 class="mb-2">{{ $dosen['kuota']->pembimbing_1 }} </h3>
+                <h3 class="mb-2">{{ $dosen['kuota']->pembimbing_1 ?? 0}} </h3>
                 <p class="mb-0">Jumlah Kuota Bimbingan</p>
             </div>
         </div>
@@ -327,7 +327,9 @@
                 <i class="fa fa-edit"></i>
             </div>
             <div class="card-body">
-                <h3 class="mb-2">{{ $dosen['kuota']->pembimbing_1 - $dosen['bimbing']->where('urut', 1)->count() }} </h3>
+                <h3 class="mb-2">
+                    {{ ($dosen['kuota'] && $dosen['kuota']->pembimbing_1 ? $dosen['kuota']->pembimbing_1 : 0) - $dosen['bimbing']->where('urut', 1)->count() >= 0 ? ($dosen['kuota'] && $dosen['kuota']->pembimbing_1 ? $dosen['kuota']->pembimbing_1 : 0) - $dosen['bimbing']->where('urut', 1)->count() : 0 }} 
+                </h3>
                 <p class="mb-0">Sisa Kuota Bimbingan</p>
             </div>
         </div>

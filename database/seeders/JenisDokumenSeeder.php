@@ -61,7 +61,11 @@ class JenisDokumenSeeder extends Seeder
             [
                 'nama' => 'BUKTI DUKUNG DARI MITRA',
                 'jenis' => 'seminar',
-            ]
+            ],
+            [
+                'nama' => 'DOKUMEN RINGKASAN',
+                'jenis' => 'pendaftaran',
+            ],
         ]);
     }
 }

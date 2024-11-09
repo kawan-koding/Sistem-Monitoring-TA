@@ -12,8 +12,8 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $tawaran = RekomendasiTopik::with(['dosen'])->where('status','Disetujui')->where('kuota', '!=', 0)->latest()->take(5)->get();
-        $tugasAkhir = TugasAkhir::with(['topik','mahasiswa','jenis_ta','bimbing_uji'])->where('status','acc')->latest()->take(5)->get();
+        $tawaran = RekomendasiTopik::with(['dosen'])->where('status','Disetujui')->where('kuota', '!=', 0)->latest()->paginate(10)->appends(request()->query());;
+        $tugasAkhir = TugasAkhir::with(['topik','mahasiswa','jenis_ta','bimbing_uji'])->where('status','acc')->latest()->paginate(2)->appends(request()->query());;
         $data = [
             'title' => 'Beranda',
             'tawaran' => $tawaran,

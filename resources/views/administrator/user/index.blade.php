@@ -7,8 +7,8 @@
         <div class="card">
             <div class="card-body">
                 @can('create-users')
-                {{-- <a href="javascript:void(0);" onclick="tambahData()" class="btn btn-primary"><i class="fa fa-plus"></i> Tambah</a>
-                <hr> --}}
+                <a href="javascript:void(0);" onclick="tambahData()" class="btn btn-primary"><i class="fa fa-plus"></i> Tambah</a>
+                <hr>
                 @endcan
                 @if(session('success'))
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
