@@ -12,7 +12,7 @@ class HomeController extends Controller
 {
     public function index(Request $request)
     {
-        $tawaran = RekomendasiTopik::with(['dosen'])->where('status','Disetujui')->where('kuota', '!=', 0)->latest()->paginate(10, ['*'], 'tawaran_page', $request->get('tawaran_page', 1));
+        $tawaran = RekomendasiTopik::with(['dosen'])->where('status','Disetujui')->where('kuota', '!=', 0)->get();
         $tugasAkhir = TugasAkhir::with(['topik','mahasiswa','jenis_ta','bimbing_uji'])->where('status','acc')->latest()->paginate(2, ['*'], 'tugas_akhir_page', $request->get('tugas_akhir_page', 1));
         $data = [
             'title' => 'Beranda',
