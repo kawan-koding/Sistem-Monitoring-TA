@@ -162,17 +162,22 @@
                                 </td>
                                 @if (getInfoLogin()->hasRole('Admin'))
                                     <td class="text-align-center justify-content-center">
-                                        <p style="white-space: nowrap" class="font-size-12 {{ $item->document_complete ? 'badge badge-soft-success text-success' : 'badge badge-soft-danger text-danger' }}">{{ $item->document_complete ? 'Berkas sudah lengkap' : 'Berkas belum lengkap' }}</p>
+                                        <p style="white-space: nowrap" class="font-size-12 {{ $item->tugas_akhir->status_pemberkasan == 'sudah_lengkap' ? 'badge badge-soft-success text-success' : 'badge badge-soft-danger text-danger' }}">{{ $item->tugas_akhir->status_pemberkasan == 'sudah_lengkap' ? 'Berkas sudah lengkap' : 'Berkas belum lengkap' }}</p>
                                     </td>
                                 @endif
                                 <td class="mb-3 text-center">
                                     @if (getInfoLogin()->hasRole('Admin'))
-                                        @can('update-jadwal-seminar')
-                                            <a href="{{ route('apps.jadwal-seminar.edit', ['jadwalSeminar' => $item->id]) }}"
-                                                class="btn btn-sm btn-primary"><i class="bx bx-calendar-event"></i></a>
-                                        @endcan
+                                        @if($item->status != 'telah_seminar')
+                                            @can('update-jadwal-seminar')
+                                                <a href="{{ route('apps.jadwal-seminar.edit', ['jadwalSeminar' => $item->id]) }}"
+                                                    class="btn btn-sm btn-primary"><i class="bx bx-calendar-event"></i></a>
+                                            @endcan
+                                        @endif
                                         @if($item->status == 'telah_seminar')
-                                            <a href=""></a>
+                                            <a href="{{ route('apps.jadwal-seminar.show', $item)}}" class="btn btn-sm btn-outline-warning mb-3" title="Detail"><i class="bx bx-show"></i></a>
+                                            @if($item->tugas_akhir->status_pemberkasan != 'sudah_lengkap')
+                                                <a href="javascript:void(0)" onClick="validate('{{ $item->id }}')" class="btn btn-sm btn-outline-success mb-3" title="Validasi Berkas"><i class="bx bx-pencil"></i></a>
+                                            @endif
                                         @endif
                                     @endif
 
@@ -217,6 +222,20 @@
             $(target).find('.file-desc').html(filename);
             $(target).find('.file-icon').attr('class', 'file-icon mdi mdi-alert-circle-outline text-warning');
             $(target).find('.file-btn').html('Ganti');
+        }
+
+        function validate(id) {
+            Swal.fire({
+                title: "Validasi Kelengkapan Berkas?",
+                text: "Apakah kamu yakin untuk memvalidasi data ini?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Ya, validasi!"
+            }).then((result) => {
+                if(result.value) {
+                    window.location.href = "{{ route('apps.jadwal-seminar.validate', ':id') }}".replace(':id', id);
+                }
+            })
         }
     </script>
 @endsection

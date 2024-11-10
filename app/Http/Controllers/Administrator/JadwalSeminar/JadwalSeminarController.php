@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Administrator\JadwalSeminar;
 
 use App\Http\Controllers\Controller;
+use App\Models\BimbingUji;
 use App\Models\Dokumen;
 use App\Models\JadwalSeminar;
 use App\Models\JenisDokumen;
@@ -323,6 +324,51 @@ class JadwalSeminarController extends Controller
 
             return redirect()->back()->with(['success' => 'Dokumen berhasil ditambahkan']);
         } catch(Exception $e) {
+            return redirect()->back()->with(['error' => $e->getMessage()]);
+        }
+    }
+
+    public function show(JadwalSeminar $jadwalSeminar)
+    {
+        $query = $jadwalSeminar->tugas_akhir;
+        $bimbingUji = $query->bimbing_uji;
+        $pembimbing1 = $bimbingUji->where('jenis', 'pembimbing')->where('urut', 1)->first();
+        $pembimbing2 = $bimbingUji->where('jenis', 'pembimbing')->where('urut', 2)->first();
+        $penguji1 = $bimbingUji->where('jenis', 'penguji')->where('urut', 1)->first();
+        $penguji2 = $bimbingUji->where('jenis', 'penguji')->where('urut', 2)->first();
+        $docPengajuan = JenisDokumen::all();
+
+        $data = [
+            'title' => 'Detail Jadwal Seminar',
+            'breadcrumbs' => [
+                [
+                    'title' => 'Dashboard',
+                    'url' => route('apps.dashboard'),
+                ],
+                [
+                    'title' => 'Jadwal Seminar',
+                    'is_active' => true,
+                ],
+            ],
+            'dataTA' => $query,
+            'pembimbingPenguji' => $bimbingUji,
+            'pembimbing1' => $pembimbing1,
+            'pembimbing2' => $pembimbing2,
+            'penguji1' => $penguji1,
+            'penguji2' => $penguji2,
+            'doc' => $docPengajuan,
+        ];
+
+        return view('administrator.pengajuan-ta.partials.detail', $data);
+    }
+
+    public function validasiBerkas(JadwalSeminar $jadwalSeminar)
+    {
+        try {
+            $jadwalSeminar->tugas_akhir()->update(['status_pemberkasan' => 'sudah_lengkap']);
+
+            return redirect()->back()->with(['success' => 'Berkas berhasil diperbarui']);
+        } catch (Exception $e) {
             return redirect()->back()->with(['error' => $e->getMessage()]);
         }
     }

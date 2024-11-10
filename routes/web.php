@@ -221,6 +221,8 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::get('{jadwalSeminar}/show', [JadwalSeminarController::class, 'show'])->name('apps.jadwal-seminar.show');
         Route::post('{jadwalSeminar}/unggah-berkas', [JadwalSeminarController::class, 'uploadDocument'])->name('apps.jadwal-seminar.unggah-berkas');
         Route::get('{jadwalSeminar}/detail', [JadwalSeminarController::class, 'detail'])->name('apps.jadwal-seminar.detail');
+        Route::get('{jadwalSeminar}/show', [JadwalSeminarController::class, 'show'])->name('apps.jadwal-seminar.show');
+        Route::get('{jadwalSeminar}/validate', [JadwalSeminarController::class, 'validasiBerkas'])->name('apps.jadwal-seminar.validate');
     });
 
     Route::prefix('kategori-nilai')->middleware('can:read-kategori-nilai')->group( function() {
