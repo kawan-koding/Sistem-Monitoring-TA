@@ -3228,3 +3228,101 @@ section {
   background: var(--primary-color);
   text-decoration: none;
 }
+
+/* CUSTOM PAGINATION */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.page-item {
+  margin: 0 5px;
+}
+
+.page-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #333;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+}
+
+.page-item.active .page-link {
+  z-index: 3;
+  color: #fff;
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.page-link:hover {
+  z-index: 2;
+  color: #fff;
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.page-item:first-child .page-link {
+  border-top-left-radius: 10px !important;   
+  border-bottom-left-radius: 10px !important;
+}
+
+.page-item:last-child .page-link {
+  border-top-right-radius: 10px !important;   
+  border-bottom-right-radius: 10px !important;   
+}
+
+#datatable thead {
+    display: none;
+}
+
+#datatable td {
+    padding: 10px 0px; 
+}
+
+/* Tambahkan jarak bawah hanya untuk baris pertama */
+#datatable tr:first-child td {
+    padding-bottom: 15px; /* Jarak bawah lebih besar pada baris pertama */
+    padding-top: 0px; /* Jarak bawah lebih besar pada baris pertama */
+}
+
+/* Tambahkan jarak atas hanya untuk baris terakhir */
+#datatable tr:last-child td {
+    padding-top: 15px; /* Jarak atas lebih besar pada baris terakhir */
+    padding-bottom: 0px; /* Jarak atas lebih besar pada baris terakhir */
+}
+
+@media (max-width: 768px) {
+    /* Mengatur agar length menu dan pencarian berada di tengah */
+    #datatable_length, #datatable_filter {
+        display: block;
+        width: 100%;
+        text-align: center;
+    }
+
+    /* Pencarian akan berada di bawah Length Menu pada perangkat mobile */
+    #datatable_filter {
+        margin-top: 10px;
+    }
+
+    /* Memastikan panjang select pada length menu diatur dengan baik pada perangkat mobile */
+    #datatable_length select {
+        width: 50%;
+        margin: 0 auto;
+    }
+}
+
+/* .filter {
+    text-align: left;
+    padding-left: 0;
+} */
+
+/* div.dataTables_wrapper div.dataTables_filter {
+  text-align: start !important;
+} */
