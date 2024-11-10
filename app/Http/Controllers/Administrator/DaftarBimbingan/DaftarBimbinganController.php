@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Administrator\DaftarBimbingan;
 
 use App\Models\PeriodeTa;
 use App\Models\BimbingUji;
+use App\Models\KuotaDosen;
+use App\Models\JenisDokumen;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -23,6 +25,9 @@ class DaftarBimbinganController extends Controller
             $query->where('jenis', 'pembimbing');
         }
         $query = $query->get();
+        
+        $kuota = KuotaDosen::where('periode_ta_id', $periode->id)->where('dosen_id', $user->id)->first();
+        $bimbing = BimbingUji::where('dosen_id', $user->id)->where('jenis', 'pembimbing');
         $data = [
             'title' => 'Mahasiswa Bimbingan',
             'mods' => 'daftar_bimbingan',
@@ -37,6 +42,8 @@ class DaftarBimbinganController extends Controller
                 ],
             ],
             'data' => $query,
+            'kuota' => $kuota,
+            'bimbing' => $bimbing,
         ];
         
         return view('administrator.daftar-bimbingan.index', $data);
@@ -45,13 +52,13 @@ class DaftarBimbinganController extends Controller
     public function show(BimbingUji $bimbingUji)
     {
         $query = $bimbingUji->tugas_akhir;
-        $ta = BimbingUji::where('tugas_akhir_id', $query->id)->get();
-        $bimbingUji->load('tugas_akhir.mahasiswa','dosen','tugas_akhir.periode_ta');
-        $pembimbing1 = $ta->where('jenis', 'pembimbing')->where('urut', 1)->first();
-        $pembimbing2 = $ta->where('jenis', 'pembimbing')->where('urut', 2)->first();
-        $penguji1 = $ta->where('jenis', 'penguji')->where('urut', 1)->first();
-        $penguji2 = $ta->where('jenis', 'penguji')->where('urut', 2)->first();
-        
+        $bimbingUji = $query->bimbing_uji;
+        $pembimbing1 = $bimbingUji->where('jenis', 'pembimbing')->where('urut', 1)->first();
+        $pembimbing2 = $bimbingUji->where('jenis', 'pembimbing')->where('urut', 2)->first();
+        $penguji1 = $bimbingUji->where('jenis', 'penguji')->where('urut', 1)->first();
+        $penguji2 = $bimbingUji->where('jenis', 'penguji')->where('urut', 2)->first();
+        $docPengajuan = JenisDokumen::all();
+
         $data = [
             'title' => 'Detail Daftar Bimbingan',
             'breadcrumbs' => [
@@ -64,13 +71,15 @@ class DaftarBimbinganController extends Controller
                     'is_active' => true,
                 ],
             ],
-            'data' => $query,
+            'dataTA' => $query,
             'pembimbingPenguji' => $bimbingUji,
             'pembimbing1' => $pembimbing1,
             'pembimbing2' => $pembimbing2,
             'penguji1' => $penguji1,
-            'penguji2' => $penguji2, 
+            'penguji2' => $penguji2,
+            'doc' => $docPengajuan,
         ];
-        return view('administrator.daftar-bimbingan.show', $data);
+
+        return view('administrator.pengajuan-ta.partials.detail', $data);
     }
 }

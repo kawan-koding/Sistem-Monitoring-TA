@@ -82,9 +82,7 @@
      <!-- filepond -->
     <script src='{{ asset('assets/libs/filepond/filepond.min.js') }}'></script>
     <script src='{{ asset('assets/libs/filepond-plugin-image-preview/filepond-plugin-image-preview.min.js') }}'></script>
-
-    <script src="{{ asset('assets/libs/tinymce/tinymce.min.js')     }}"></script>
-
+    <script src="{{ asset('assets/libs/tinymce/tinymce.min.js') }}"></script>
     <!-- init js -->
     <script src="{{ asset('assets/js/pages/form-editor.init.js') }}"></script>
     <!-- App js -->

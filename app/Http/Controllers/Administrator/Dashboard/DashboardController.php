@@ -104,7 +104,8 @@ class DashboardController extends Controller
         $user = getInfoLogin()->userable;
         $bimbing = BimbingUji::where('dosen_id', $user->id)->where('jenis', 'pembimbing');
         $uji = BimbingUji::where('dosen_id', $user->id)->where('jenis', 'penguji');
-        $kuota = KuotaDosen::where('dosen_id', $user->id)->first();
+        $periode = PeriodeTa::where('is_active', 1)->first();
+        $kuota = KuotaDosen::where('periode_ta_id', $periode->id)->where('dosen_id', $user->id)->first();
 
         return[
             'bimbing' => $bimbing,

@@ -36,9 +36,10 @@
     </div>
   </div>
   <div class="d-flex justify-content-center" style="margin-top: 40px">
-    {{ $tawaran->links() }}
+    {{ $tawaran->appends(request()->except('page'))->links() }}
   </div>
 </section>
+
 
 <section id="judul-tugas-akhir" style="padding: 60px 0 100px 0" class="judul-tugas-akhir">
   <div class="container">
@@ -154,6 +155,7 @@
             element.innerText = "Selengkapnya";
         }
     }
+    
     </script>
   @endsection
 
