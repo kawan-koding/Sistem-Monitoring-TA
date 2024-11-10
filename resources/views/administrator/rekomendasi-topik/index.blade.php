@@ -95,7 +95,8 @@
                                     <div class="d-flex align-items-center">
                                             <div>
                                                 <span class="badge rounded-pill bg-dark-subtle text-body small mb-1">{{ $item->tipe }}</span>
-                                                <p class="m-0 p-0 text-muted">Jumlah Kuota : {{$item->kuota}}</p>
+                                                <p class="m-0 p-0 text-muted">Jumlah Kuota : <strong>{{ $item->ambilTawaran()->where('status', 'Disetujui')->count() }}</strong>/{{$item->kuota}}</p>
+                                                <p class="m-0 p-0 text-muted">Jumlah Pengambil : {{$item->ambilTawaran()->where('status', '!=', 'Ditolak')->count()}}</p>
                                             </div>
                                         </div>
                                 </td>

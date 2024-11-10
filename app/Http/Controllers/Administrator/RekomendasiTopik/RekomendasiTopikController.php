@@ -28,7 +28,10 @@ class RekomendasiTopikController extends Controller
             $query->where('dosen_id', $dosen->id);
         }
         if (session('switchRoles') == 'Mahasiswa') {
-            $query->where('kuota', '!=', '0')->where('status', 'Disetujui');
+            $query->where('kuota', '!=', '0')->where('status', 'Disetujui')->whereHas('ambilTawaran', function ($q) use ($user) {
+                $q->where('mahasiswa_id', '!=', $user->id);
+                $q->where('status', '!=', 'Disetujui');
+            });
         }
         if (session('switchRoles') == 'Kaprodi') {
             $prodi = $user->programStudi->id;
@@ -100,7 +103,7 @@ class RekomendasiTopikController extends Controller
                 $jenis = $request->jenis_ta_id;
             }
             $kuota = (int) $request->kuota;
-            $request->merge(['kuota' => $kuota, 'jenis_ta_id' => $jenis, 'status' => 'Menunggu', 'catatan' => null]);   
+            $request->merge(['kuota' => $kuota, 'jenis_ta_id' => $jenis, 'status' => $rekomendasiTopik->status == 'Disetujui' ? 'Disetujui' : 'Menunggu', 'catatan' => null]);
             $rekomendasiTopik->update($request->only(['jenis_ta_id', 'judul', 'tipe', 'kuota', 'deskripsi', 'status', 'catatan']));
             return redirect()->route('apps.rekomendasi-topik')->with('success', 'Data berhasil diperbarui');
         } catch (\Exception $e) {
