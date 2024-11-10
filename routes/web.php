@@ -31,6 +31,7 @@ use App\Http\Controllers\Administrator\Mahasiswa\MahasiswaController;
 use App\Http\Controllers\Administrator\PeriodeTA\PeriodeTAController;
 use App\Http\Controllers\Administrator\KuotaDosen\KuotaDosenController;
 use App\Http\Controllers\Administrator\PengajuanTA\PengajuanTAController;
+use App\Http\Controllers\Administrator\JadwalSidang\JadwalSidangController;
 use App\Http\Controllers\Administrator\JenisDokumen\JenisDokumenController;
 use App\Http\Controllers\Administrator\ProgramStudi\ProgramStudiController;
 use App\Http\Controllers\Administrator\JadwalSeminar\JadwalSeminarController;
@@ -254,6 +255,10 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::get('{jenisDokumen}/show', [JenisDokumenController::class, 'show'])->name('apps.jenis-dokumen.show');
         Route::post('{jenisDokumen}/update', [JenisDokumenController::class, 'update'])->name('apps.jenis-dokumen.update')->middleware('can:update-jenis-dokumen');
         Route::get('{jenisDokumen}/destroy', [JenisDokumenController::class, 'destroy'])->name('apps.jenis-dokumen.delete')->middleware('can:delete-jenis-dokumen');
+    });
+
+    Route::prefix('jadwal-sidang')->middleware('can:read-daftar-sidang')->group( function() {
+       Route::get('',[JadwalSidangController::class,'index'])->name('apps.jadwal-sidang'); 
     });
     
     Route::get('coming-soon', function(){

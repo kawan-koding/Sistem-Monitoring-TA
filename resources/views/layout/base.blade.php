@@ -7,11 +7,6 @@
     <title> {{ $title ?? 'unknown'}} | {{ getSetting('app_name') }}</title>
     <!-- Favicons -->
     <link href="{{ asset('storage/images/settings/' . getSetting('app_favicon')) }}" rel="apple-touch-icon">
-    <!-- DataTables -->
-    <link href="{{ asset('assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css') }}" rel="stylesheet"
-        type="text/css" />
-    <link href="{{ asset('assets/libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css') }}" rel="stylesheet"
-        type="text/css" />
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -35,7 +30,6 @@
     </div>
     @yield('app')
 
-    <script src="{{ asset('assets/libs/jquery/jquery.min.js') }}"></script>
     <!-- Vendor JS Files -->
     <script src="{{ asset('landing-assets/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
     <script src="{{ asset('landing-assets/vendor/aos/aos.js')}}"></script>
@@ -43,17 +37,6 @@
     <script src="{{ asset('landing-assets/vendor/isotope-layout/isotope.pkgd.min.js')}}"></script>
     <script src="{{ asset('landing-assets/vendor/swiper/swiper-bundle.min.js')}}"></script>
     <script src="{{ asset('landing-assets/vendor/php-email-form/validate.js')}}"></script>
-    <!-- Required datatable js -->
-    <script src="{{ asset('assets/libs/datatables.net/js/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
-    <!-- Buttons examples -->
-    <script src="{{ asset('assets/libs/datatables.net-buttons/js/dataTables.buttons.min.js') }}"></script>
-    <script src="{{ asset('assets/libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js') }}"></script>
-    <!-- Responsive examples -->
-    <script src="{{ asset('assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
-    <script src="{{ asset('assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js') }}"></script>
-    <!-- Datatable init js -->
-    <script src="{{ asset('assets/js/pages/datatables.init.js') }}"></script>
     <!-- Apexcharts -->
     <script src="{{ asset('landing-assets/vendor/apexcharts/apexcharts.min.js')}}"></script>
     <script src="{{ asset('landing-assets/js/apexcharts.init.js')}}"></script>

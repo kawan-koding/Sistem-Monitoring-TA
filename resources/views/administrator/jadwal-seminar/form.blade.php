@@ -52,6 +52,7 @@
                             <label for="">Jam Selesai<span class="text-danger"> *</span></label>
                             <input type="time" name="jam_selesai" class="form-control" value="{{isset($editedData) ? $editedData->jam_selesai : ''}}">
                         </div>
+                        <a href="{{route('apps.jadwal-seminar')}}" class="btn btn-secondary">Kembali</a>
                         <button class="btn btn-primary" type="submit">Simpan</button>
                     </form>
                 </div>

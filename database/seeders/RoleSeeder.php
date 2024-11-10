@@ -66,6 +66,7 @@ class RoleSeeder extends Seeder
             'read-jadwal-seminar', 'update-jadwal-seminar',
             'read-kategori-nilai','create-kategori-nilai','update-kategori-nilai','delete-kategori-nilai',
             'read-jenis-dokumen','create-jenis-dokumen','update-jenis-dokumen','delete-jenis-dokumen',
+            'read-pemberkasan','create-pemberkasan',
         ]);
 
         $kaprodi->givePermissionTo([
@@ -81,10 +82,12 @@ class RoleSeeder extends Seeder
             'read-dashboard',
             'read-rekomendasi-topik','create-rekomendasi-topik','update-rekomendasi-topik','delete-rekomendasi-topik',
             'read-nilai', 'create-nilai',
-            'read-rekapitulasi-nilai', 'create-rekapitulasi-nilai',
             'read-daftar-bimbingan',
-            'read-jadwal',
-            'create-revisi','create-penilaian',
+            'read-jadwal-seminar',
+            'read-sidang-sidang',
+            'read-nilai','create-nilai',
+            'read-revisi','create-revisi',
+            'read-rekapitulasi-nilai',
         ]);
 
         $kajur->givePermissionTo([
@@ -103,7 +106,11 @@ class RoleSeeder extends Seeder
             'read-topik-yang-diambil','cancel-topik-yang-diambil',
             'read-pengajuan-tugas-akhir', 'create-pengajuan-tugas-akhir', 'update-pengajuan-tugas-akhir',
             'read-jadwal-seminar', 
+            'read-daftar-sidang', 
             'read-rekapitulasi-nilai',
+            'read-nilai',
+            'read-revisi',
+            'read-pemberkasan','create-pemberkasan',
         ]);
     }
 }

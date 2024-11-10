@@ -1,5 +1,8 @@
 @extends('administrator.layout.main')
+
 @section('content')
+
+
     <div class="card">
         <div class="card-body">
             @if (session('success'))
@@ -26,55 +29,6 @@
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
                     </button>
                 </div>
-            @endif
-            @if (getInfoLogin()->hasRole('Admin'))
-                <div class="col-md-8 col-sm-12">
-                    <form action="">
-                        @if(!is_null($status))
-                        <input type="hidden" name="status" value="{{ $status }}">
-                        @endif
-                        <label for="">Filter Tanggal</label>
-                        <div class="inner mb-3 row">
-                            <div class="col-md-8 col-sm-6">
-                                <div class="position-relative">
-                                    <div class="input-group">
-                                        <input type="date" name="tanggal" class="inner form-control" placeholder="cari berdasarkan tanggal">
-                                        <div class="input-group-prepend">
-                                            <button type="submit" class="btn btn-primary input-group-text inner">Filter</button>
-                                            <a href="{{ route('apps.jadwal-seminar') }}" class="btn btn-secondary input-group-text inner">Reset</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-
-                @can('read-jadwal-seminar')
-                    <ul class="nav nav-tabs nav-tabs-custom nav-justified mt-1 mb-2" role="tablist">
-                        <li class="nav-item">
-                            <a class="nav-link @if (url()->full() == route('apps.jadwal-seminar')) active @endif"
-                                href="{{ route('apps.jadwal-seminar') }}">
-                                <span class="d-block d-sm-none"><i class="bx bx-timer"></i></span>
-                                <span class="d-none d-sm-block">Belum Terjadwal</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link @if (url()->full() == route('apps.jadwal-seminar', ['status' => 'sudah_terjadwal'])) active @endif"
-                                href="{{ route('apps.jadwal-seminar', ['status' => 'sudah_terjadwal']) }}">
-                                <span class="d-block d-sm-none"><i class="bx bx-list-check"></i></span>
-                                <span class="d-none d-sm-block">Sudah Terjadwal</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link @if (url()->full() == route('apps.jadwal-seminar', ['status' => 'telah_seminar'])) active @endif"
-                                href="{{ route('apps.jadwal-seminar', ['status' => 'telah_seminar']) }}">
-                                <span class="d-block d-sm-none"><i class="bx bx-check-circle"></i></span>
-                                <span class="d-none d-sm-block">Telah Diseminarkan</span>
-                            </a>
-                        </li>
-                    </ul>
-                @endcan
             @endif
 
             <div class="table-responsive">
@@ -159,44 +113,15 @@
                                 </td>
                                 @if (getInfoLogin()->hasRole('Admin'))
                                     <td class="text-align-center justify-content-center">
-                                        {{-- @if ($item->status == 'belum_terjadwal')
-                                            <span class="badge rounded-pill badge-soft-secondary font-size-12">Belum
-                                                Terjadwal</span>
-                                        @else
-                                            @if ($item->status == 'sudah_terjadwal')
-                                                <span class="badge rounded-pill badge-soft-primary font-size-12">Sudah
-                                                    Terjadwal</span>
-                                            @else
-                                                <span class="badge rounded-pill badge-soft-success font-size-12">Telah
-                                                    Seminar</span>
-                                            @endif
-                                        @endif --}}
                                         <p style="white-space: nowrap" class="font-size-12 {{ $item->document_complete ? 'badge badge-soft-success text-success' : 'badge badge-soft-danger text-danger' }}">{{ $item->document_complete ? 'Berkas sudah lengkap' : 'Berkas belum lengkap' }}</p>
                                     </td>
                                 @endif
                                 <td class="mb-3 text-center">
-                                    @if (getInfoLogin()->hasRole('Admin'))
-                                        @can('update-jadwal-seminar')
-                                            <a href="{{ route('apps.jadwal-seminar.edit', ['jadwalSeminar' => $item->id]) }}"
-                                                class="btn btn-sm btn-primary"><i class="bx bx-calendar-event"></i></a>
-                                        @endcan
-                                    @endif
-
                                     @if (getInfoLogin()->hasRole('Mahasiswa'))
-                                        <a href="{{ route('apps.jadwal-seminar.detail', $item->id) }}"
-                                            class="btn btn-sm btn-outline-primary my-1"><i class="bx bx-show" title="Detail"></i></a>
-                                        <a href="javascript:void(0);"
-                                            onclick="uploadFileSeminar('{{ $item->id }}', '{{ route('apps.jadwal-seminar.unggah-berkas', $item->id) }}')"
-                                            class="btn btn-sm btn-outline-dark">
-                                            <i class="bx bx-file"></i>
+                                        <a href="{{ route('apps.jadwal-seminar.detail', $item->id) }}" class="btn btn-sm btn-outline-primary my-1"><i class="bx bx-show" title="Detail"></i></a>
+                                        <a href="javascript:void(0);" onclick="uploadFileSeminar('{{ $item->id }}', '{{ route('apps.jadwal-seminar.unggah-berkas', $item->id) }}')" class="btn btn-sm btn-outline-dark"><i class="bx bx-file"></i>
                                             Unggah
-                                            {{-- @if ($item->status == 'belum_terjadwal')
-                                                <i class="mdi mdi-pencil"></i>
-                                                Daftar
-                                            @else
-                                            @endif --}}
                                         </a>
-                                        @include('administrator.jadwal-seminar.partials.modal')
                                     @endif
                                 </td>
                             </tr>
@@ -210,24 +135,5 @@
             </div>
         </div>
     </div>
-
-@endsection
-
-@section('js')
-    <script>
-        function uploadFileSeminar(id, url) {
-            $('#id_jadwal_seminar').val(id);
-            $('#url_unggah_berkas').val(url);
-            $('#myModalUpload').find('form').trigger('reset');
-            $('#myModalUpload').find('form').attr("action", url);
-            $('#myModalUpload').modal('show');
-        }
-
-        function changeFile(target) {
-            var filename = $(target).find('[type="file"]').prop('files')[0].name;
-            $(target).find('.file-desc').html(filename);
-            $(target).find('.file-icon').attr('class', 'file-icon mdi mdi-alert-circle-outline text-warning');
-            $(target).find('.file-btn').html('Ganti');
-        }
-    </script>
+    
 @endsection

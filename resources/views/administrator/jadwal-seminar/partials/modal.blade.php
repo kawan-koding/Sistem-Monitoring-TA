@@ -28,7 +28,7 @@
                                     {{ ucwords(strtolower($doc->nama)) }}
                                     @if ($document)
                                         <p class="file-desc text-muted small m-0 p-0"><a
-                                                href="{{ asset('storage/files/documents/' . $document->filename) }}"
+                                                href="{{ asset('storage/files/pemberkasan/' . $document->filename) }}"
                                                 target="_blank">Lihat berkas</a></p>
                                     @else
                                         <p class="file-desc text-muted small m-0 p-0"><i class="text-danger">*</i>)
@@ -37,7 +37,7 @@
                                 </div>
                                 <label for="file{{ $doc->id }}">
                                     <input type="file" id="file{{ $doc->id }}" onchange="changeFile('#document{{ $doc->id }}')"
-                                        name="document_{{ $doc->id }}" class="d-none">
+                                        name="document_{{ $doc->id }}" class="d-none"  accept=".pdf" >
                                     @if ($document)
                                         <div class="file-btn btn btn-outline-primary btn-sm">Perbarui</div>
                                     @else
@@ -59,7 +59,7 @@
                                     {{ ucwords(strtolower($doc->nama)) }}
                                     @if ($document)
                                         <p class="file-desc text-muted small m-0 p-0"><a
-                                                href="{{ asset('storage/files/documents/' . $document->filename) }}"
+                                                href="{{ asset('storage/files/pemberkasan/' . $document->filename) }}"
                                                 target="_blank">Lihat berkas</a></p>
                                     @else
                                         <p class="file-desc text-muted small m-0 p-0"><i class="text-danger">*</i>)
@@ -68,7 +68,7 @@
                                 </div>
                                 <label for="file{{ $doc->id }}">
                                     <input type="file" id="file{{ $doc->id }}" onchange="changeFile('#document{{ $doc->id }}')"
-                                        name="document_{{ $doc->id }}" class="d-none">
+                                        name="document_{{ $doc->id }}" class="d-none"  accept=".pdf" >
                                     @if ($document)
                                         <div class="file-btn btn btn-outline-primary btn-sm">Perbarui</div>
                                     @else

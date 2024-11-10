@@ -68,7 +68,7 @@
                     </li>
                     @endcan
 
-                    @can(['read-jadwal'])
+                    @can(['read-jadwal-seminar'])
                     <li>
                         <a href="{{route('apps.jadwal')}}" class=" waves-effect">
                             <i class="bx bx-calendar"></i>
@@ -76,24 +76,42 @@
                         </a>
                     </li>
                     @endcan
+                    @can(['read-daftar-sidang'])
+                    <li>
+                        <a href="{{ route('apps.jadwal-sidang')}}" class=" waves-effect">
+                            <i class="bx bx-calendar-event"></i>
+                            <span>Jadwal Sidang</span>
+                        </a>
+                    </li>
+                    @endcan
                 @endif
                 
-                @can(['read-pengajuan-tugas-akhir'])
-                    @if(getInfoLogin()->hasRole('Mahasiswa') || getInfoLogin()->hasRole('Developer'))
+                @if(in_array(session('switchRoles'), ['Mahasiswa','Developer']))
+                    @can(['read-pengajuan-tugas-akhir'])
                     <li>
                         <a href="{{ route('apps.pengajuan-ta')}}" class=" waves-effect">
                             <i class="mdi mdi-calendar-text"></i>
                             <span>Tugas akhir</span>
                         </a>
                     </li>
+                    @endcan
+                    @can(['read-jadwal-seminar'])
                     <li>
                         <a href="{{ route('apps.jadwal-seminar')}}" class=" waves-effect">
                             <i class="bx bx-calendar"></i>
                             <span>Jadwal Seminar</span>
                         </a>
                     </li>
-                    @endif
-                @endcan
+                    @endcan
+                    @can(['read-daftar-sidang'])
+                    <li>
+                        <a href="{{ route('apps.jadwal-sidang')}}" class=" waves-effect">
+                            <i class="bx bx-calendar-event"></i>
+                            <span>Jadwal Sidang</span>
+                        </a>
+                    </li>
+                    @endcan
+                @endif
 
                 @if (in_array(session('switchRoles'), ['Admin','Developer','Kajur']))  
                     @canany(['read-mahasiswa', 'read-dosen', 'read-ruangan', 'read-topik', 'read-topik'])
@@ -168,6 +186,9 @@
                                 @if ((getInfoLogin()->hasRole('Admin') && (session('switchRoles') == 'Admin') || getInfoLogin()->hasRole('Mahasiswa')))    
                                     @can('read-jadwal-seminar')
                                     <li><a href="{{route('apps.jadwal-seminar')}}">Jadwal Seminar</a></li>
+                                    @endcan
+                                    @can('read-jadwal-seminar')
+                                    <li><a href="{{route('apps.jadwal-sidang')}}">Jadwal Sidang</a></li>
                                     @endcan
                                 @endif
                             </ul>
