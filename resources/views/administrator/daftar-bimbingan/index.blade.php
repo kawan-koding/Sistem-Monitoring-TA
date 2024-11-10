@@ -2,6 +2,43 @@
 @section('content')
 
 <div class="row">
+    <div class="col-lg-6 col-md-6 col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex align-items-start">
+                    <div class="avatar-sm font-size-24 me-3" style="height: 3.5rem; width: 3.5rem">
+                        <span class="avatar-title bg-soft-primary text-primary rounded">
+                            <i class="mdi mdi-account-multiple"></i>
+                        </span>
+                    </div>
+                    <div class="flex-1">
+                        <div class="font-size-16 mt-1">Total Kuota Bimbingan</div>
+                        <p class="font-size-18 fw-bold text-primary m-0">{{ $kuota->pembimbing_1 ?? 0}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6 col-md-6 col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex align-items-start">
+                    <div class="avatar-sm font-size-24 me-3" style="height: 3.5rem; width: 3.5rem">
+                        <span class="avatar-title bg-soft-primary text-primary rounded">
+                            <i class="mdi mdi-account-outline"></i>
+                        </span>
+                    </div>
+                    <div class="flex-1">
+                        <div class="font-size-16 mt-1">Sisa Kuota Bimbingan</div>
+                        <p class="font-size-18 fw-bold text-primary m-0"> {{ ($kuota && $kuota->pembimbing_1 ? $kuota->pembimbing_1 : 0) - $bimbing->where('urut', 1)->count() >= 0 ? ($kuota && $kuota->pembimbing_1 ? $kuota->pembimbing_1 : 0) - $bimbing->where('urut', 1)->count() : 0 }} </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
     <div class="col-md-12 col-sm-12 col-g-12">
         <div class="card">
             @can('read-daftar-bimbingan')

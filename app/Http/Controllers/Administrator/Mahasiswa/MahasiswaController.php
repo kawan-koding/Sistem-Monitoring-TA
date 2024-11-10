@@ -63,6 +63,7 @@ class MahasiswaController extends Controller
                         'userable_id' => $mhs->id,
                         'userable_type' => Mahasiswa::class,
                     ]);
+                    $existingUser->assignRole('Mahasiswa');
                 }
             }
             return redirect()->route('apps.mahasiswa')->with('success', 'Data berhasil ditambahkan');

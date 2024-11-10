@@ -21,7 +21,11 @@
         <div class="row w-100">
           <div class="col-lg-12">
             <h6 class="m-0"><b>{{ $item->judul }}</b></h4>
-            <p class="m-0" style="font-size: 14px">{{ Str::limit($item->deskripsi, 150) }}</p>
+            <p class="m-0" style="font-size: 14px">
+              <span class="short-description">{{ Str::limit($item->deskripsi, 200) }}</span>
+              <span class="full-description d-none">{{ $item->deskripsi }}</span>
+              @if(strlen($item->deskripsi) > 200)<a href="javascript:void(0);" class="read-more" onclick="toggleDescription(this)">Selengkapnya</a>@endif
+            </p>
             <p class="text-muted small m-0"><span class="me-2"><i class="bx bx-user me-1"></i> {{ $item->dosen->name }}</span> <i class="bx bx-group me-1"></i>{{ $item->ambilTawaran()->where('status','Disetujui')->count() }}/{{ $item->kuota }} Kuota</p>
           </div>
         </div>
@@ -30,21 +34,20 @@
       <p class="text-center " style="color: #aeaeae">Tidak ada tawaran</p>
       @endforelse
     </div>
-    @if($tawaran->count() > 0)
-    <div class="text-center mt-5">
-      <a href="{{ route('guest.rekomendasi-topik')}}" style="color: var(--primary-color)">Lihat Lainnya <i class="bx bx-right-arrow-alt"></i></a>
-    </div>
-    @endif
+  </div>
+  <div class="d-flex justify-content-center" style="margin-top: 40px">
+    {{ $tawaran->appends(request()->except('page'))->links() }}
   </div>
 </section>
+
 
 <section id="judul-tugas-akhir" style="padding: 60px 0 100px 0" class="judul-tugas-akhir">
   <div class="container">
     <h5 class="font-size-24 text-center m-0 fw-bold mb-5" style="color: var(--primary-color)">Judul Tugas Akhir Yang Disetujui</h5> 
       @forelse ($tugasAkhir as $item)
-        <div class="info-item d-flex mb-4">
+        <div class="info-item d-flex">
           <div>
-            <p class="m-0"><span class="badge" style="background-color: #AFB0DA; color:var(--primary-color); letter-spacing: 1px">{{ $item->tipe == 'I' ? 'Individu' : 'Kelompok' }}</span></p>
+            <p class="m-0"><span class="badge" style="background-color: #AFB0DA; color:var(--primary-color);">{{ $item->tipe == 'I' ? 'Individu' : 'Kelompok' }}</span></p>
             <h6 class="m-0 "><b>{{ $item->judul }}</b></h4>
             <p class="m-0">{{ $item->mahasiswa->nama_mhs }}</p>
             <p class="m-0">{{ $item->jenis_ta->nama_jenis}} - {{ $item->topik->nama_topik }}</p>
@@ -60,12 +63,9 @@
       @empty
       <p class="text-center " style="color: #aeaeae">Tidak ada tawaran</p>
       @endforelse
-
-      @if($tugasAkhir->count() > 0)
-        <div class="text-center mt-5">
-          <a href="{{ route('guest.judul-tugas-akhir')}}" style="color: var(--primary-color)">Lihat Lainnya <i class="bx bx-right-arrow-alt"></i></a>
-        </div>
-      @endif
+    </div>
+    <div class="d-flex justify-content-center" style="margin-top: 40px">
+      {{ $tugasAkhir->links() }}
     </div>
   </section>
   
@@ -139,5 +139,24 @@
       </div> 
     </div>
   </section>
+
+  @section('scripts')
+    <script>
+      function toggleDescription(element) {
+        const shortDescription = element.previousElementSibling.previousElementSibling;
+        const fullDescription = element.previousElementSibling;
+        if (fullDescription.classList.contains('d-none')) {
+            fullDescription.classList.remove('d-none');
+            shortDescription.classList.add('d-none');
+            element.innerText = "Lebih Sedikit";
+        } else {
+            fullDescription.classList.add('d-none');
+            shortDescription.classList.remove('d-none');
+            element.innerText = "Selengkapnya";
+        }
+    }
+    
+    </script>
+  @endsection
 
 @endsection

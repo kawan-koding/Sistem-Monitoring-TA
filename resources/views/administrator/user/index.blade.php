@@ -6,10 +6,10 @@
     <div class="col-md-12 col-sm-12 col-g-12">
         <div class="card">
             <div class="card-body">
-                @can('create-users')
-                {{-- <a href="javascript:void(0);" onclick="tambahData()" class="btn btn-primary"><i class="fa fa-plus"></i> Tambah</a>
-                <hr> --}}
-                @endcan
+                {{-- @can('create-users')
+                <a href="javascript:void(0);" onclick="tambahData()" class="btn btn-primary"><i class="fa fa-plus"></i> Tambah</a>
+                <hr>
+                @endcan --}}
                 @if(session('success'))
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
                         <i class="mdi mdi-check-all me-2"></i> {{ session('success') }}

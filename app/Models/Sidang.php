@@ -11,7 +11,7 @@ class Sidang extends Model
 
     protected $guarded = [];
 
-     public function tugasAkhir()
+     public function tugas_akhir()
     {
         return $this->belongsTo(TugasAkhir::class);
     }

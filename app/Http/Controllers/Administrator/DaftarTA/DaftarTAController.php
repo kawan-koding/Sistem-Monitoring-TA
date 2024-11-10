@@ -10,6 +10,7 @@ use App\Models\PeriodeTa;
 use App\Models\BimbingUji;
 use App\Models\KuotaDosen;
 use App\Models\TugasAkhir;
+use App\Models\JenisDokumen;
 use App\Models\ProgramStudi;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -62,6 +63,7 @@ class DaftarTAController extends Controller
         return view('administrator.daftar-ta.index', $data);
     }
 
+
     public function show(TugasAkhir $tugasAkhir)
     {
         $bimbingUji = $tugasAkhir->bimbing_uji;
@@ -69,11 +71,11 @@ class DaftarTAController extends Controller
         $pembimbing2 = $bimbingUji->where('jenis', 'pembimbing')->where('urut', 2)->first();
         $penguji1 = $bimbingUji->where('jenis', 'penguji')->where('urut', 1)->first();
         $penguji2 = $bimbingUji->where('jenis', 'penguji')->where('urut', 2)->first();
-        
+        $docPengajuan = JenisDokumen::all();
+
         $data = [
-            'title' => 'Detail  Tugas Akhir',
-            'mods' => 'daftar_ta',
-            'breadcrumbs' => [
+            'title' => 'Detail Tugas Akhir',
+                  'breadcrumbs' => [
                 [
                     'title' => 'Dashboard',
                     'url' => route('apps.dashboard')
@@ -91,16 +93,16 @@ class DaftarTAController extends Controller
                     'is_active' => true
                 ]
             ],
-            'data' => $tugasAkhir,
+            'dataTA' => $tugasAkhir,
             'pembimbingPenguji' => $bimbingUji,
             'pembimbing1' => $pembimbing1,
             'pembimbing2' => $pembimbing2,
             'penguji1' => $penguji1,
             'penguji2' => $penguji2,
-       
+            'doc' => $docPengajuan,
         ];
-        
-        return view('administrator.daftar-ta.detail', $data);
+
+        return view('administrator.pengajuan-ta.partials.detail', $data);
     }
 
     public function edit(TugasAkhir $tugasAkhir)

@@ -42,6 +42,6 @@
     <script src="{{ asset('landing-assets/js/apexcharts.init.js')}}"></script>
     <!-- Template Main JS File -->
     <script src="{{ asset('landing-assets/js/main.js')}}"></script>
-    @yield('script')
+    @yield('scripts')
 </body>
 </html>

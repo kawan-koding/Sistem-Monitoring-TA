@@ -2,24 +2,25 @@
 
 namespace App\Http\Controllers\Administrator\PengajuanTA;
 
+use Carbon\Carbon;
+use App\Models\Dosen;
+use App\Models\Topik;
+use App\Models\Sidang;
+use App\Models\JenisTa;
 use App\Models\Mahasiswa;
+use App\Models\PeriodeTa;
+use App\Models\BimbingUji;
+use App\Models\KuotaDosen;
 use App\Models\TugasAkhir;
+use App\Models\Pemberkasan;
+use App\Models\JenisDokumen;
 use Illuminate\Http\Request;
 use App\Models\JadwalSeminar;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\PengajuanTA\PengajuanTARequest;
-use App\Models\BimbingUji;
-use App\Models\Dosen;
-use App\Models\JenisDokumen;
-use App\Models\JenisTa;
-use App\Models\KuotaDosen;
-use App\Models\Pemberkasan;
-use App\Models\PeriodeTa;
-use App\Models\Topik;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
+use App\Http\Requests\PengajuanTA\PengajuanTARequest;
 
 class PengajuanTAController extends Controller
 {
@@ -407,9 +408,13 @@ class PengajuanTAController extends Controller
                 'status' => 'belum_terjadwal'
             ]);
 
+            Sidang::create([
+                'tugas_akhir_id' => $pengajuanTA->id,
+                'status' => 'belum_terjadwal'
+            ]);
+
             return redirect()->route('apps.pengajuan-ta')->with('success', 'Berhasil menyetujui pengajuan TA');
         } catch (\Exception $e) {
-            // dd($e->getMessage());
             return redirect()->back()->with('error', $e->getMessage());
         }
 
