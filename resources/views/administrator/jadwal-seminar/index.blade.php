@@ -27,6 +27,9 @@
                     </button>
                 </div>
             @endif
+            <a href="#" target="_blank" class="btn btn-success mb-2"><i
+                class="far fa-file-alt"></i> Template Pemberkasan Seminar</a>
+            <hr>
             @if (getInfoLogin()->hasRole('Admin'))
                 <div class="col-md-8 col-sm-12">
                     <form action="">
@@ -159,18 +162,6 @@
                                 </td>
                                 @if (getInfoLogin()->hasRole('Admin'))
                                     <td class="text-align-center justify-content-center">
-                                        {{-- @if ($item->status == 'belum_terjadwal')
-                                            <span class="badge rounded-pill badge-soft-secondary font-size-12">Belum
-                                                Terjadwal</span>
-                                        @else
-                                            @if ($item->status == 'sudah_terjadwal')
-                                                <span class="badge rounded-pill badge-soft-primary font-size-12">Sudah
-                                                    Terjadwal</span>
-                                            @else
-                                                <span class="badge rounded-pill badge-soft-success font-size-12">Telah
-                                                    Seminar</span>
-                                            @endif
-                                        @endif --}}
                                         <p style="white-space: nowrap" class="font-size-12 {{ $item->document_complete ? 'badge badge-soft-success text-success' : 'badge badge-soft-danger text-danger' }}">{{ $item->document_complete ? 'Berkas sudah lengkap' : 'Berkas belum lengkap' }}</p>
                                     </td>
                                 @endif
@@ -180,6 +171,9 @@
                                             <a href="{{ route('apps.jadwal-seminar.edit', ['jadwalSeminar' => $item->id]) }}"
                                                 class="btn btn-sm btn-primary"><i class="bx bx-calendar-event"></i></a>
                                         @endcan
+                                        @if($item->status == 'telah_seminar')
+                                            <a href=""></a>
+                                        @endif
                                     @endif
 
                                     @if (getInfoLogin()->hasRole('Mahasiswa'))
@@ -190,11 +184,6 @@
                                             class="btn btn-sm btn-outline-dark">
                                             <i class="bx bx-file"></i>
                                             Unggah
-                                            {{-- @if ($item->status == 'belum_terjadwal')
-                                                <i class="mdi mdi-pencil"></i>
-                                                Daftar
-                                            @else
-                                            @endif --}}
                                         </a>
                                         @include('administrator.jadwal-seminar.partials.modal')
                                     @endif

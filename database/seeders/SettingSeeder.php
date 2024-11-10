@@ -91,7 +91,13 @@ class SettingSeeder extends Seeder
                 'key' => 'app_bg',
                 'name' => 'Background Foto',
                 'value' => 'bg.jpeg'
-            ]
-        ]);
+            ],
+            [
+                'type' => 'general',
+                'key' => 'app_template_filing',
+                'name' => 'Template Pemberkasan Seminar',
+                'value' => 'https://drive.google.com/file/d/1CF7BnMwtpPVVmo3fkdBsJztGabu_I3FE/view?usp=sharing'
+            ],
+            ]);
     }
 }
