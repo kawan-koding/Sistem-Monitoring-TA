@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('tugas_akhir_id')->references('id')->on('tugas_akhirs')->onDelete('cascade');
             $table->foreignId('ruangan_id')->nullable()->references('id')->on('ruangans')->onDelete('cascade');
-            // $table->foreignId('hari_id')->nullable()->references('id')->on('haris')->onDelete('cascade');
             $table->time('jam_mulai')->nullable();
             $table->time('jam_selesai')->nullable();
             $table->date('tanggal')->nullable();

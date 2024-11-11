@@ -23,10 +23,32 @@
             @endif
             <div class="card-body">
                 @if (in_array(session('switchRoles'), ['Dosen']))
-                    @can('create-rekomendasi-topik')
-                    <button onclick="tambahData()" class="btn btn-primary"><i class="fa fa-plus"></i> Tambah</button>
-                    <hr>
-                    @endcan
+                <div class="row">
+                    <div class="col-md-2">
+                        @can('create-rekomendasi-topik')
+                        <button onclick="tambahData()" class="btn btn-primary"><i class="fa fa-plus"></i> Tambah</button>
+                        @endcan
+                    </div>
+                    <div class="col-md-10">
+                        <form method="GET" action="">
+                            <div class="row">
+                                <div class="col-md-5 col-sm-12">
+                                    <div class="position-relative">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">Filter :</span>
+                                            </div>
+                                            <select name="tipe" id="tipe" class="form-control" onchange="this.form.submit()">
+                                                <option value="Semua">Semua</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <hr>
                 @endif
                 @if(session('success'))
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -59,15 +81,15 @@
                             <tr>
                                 <th width="5%">No</th>
                                 <th width="30%">Topik</th>
-                                <th width="20%">Jenis Penyelesaian</th>
-                                <th>Jenis Topik</th>
+                                <th width="20%" style="white-space: nowrap">Jenis Penyelesaian</th>
+                                <th style="white-space: nowrap">Jenis Topik</th>
                                 @if(in_array(session('switchRoles'), ['Dosen','Developer']))
-                                @if(getInfoLogin()->hasRole('Dosen') || getInfoLogin()->hasRole('Developer'))
-                                <th>Pengambil:</th>
-                                @endif
+                                    @if(getInfoLogin()->hasRole('Dosen') || getInfoLogin()->hasRole('Developer'))
+                                    <th>Pengambil:</th>
+                                    @endif
                                 @endif
                                 @if(in_array(session('switchRoles'), ['Mahasiswa','Developer', 'Kaprodi','Kajur']))
-                                <th>Nama Dosen</th>
+                                <th style="white-space: nowrap">Nama Dosen</th>
                                 @endif
                                 @if(getInfoLogin()->hasRole('Dosen') || getInfoLogin()->hasRole('Developer') || getInfoLogin()->hasRole('Kaprodi'))
                                 <th>Status:</th>
@@ -107,7 +129,7 @@
                                         @else
                                         <ul>
                                             @foreach ($item->ambilTawaran()->where('status','!=','Ditolak')->get() as $tawaran)
-                                            <li>{{ $tawaran->mahasiswa->nama_mhs }}</li>
+                                            <li class="small">{{ $tawaran->mahasiswa->nama_mhs }}</li>
                                             @endforeach
                                         </ul>
                                         @endif
