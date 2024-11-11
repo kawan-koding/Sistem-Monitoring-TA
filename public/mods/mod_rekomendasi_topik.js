@@ -4,6 +4,7 @@ function tambahData() {
     $('#judul').val('')
     $('#deskripsi').val('')
     $('#jenis_ta_id').val('')
+    $('#program_studi_id').val('')
     $('#kuota').val('')
     $('#tipe').val('')
     $('#myModal').modal('show')
@@ -23,6 +24,7 @@ function editData(id, urlShow) {
             $('#tipe').val(response.tipe)
             $('#deskripsi').val(response.deskripsi)
             $('#jenis_ta_id').val(response.jenis_ta_id)
+            $('#program_studi_id').val(response.program_studi_id)
         },
         error: function (xhr, status, error) {
             console.error(xhr.responseText);

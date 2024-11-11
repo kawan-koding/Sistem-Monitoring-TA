@@ -47,8 +47,6 @@
                     </a>
                 </li>
                 @endcan
-
-                
                 @can(['read-rekomendasi-topik'])
                 <li>
                     <a href="{{route('apps.rekomendasi-topik')}}" class=" waves-effect">
@@ -57,7 +55,6 @@
                     </a>
                 </li>
                 @endcan
-
                 @if(session('switchRoles') === 'Dosen')
                     @can(['read-daftar-bimbingan'])
                     <li>
@@ -67,7 +64,6 @@
                         </a>
                     </li>
                     @endcan
-
                     @can(['read-jadwal-seminar'])
                     <li>
                         <a href="{{route('apps.jadwal')}}" class=" waves-effect">
@@ -85,6 +81,7 @@
                     </li>
                     @endcan
                 @endif
+                
                 
                 @if(in_array(session('switchRoles'), ['Mahasiswa','Developer']))
                     @can(['read-pengajuan-tugas-akhir'])
@@ -112,6 +109,15 @@
                     </li>
                     @endcan
                 @endif
+
+                @if(in_array(session('switchRoles'), ['Mahasiswa','Kaprodi','Kajur']))
+                <li>
+                    <a href="{{ route('apps.profile-dosen') }}" class=" waves-effect">
+                        <i class="mdi mdi-account-details"></i>
+                        <span>Pofile Dosen</span>
+                    </a>
+                </li>
+                @endcan
 
                 @if (in_array(session('switchRoles'), ['Admin','Developer','Kajur']))  
                     @canany(['read-mahasiswa', 'read-dosen', 'read-ruangan', 'read-topik', 'read-topik'])

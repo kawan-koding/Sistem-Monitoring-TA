@@ -52,7 +52,13 @@
                                     <td>
                                         <p>
                                             <span class="badge bg-primary">
-                                                {{ $item->jenis === 'pra_seminar' ? 'Pra Seminar' : ($item->jenis === 'seminar' ? 'Seminar' : ($item->jenis === 'pra_sidang' ? 'Pra Sidang' : ($item->jenis === 'sidang' ? 'Sidang' : '-'))) }}
+                                                {{ 
+                                                    $item->jenis === 'pra_seminar' ? 'Pra Seminar' : 
+                                                    ($item->jenis === 'seminar' ? 'Seminar' : 
+                                                    ($item->jenis === 'pra_sidang' ? 'Pra Sidang' : 
+                                                    ($item->jenis === 'sidang' ? 'Sidang' :
+                                                    ($item->jenis === 'pendaftaran' ? 'Pendaftaran' : '-' )))) 
+                                                }}
                                             </span> <br>
                                             {{ $item->nama }}
                                         </p>

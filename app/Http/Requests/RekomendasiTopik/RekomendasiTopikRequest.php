@@ -34,6 +34,7 @@ class RekomendasiTopikRequest extends FormRequest
             'tipe' => 'required',
             'kuota' => 'required',
             'jenis_ta_new' => 'nullable',
+            'program_studi_id' => 'required',
         ];
     }
 
@@ -45,6 +46,7 @@ class RekomendasiTopikRequest extends FormRequest
             'deskripsi.required' => 'Deskripsi TA wajib diisi',
             'tipe.required' => 'Tipe wajib diisi',
             'kuota.required' => 'Kuota wajib diisi',
+            'program_studi_id.required' => 'Program Studi tujuan wajib diisi',
         ];
     }
 }
