@@ -28,15 +28,32 @@
                             </ul>
                         </div>
                     @endif
-                    @can('create-pengajuan-tugas-akhir')
-                        @if (!$dataTA->whereNotIn('status', ['reject','cancel'])->count() > 0 || $dataTA->count() == 0)
-                            <a href="{{ route('apps.pengajuan-ta.create') }}" class="btn btn-primary mb-2"><i class="fa fa-upload me-1"></i> Ajukan TA</a>
-                        @endif
-                    @endcan
-                    <a href="{{ getSetting('app_template_mentor') }}" target="_blank" class="btn btn-success mb-2"><i
-                            class="far fa-file-alt"></i> Template Persetujuan Pembimbing</a>
-                    <a href="{{ getSetting('app_template_summary') }}" target="_blank" class="btn btn-secondary mb-2"><i
+                    <form action="">
+                        @can('create-pengajuan-tugas-akhir')
+                            @if (!$dataTA->whereNotIn('status', ['reject','cancel'])->count() > 0 || $dataTA->count() == 0)
+                                <a href="{{ route('apps.pengajuan-ta.create') }}" class="btn btn-primary mb-2"><i class="fa fa-upload me-1"></i> Ajukan TA</a>
+                            @endif
+                        @endcan
+                        <a href="{{ getSetting('app_template_mentor') }}" target="_blank" class="btn btn-success mb-2"><i
+                                class="far fa-file-alt"></i> Template Persetujuan Pembimbing</a>
+                        <a href="{{ getSetting('app_template_summary') }}" target="_blank" class="btn btn-secondary mb-2"><i
                             class="far fa-file-alt"></i> Template Ringkasan</a>
+                        @if(getInfoLogin()->hasRole('Kaprodi'))
+                        <div class="d-flex align-items-center gap-2 float-end col-5" style="white-space: nowrap"> 
+                            <label for="">Filter Berdasarkan: </label>
+                            <select name="filter" id="" class="form-control" onchange="this.form.submit()">
+                                <option value="semua" {{ $filter == 'semua' ? 'selected' : '' }}>Semua Jenis Penyelesaian</option>
+                                <option value="I" {{ $filter == 'I' ? 'selected' : '' }}>Individu</option>
+                                <option value="K" {{ $filter == 'K' ? 'selected' : '' }}>Kelompok</option>
+                            </select>
+                            <select name="filter2" id="" class="form-control" onchange="this.form.submit()">
+                                <option value="semua" {{ $filter2 == 'semua' ? 'selected' : '' }}>Semua Status</option>
+                                <option value="draft" {{ $filter2 == 'draft' ? 'selected' : '' }}>Draft</option>
+                                <option value="acc" {{ $filter2 == 'acc' ? 'selected' : '' }}>Acc</option>
+                            </select>
+                        </div>
+                        @endif
+                    </form>
                     <hr>
                     <div class="table-responsive">
                         <table class="table table-striped" id="datatable">

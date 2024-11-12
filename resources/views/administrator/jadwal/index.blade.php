@@ -65,20 +65,10 @@
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>
-                                            {{-- @if (is_null($item->tugas_akhir->jadwal_seminar()->orderBy('id', 'desc')->first()) ? $item->tugas_akhir->jadwal_seminar()->orderBy('id', 'desc')->first()->status == 'belum_terjadwal')
+                                            @if (!is_null($item->tugas_akhir->jadwal_seminar()->orderBy('id', 'desc')->first()) && $item->tugas_akhir->jadwal_seminar()->orderBy('id', 'desc')->first()->status == 'belum_terjadwal')
                                                 <span class="badge rounded-pill badge-soft-primary">Belum Terjadwal</span>
                                             @else
-                                                @if ($item->tugas_akhir->jadwal_seminar()->orderBy('id', 'desc')->first()->status == 'sudah_terjadwal')
-                                                    <span class="badge rounded-pill badge-soft-primary">Sudah
-                                                        Terjadwal</span>
-                                                @else
-                                                    <span class="badge rounded-pill badge-soft-primary">Telah Seminar</span>
-                                                @endif
-                                            @endif --}}
-                                            @if ($item->tugas_akhir->jadwal_seminar()->orderBy('id', 'desc')->first()->status == 'belum_terjadwal')
-                                                <span class="badge rounded-pill badge-soft-primary">Belum Terjadwal</span>
-                                            @else
-                                                @if ($item->tugas_akhir->jadwal_seminar()->orderBy('id', 'desc')->first()->status == 'sudah_terjadwal')
+                                                @if (!is_null($item->tugas_akhir->jadwal_seminar()->orderBy('id', 'desc')->first()) && $item->tugas_akhir->jadwal_seminar()->orderBy('id', 'desc')->first()->status == 'sudah_terjadwal')
                                                     <span class="badge rounded-pill badge-soft-primary">Sudah
                                                         Terjadwal</span>
                                                 @else
@@ -96,27 +86,24 @@
                                                 {{ is_null($item->tugas_akhir->jadwal_seminar()->orderBy('id', 'desc')->first()) || is_null($item->tugas_akhir->jadwal_seminar()->orderBy('id', 'desc')->first()->tanggal)? '-': \Carbon\Carbon::createFromFormat('Y-m-d', $item->tugas_akhir->jadwal_seminar()->orderBy('id', 'desc')->first()->tanggal)->locale('id')->translatedFormat('l, d M Y') }}
                                             </p>
                                             <p>Waktu:
-                                                {{ $item->tugas_akhir->jadwal_seminar()->orderBy('id', 'desc')->first()->jam_mulai }}
+                                                {{ !is_null($item->tugas_akhir->jadwal_seminar()->orderBy('id', 'desc')->first()) ? $item->tugas_akhir->jadwal_seminar()->orderBy('id', 'desc')->first()->jam_mulai : '' }}
                                                 -
-                                                {{ $item->tugas_akhir->jadwal_seminar()->orderBy('id', 'desc')->first()->jam_selesai }}
+                                                {{ !is_null($item->tugas_akhir->jadwal_seminar()->orderBy('id', 'desc')->first()) ? $item->tugas_akhir->jadwal_seminar()->orderBy('id', 'desc')->first()->jam_selesai : ''}}
                                             </p>
                                         </td>
                                         <td>
                                             <span
-                                            {{-- @if($item->tugas_akhir->jadwal_seminar()->orderBy('id', 'desc')->first()->status == 'telah_seminar') --}}
                                                 class="badge {{ !is_null($item->tugas_akhir->status_seminar) ? ($item->tugas_akhir->status_seminar == 'acc' ? 'badge-soft-success' : ($item->tugas_akhir->status_seminar == 'revisi' ? 'badge-soft-success' : 'badge-soft-danger')) : 'badge-soft-secondary' }}">{{!is_null($item->tugas_akhir->status_seminar) ? ($item->tugas_akhir->status_seminar == 'acc' ? 'Disetujui' : ($item->tugas_akhir->status_seminar == 'revisi' ? 'Disetujui dengan revisi' : 'Ditolak')) : '-' }}</span>
-                                            {{-- @endif --}}
                                         </td>
                                         <td class="text-center">
-                                            @if (!is_null($item->tugas_akhir->jadwal_seminar()->orderBy('id', 'desc')->first()))
+                                            @if (!is_null($item->tugas_akhir->jadwal_seminar()->orderBy('id', 'desc')->first()) && $item->tugas_akhir->jadwal_seminar()->orderBy('id', 'desc')->first()->status != 'belum_terjadwal')
                                                 <a href="{{ route('apps.jadwal.penilaian', $item->tugas_akhir->jadwal_seminar()->orderBy('id', 'desc')->first()->id) }}"
                                                     class="btn btn-outline-primary btn-sm mb-1">
                                                     <i class="bx bx-clipboard"></i>
                                                 </a>
                                             @endif
-                                            @if ($item->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->where('jenis', 'pembimbing')->where('urut', 1)->count() > 0 && $item->tugas_akhir->status_seminar != 'acc' && $item->tugas_akhir->jadwal_seminar->status == 'telah_seminar')
+                                            @if ($item->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->where('jenis', 'pembimbing')->where('urut', 1)->count() > 0 && $item->tugas_akhir->status_seminar != 'acc' && (!is_null($item->tugas_akhir->jadwal_seminar) && $item->tugas_akhir->jadwal_seminar->status == 'telah_seminar'))
                                                 <button class="btn btn-outline-warning btn-sm mb-1" type="button" data-bs-toggle="modal" data-bs-target="#myModal">Setujui?</button>
-                                                {{-- @dd($item->tugas_akhir->jadwal_seminar) --}}
                                                 @include('administrator.jadwal.partials.modal')
                                             @endif
                                         </td>

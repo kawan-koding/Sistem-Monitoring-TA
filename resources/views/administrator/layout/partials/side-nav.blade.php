@@ -64,7 +64,7 @@
                         </a>
                     </li>
                     @endcan
-                    @can(['read-jadwal-seminar'])
+                    @can(['read-jadwal'])
                     <li>
                         <a href="{{route('apps.jadwal')}}" class=" waves-effect">
                             <i class="bx bx-calendar"></i>
@@ -81,7 +81,6 @@
                     </li>
                     @endcan
                 @endif
-                
                 
                 @if(in_array(session('switchRoles'), ['Mahasiswa','Developer']))
                     @can(['read-pengajuan-tugas-akhir'])
