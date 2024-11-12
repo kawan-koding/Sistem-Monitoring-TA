@@ -68,7 +68,7 @@
                     </li>
                     @endcan
 
-                    @can(['read-jadwal-seminar'])
+                    @can(['read-jadwal'])
                     <li>
                         <a href="{{route('apps.jadwal')}}" class=" waves-effect">
                             <i class="bx bx-calendar"></i>

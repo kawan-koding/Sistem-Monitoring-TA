@@ -65,7 +65,7 @@
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>
-                                            @if ($item->tugas_akhir->jadwal_seminar()->orderBy('id', 'desc')->first()->status == 'belum_terjadwal')
+                                            @if (is_null($item->tugas_akhir->jadwal_seminar()->orderBy('id', 'desc')->first()) ? $item->tugas_akhir->jadwal_seminar()->orderBy('id', 'desc')->first()->status == 'belum_terjadwal')
                                                 <span class="badge rounded-pill badge-soft-primary">Belum Terjadwal</span>
                                             @else
                                                 @if ($item->tugas_akhir->jadwal_seminar()->orderBy('id', 'desc')->first()->status == 'sudah_terjadwal')
