@@ -22,33 +22,11 @@
             </ul>
             @endif
             <div class="card-body">
-                @if (in_array(session('switchRoles'), ['Dosen']))
-                <div class="row">
-                    <div class="col-md-2">
-                        @can('create-rekomendasi-topik')
-                        <button onclick="tambahData()" class="btn btn-primary"><i class="fa fa-plus"></i> Tambah</button>
-                        @endcan
-                    </div>
-                    <div class="col-md-10">
-                        <form method="GET" action="">
-                            <div class="row">
-                                <div class="col-md-5 col-sm-12">
-                                    <div class="position-relative">
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">Filter :</span>
-                                            </div>
-                                            <select name="tipe" id="tipe" class="form-control" onchange="this.form.submit()">
-                                                <option value="Semua">Semua</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+                @if(session('switchRoles') == 'Dosen')
+                @can('create-rekomendasi-topik')
+                <button onclick="tambahData()" class="btn btn-primary"><i class="fa fa-plus"></i> Tambah</button>
                 <hr>
+                @endcan
                 @endif
                 @if(session('success'))
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -79,7 +57,7 @@
                     <table class="table table-striped" id="datatable">
                         <thead>
                             <tr>
-                                <th width="5%">No</th>
+                                <th width="5%"> No</th>
                                 <th width="30%">Topik</th>
                                 <th width="20%" style="white-space: nowrap">Jenis Penyelesaian</th>
                                 <th style="white-space: nowrap">Jenis Topik</th>
@@ -104,7 +82,9 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>
-                                    <p class="m-0"><span class="badge rounded-pill bg-primary-subtle text-primary small mb-1">{{ $item->program_studi->nama }}</span></p>
+                                    @if(in_array(session('switchRoles'), ['Dosen']))
+                                        <p class="m-0"><span class="badge rounded-pill bg-primary-subtle text-primary small mb-1">{{ $item->program_studi->nama }}</span></p>
+                                    @endif
                                     <p class="fw-bold m-0" style="text-align: justify">{{ $item->judul }}</p>
                                     <p class="m-0 text-muted small" style="text-align: justify"><strong>Deskripsi :</strong> {{ $item->deskripsi ?? '-' }}</p>
                                     @if($item->catatan != null)

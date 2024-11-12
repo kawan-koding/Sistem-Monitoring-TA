@@ -6,13 +6,16 @@ use App\Models\PeriodeTa;
 use App\Models\TugasAkhir;
 use Illuminate\Http\Request;
 use App\Models\RekomendasiTopik;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 
 class HomeController extends Controller
 {
     public function index(Request $request)
     {
-        $tawaran = RekomendasiTopik::with(['dosen'])->where('status','Disetujui')->where('kuota', '!=', 0)->get();
+        $tawaran = RekomendasiTopik::where('status', 'Disetujui')->whereHas('ambilTawaran', function ($q) {
+                $q->where('status', 'Disetujui');
+            }, '<', DB::raw('kuota'))->take(5)->get();
         $tugasAkhir = TugasAkhir::with(['topik','mahasiswa','jenis_ta','bimbing_uji'])->where('status','acc')->latest()->paginate(2, ['*'], 'tugas_akhir_page', $request->get('tugas_akhir_page', 1));
         $data = [
             'title' => 'Beranda',
@@ -26,7 +29,9 @@ class HomeController extends Controller
     public function topik(Request $request)
     {
         $search = $request->input('search');
-        $tawaran = RekomendasiTopik::with(['dosen'])->where('status','Disetujui')->where('kuota', '!=', 0)->when($search, function ($query) use ($search) {
+        $tawaran = RekomendasiTopik::with(['dosen'])->where('status','Disetujui')->whereHas('ambilTawaran', function ($q) {
+            $q->where('status', 'Disetujui');
+        }, '<', DB::raw('kuota'))->when($search, function ($query) use ($search) {
             return $query->where('judul', 'LIKE', '%' . $search . '%');
         })->get();
         $data = [

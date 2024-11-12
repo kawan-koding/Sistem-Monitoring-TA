@@ -28,23 +28,25 @@ class RekomendasiTopikController extends Controller
             $dosen = Dosen::where('id', $user->id)->first();
             $query->where('dosen_id', $dosen->id);
         }
-
         if (session('switchRoles') == 'Mahasiswa') {
             $prodi = $user->programStudi;
-            // $query->where('kuota', '!=', '0')->where('status', 'Disetujui')->whereHas('ambilTawaran', function ($q) use ($user) {
-            //     $q->where('mahasiswa_id', '!=', $user->id);
-            //     $q->where('status', '!=', 'Disetujui');
-            // });
-            $query->where('program_studi_id', $prodi->id);
+            $query->where('program_studi_id', $prodi->id)->where('status', 'Disetujui')
+                ->whereDoesntHave('ambilTawaran', function ($q) use ($user) {
+                    $q->where('mahasiswa_id', $user->id)
+                        ->where('status', 'Disetujui');
+                })
+                ->where(function ($query) {
+                    $query->whereHas('ambilTawaran', function ($q) {
+                        $q->where('status', 'Disetujui');
+                    }, '<', DB::raw('kuota'));
+                });
         }
-
         if (session('switchRoles') == 'Kaprodi') {
             $prodi = $user->programStudi;
             $query->where('program_studi_id', $prodi->id);
         }
-
         $q = $query->get();
-        
+
         $data = [
             'title' => 'Tawaran Tugas Akhir',
             'mods' => 'rekomendasi_topik',
@@ -249,7 +251,7 @@ class RekomendasiTopikController extends Controller
             DB::beginTransaction();
             $kuota = $ambilTawaran->rekomendasiTopik->kuota;
             $rekomendasiTopik = $ambilTawaran->rekomendasiTopik;
-            if($kuota <= 0) {
+            if ($rekomendasiTopik->ambilTawaran()->where('status', 'Disetujui')->count() >= $kuota) {
                 return redirect()->route('apps.rekomendasi-topik.detail', $rekomendasiTopik->id)->with('error', 'Kuota sudah habis');
             }
             $ambilTawaran->update(['status' => 'Disetujui']);
@@ -257,11 +259,8 @@ class RekomendasiTopikController extends Controller
             if ($mahasiswa) {
                 // Mail::to($mahasiswa->email)->send(new RekomendasiTopikMail($rekomendasiTopik, $mahasiswa));
             }
-            $rekomendasiTopik->decrement('kuota', 1);
-            if ($rekomendasiTopik->kuota <= 0) {
-            AmbilTawaran::where('rekomendasi_topik_id', $rekomendasiTopik->id)
-                ->where('status', 'Menunggu')
-                ->update(['status' => 'Ditolak']);
+            if ($rekomendasiTopik->ambilTawaran()->where('status', 'Disetujui')->count() >= $kuota) {
+                AmbilTawaran::where('rekomendasi_topik_id', $rekomendasiTopik->id)->where('status', 'Menunggu')->update(['status' => 'Ditolak']);
             }
             DB::commit();
             return redirect()->route('apps.rekomendasi-topik.detail', $rekomendasiTopik->id)->with('success', 'Berhasil menyetujui data.');
@@ -294,12 +293,6 @@ class RekomendasiTopikController extends Controller
                 File::delete(public_path('storage/files/apply-topik/'. $ambilTawaran->file));
             }
             $ambilTawaran->delete();
-            if ($ambilTawaran->status === 'Disetujui') {
-                $rekomendasiTopik = RekomendasiTopik::find($topik);
-                if ($rekomendasiTopik) {
-                    $rekomendasiTopik->increment('kuota');
-            }
-            }
             return $this->successResponse('Berhasil menghapus data');
         } catch(\Exception $e) {
             return $this->exceptionResponse($e);
