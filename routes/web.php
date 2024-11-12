@@ -174,6 +174,8 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::post('{ambilTawaran}/accept', [RekomendasiTopikController::class, 'accept'])->name('apps.rekomendasi-topik.accept');
         Route::post('{ambilTawaran}/reject', [RekomendasiTopikController::class, 'reject'])->name('apps.rekomendasi-topik.reject');
         Route::get('{ambilTawaran}/hapus-mahasiswa-terkait', [RekomendasiTopikController::class, 'deleteMhs'])->name('apps.hapus-mahasiswa-terkait');
+        Route::get('{ambilTawaran}/edit-topik', [RekomendasiTopikController::class, 'editTopik'])->name('apps.edit-topik-terkait');
+        Route::post('{ambilTawaran}/update-topik', [RekomendasiTopikController::class, 'updateTopik'])->name('apps.update-topik-terkait');
     });
     
     Route::prefix('dosen')->middleware('can:read-dosen')->group(function () {

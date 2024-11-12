@@ -28,6 +28,31 @@
                 </div>
                 <hr>
                 @endif
+                 @if(session('success'))
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <i class="mdi mdi-check-all me-2"></i> {{ session('success') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                        </button>
+                    </div>
+                @endif
+                @if(session('error'))
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="mdi mdi-block-helper me-2"></i>{{ session('error') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                    </button>
+                </div>
+                @endif
+                @if ($errors->any())
+                    <div class="alert alert-error alert-danger alert-dismissible fade show" role="alert">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                        </button>
+                    </div>
+                @endif
                 <div class="table-responsive">
                     <table class="table table-striped" id="datatable">
                         <thead>
@@ -54,6 +79,7 @@
                                 </td>
                                 <td>
                                     @if($item->status == 'Menunggu')
+                                    <button title="Edit" class="btn btn-outline-primary btn-sm mx-1 my-1" onclick="editTopikTerkait('{{ $item->id }}', '{{ route('apps.edit-topik-terkait', $item->id) }}')"><i class="bx bx-edit-alt"></i></button>
                                     <button title="Hapus" class="btn btn-outline-dark btn-sm mx-1 my-1" onclick="hapusTopikTerkait('{{ $item->id }}', '{{ route('apps.hapus-topik-yang-diambil', $item->id) }}')"><i class="bx bx-trash"></i></button>
                                     @else
                                     -
@@ -69,5 +95,7 @@
         </div>
     </div>
 </div>
+
+@include('administrator.rekomendasi-topik.partials.modal-apply')
 
 @endsection

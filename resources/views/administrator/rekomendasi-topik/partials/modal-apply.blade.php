@@ -4,7 +4,7 @@
             <div class="modal-header">
                 <h5 class="modal-title mt-0" id="myModalLabelApply"></h5>
             </div>
-            <form action="" id="myImportFormulir" method="post" enctype="multipart/form-data">
+            <form action="" id="myModalAction" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
                     <div class="mb-2">
@@ -15,6 +15,7 @@
                     <div class="mb-2">
                         <label for="">Lampiran <span class="text-danger">*</span></label>
                         <input type="file" name="document" id="document" class="form-control filepond">
+                        <div id="documentLink" class="mt-2"></div>
                         <i><span class="text-danger small">*Lampirkan CV/Portofilio</span></i>
                     </div>
                 </div>

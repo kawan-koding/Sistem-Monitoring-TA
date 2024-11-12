@@ -188,11 +188,12 @@ class RekomendasiTopikController extends Controller
     {
         $request->validate([
             'description' => 'required',
-            'document' => 'required|max:2048',
+            'document' => 'required|max:2048|mimes:pdf',
         ],[
             'description.required' => 'Deskripsi harus diisi',
             'document.required' => 'Dokumen harus diisi',
             'document.max' => 'Dokumen maksimal 2 MB',
+            'document.mimes' => 'Dokumen harus berformat PDF',
         ]);
 
         try {
@@ -320,6 +321,42 @@ class RekomendasiTopikController extends Controller
             return redirect()->route('apps.rekomendasi-topik')->with('success', 'Berhasil menolak data');
         } catch (\Exception $e) {
             return redirect()->route('apps.rekomendasi-topik')->with($e->getMessage());
+        }
+    }
+
+    public function editTopik(AmbilTawaran $ambilTawaran) 
+    {
+        return response()->json($ambilTawaran);
+    }  
+
+    public function updateTopik(AmbilTawaran $ambilTawaran, Request $request)
+    {
+        $request->validate([
+            'description' => 'required',
+            'document' => 'nullable|max:2048|mimes:pdf',
+        ],[
+            'description.required' => 'Deskripsi harus diisi',
+            'document.max' => 'Dokumen maksimal 2 MB',
+            'document.mimes' => 'Dokumen harus berformat PDF',
+        ]);
+
+        try {
+            if($request->hasFile('document')) {
+                $file = $request->file('document');
+                $filename = 'Lampiran_'. rand(0, 999999999) .'_'. rand(0, 999999999) .'.'. $file->getClientOriginalExtension();
+                $file->move(public_path('storage/files/apply-topik'), $filename);
+            } else {
+                $filename = $ambilTawaran->file;
+            }
+
+            $ambilTawaran->update([
+                'description' => $request->description,
+                'file' => $filename,
+            ]);
+
+            return redirect()->route('apps.topik-yang-diambil')->with('success', 'Berhasil memperbarui data');
+        } catch (\Exception $e) {
+            return redirect()->route('apps.topik-yang-diambil')->with($e->getMessage());
         }
     }
 
