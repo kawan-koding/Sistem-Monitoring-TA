@@ -24,7 +24,7 @@ use App\Http\Requests\PengajuanTA\PengajuanTARequest;
 
 class PengajuanTAController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $query = [];
         if(getInfoLogin()->hasRole('Mahasiswa')){
@@ -41,7 +41,16 @@ class PengajuanTAController extends Controller
                 $query->whereHas('programStudi', function ($q) use($prodi) {
                     $q->where('nama', $prodi);
                 });
-            })->get();
+            });
+
+            if($request->has('filter') && !empty($request->filter) && $request->filter != 'semua') {
+                $query = $query->where('tipe', $request->filter);
+            }
+            if($request->has('filter2') && !empty($request->filter2) && $request->filter2 != 'semua') {
+                $query = $query->where('status', $request->filter2);
+            }
+
+            $query = $query->get();
         }
 
         $data = [
@@ -58,7 +67,8 @@ class PengajuanTAController extends Controller
                 ]
             ],
             'dataTA'   => $query,
-            // 'timer' => $waktu,
+            'filter' => $request->has('filter') ? $request->filter : 'semua',
+            'filter2' => $request->has('filter2') ? $request->filter2 : 'semua',
         ];
         
         return view('administrator.pengajuan-ta.index', $data);
@@ -453,6 +463,5 @@ class PengajuanTAController extends Controller
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
-    }
-    
+    }    
 }
