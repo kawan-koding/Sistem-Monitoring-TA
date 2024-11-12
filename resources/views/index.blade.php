@@ -21,7 +21,7 @@
                 <p class="text-muted"><span>Temukan topik yang sesuai dengan bidang keahlian kamu</span></p>
             </div>
             <div class="table-responsive">
-                <table class="table" id="datatable">
+                <table class="table datatable" id="datatable">
                     <thead>
                         <tr>
                             <th></th>
@@ -35,17 +35,19 @@
                                   <div class="row w-100">
                                       <div class="col-lg-12">
                                         <h6 class="m-0"><b>{{ $item->judul }}</b></h6>
-                                        <p class="m-0" style="font-size: 14px">
+                                        <p class="m-0" style="font-size: 14px; text-align: justify">
                                           <span class="short-description">{{ Str::limit($item->deskripsi, 200) }}</span>
-                                          <span class="full-description d-none">{{ $item->deskripsi }}</span>
+                                          <span class="full-description d-none" >{{ $item->deskripsi }}</span>
                                           @if (strlen($item->deskripsi) > 200)
-                                              <a href="javascript:void(0);" class="read-more"
-                                                  onclick="toggleDescription(this)">Selengkapnya</a>
+                                              <a href="javascript:void(0);" class="read-more" onclick="toggleDescription(this)">Selengkapnya</a>
                                           @endif
                                         </p>
-                                        <p class="text-muted small m-0">
-                                          <span class="me-2"><i class="bx bx-user me-1"></i>{{ $item->dosen->name }} </span> 
-                                          <i class="bx bx-group me-1"></i>{{ $item->ambilTawaran()->where('status', 'Disetujui')->count() }}/{{ $item->kuota }}Kuota
+                                        <p class="text-muted small m-0 info-details">
+                                            <span class="dosen-info"><i class="bx bx-user me-1"></i>{{ $item->dosen->name }}</span>
+                                            <span class="kuota-group">
+                                                <span class="kuota-info"><i class="bx bx-group me-1"></i>{{ $item->ambilTawaran()->where('status', 'Disetujui')->count() }}/{{ $item->kuota }} Kuota</span>
+                                                <span class="diambil-oleh-info">| Diambil oleh {{ $item->ambilTawaran()->where('status', 'Menunggu')->count() }} Mahasiswa</span>
+                                            </span>
                                         </p>
                                       </div>
                                   </div>
@@ -63,74 +65,50 @@
         </div>
     </section>
 
-    {{-- <section id="tawaran-topik" style="padding: 60px 0 100px 0" class="rekomendasi-topik">
-        <div class="container">
-            <div class="text-center mb-5">
-                <h5 class="font-size-24  m-0 fw-bold" style="color: var(--primary-color)">Tawaran Topik Tugas Akhir</h5>
-                <p class="text-muted"><span>Temukan topik yang sesuai dengan bidang keahlian kamu</span></p>
-            </div>
-            <div class="info">
-                @forelse ($tawaran as $item)
-                    <div class="info-item d-flex">
-                        <div class="row w-100">
-                            <div class="col-lg-12">
-                                <h6 class="m-0"><b>{{ $item->judul }}</b></h4>
-                                    <p class="m-0" style="font-size: 14px">
-                                        <span class="short-description">{{ Str::limit($item->deskripsi, 200) }}</span>
-                                        <span class="full-description d-none">{{ $item->deskripsi }}</span>
-                                        @if (strlen($item->deskripsi) > 200)
-                                            <a href="javascript:void(0);" class="read-more"
-                                                onclick="toggleDescription(this)">Selengkapnya</a>
-                                        @endif
-                                    </p>
-                                    <p class="text-muted small m-0"><span class="me-2"><i class="bx bx-user me-1"></i>
-                                            {{ $item->dosen->name }}</span> <i
-                                            class="bx bx-group me-1"></i>{{ $item->ambilTawaran()->where('status', 'Disetujui')->count() }}/{{ $item->kuota }}
-                                        Kuota</p>
-                            </div>
-                        </div>
-                    </div><!-- End Info Item -->
-                @empty
-                    <p class="text-center " style="color: #aeaeae">Tidak ada tawaran</p>
-                @endforelse
-            </div>
-        </div>
-        <div class="d-flex justify-content-center" style="margin-top: 40px">
-            {{ $tawaran->appends(request()->except('page'))->links() }}
-        </div>
-    </section> --}}
-
-
     <section id="judul-tugas-akhir" style="padding: 60px 0 100px 0" class="judul-tugas-akhir">
         <div class="container">
-            <h5 class="font-size-24 text-center m-0 fw-bold mb-5" style="color: var(--primary-color)">Judul Tugas Akhir Yang
-                Disetujui</h5>
-            @forelse ($tugasAkhir as $item)
-                <div class="info-item d-flex">
-                    <div>
-                        <p class="m-0"><span class="badge"
-                                style="background-color: #AFB0DA; color:var(--primary-color);">{{ $item->tipe == 'I' ? 'Individu' : 'Kelompok' }}</span>
-                        </p>
-                        <h6 class="m-0 "><b>{{ $item->judul }}</b></h4>
-                            <p class="m-0">{{ $item->mahasiswa->nama_mhs }}</p>
-                            <p class="m-0">{{ $item->jenis_ta->nama_jenis }} - {{ $item->topik->nama_topik }}</p>
-                            <p class="text-muted small m-0"><span class="me-2">
-                                    @foreach ($item->bimbing_uji()->where('jenis', 'pembimbing')->orderBy('urut', 'asc')->get() as $dosen)
-                                        <i class="bx bx-user me-1"></i> {{ $dosen->dosen->name }}
-                                        @if (!$loop->last)
-                                            /
-                                        @endif
-                                    @endforeach
-                                </span>
-                            </p>
-                    </div>
-                </div>
-            @empty
-                <p class="text-center " style="color: #aeaeae">Tidak ada tawaran</p>
-            @endforelse
-        </div>
-        <div class="d-flex justify-content-center" style="margin-top: 40px">
-            {{ $tugasAkhir->links() }}
+            <h5 class="font-size-24 text-center m-0 fw-bold mb-5" style="color: var(--primary-color)">Judul Tugas Akhir Yang Disetujui</h5>
+            <div class="table-responsive">
+                <table class="table datatable" id="datatable">
+                    <thead>
+                        <tr>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                      @forelse ($tugasAkhir as $item)
+                          <tr>
+                            <td>
+                              <div class="info-item d-flex">
+                                    <div>
+                                        <p class="m-0">
+                                            <span class="badge" style="background-color: #AFB0DA; color:var(--primary-color);">{{ $item->tipe == 'I' ? 'Individu' : 'Kelompok' }}</span>
+                                        </p>
+                                        <h6 class="m-0 "><b>{{ $item->judul }}</b></h4>
+                                        <p class="m-0">{{ $item->mahasiswa->nama_mhs }}</p>
+                                        <p class="m-0">{{ $item->jenis_ta->nama_jenis }} - {{ $item->topik->nama_topik }}</p>
+                                        <p class="text-muted small m-0">
+                                            <span class="me-2">
+                                                @foreach ($item->bimbing_uji()->where('jenis', 'pembimbing')->orderBy('urut', 'asc')->get() as $dosen)
+                                                    <i class="bx bx-user me-1"></i> {{ $dosen->dosen->name }}
+                                                    @if (!$loop->last)
+                                                        /
+                                                    @endif
+                                                @endforeach
+                                            </span>
+                                        </p>
+                                    </div>
+                                </div>  
+                            </td>
+                        </tr>
+                     @empty
+                        <tr>
+                          <p class="text-center " style="color: #aeaeae">Tidak ada tugas akhir</p>
+                        </tr>
+                      @endforelse
+                    </tbody>
+                </table>
+            </div>
         </div>
     </section>
 

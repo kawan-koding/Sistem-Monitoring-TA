@@ -3286,35 +3286,62 @@ section {
     padding: 10px 0px; 
 }
 
-/* Tambahkan jarak bawah hanya untuk baris pertama */
 #datatable tr:first-child td {
-    padding-bottom: 15px; /* Jarak bawah lebih besar pada baris pertama */
-    padding-top: 0px; /* Jarak bawah lebih besar pada baris pertama */
+    padding-bottom: 15px;
+    padding-top: 0px;
 }
 
-/* Tambahkan jarak atas hanya untuk baris terakhir */
 #datatable tr:last-child td {
-    padding-top: 15px; /* Jarak atas lebih besar pada baris terakhir */
-    padding-bottom: 0px; /* Jarak atas lebih besar pada baris terakhir */
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+
+.info-details {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 5px;
+}
+
+.dosen-info,
+.kuota-group {
+    display: inline-block;
+}
+
+.dosen-info::after {
+    content: "|";
+    margin: 0 5px;
+    color: #ccc;
 }
 
 @media (max-width: 768px) {
-    /* Mengatur agar length menu dan pencarian berada di tengah */
     #datatable_length, #datatable_filter {
         display: block;
         width: 100%;
         text-align: center;
     }
 
-    /* Pencarian akan berada di bawah Length Menu pada perangkat mobile */
     #datatable_filter {
         margin-top: 10px;
     }
 
-    /* Memastikan panjang select pada length menu diatur dengan baik pada perangkat mobile */
     #datatable_length select {
-        width: 50%;
         margin: 0 auto;
+    }
+
+    .info-details {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .dosen-info::after {
+        content: "";
+    }
+
+    .kuota-group {
+        display: flex;
+        gap: 5px;
     }
 }
 

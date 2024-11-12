@@ -7,6 +7,7 @@ use App\Models\Dosen;
 use App\Models\JenisTa;
 use App\Models\Mahasiswa;
 use App\Models\AmbilTawaran;
+use App\Models\ProgramStudi;
 use Illuminate\Http\Request;
 use App\Models\RekomendasiTopik;
 use App\Mail\RekomendasiTopikMail;
@@ -27,21 +28,23 @@ class RekomendasiTopikController extends Controller
             $dosen = Dosen::where('id', $user->id)->first();
             $query->where('dosen_id', $dosen->id);
         }
-        if (session('switchRoles') == 'Mahasiswa') {
-            $query->where('kuota', '!=', '0')->where('status', 'Disetujui')->whereHas('ambilTawaran', function ($q) use ($user) {
-                $q->where('mahasiswa_id', '!=', $user->id);
-                $q->where('status', '!=', 'Disetujui');
-            });
-        }
-        if (session('switchRoles') == 'Kaprodi') {
-            $prodi = $user->programStudi->id;
-            $query->whereHas('dosen', function ($q) use ($prodi) {
-                $q->where('program_studi_id', $prodi);
-            });
-        }
-        $q = $query->get();
 
-        // dd($q);
+        if (session('switchRoles') == 'Mahasiswa') {
+            $prodi = $user->programStudi;
+            // $query->where('kuota', '!=', '0')->where('status', 'Disetujui')->whereHas('ambilTawaran', function ($q) use ($user) {
+            //     $q->where('mahasiswa_id', '!=', $user->id);
+            //     $q->where('status', '!=', 'Disetujui');
+            // });
+            $query->where('program_studi_id', $prodi->id);
+        }
+
+        if (session('switchRoles') == 'Kaprodi') {
+            $prodi = $user->programStudi;
+            $query->where('program_studi_id', $prodi->id);
+        }
+
+        $q = $query->get();
+        
         $data = [
             'title' => 'Tawaran Tugas Akhir',
             'mods' => 'rekomendasi_topik',
@@ -56,6 +59,7 @@ class RekomendasiTopikController extends Controller
                 ]
             ],
             'data' => $q,
+            'prodi' => ProgramStudi::all(),
             'jenisTa' => JenisTa::all(),
         ];
         return view('administrator.rekomendasi-topik.index', $data);
@@ -69,18 +73,15 @@ class RekomendasiTopikController extends Controller
             if(!$dosen) {
                 return redirect()->route('apps.rekomendasi-topik')->with('error', 'Anda tidak terdaftar sebagai dosen');
             }
-
             if($request->jenis_ta_new !== null) {
                 $newJenis =JenisTa::create(['nama_jenis' => $request->jenis_ta_new]);
                 $jenis = $newJenis->id;
-
             } else {
                 $jenis = $request->jenis_ta_id;
             }
-
             $kuota = (int) $request->kuota;
-            $request->merge(['dosen_id' => $dosen->id, 'kuota' => $kuota, 'jenis_ta_id' => $jenis, 'status' => 'Menunggu']);                   
-            RekomendasiTopik::create($request->only(['dosen_id','jenis_ta_id', 'judul', 'tipe', 'kuota', 'deskripsi', 'status']));
+            $request->merge(['dosen_id' => $dosen->id, 'kuota' => $kuota, 'jenis_ta_id' => $jenis,  'status' => 'Menunggu']);                   
+            RekomendasiTopik::create($request->only(['dosen_id','jenis_ta_id', 'judul', 'tipe', 'kuota', 'deskripsi', 'status', 'program_studi_id']));
             return redirect()->route('apps.rekomendasi-topik')->with('success', 'Data berhasil ditambahkan');
         } catch (\Exception $e) {
             return redirect()->route('apps.rekomendasi-topik')->with('error', $e->getMessage());
@@ -104,7 +105,7 @@ class RekomendasiTopikController extends Controller
             }
             $kuota = (int) $request->kuota;
             $request->merge(['kuota' => $kuota, 'jenis_ta_id' => $jenis, 'status' => $rekomendasiTopik->status == 'Disetujui' ? 'Disetujui' : 'Menunggu', 'catatan' => null]);
-            $rekomendasiTopik->update($request->only(['jenis_ta_id', 'judul', 'tipe', 'kuota', 'deskripsi', 'status', 'catatan']));
+            $rekomendasiTopik->update($request->only(['jenis_ta_id', 'judul', 'tipe', 'kuota', 'deskripsi', 'status', 'catatan','program_studi_id']));
             return redirect()->route('apps.rekomendasi-topik')->with('success', 'Data berhasil diperbarui');
         } catch (\Exception $e) {
             return redirect()->route('apps.rekomendasi-topik')->with('error', $e->getMessage());

@@ -84,7 +84,7 @@ class RoleSeeder extends Seeder
             'read-nilai', 'create-nilai',
             'read-daftar-bimbingan',
             'read-jadwal-seminar',
-            'read-sidang-sidang',
+            'read-daftar-sidang',
             'read-nilai','create-nilai',
             'read-revisi','create-revisi',
             'read-rekapitulasi-nilai',

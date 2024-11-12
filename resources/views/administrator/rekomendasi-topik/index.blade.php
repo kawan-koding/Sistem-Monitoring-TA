@@ -23,10 +23,32 @@
             @endif
             <div class="card-body">
                 @if (in_array(session('switchRoles'), ['Dosen']))
-                    @can('create-rekomendasi-topik')
-                    <button onclick="tambahData()" class="btn btn-primary"><i class="fa fa-plus"></i> Tambah</button>
-                    <hr>
-                    @endcan
+                <div class="row">
+                    <div class="col-md-2">
+                        @can('create-rekomendasi-topik')
+                        <button onclick="tambahData()" class="btn btn-primary"><i class="fa fa-plus"></i> Tambah</button>
+                        @endcan
+                    </div>
+                    <div class="col-md-10">
+                        <form method="GET" action="">
+                            <div class="row">
+                                <div class="col-md-5 col-sm-12">
+                                    <div class="position-relative">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">Filter :</span>
+                                            </div>
+                                            <select name="tipe" id="tipe" class="form-control" onchange="this.form.submit()">
+                                                <option value="Semua">Semua</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <hr>
                 @endif
                 @if(session('success'))
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -58,16 +80,16 @@
                         <thead>
                             <tr>
                                 <th width="5%">No</th>
-                                <th >Topik</th>
-                                <th>Jenis Penyelesaian</th>
-                                <th>Jenis Topik</th>
+                                <th width="30%">Topik</th>
+                                <th width="20%" style="white-space: nowrap">Jenis Penyelesaian</th>
+                                <th style="white-space: nowrap">Jenis Topik</th>
                                 @if(in_array(session('switchRoles'), ['Dosen','Developer']))
                                     @if(getInfoLogin()->hasRole('Dosen') || getInfoLogin()->hasRole('Developer'))
                                     <th>Pengambil:</th>
                                     @endif
                                 @endif
                                 @if(in_array(session('switchRoles'), ['Mahasiswa','Developer', 'Kaprodi','Kajur']))
-                                <th>Nama Dosen</th>
+                                <th style="white-space: nowrap">Nama Dosen</th>
                                 @endif
                                 @if(getInfoLogin()->hasRole('Dosen') || getInfoLogin()->hasRole('Developer') || getInfoLogin()->hasRole('Kaprodi'))
                                 <th>Status:</th>
@@ -82,25 +104,23 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>
-                                    <p class="fw-bold m-0">{{ $item->judul }}</p>
-                                    @if(in_array(session('switchRoles'), ['Developer','Kaprodi','Kajur']))
-                                    <p class="m-0 text-muted small"><strong>Nama Dosen :</strong> {{ $item->dosen->name ?? '-' }}</p>
-                                    @endif
-                                    <p class="m-0 text-muted small"><strong>Deskripsi :</strong> {{ $item->deskripsi ?? '-' }}</p>
+                                    <p class="m-0"><span class="badge rounded-pill bg-primary-subtle text-primary small mb-1">{{ $item->program_studi->nama }}</span></p>
+                                    <p class="fw-bold m-0" style="text-align: justify">{{ $item->judul }}</p>
+                                    <p class="m-0 text-muted small" style="text-align: justify"><strong>Deskripsi :</strong> {{ $item->deskripsi ?? '-' }}</p>
                                     @if($item->catatan != null)
                                     <p class="m-0 text-muted small">Catatan : <span class="text-danger"> {{ $item->catatan }}</span></p>
                                     @endif
                                 </td>
                                 <td>
                                     <div class="d-flex align-items-center">
-                                            <div>
-                                                <span class="badge rounded-pill bg-dark-subtle text-body small mb-1">{{ $item->tipe }}</span>
-                                                <p class="m-0 p-0 text-muted">Jumlah Kuota : <strong>{{ $item->ambilTawaran()->where('status', 'Disetujui')->count() }}</strong>/{{$item->kuota}}</p>
-                                                <p class="m-0 p-0 text-muted">Jumlah Pengambil : {{$item->ambilTawaran()->where('status', '!=', 'Ditolak')->count()}}</p>
-                                            </div>
+                                        <div>
+                                            <span class="badge rounded-pill bg-dark-subtle text-body small mb-1">{{ $item->tipe }}</span>
+                                            <p class="m-0 p-0 text-muted small">Jumlah Kuota : {{ $item->ambilTawaran()->where('status', 'Disetujui')->count() }}/{{$item->kuota}}</p>
+                                            <p class="m-0 p-0 text-muted small">Jumlah Pengambil : {{$item->ambilTawaran()->where('status', '!=', 'Ditolak')->count()}}</p>
                                         </div>
+                                    </div>
                                 </td>
-                                <td>{{ $item->jenisTa->nama_jenis }}</td>
+                                <td><p class="small">{{ $item->jenisTa->nama_jenis }}</p></td>
                                 @if(in_array(session('switchRoles'), ['Dosen','Developer']))
                                     @if(getInfoLogin()->hasRole('Dosen') || getInfoLogin()->hasRole('Developer'))
                                     <td>
@@ -109,7 +129,7 @@
                                         @else
                                         <ul>
                                             @foreach ($item->ambilTawaran()->where('status','!=','Ditolak')->get() as $tawaran)
-                                            <li>{{ $tawaran->mahasiswa->nama_mhs }}</li>
+                                            <li class="small">{{ $tawaran->mahasiswa->nama_mhs }}</li>
                                             @endforeach
                                         </ul>
                                         @endif
@@ -117,12 +137,10 @@
                                     @endif
                                 @endif
                                 @if(in_array(session('switchRoles'), ['Mahasiswa','Developer', 'Kaprodi','Kajur']))
-                                <td>{{ $item->dosen->name}}</td>
+                                <td><p class="small">{{ $item->dosen->name}}</td></p>
                                 @endif
                                 @if(getInfoLogin()->hasRole('Dosen') || getInfoLogin()->hasRole('Developer') || getInfoLogin()->hasRole('Kaprodi'))
-                                <td>
-                                    <span class="badge {{ isset($item->status) ? ($item->status == 'Menunggu' ? 'bg-dark-subtle text-body' : ($item->status == 'Disetujui' ? 'badge-soft-success' : 'badge-soft-danger')) : '-'}}">{{ $item->status ?? '-' }}</span>
-                                </td>
+                                <td><span class="badge small {{ isset($item->status) ? ($item->status == 'Menunggu' ? 'bg-dark-subtle text-body' : ($item->status == 'Disetujui' ? 'badge-soft-success' : 'badge-soft-danger')) : '-'}}">{{ $item->status ?? '-' }}</span></td>
                                 @endif
                                 @if(session('switchRoles') !== 'Kajur') 
                                 <td>
@@ -157,7 +175,6 @@
                         </tbody>
                     </table>
                 </div>
-
             </div>
         </div>
     </div>

@@ -21,6 +21,7 @@ return new class extends Migration
             $table->text('catatan')->nullable();
             $table->enum('tipe',['Kelompok','Individu']);
             $table->bigInteger('kuota');
+            $table->foreignId('program_studi_id')->nullable()->references('id')->on('program_studis')->onDelete('cascade');
             $table->timestamps();
         });
     }

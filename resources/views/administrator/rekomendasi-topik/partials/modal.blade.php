@@ -48,6 +48,15 @@
                         <label for="">Masukkan Jenis Topik Baru</label>
                         <input type="text" class="form-control" id="jenis_ta_new" name="jenis_ta_new" placeholder="Masukkan jenis topik">
                     </div>
+                    <div class="mb-3">
+                        <label for="">Program Studi Tujuan <span class="text-danger">*</span></label>
+                        <select class="form-control" name="program_studi_id" id="program_studi_id">
+                            <option value="" disabled selected hidden>Pilih Program Studi</option>
+                            @foreach ($prodi as $item)
+                                <option value="{{ $item->id }}">{{$item->nama}}</option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary waves-effect"
