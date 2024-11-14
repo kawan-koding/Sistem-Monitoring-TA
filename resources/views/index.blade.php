@@ -20,7 +20,9 @@
                 <h5 class="font-size-24  m-0 fw-bold" style="color: var(--primary-color)">Tawaran Topik Tugas Akhir</h5>
                 <p class="text-muted"><span>Temukan topik yang sesuai dengan bidang keahlian kamu</span></p>
             </div>
-            <div class="info">
+
+            
+            <div class="info" id="info">
                 @forelse ($tawaran as $item)
                 <div class="info-item d-flex">
                     <div class="row w-100">
@@ -47,7 +49,7 @@
                 @endforelse
             </div>
         </div>
-        @if ($tawaran->count() > 5)
+        @if ($tawaran->count() > 4)
         <div class="d-flex justify-content-center" style="margin-top: 40px">
             <a href="{{ route('guest.rekomendasi-topik') }}">Lihat Semua...</a>
         </div>
@@ -243,22 +245,5 @@
         </div>
     </section>
 
-    @section('scripts')
-        <script>
-            function toggleDescription(element) {
-                const shortDescription = element.previousElementSibling.previousElementSibling;
-                const fullDescription = element.previousElementSibling;
-                if (fullDescription.classList.contains('d-none')) {
-                    fullDescription.classList.remove('d-none');
-                    shortDescription.classList.add('d-none');
-                    element.innerText = "Lebih Sedikit";
-                } else {
-                    fullDescription.classList.add('d-none');
-                    shortDescription.classList.remove('d-none');
-                    element.innerText = "Selengkapnya";
-                }
-            }
-        </script>
-    @endsection
 
 @endsection

@@ -10,6 +10,7 @@ use App\Models\PeriodeTa;
 use App\Models\BimbingUji;
 use App\Models\KuotaDosen;
 use App\Models\TugasAkhir;
+use App\Models\Pemberkasan;
 use App\Models\JenisDokumen;
 use App\Models\ProgramStudi;
 use Illuminate\Http\Request;
@@ -150,6 +151,7 @@ class DaftarTAController extends Controller
             ];
         });
 
+        $docPengajuan = JenisDokumen::where('jenis','pendaftaran')->get();
         $data = [
             'title' => 'Edit Tugas Akhir',
             'mods' => 'daftar_ta',
@@ -181,6 +183,8 @@ class DaftarTAController extends Controller
             'peng2' => $peng2,
             'jenis' => JenisTa::all(),
             'topik' => Topik::all(),
+            'editedData' => $tugasAkhir,
+            'doc' => $docPengajuan,
             'action' => route('apps.daftar-ta.update', $tugasAkhir->id),
         ];
         
@@ -239,30 +243,7 @@ class DaftarTAController extends Controller
                     return redirect()->back()->with('error', 'Kuota untuk dosen ' . $validasi['tipe'] . ' ' . $validasi['urut'] . ' telah penuh.');
                 }
             }
-
-            if($request->hasFile('doc_pemb_1')) {
-                $file = $request->file('doc_pemb_1');
-                $filename1 = 'TugasAkhir_'. rand(0, 999999999) .'_'. rand(0, 999999999) .'.'. $file->getClientOriginalExtension();
-                $file->move(public_path('storage/files/tugas-akhir'), $filename1);
-                if($tugasAkhir->dokumen_pemb_1) {
-                    File::delete(public_path('storage/files/tugas-akhir/'. $tugasAkhir->dokumen_pemb_1));
-                }
-            } else {
-                $filename1 = $tugasAkhir->dokumen_pemb_1;
-            }
-
-            if($request->hasFile('doc_ringkasan')) {
-                $file = $request->file('doc_ringkasan');
-                $filename2 = 'TugasAkhir_'. rand(0, 999999999) .'_'. rand(0, 999999999) .'.'. $file->getClientOriginalExtension();
-                $file->move(public_path('storage/files/tugas-akhir'), $filename2);
-                if($tugasAkhir->dokumen_ringkasan) {
-                    File::delete(public_path('storage/files/tugas-akhir/'. $tugasAkhir->dokumen_ringkasan));
-                }
-            } else {
-                $filename2 = $tugasAkhir->dokumen_ringkasan;
-            }
-
-             
+ 
             if($request->jenis_ta_new !== null) {
                 $newJenis = JenisTa::create(['nama_jenis' => $request->jenis_ta_new]);
                 $jenis = $newJenis->id;
@@ -277,7 +258,7 @@ class DaftarTAController extends Controller
                 $topik = $request->topik_id;
             }
 
-            $request->merge(['dokumen_ringkasan' => $filename2, 'dokumen_pemb_1' => $filename1, 'jenis_ta_id' => $jenis, 'topik_id' => $topik]);
+            $request->merge(['jenis_ta_id' => $jenis, 'topik_id' => $topik]);
             $tugasAkhir->update($request->only(['jenis_ta_id', 'topik_id', 'judul', 'tipe', 'dokumen_pemb_1', 'dokumen_ringkasan']));
             $data = [
                 ['jenis' => 'pembimbing', 'urut' => 1, 'dosen_id' => $request->pembimbing_1],
@@ -295,6 +276,34 @@ class DaftarTAController extends Controller
                     ],
                     ['dosen_id' => $item['dosen_id']]
                 );
+            }
+
+            $docPengajuan = JenisDokumen::where('jenis','pendaftaran')->get();
+            foreach($docPengajuan as $item) {
+                $request->validate([
+                    'dokumen_'.$item->id => 'mimes:pdf,docx|max:2048'
+                ], [
+                    'dokumen_'. $item->id .'.mimes' => 'Dokumen harus dalam format PDF atau Docx',
+                    'dokumen_'. $item->id .'.max' => 'Dokumen tidak boleh lebih dari 2 MB',
+                ]);
+                if($request->hasFile('dokumen_'.$item->id)) {
+                    $file = $request->file('dokumen_'.$item->id);
+                    $filename = 'document_' . rand(0, 999999999) .'_'. rand(0, 999999999) .'.'. $file->getClientOriginalExtension();
+                    $file->move(public_path('storage/files/pemberkasan'), $filename);
+                    $pemberkasan = Pemberkasan::where('tugas_akhir_id', $tugasAkhir->id)->where('jenis_dokumen_id', $item->id)->first();
+                    if(!is_null($pemberkasan)) {
+                        File::delete(public_path('Storage/files/pemberkasan/'.$pemberkasan->filename));
+                        $pemberkasan->update([
+                            'filename' => $filename,
+                        ]);
+                    } else {
+                        Pemberkasan::create([
+                            'tugas_akhir_id' => $pengajuanTA->id,
+                            'jenis_dokumen_id' => $item->id,
+                            'filename' => $filename,
+                        ]);
+                    }
+                }
             }
 
             return redirect()->route('apps.daftar-ta')->with('success', 'Data berhasil diperbarui');

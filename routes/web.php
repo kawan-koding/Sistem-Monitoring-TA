@@ -236,7 +236,7 @@ Route::prefix('apps')->middleware('auth')->group(function () {
        Route::get('{kategoriNilai}/destroy', [KategoriNilaiController::class, 'destroy'])->name('apps.kategori-nilai.delete')->middleware('can:delete-kategori-nilai'); 
     });
     
-    Route::prefix('jadwal')->middleware('can:read-jadwal')->group( function(){
+    Route::prefix('jadwal')->middleware('can:read-jadwal-seminar')->group( function(){
         Route::get('{jenis?}',[JadwalController::class, 'index'])->name('apps.jadwal');
         Route::get('{jadwal}/penilaian',[JadwalController::class, 'evaluation'])->name('apps.jadwal.penilaian');
         Route::post('{jadwal}/revisi',[JadwalController::class, 'revisi'])->name('apps.jadwal.revisi');

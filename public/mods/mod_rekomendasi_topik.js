@@ -37,7 +37,7 @@ function editData(id, urlShow) {
 $(document).ready(function() {
     $(document).on('click', '*[data-toggle="get-topik"]', function () {
         const id = $(this).data('id');
-        $('#myImportFormulir').attr('action', `${BASE_URL}/apps/rekomendasi-topik/${id}/mengambil-topik`);
+        $('#myModalAction').attr('action', `${BASE_URL}/apps/rekomendasi-topik/${id}/mengambil-topik`);
         $('#myModalLabelApply').html('Ambil Topik');
         $('#description').val('');
         $('#myModalApply').modal('show');

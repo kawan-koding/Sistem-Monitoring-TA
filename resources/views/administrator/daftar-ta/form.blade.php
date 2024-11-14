@@ -137,26 +137,17 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="row">
-                            <div class="col-lg-6 col-md-6 col-sm-12">
-                                <div class="mb-3">
-                                    <label for="">Dokumen Pembimbing 1 <span class="text-danger">*</span></label>
-                                    <input type="file" name="doc_pemb_1" id="dokumen_pembimbing_1" class="form-control filepond" >
-                                    @if(isset($data) && !is_null($data->dokumen_pemb_1))
-                                        <a href="{{ asset('storage/files/tugas-akhir/'. $data->dokumen_pemb_1) }}" target="_blank" class="nav-link small text-primary mt-1"><i>Lihat Dokumen Pembimbing 1</i></a>
-                                    @endif
-                                </div>
-                            </div>
-                            <div class="col-lg-6 col-md-6 col-sm-12">
-                                <div class="mb-3">
-                                    <label for="">Dokumen Ringkasan <span class="text-danger">*</span></label>
-                                    <input type="file" name="doc_ringkasan" id="doc_ringkasan" class="form-control filepond">
-                                    @if(isset($data) && !is_null($data->dokumen_ringkasan))
-                                        <a href="{{ asset('storage/files/tugas-akhir/'. $data->dokumen_ringkasan) }}" target="_blank" class="nav-link small text-primary mt-1"><i>Lihat Dokumen Ringkasan</i></a>
-                                    @endif
-                                </div>
+                        @foreach ($doc as $item)
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="">{{ ucwords(strtolower(ucfirst($item->nama))) }} <span class="text-danger">*</span></label>
+                                <input type="file" name="dokumen_{{ $item->id }}" class="form-control filepond">
+                                @if(isset($editedData) && !is_null($item->pemberkasan()->where('tugas_akhir_id', $editedData->id)->first()))
+                                    <a href="{{ asset('storage/files/pemberkasan/'. $item->pemberkasan()->where('tugas_akhir_id', $editedData->id)->first()->filename) }}" target="_blank" class="nav-link small text-primary mt-1" accept=".docx, .pdf"><i>Lihat {{ strtolower($item->nama) }}</i></a>
+                                @endif
                             </div>
                         </div>
+                        @endforeach
                     </div>
                     <hr>
                     <div class="text-end">

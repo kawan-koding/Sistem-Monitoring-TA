@@ -31,7 +31,7 @@
         </tbody>
     </table>
 @else
-    @if(session('success'))
+    {{-- @if(session('success'))
     <div class="alert alert-success alert-dismissible fade show" role="alert">
         <i class="mdi mdi-check-all me-2"></i> {{ session('success') }}
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
@@ -55,7 +55,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
         </button>
     </div>
-    @endif
+    @endif --}}
     <div class="row align-items-center">
         <h5 class="fw-bold mb-0">Lembar Revisi</h5>
         <strong class="mb-0">{{ getInfoLogin()->userable->name }} (Penguji {{ $data->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->first()->urut }})</strong>

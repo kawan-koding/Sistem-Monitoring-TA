@@ -23,14 +23,18 @@
       <h5 class="font-size-24  m-0 fw-bold" style="color: var(--primary-color)">Rekomendasi Topik Tugas Akhir</h5>
       <p class="text-muted"><span>Temukan topik yang sesuai dengan bidang keahlian kamu</span></p>
     </div>
-    <div class="info">
+    <div class="info" id="info">
       @forelse ($tawaran as $item)
       <div class="info-item d-flex">
         <div class="row w-100">
           <div class="col-lg-12">
             <p class="m-0"><span class="badge rounded-pill bg-primary-subtle text-primary small mb-1">{{ $item->program_studi->nama }}</span></p>
             <h6 class="m-0"><b>{{ $item->judul }}</b></h4>
-            <p class="m-0" style="font-size: 14px">{{ Str::limit($item->deskripsi, 150) }}</p>
+            <p class="m-0" style="font-size: 14px">
+              <span class="short-description">{{ Str::limit($item->deskripsi, 200) }}</span>
+              <span class="full-description d-none">{{ $item->deskripsi }}</span>
+              @if(strlen($item->deskripsi) > 200)<a href="javascript:void(0);" class="read-more" onclick="toggleDescription(this)">Selengkapnya</a>@endif
+            </p>
             <p class="text-muted small m-0 info-details">
                 <span class="dosen-info"><i class="bx bx-user me-1"></i>{{ $item->dosen->name }}</span>
                 <span class="kuota-group">
@@ -50,5 +54,6 @@
     {{ $tawaran->links() }}
   </div>
 </section>
+
 
 @endsection

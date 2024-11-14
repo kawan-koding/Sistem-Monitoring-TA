@@ -186,7 +186,9 @@
     <div class="content">
         <div class="title">
             <h5 style="font-weight: 800; text-align: center">LEMBAR PENILAIAN SEMINAR PROPOSAL</h5>
-            <button id="print" class="no-print">Cetak</button>
+             @if ($loop->first)
+                <button id="print" class="no-print">Cetak</button>
+            @endif
             <table>
             <tr>
                 <td width="30%">Nama Mahasiswa</td>

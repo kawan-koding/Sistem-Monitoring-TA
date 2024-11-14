@@ -20,7 +20,7 @@ use App\Http\Requests\RekomendasiTopik\RekomendasiTopikRequest;
 
 class RekomendasiTopikController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $user = getInfoLogin()->userable;
         $query = RekomendasiTopik::with(['dosen', 'jenisTa', 'ambilTawaran']);
@@ -42,6 +42,9 @@ class RekomendasiTopikController extends Controller
                 });
         }
         if (session('switchRoles') == 'Kaprodi') {
+            if($request->has('status') && !empty($request->status) && $request->status != 'Semua') {
+                $query = $query->where('status', $request->status);
+            }
             $prodi = $user->programStudi;
             $query->where('program_studi_id', $prodi->id);
         }
@@ -62,6 +65,7 @@ class RekomendasiTopikController extends Controller
             ],
             'data' => $q,
             'prodi' => ProgramStudi::all(),
+            'status' => $request->has('status') ? $request->status : 'Semua',
             'jenisTa' => JenisTa::all(),
         ];
         return view('administrator.rekomendasi-topik.index', $data);

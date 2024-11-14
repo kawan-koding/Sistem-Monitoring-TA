@@ -22,6 +22,29 @@
             </ul>
             @endif
             <div class="card-body">
+                @if(session('switchRoles') == 'Kaprodi')
+                    <form action="">
+                        <div class="row">
+                            <div class="col-md-5 col-sm-12">
+                                <div class="position-relative">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Filter :</span>
+                                        </div>
+                                        <select name="status" id="" class="form-control" onchange="this.form.submit()">
+                                            <option value="Semua" {{ $status == 'Semua' ? 'selected' : '' }}>Semua</option>
+                                            <option value="Disetujui" {{ $status == 'Disetujui' ? 'selected' : '' }}>Disetujui</option>
+                                            <option value="Menunggu" {{ $status == 'Menunggu' ? 'selected' : '' }}>Menunggu</option>
+                                            <option value="Ditolak" {{ $status == 'Ditolak' ? 'selected' : '' }}>Ditolak</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <hr>
+                @endif
+
                 @if(session('switchRoles') == 'Dosen')
                 @can('create-rekomendasi-topik')
                 <button onclick="tambahData()" class="btn btn-primary"><i class="fa fa-plus"></i> Tambah</button>

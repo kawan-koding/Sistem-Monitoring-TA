@@ -33,7 +33,7 @@ class HomeController extends Controller
             $q->where('status', 'Disetujui');
         }, '<', DB::raw('kuota'))->when($search, function ($query) use ($search) {
             return $query->where('judul', 'LIKE', '%' . $search . '%');
-        })->paginate(1);
+        })->paginate(10);
         $data = [
             'title' => 'Tawaran Topik',
             'tawaran' => $tawaran,

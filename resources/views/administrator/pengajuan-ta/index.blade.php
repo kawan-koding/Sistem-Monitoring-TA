@@ -76,7 +76,7 @@
                                             <td>
                                                 <span
                                                     class="badge badge-soft-primary small mb-1 fw-bold">{{ $item->tipe == 'I' ? 'Individu' : 'Kelompok' }}</span>
-                                                <h5 class="fw-bold m-0">{{ $item->judul }}</h5>
+                                                <h5 class="fw-bold small m-0">{{ $item->judul }}</h5>
                                                 <p class="m-0 text-muted small">{{ $item->topik->nama_topik }} -
                                                     {{ $item->jenis_ta->nama_jenis }}</p>
                                                 @if($item->catatan != null)                                                    
@@ -84,40 +84,40 @@
                                                 @endif
                                             </td>
                                             @if(!getInfoLogin()->hasRole('Mahasiswa'))
-                                            <td>{{$item->mahasiswa->nama_mhs}}</td> 
+                                            <td> <p class="small">{{$item->mahasiswa->nama_mhs}}</p></td> 
                                             @endif
                                             <td>
-                                                <strong>Pembimbing</strong>
+                                                <p class="small fw-bold m-0">Pembimbing</p>
                                                 <ol>
                                                     @for ($i = 0; $i < 2; $i++)
                                                         @if ($item->bimbing_uji()->where('jenis', 'pembimbing')->count() > $i)
                                                             @foreach ($item->bimbing_uji as $pemb)
                                                                 @if ($pemb->jenis == 'pembimbing' && $pemb->urut == 1 && $i == 0)
-                                                                    <li>{{ $pemb->dosen->name ?? '-' }}</li>
+                                                                    <li class="small">{{ $pemb->dosen->name ?? '-' }}</li>
                                                                 @endif
                                                                 @if ($pemb->jenis == 'pembimbing' && $pemb->urut == 2 && $i == 1)
-                                                                    <li>{{ $pemb->dosen->name ?? '-' }}</li>
+                                                                    <li class="small">{{ $pemb->dosen->name ?? '-' }}</li>
                                                                 @endif
                                                             @endforeach
                                                         @else
-                                                            <li>-</li>
+                                                            <li class="small">-</li>
                                                         @endif
                                                     @endfor
                                                 </ol>
-                                                <strong>Penguji</strong>
+                                                <p class="small fw-bold m-0">Penguji</p>
                                                 <ol>
                                                     @for ($i = 0; $i < 2; $i++)
                                                         @if ($item->bimbing_uji()->where('jenis', 'penguji')->count() > $i)    
                                                             @foreach ($item->bimbing_uji as $pemb)
                                                                 @if ($pemb->jenis == 'penguji' && $pemb->urut == 1 && $i == 0)
-                                                                    <li>{{ $pemb->dosen->name ?? '-' }}</li>
+                                                                    <li class="small">{{ $pemb->dosen->name ?? '-' }}</li>
                                                                 @endif
                                                                 @if ($pemb->jenis == 'penguji' && $pemb->urut == 2 && $i == 1)
-                                                                    <li>{{ $pemb->dosen->name ?? '-' }}</li>
+                                                                    <li class="small">{{ $pemb->dosen->name ?? '-' }}</li>
                                                                 @endif
                                                             @endforeach
                                                         @else
-                                                            <li>-</li>
+                                                            <li class="small">-</li>
                                                         @endif
                                                     @endfor
                                                 </ol>
@@ -125,14 +125,14 @@
                                             <td>
                                                 @if ($item->status == 'acc')
                                                     <span
-                                                        class='badge rounded-pill badge-soft-primary font-size-11'>{{ ucfirst($item->status) }}</span>
+                                                        class='badge sm rounded-pill badge-soft-primary font-size-11'>{{ ucfirst($item->status) }}</span>
                                                 @else
                                                     @if ($item->status == 'reject')
                                                         <span
-                                                            class='badge rounded-pill badge-soft-danger font-size-11'>{{ ucfirst($item->status) }}</span>
+                                                            class='badge small rounded-pill badge-soft-danger font-size-11'>{{ ucfirst($item->status) }}</span>
                                                     @else
                                                         <span
-                                                            class='badge rounded-pill badge-soft-secondary font-size-11'>{{ ucfirst($item->status) }}</span>
+                                                            class='badge small rounded-pill badge-soft-secondary font-size-11'>{{ ucfirst($item->status) }}</span>
                                                     @endif
                                                 @endif
                                             </td>
