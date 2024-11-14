@@ -300,6 +300,7 @@
             </div>
         </div>
     </div>
+    <hr class="no-print">
     @if (!$loop->last)
         <div class="page-break"></div>
     @endif
