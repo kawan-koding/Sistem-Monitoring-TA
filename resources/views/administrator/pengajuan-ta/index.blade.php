@@ -39,21 +39,35 @@
                         <a href="{{ getSetting('app_template_summary') }}" target="_blank" class="btn btn-secondary mb-2"><i
                             class="far fa-file-alt"></i> Template Ringkasan</a>
                         @if(getInfoLogin()->hasRole('Kaprodi'))
-                        <div class="d-flex align-items-center gap-2 float-end col-5" style="white-space: nowrap"> 
+                        <div class="d-flex align-items-center gap-2 float-md-end col-md-4 " style="white-space: nowrap"> 
+                            <input name="status" type="hidden" value="{{ $status }}">
                             <label for="">Filter Berdasarkan: </label>
                             <select name="filter" id="" class="form-control" onchange="this.form.submit()">
                                 <option value="semua" {{ $filter == 'semua' ? 'selected' : '' }}>Semua Jenis Penyelesaian</option>
                                 <option value="I" {{ $filter == 'I' ? 'selected' : '' }}>Individu</option>
                                 <option value="K" {{ $filter == 'K' ? 'selected' : '' }}>Kelompok</option>
                             </select>
-                            <select name="filter2" id="" class="form-control" onchange="this.form.submit()">
-                                <option value="semua" {{ $filter2 == 'semua' ? 'selected' : '' }}>Semua Status</option>
-                                <option value="draft" {{ $filter2 == 'draft' ? 'selected' : '' }}>Draft</option>
-                                <option value="acc" {{ $filter2 == 'acc' ? 'selected' : '' }}>Acc</option>
-                            </select>
                         </div>
                         @endif
                     </form>
+                    @if(getInfoLogin()->hasRole('Kaprodi'))
+                    <ul class="nav nav-tabs nav-tabs-custom nav-justified mt-1 mb-2" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link @if (url()->full() == route('apps.pengajuan-ta')) active @endif"
+                                href="{{ route('apps.pengajuan-ta') }}">
+                                <span class="d-block d-sm-none small">Draft</span>
+                                <span class="d-none d-sm-block">Draft</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @if (url()->full() == route('apps.pengajuan-ta', ['status' => 'acc'])) active @endif"
+                                href="{{ route('apps.pengajuan-ta', ['status' => 'acc']) }}">
+                                <span class="d-block d-sm-none small">Acc</i></span>
+                                <span class="d-none d-sm-block">Acc</span>
+                            </a>
+                        </li>
+                    </ul>
+                    @endif
                     <hr>
                     <div class="table-responsive">
                         <table class="table table-striped" id="datatable">
@@ -159,12 +173,6 @@
                                                                 class="bx bx-edit-alt"></i></a>
                                                     @endcan
                                                     @endif
-                                                    {{-- @if($item->bimbing_uji()->where('jenis', 'pembimbing')->where('urut', 2)->count() > 0 && $item->status == 'acc')
-                                                    <button
-                                                        onclick="uploadFile('{{ $item->id }}','{{ route('apps.pengajuan-ta.unggah-berkas', $item->id) }}')"
-                                                        class="btn btn-sm btn-outline-secondary unggah-berkas mx-1 my-1"
-                                                        title="Unggah Berkas Pembimbing 2"><i class="bx bx-file"></i></button>
-                                                    @endif --}}
                                                 @endif
                                                 <a href="{{ route('apps.pengajuan-ta.show', ['pengajuanTA' => $item->id]) }}"
                                                     class="btn btn-sm btn-outline-warning mx-1 my-1" title="Detail"><i

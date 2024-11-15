@@ -46,8 +46,11 @@ class PengajuanTAController extends Controller
             if($request->has('filter') && !empty($request->filter) && $request->filter != 'semua') {
                 $query = $query->where('tipe', $request->filter);
             }
-            if($request->has('filter2') && !empty($request->filter2) && $request->filter2 != 'semua') {
-                $query = $query->where('status', $request->filter2);
+
+            if($request->has('status') && !empty($request->status)) {
+                $query = $query->whereIn('status', [$request->status, 'cancel']);
+            } else {
+                $query = $query->whereIn('status', ['draft', 'reject']);
             }
 
             $query = $query->get();
@@ -68,7 +71,7 @@ class PengajuanTAController extends Controller
             ],
             'dataTA'   => $query,
             'filter' => $request->has('filter') ? $request->filter : 'semua',
-            'filter2' => $request->has('filter2') ? $request->filter2 : 'semua',
+            'status' => $request->has('status') ? $request->status : 'draft',
         ];
         
         return view('administrator.pengajuan-ta.index', $data);
@@ -338,6 +341,7 @@ class PengajuanTAController extends Controller
 
         $data = [
             'title' => 'Detail Pengajuan Tugas Akhir',
+            'mods' => 'pengajuan_ta',
             'breadcrumbs' => [
                 [
                     'title' => 'Dashboard',

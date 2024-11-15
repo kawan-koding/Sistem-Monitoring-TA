@@ -27,7 +27,9 @@
                     </button>
                 </div>
             @endif
-            <a href="#" target="_blank" class="btn btn-success mb-2"><i
+            <a href="{{ getSetting('app_seminar_registration_template') }}" target="_blank" class="btn btn-success mb-2"><i
+                class="far fa-file-alt"></i> Template Pendaftaran Seminar</a>
+            <a href="{{ getSetting('app_seminar_filing_template') }}" target="_blank" class="btn btn-secondary mb-2"><i
                 class="far fa-file-alt"></i> Template Pemberkasan Seminar</a>
             <hr>
             @if (getInfoLogin()->hasRole('Admin'))

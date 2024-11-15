@@ -1,17 +1,9 @@
 @extends('administrator.layout.main')
 @section('content')
     <div class="card">
-        {{-- <div class="card-header">
-            <h5  class="fw-bold">
-                sistem rekomandasi pencarian buku
-            </h5>
-            <div class="badge badge-soft-primary font-size-12">status</div>
-            <hr>
-        </div>
-         --}}
          <div class="card-body">
             <div class="d-flex">
-                <div class="w-100">
+                <div class="col-md-10 col-12">
                     <h5 class="fw-bold mb-1">{{isset($dataTA->judul) ? $dataTA->judul : '-'}}</h5>
                     <div class="d-flex gap-2 small text-muted">
                         <div class="badge rounded-pill font-size-12 px-2 {{isset($dataTA->status) ? ($dataTA->status == 'acc' ? 'badge-soft-success' : ($dataTA->status == 'draft' ? 'bg-dark-subtle text-body' : 'badge-soft-danger')) : ''}}">{{isset($dataTA->status) ? $dataTA->status : '-'}}</div>
@@ -19,7 +11,22 @@
                         <span><strong>{{isset($dataTA->topik->nama_topik) ? $dataTA->topik->nama_topik : '-'}}</strong> - {{isset($dataTA->jenis_ta->nama_jenis) ? $dataTA->jenis_ta->nama_jenis : '-'}}</span>
                     </div>
                 </div>
-                {{-- <button class="btn btn-rounded btn-light bx bx-dots-horizontal fs-4" style="width: 45px;height: 45px;"></button> --}}
+                <div class="col-md-2 col-12 text-end">
+                    @if (getInfoLogin()->hasRole('Kaprodi'))
+                        @if ($dataTA->status == 'draft')
+                            @can('acc-pengajuan-tugas-akhir')
+                                <button
+                                    onclick="acceptTA('{{ $dataTA->id }}', '{{ route('apps.pengajuan-ta.accept', $dataTA->id) }}')"
+                                    class="btn btn-outline-primary btn-sm mx-1 my-1"
+                                    title="Acc">Setujui</i></button>
+                            @endcan
+                            <button
+                                onclick="rejectTA('{{ $dataTA->id }}', '{{ route('apps.pengajuan-ta.reject', $dataTA->id) }}')"
+                                class="btn btn-outline-danger btn-sm mx-1 my-1"
+                                title="Reject">Tolak</button>
+                        @endif
+                    @endif
+                </div>
             </div>
             <hr style="border: 1.5px solid #a1a1a1;">
             <h5 class="fw-bold m-0">Informasi</h5>
@@ -163,5 +170,30 @@
                 </div>
             </div>
          </div>
+    </div>
+
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalAccLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title mt-0"></h5>
+                    <button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+                </div>
+                <form action="" method="post">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="">Catatan</label>
+                            <textarea name="catatan" class="form-control"></textarea>
+                            <i>Silahkan tuliskan catatan (opsional):</i>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary waves-effect waves-light">Simpan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 @endsection
