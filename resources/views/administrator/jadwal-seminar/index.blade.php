@@ -85,7 +85,7 @@
                     <thead>
                         <tr>
                             <th width="2%">No.</th>
-                            <th min-width="200px">Judul</th>
+                            <th width="40%">Judul</th>
                             @if (getInfoLogin()->hasRole('Admin'))
                                 <th>Mahasiswa</th>
                             @endif

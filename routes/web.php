@@ -174,6 +174,8 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::post('{ambilTawaran}/accept', [RekomendasiTopikController::class, 'accept'])->name('apps.rekomendasi-topik.accept');
         Route::post('{ambilTawaran}/reject', [RekomendasiTopikController::class, 'reject'])->name('apps.rekomendasi-topik.reject');
         Route::get('{ambilTawaran}/hapus-mahasiswa-terkait', [RekomendasiTopikController::class, 'deleteMhs'])->name('apps.hapus-mahasiswa-terkait');
+        Route::get('{ambilTawaran}/edit-topik', [RekomendasiTopikController::class, 'editTopik'])->name('apps.edit-topik-terkait');
+        Route::post('{ambilTawaran}/update-topik', [RekomendasiTopikController::class, 'updateTopik'])->name('apps.update-topik-terkait');
     });
     
     Route::prefix('dosen')->middleware('can:read-dosen')->group(function () {
@@ -234,7 +236,7 @@ Route::prefix('apps')->middleware('auth')->group(function () {
        Route::get('{kategoriNilai}/destroy', [KategoriNilaiController::class, 'destroy'])->name('apps.kategori-nilai.delete')->middleware('can:delete-kategori-nilai'); 
     });
     
-    Route::prefix('jadwal')->middleware('can:read-jadwal')->group( function(){
+    Route::prefix('jadwal')->middleware('can:read-jadwal-seminar')->group( function(){
         Route::get('{jenis?}',[JadwalController::class, 'index'])->name('apps.jadwal');
         Route::get('{jadwal}/penilaian',[JadwalController::class, 'evaluation'])->name('apps.jadwal.penilaian');
         Route::post('{jadwal}/revisi',[JadwalController::class, 'revisi'])->name('apps.jadwal.revisi');

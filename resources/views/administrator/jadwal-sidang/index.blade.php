@@ -2,7 +2,6 @@
 
 @section('content')
 
-
     <div class="card">
         <div class="card-body">
             @if (session('success'))
@@ -36,7 +35,7 @@
                     <thead>
                         <tr>
                             <th width="2%">No.</th>
-                            <th min-width="200px">Judul</th>
+                            <th width="40%">Judul</th>
                             @if (getInfoLogin()->hasRole('Admin'))
                                 <th>Mahasiswa</th>
                             @endif
@@ -119,9 +118,16 @@
                                 <td class="mb-3 text-center">
                                     @if (getInfoLogin()->hasRole('Mahasiswa'))
                                         <a href="{{ route('apps.jadwal-seminar.detail', $item->id) }}" class="btn btn-sm btn-outline-primary my-1"><i class="bx bx-show" title="Detail"></i></a>
-                                        <a href="javascript:void(0);" onclick="uploadFileSeminar('{{ $item->id }}', '{{ route('apps.jadwal-seminar.unggah-berkas', $item->id) }}')" class="btn btn-sm btn-outline-dark"><i class="bx bx-file"></i>
-                                            Unggah
-                                        </a>
+                                        @if($item->status == 'belum_terjadwal')
+                                            <a href="javascript:void(0);" onclick="daftarSidang('{{ $item->id }}', '{{ route('apps.jadwal-seminar.unggah-berkas', $item->id) }}')" class="btn btn-sm btn-outline-dark"><i class="bx bx-file"></i>
+                                                Daftar
+                                            </a>
+                                            @else 
+                                            <a href="javascript:void(0);" onclick="unggahFile('{{ $item->id }}', '{{ route('apps.jadwal-seminar.unggah-berkas', $item->id) }}')" class="btn btn-sm btn-outline-dark"><i class="bx bx-file"></i>
+                                                Unggah
+                                            </a>
+                                        @endif
+                                        @include('administrator.jadwal-sidang.partials.modal')
                                     @endif
                                 </td>
                             </tr>
@@ -135,5 +141,24 @@
             </div>
         </div>
     </div>
+
+    @section('js')
+    <script>
+        function uploadFileSeminar(id, url) {
+            $('#id_jadwal_seminar').val(id);
+            $('#url_unggah_berkas').val(url);
+            $('#myModalUpload').find('form').trigger('reset');
+            $('#myModalUpload').find('form').attr("action", url);
+            $('#myModalUpload').modal('show');
+        }
+
+        function changeFile(target) {
+            var filename = $(target).find('[type="file"]').prop('files')[0].name;
+            $(target).find('.file-desc').html(filename);
+            $(target).find('.file-icon').attr('class', 'file-icon mdi mdi-alert-circle-outline text-warning');
+            $(target).find('.file-btn').html('Ganti');
+        }
+    </script>
+    @endsection
     
 @endsection

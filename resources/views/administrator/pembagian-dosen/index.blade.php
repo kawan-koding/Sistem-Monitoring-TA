@@ -67,42 +67,42 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>
                                         <span class="badge {{ isset($item->status) ? ($item->status == 'acc' ? 'badge-soft-success' : ($item->status == 'draft' ? 'bg-dark-subtle text-body' : 'badge-soft-danger')) : '-'}} small mb-1"> {{ ucfirst($item->status ?? '-')}} </span>
-                                        <p class="m-0"><strong>{{ $item->judul }}</strong></p>
+                                        <p class="m-0 small font-size-14"><strong>{{ $item->judul }}</strong></p>
                                         <p class="m-0 text-muted small">{{ $item->topik->nama_topik }} - {{ $item->jenis_ta->nama_jenis}}</p>
                                     </td>
-                                    <td>{{ $item->mahasiswa->nama_mhs }}</td>
+                                    <td><p class="small m-0">{{ $item->mahasiswa->nama_mhs }}</p></td>
                                     <td>
-                                        <strong>Pembimbing</strong>
+                                        <p class="fw-bold small m-0">Pembimbing</p>
                                         <ol>
                                         @for ($i = 0; $i < 2; $i++)
                                             @if ($item->bimbing_uji()->where('jenis', 'pembimbing')->count() > $i)
                                                 @foreach ($item->bimbing_uji as $pemb)
                                                     @if ($pemb->jenis == 'pembimbing' && $pemb->urut == 1 && $i == 0)
-                                                        <li>{{ $pemb->dosen->name ?? '-' }}</li>
+                                                        <li class="small">{{ $pemb->dosen->name ?? '-' }}</li>
                                                     @endif
                                                     @if ($pemb->jenis == 'pembimbing' && $pemb->urut == 2 && $i == 1)
-                                                        <li>{{ $pemb->dosen->name ?? '-' }}</li>
+                                                        <li class="small">{{ $pemb->dosen->name ?? '-' }}</li>
                                                     @endif
                                                 @endforeach
                                             @else
-                                                <li>-</li>
+                                                <li class="small">-</li>
                                             @endif
                                         @endfor
                                         </ol>
-                                        <strong>Penguji</strong>
+                                        <p class="fw-bold small m-0">Penguji</p>
                                         <ol>
                                         @for ($i = 0; $i < 2; $i++)
                                             @if ($item->bimbing_uji()->where('jenis', 'penguji')->count() > $i)    
                                                 @foreach ($item->bimbing_uji as $pemb)
                                                     @if ($pemb->jenis == 'penguji' && $pemb->urut == 1 && $i == 0)
-                                                        <li>{{ $pemb->dosen->name ?? '-' }}</li>
+                                                        <li class="small">{{ $pemb->dosen->name ?? '-' }}</li>
                                                     @endif
                                                     @if ($pemb->jenis == 'penguji' && $pemb->urut == 2 && $i == 1)
-                                                        <li>{{ $pemb->dosen->name ?? '-' }}</li>
+                                                        <li class="small">{{ $pemb->dosen->name ?? '-' }}</li>
                                                     @endif
                                                 @endforeach
                                             @else
-                                                <li>-</li>
+                                                <li class="small">-</li>
                                             @endif
                                         @endfor
                                         </ol>

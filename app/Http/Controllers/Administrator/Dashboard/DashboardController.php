@@ -10,6 +10,7 @@ use App\Models\KuotaDosen;
 use App\Models\TugasAkhir;
 use Illuminate\Http\Request;
 use App\Models\RekomendasiTopik;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 
 class DashboardController extends Controller
@@ -55,7 +56,10 @@ class DashboardController extends Controller
     private function mahasiswa()
     {
         $mhs = getInfoLogin()->userable;
-        $topik = RekomendasiTopik::where('status', 'Disetujui')->where('kuota', '!=', 0)->latest()->take(3)->get();
+        $prodi = $mhs->programStudi;
+        $topik = RekomendasiTopik::where('status', 'Disetujui')->whereHas('ambilTawaran', function ($q) {
+                $q->where('status', 'Disetujui');
+            }, '<', DB::raw('kuota'))->where('program_studi_id', $prodi->id)->take(3)->get();
         $tugasAkhir = TugasAkhir::with(['mahasiswa','jenis_ta','topik','periode_ta','bimbing_uji'])->where('mahasiswa_id', $mhs->id)->first();
         return [
             'mhs' => $mhs,
@@ -84,8 +88,8 @@ class DashboardController extends Controller
     {
         $user = getInfoLogin()->userable;
         $prodi = $user->programStudi->id;
-        $belumAcc = RekomendasiTopik::where('status','Menunggu')->get();
-        $sudahAcc = RekomendasiTopik::where('status','Disetujui')->get();
+        $belumAcc = RekomendasiTopik::where('status','Menunggu')->where('program_studi_id', $prodi)->get();
+        $sudahAcc = RekomendasiTopik::where('status','Disetujui')->where('program_studi_id', $prodi)->get();
         $taDraft = TugasAkhir::where('status','draft')->whereHas('mahasiswa', function($query) use ($prodi) {
             $query->where('program_studi_id', $prodi);
         })->get();

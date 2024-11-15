@@ -6,36 +6,34 @@
         <div class="card">
             <div class="card-body">
                 @can('update-kuota')
-                    <button onclick="tambahData()" class="btn btn-primary"><i class="fa fa-plus"></i> Tambah</button>
+                <button onclick="tambahData()" class="btn btn-primary"><i class="fa fa-plus"></i> Tambah</button>
                 @endcan
-                    <hr>
-                    @if(session('success'))
-                        <div class="alert alert-success alert-dismissible fade show" role="alert">
-                            <i class="mdi mdi-check-all me-2"></i> {{ session('success') }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-                            </button>
-                        </div>
-                    @endif
-
-                    @if(session('error'))
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            <i class="mdi mdi-block-helper me-2"></i>{{ session('error') }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-                            </button>
-                        </div>
-                    @endif
-                    
-                    @if ($errors->any())
-                        <div class="alert alert-error alert-danger alert-dismissible fade show" role="alert">
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-                            </button>
-                        </div>
-                    @endif
+                <hr>
+                @if(session('success'))
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <i class="mdi mdi-check-all me-2"></i> {{ session('success') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                        </button>
+                    </div>
+                @endif
+                @if(session('error'))
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="mdi mdi-block-helper me-2"></i>{{ session('error') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                        </button>
+                    </div>
+                @endif
+                @if ($errors->any())
+                    <div class="alert alert-error alert-danger alert-dismissible fade show" role="alert">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                        </button>
+                    </div>
+                @endif
                 <div class="table-responsive">
                     <table class="table table-striped" id="datatable">
                         <thead>
@@ -51,15 +49,13 @@
                         </thead>
                         <tbody>
                             @foreach ($data as $item)
-                            <?php
-                                $kuota = \App\Models\KuotaDosen::where('dosen_id', $item->id)->where('periode_ta_id', $periode->id)->first();
-                            ?>
+                            <?php $kuota = \App\Models\KuotaDosen::where('dosen_id', $item->id)->where('periode_ta_id', $periode->id)->first(); ?>
                             <tr>
                                 <td>{{$loop->iteration}}</td>
                                 <td>{{$item->nip}}</td>
                                 <td>
                                     <div class="d-flex align-items-center">
-                                        <div class="">
+                                        <div>
                                             <strong>{{ucfirst($item->name)}}</strong>
                                             <p class="m-0 p-0 text-muted small">NIDN : {{$item->nidn}}</p>
                                         </div>

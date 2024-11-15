@@ -294,5 +294,19 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('load', () => {
     aos_init();
   });
-
 });
+
+
+function toggleDescription(element) {
+    const shortDescription = element.previousElementSibling.previousElementSibling;
+    const fullDescription = element.previousElementSibling;
+    if (fullDescription.classList.contains('d-none')) {
+        fullDescription.classList.remove('d-none');
+        shortDescription.classList.add('d-none');
+        element.innerText = "Lebih Sedikit";
+    } else {
+        fullDescription.classList.add('d-none');
+        shortDescription.classList.remove('d-none');
+        element.innerText = "Selengkapnya";
+    }
+}

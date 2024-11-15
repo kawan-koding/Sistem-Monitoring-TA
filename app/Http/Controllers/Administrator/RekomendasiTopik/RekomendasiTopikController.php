@@ -20,7 +20,7 @@ use App\Http\Requests\RekomendasiTopik\RekomendasiTopikRequest;
 
 class RekomendasiTopikController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $user = getInfoLogin()->userable;
         $query = RekomendasiTopik::with(['dosen', 'jenisTa', 'ambilTawaran']);
@@ -28,23 +28,28 @@ class RekomendasiTopikController extends Controller
             $dosen = Dosen::where('id', $user->id)->first();
             $query->where('dosen_id', $dosen->id);
         }
-
         if (session('switchRoles') == 'Mahasiswa') {
             $prodi = $user->programStudi;
-            // $query->where('kuota', '!=', '0')->where('status', 'Disetujui')->whereHas('ambilTawaran', function ($q) use ($user) {
-            //     $q->where('mahasiswa_id', '!=', $user->id);
-            //     $q->where('status', '!=', 'Disetujui');
-            // });
-            $query->where('program_studi_id', $prodi->id);
+            $query->where('program_studi_id', $prodi->id)->where('status', 'Disetujui')
+                ->whereDoesntHave('ambilTawaran', function ($q) use ($user) {
+                    $q->where('mahasiswa_id', $user->id)
+                        ->where('status', 'Disetujui');
+                })
+                ->where(function ($query) {
+                    $query->whereHas('ambilTawaran', function ($q) {
+                        $q->where('status', 'Disetujui');
+                    }, '<', DB::raw('kuota'));
+                });
         }
-
         if (session('switchRoles') == 'Kaprodi') {
+            if($request->has('status') && !empty($request->status) && $request->status != 'Semua') {
+                $query = $query->where('status', $request->status);
+            }
             $prodi = $user->programStudi;
             $query->where('program_studi_id', $prodi->id);
         }
-
         $q = $query->get();
-        
+
         $data = [
             'title' => 'Tawaran Tugas Akhir',
             'mods' => 'rekomendasi_topik',
@@ -60,6 +65,7 @@ class RekomendasiTopikController extends Controller
             ],
             'data' => $q,
             'prodi' => ProgramStudi::all(),
+            'status' => $request->has('status') ? $request->status : 'Semua',
             'jenisTa' => JenisTa::all(),
         ];
         return view('administrator.rekomendasi-topik.index', $data);
@@ -186,11 +192,12 @@ class RekomendasiTopikController extends Controller
     {
         $request->validate([
             'description' => 'required',
-            'document' => 'required|max:2048',
+            'document' => 'required|max:2048|mimes:pdf',
         ],[
             'description.required' => 'Deskripsi harus diisi',
             'document.required' => 'Dokumen harus diisi',
             'document.max' => 'Dokumen maksimal 2 MB',
+            'document.mimes' => 'Dokumen harus berformat PDF',
         ]);
 
         try {
@@ -249,7 +256,7 @@ class RekomendasiTopikController extends Controller
             DB::beginTransaction();
             $kuota = $ambilTawaran->rekomendasiTopik->kuota;
             $rekomendasiTopik = $ambilTawaran->rekomendasiTopik;
-            if($kuota <= 0) {
+            if ($rekomendasiTopik->ambilTawaran()->where('status', 'Disetujui')->count() >= $kuota) {
                 return redirect()->route('apps.rekomendasi-topik.detail', $rekomendasiTopik->id)->with('error', 'Kuota sudah habis');
             }
             $ambilTawaran->update(['status' => 'Disetujui']);
@@ -257,11 +264,8 @@ class RekomendasiTopikController extends Controller
             if ($mahasiswa) {
                 // Mail::to($mahasiswa->email)->send(new RekomendasiTopikMail($rekomendasiTopik, $mahasiswa));
             }
-            $rekomendasiTopik->decrement('kuota', 1);
-            if ($rekomendasiTopik->kuota <= 0) {
-            AmbilTawaran::where('rekomendasi_topik_id', $rekomendasiTopik->id)
-                ->where('status', 'Menunggu')
-                ->update(['status' => 'Ditolak']);
+            if ($rekomendasiTopik->ambilTawaran()->where('status', 'Disetujui')->count() >= $kuota) {
+                AmbilTawaran::where('rekomendasi_topik_id', $rekomendasiTopik->id)->where('status', 'Menunggu')->update(['status' => 'Ditolak']);
             }
             DB::commit();
             return redirect()->route('apps.rekomendasi-topik.detail', $rekomendasiTopik->id)->with('success', 'Berhasil menyetujui data.');
@@ -294,12 +298,6 @@ class RekomendasiTopikController extends Controller
                 File::delete(public_path('storage/files/apply-topik/'. $ambilTawaran->file));
             }
             $ambilTawaran->delete();
-            if ($ambilTawaran->status === 'Disetujui') {
-                $rekomendasiTopik = RekomendasiTopik::find($topik);
-                if ($rekomendasiTopik) {
-                    $rekomendasiTopik->increment('kuota');
-            }
-            }
             return $this->successResponse('Berhasil menghapus data');
         } catch(\Exception $e) {
             return $this->exceptionResponse($e);
@@ -327,6 +325,42 @@ class RekomendasiTopikController extends Controller
             return redirect()->route('apps.rekomendasi-topik')->with('success', 'Berhasil menolak data');
         } catch (\Exception $e) {
             return redirect()->route('apps.rekomendasi-topik')->with($e->getMessage());
+        }
+    }
+
+    public function editTopik(AmbilTawaran $ambilTawaran) 
+    {
+        return response()->json($ambilTawaran);
+    }  
+
+    public function updateTopik(AmbilTawaran $ambilTawaran, Request $request)
+    {
+        $request->validate([
+            'description' => 'required',
+            'document' => 'nullable|max:2048|mimes:pdf',
+        ],[
+            'description.required' => 'Deskripsi harus diisi',
+            'document.max' => 'Dokumen maksimal 2 MB',
+            'document.mimes' => 'Dokumen harus berformat PDF',
+        ]);
+
+        try {
+            if($request->hasFile('document')) {
+                $file = $request->file('document');
+                $filename = 'Lampiran_'. rand(0, 999999999) .'_'. rand(0, 999999999) .'.'. $file->getClientOriginalExtension();
+                $file->move(public_path('storage/files/apply-topik'), $filename);
+            } else {
+                $filename = $ambilTawaran->file;
+            }
+
+            $ambilTawaran->update([
+                'description' => $request->description,
+                'file' => $filename,
+            ]);
+
+            return redirect()->route('apps.topik-yang-diambil')->with('success', 'Berhasil memperbarui data');
+        } catch (\Exception $e) {
+            return redirect()->route('apps.topik-yang-diambil')->with($e->getMessage());
         }
     }
 

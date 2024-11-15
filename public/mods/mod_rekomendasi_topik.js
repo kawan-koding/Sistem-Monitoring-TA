@@ -37,11 +37,13 @@ function editData(id, urlShow) {
 $(document).ready(function() {
     $(document).on('click', '*[data-toggle="get-topik"]', function () {
         const id = $(this).data('id');
-        $('#myImportFormulir').attr('action', `${BASE_URL}/apps/rekomendasi-topik/${id}/mengambil-topik`);
+        $('#myModalAction').attr('action', `${BASE_URL}/apps/rekomendasi-topik/${id}/mengambil-topik`);
         $('#myModalLabelApply').html('Ambil Topik');
         $('#description').val('');
         $('#myModalApply').modal('show');
     });
+
+
 
     $(document).on('click', '*[data-toggle="reject-mhs"]', function (e) {
         e.preventDefault();
@@ -229,3 +231,32 @@ function hapusMahasiswaTerkait(e, url) {
         }
     });
 };
+
+function editTopikTerkait(id, urlShow) {
+    $('#myModalAction').attr("action", `${BASE_URL}/apps/rekomendasi-topik/${id}/update-topik`);
+    $('#myModalLabelApply').html('Ubah Topik Yang Diambil');
+    
+    $.ajax({
+        url: urlShow,
+        type: "GET",
+        dataType: "json",
+        success: function (response) {
+            console.log(response);
+            $('#description').val(response.description);
+            if (response.file) {
+                $('#documentLink').html(`
+                    <a href = "${BASE_URL}/storage/files/apply-topik/${response.file}"target = "_blank" class="text-primary small">Lihat Dokumen</a>
+                `);
+            } else {
+                // Sembunyikan link jika tidak ada dokumen
+                $('#documentLink').html('');
+            }
+        },
+
+        error: function (xhr, status, error) {
+            console.error(xhr.responseText);
+        }
+    });
+
+    $('#myModalApply').modal('show');
+}

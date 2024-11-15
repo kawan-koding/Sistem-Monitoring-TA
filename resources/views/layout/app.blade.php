@@ -7,9 +7,9 @@
             </a>
             <nav id="navbar" class="navbar">
                 <ul>
-                    <li><a class="nav-link scrollto" href="#hero-fullscreen">Beranda</a></li>
-                    <li><a class="nav-link scrollto" href="#tawaran-topik">Tawaran Topik</a></li>
-                    <li><a class="nav-link scrollto" href="#judul-tugas-akhir">Tugas Akhir</a></li>
+                   <li><a class="nav-link scrollto {{ request()->routeIs('home') ? 'active' : ''}}" href="{{ route('home')}}">Beranda</a></li>
+                    <li><a class="nav-link scrollto {{ request()->routeIs('guest.rekomendasi-topik') ? 'active' : ''}}" href="{{ route('guest.rekomendasi-topik')}}">Tawaran Topik</a></li>
+                    <li><a class="nav-link scrollto {{ request()->routeIs('guest.judul-tugas-akhir') ? 'active' : ''}}" href="{{ route('guest.judul-tugas-akhir')}}">Tugas Akhir</a></li>
                     <li><a class="nav-link scrollto" href="#jadwal">Jadwal</a></li>
                 </ul>
                 <i class="bi bi-list mobile-nav-toggle d-none"></i>

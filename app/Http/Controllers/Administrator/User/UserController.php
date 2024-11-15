@@ -49,7 +49,7 @@ class UserController extends Controller
                 $filename = 'Users_'. rand(0, 999999999) .'_'. rand(0, 999999999) .'.'. $file->getClientOriginalExtension();
                 $file->move(public_path('storage/images/users'), $filename);
             } else {
-                $filename = 'default.jpg';
+                $filename = 'default.png';
             }
 
             $request->merge(['password' => Hash::make($request->password), 'image' => $filename]);

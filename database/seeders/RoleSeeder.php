@@ -67,6 +67,7 @@ class RoleSeeder extends Seeder
             'read-kategori-nilai','create-kategori-nilai','update-kategori-nilai','delete-kategori-nilai',
             'read-jenis-dokumen','create-jenis-dokumen','update-jenis-dokumen','delete-jenis-dokumen',
             'read-pemberkasan','create-pemberkasan',
+            'read-daftar-sidang','create-daftar-sidang','update-daftar-sidang','delete-daftar-sidang',
         ]);
 
         $kaprodi->givePermissionTo([

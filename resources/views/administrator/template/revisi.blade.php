@@ -204,7 +204,9 @@
                 PROGRAM STUDI TEKNOLOGI REKAYASA PERANGKAT LUNAK <br>
                 POLITEKNIK NEGERI BANYUWANGI
             </h5>
-            <button id="print" class="no-print">Cetak</button>
+            @if ($loop->first)
+                <button id="print" class="no-print">Cetak</button>
+            @endif
             <table>
                 <tr>
                     <td width="30%">Nama</td>
@@ -264,6 +266,8 @@
             </div>
         </div>
     </div>
+
+    <hr class="no-print">
 
     @if (!$loop->last)
         <div class="page-break"></div>

@@ -26,9 +26,10 @@ class JadwalSidangController extends Controller
             }
         }
 
-        $docSeminar = JenisDokumen::whereIn('jenis', ['seminar', 'pra_seminar'])->get();
+        $docSidang = JenisDokumen::whereIn('jenis', ['sidang', 'pra_sidang'])->get();
         $data = [
             'title' =>  'Jadwal Sidang',
+            'mods' => 'jadwal_sidang',
             'breadcrumbs' =>[
                 [
                     'title' => 'Dashboard',
@@ -40,7 +41,7 @@ class JadwalSidangController extends Controller
                 ]
             ],
             'data' => $query,
-            'document_seminar' => $docSeminar,
+            'document_sidang' => $docSidang,
         ];
         
         return view('administrator.jadwal-sidang.index', $data);
