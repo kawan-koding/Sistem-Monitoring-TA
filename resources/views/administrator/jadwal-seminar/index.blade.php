@@ -77,8 +77,8 @@
                             </a>
                         </li>
                     </ul>
-                @endcan
-            @endif
+                    @endcan
+                @endif
 
             <div class="table-responsive">
                 <table class="table table-striped" id="datatable">
@@ -99,28 +99,6 @@
                     </thead>
                     <tbody>
                         @forelse ($data as $item)
-                            @foreach ($item->tugas_akhir->bimbing_uji as $bimuj)
-                                @if ($bimuj->jenis == 'pembimbing' && $bimuj->urut == 1)
-                                    @php
-                                        $item_pemb_1 = $bimuj->dosen->name;
-                                    @endphp
-                                @endif
-                                @if ($bimuj->jenis == 'pembimbing' && $bimuj->urut == 2)
-                                    @php
-                                        $item_pemb_2 = $bimuj->dosen->name;
-                                    @endphp
-                                @endif
-                                @if ($bimuj->jenis == 'penguji' && $bimuj->urut == 1)
-                                    @php
-                                        $item_peng_1 = $bimuj->dosen->name;
-                                    @endphp
-                                @endif
-                                @if ($bimuj->jenis == 'penguji' && $bimuj->urut == 2)
-                                    @php
-                                        $item_peng_2 = $bimuj->dosen->name;
-                                    @endphp
-                                @endif
-                            @endforeach
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>
@@ -129,32 +107,56 @@
                                             class="badge small mb-1 {{ !is_null($item->tugas_akhir->status_seminar) ? ($item->tugas_akhir->status_seminar == 'acc' ? 'badge-soft-success' : ($item->tugas_akhir->status_seminar == 'revisi' ? 'badge-soft-success' : 'badge-soft-danger')) : '' }}">{{ !is_null($item->tugas_akhir->status_seminar) ? ($item->tugas_akhir->status_seminar == 'acc' ? 'Disetujui' : ($item->tugas_akhir->status_seminar == 'revisi' ? 'Disetujui dengan revisi' : 'Ditolak')) : 'Belum Seminar' }}</span>
                                     @endif
                                     <a href="{{ route('apps.jadwal-seminar.detail', $item->id) }}">
-                                        <h5 class="fw-bold m-0">{{ $item->tugas_akhir->judul }}</h5>
+                                        <h5 class="small font-size-14 m-0">{{ $item->tugas_akhir->judul }}</h5>
                                     </a>
                                     <p class="m-0 text-muted small">{{ $item->tugas_akhir->topik->nama_topik }} -
                                         {{ $item->tugas_akhir->jenis_ta->nama_jenis }}</p>
                                 </td>
                                 @if (getInfoLogin()->hasRole('Admin'))
-                                    <td>{{ $item->tugas_akhir->mahasiswa->nama_mhs }}</td>
+                                    <td><p class="small">{{ $item->tugas_akhir->mahasiswa->nama_mhs }}</p></td>
                                 @endif
                                 <td>
-                                    <strong>Pembimbing</strong>
+                                    <p class="fw-bold small m-0">Pembimbing</p>
                                     <ol>
-                                        <li>{{ $item_pemb_1 ?? '-' }}</li>
-                                        <li>{{ $item_pemb_2 ?? '-' }}</li>
+                                    @for ($i = 0; $i < 2; $i++)
+                                        @if ($item->tugas_akhir->bimbing_uji()->where('jenis', 'pembimbing')->count() > $i)
+                                            @foreach ($item->tugas_akhir->bimbing_uji as $pemb)
+                                                @if ($pemb->jenis == 'pembimbing' && $pemb->urut == 1 && $i == 0)
+                                                    <li class="small">{{ $pemb->dosen->name ?? '-' }}</li>
+                                                @endif
+                                                @if ($pemb->jenis == 'pembimbing' && $pemb->urut == 2 && $i == 1)
+                                                    <li class="small">{{ $pemb->dosen->name ?? '-' }}</li>
+                                                @endif
+                                            @endforeach
+                                        @else
+                                            <li class="small">-</li>
+                                        @endif
+                                    @endfor
                                     </ol>
-                                    <strong>Penguji</strong>
+                                    <p class="fw-bold small m-0">Penguji</p>
                                     <ol>
-                                        <li>{{ $item_peng_1 ?? '-' }}</li>
-                                        <li>{{ $item_peng_2 ?? '-' }}</li>
+                                    @for ($i = 0; $i < 2; $i++)
+                                        @if ($item->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->count() > $i)    
+                                            @foreach ($item->tugas_akhir->bimbing_uji as $pemb)
+                                                @if ($pemb->jenis == 'penguji' && $pemb->urut == 1 && $i == 0)
+                                                    <li class="small">{{ $pemb->dosen->name ?? '-' }}</li>
+                                                @endif
+                                                @if ($pemb->jenis == 'penguji' && $pemb->urut == 2 && $i == 1)
+                                                    <li class="small">{{ $pemb->dosen->name ?? '-' }}</li>
+                                                @endif
+                                            @endforeach
+                                        @else
+                                            <li class="small">-</li>
+                                        @endif
+                                    @endfor
                                     </ol>
                                 </td>
                                 <td>
                                     <strong>{{ isset($item->ruangan->nama_ruangan) ? $item->ruangan->nama_ruangan : '-' }}</strong>
-                                    <p class="m-0">Tanggal:
+                                    <p class="m-0 small">Tanggal:
                                         {{ $item->tanggal ? Carbon\Carbon::parse($item->tanggal)->format('d/m/Y') : ' -' }}
                                     </p>
-                                    <p class="m-0">Waktu:
+                                    <p class="m-0 small">Waktu:
                                         {{ $item->jam_mulai ? Carbon\Carbon::parse($item->jam_mulai)->format('H:i') : '' }}
                                         -
                                         {{ $item->jam_selesai ? Carbon\Carbon::parse($item->jam_selesai)->format('H:i') : '' }}

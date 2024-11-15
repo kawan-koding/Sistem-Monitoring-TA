@@ -15,17 +15,41 @@ class JadwalSidangController extends Controller
     {
         $query = [];
         $periode = PeriodeTa::where('is_active', 1)->first();
-
+        $query = Sidang::with(['tugas_akhir']);
         if(getInfoLogin()->hasRole('Mahasiswa')) {
             $myId = getInfoLogin()->userable;
             $mahasiswa = Mahasiswa::where('id', $myId->id)->first();
             if($mahasiswa) {
-                $query = Sidang::whereHas('tugas_akhir', function ($q) use($periode, $mahasiswa) {
+                $query->whereHas('tugas_akhir', function ($q) use($periode, $mahasiswa) {
                     $q->where('periode_ta_id', $periode->id)->where('mahasiswa_id', $mahasiswa->id);
-                })->get();
+                });
+                $query = $query->get();
             }
         }
 
+        if(getInfoLogin()->hasRole('Admin')) {
+            if($request->has('tanggal') && !empty($request->tanggal)) {
+                $query = $query->whereDate('tanggal', $request->tanggal);
+            }
+
+            if($request->has('status') && !empty($request->status)) {
+                $query = $query->where('status', $request->status);
+            } else {
+                $query = $query->where('status', 'belum_terjadwal');
+            }
+            $query = $query->get();
+
+            $query = $query->map(function($item) {
+                $jenisDocument = JenisDokumen::whereIn('jenis', ['sidang', 'pra_sidang'])->count();
+                $jenisDocumentComplete = JenisDokumen::whereIn('jenis', ['sidang', 'pra_sidang'])->whereHas('pemberkasan', function($q) use ($item) {
+                    $q->where('tugas_akhir_id', $item->tugas_akhir->id);
+                })->count();
+                $item->document_complete = $jenisDocument - $jenisDocumentComplete == 0;
+                return $item;
+            });
+        }
+
+        // dd($query);
         $docSidang = JenisDokumen::whereIn('jenis', ['sidang', 'pra_sidang'])->get();
         $data = [
             'title' =>  'Jadwal Sidang',
@@ -41,6 +65,7 @@ class JadwalSidangController extends Controller
                 ]
             ],
             'data' => $query,
+            'status' => $request->has('status') ? $request->status : null,
             'document_sidang' => $docSidang,
         ];
         
