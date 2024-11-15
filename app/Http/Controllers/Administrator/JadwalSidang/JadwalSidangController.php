@@ -7,6 +7,7 @@ use App\Models\Mahasiswa;
 use App\Models\PeriodeTa;
 use App\Models\JenisDokumen;
 use Illuminate\Http\Request;
+use App\Models\KategoriNilai;
 use App\Http\Controllers\Controller;
 
 class JadwalSidangController extends Controller
@@ -35,7 +36,7 @@ class JadwalSidangController extends Controller
             if($request->has('status') && !empty($request->status)) {
                 $query = $query->where('status', $request->status);
             } else {
-                $query = $query->where('status', 'belum_terjadwal');
+                $query = $query->where('status', 'belum_daftar');
             }
             $query = $query->get();
 
@@ -49,7 +50,6 @@ class JadwalSidangController extends Controller
             });
         }
 
-        // dd($query);
         $docSidang = JenisDokumen::whereIn('jenis', ['sidang', 'pra_sidang'])->get();
         $data = [
             'title' =>  'Jadwal Sidang',
@@ -70,5 +70,45 @@ class JadwalSidangController extends Controller
         ];
         
         return view('administrator.jadwal-sidang.index', $data);
+    }
+
+    public function show(Sidang $sidang)
+    {
+        $recapPemb1 = $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'pembimbing')->where('urut', 1)->first()->penilaian()->where('type', 'Seminar')->sum('nilai');
+        $recapPemb1 = $recapPemb1 > 0 ? $recapPemb1 / $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'pembimbing')->where('urut', 1)->first()->penilaian()->where('type', 'Seminar')->count() : 0;
+        $recapPemb2 = $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'pembimbing')->where('urut', 2)->first()->penilaian()->where('type', 'Seminar')->sum('nilai');
+        $recapPemb2 = $recapPemb2 > 0 ? $recapPemb2 / $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'pembimbing')->where('urut', 2)->first()->penilaian()->where('type', 'Seminar')->count() : 0;
+        $recapPenguji1 = $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 1)->first()->penilaian()->where('type', 'Seminar')->sum('nilai');
+        $recapPenguji1 = $recapPenguji1 > 0 ? $recapPenguji1 / $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 1)->first()->penilaian()->where('type', 'Seminar')->count() : 0;
+        $recapPenguji2 = $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 2)->first()->penilaian()->where('type', 'Seminar')->sum('nilai');
+        $recapPenguji2 = $recapPenguji2 > 0 ? $recapPenguji2 / $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 2)->first()->penilaian()->where('type', 'Seminar')->count() : 0;
+
+        $data = [
+            'title' => 'Jadwal Sidang',
+            'breadcrumbs' => [
+                [
+                    'title' => 'Dashboard',
+                    'url' => route('apps.dashboard'),
+                ],
+                [
+                    'title' => 'Jadwal Sidang',
+                    'url' => route('apps.jadwal-sidang'),
+                ],
+                [
+                    'title' => 'Detail',
+                    'is_active' => true
+                ]
+            ],
+            'data' => $sidang,
+            'kategoriNilais' => KategoriNilai::all(),
+            'bimbingUjis' => $sidang->tugas_akhir->bimbing_uji()->orderBy('jenis', 'desc')->orderBy('urut', 'asc')->get(),
+            'recapPemb1' => $recapPemb1,
+            'recapPemb2' => $recapPemb2,
+            'recapPenguji1' => $recapPenguji1,
+            'recapPenguji2' => $recapPenguji2
+        ];
+
+        return view('administrator.jadwal-sidang.detail', $data);
+
     }
 }

@@ -62,21 +62,21 @@
                         <a class="nav-link @if (url()->full() == route('apps.jadwal-sidang')) active @endif"
                             href="{{ route('apps.jadwal-sidang') }}">
                             <span class="d-block d-sm-none"><i class="bx bx-timer"></i></span>
-                            <span class="d-none d-sm-block">Belum Terjadwal</span>
+                            <span class="d-none d-sm-block">Belum Daftar</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link @if (url()->full() == route('apps.jadwal-sidang', ['status' => 'sudah_terjadwal'])) active @endif"
-                            href="{{ route('apps.jadwal-sidang', ['status' => 'sudah_terjadwal']) }}">
+                        <a class="nav-link @if (url()->full() == route('apps.jadwal-sidang', ['status' => 'sudah_daftar'])) active @endif"
+                            href="{{ route('apps.jadwal-sidang', ['status' => 'sudah_daftar']) }}">
                             <span class="d-block d-sm-none"><i class="bx bx-list-check"></i></span>
-                            <span class="d-none d-sm-block">Sudah Terjadwal</span>
+                            <span class="d-none d-sm-block">Sudah Daftar</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link @if (url()->full() == route('apps.jadwal-sidang', ['status' => 'telah_seminar'])) active @endif"
-                            href="{{ route('apps.jadwal-sidang', ['status' => 'telah_seminar']) }}">
+                        <a class="nav-link @if (url()->full() == route('apps.jadwal-sidang', ['status' => 'sudah_sidang'])) active @endif"
+                            href="{{ route('apps.jadwal-sidang', ['status' => 'sudah_sidang']) }}">
                             <span class="d-block d-sm-none"><i class="bx bx-check-circle"></i></span>
-                            <span class="d-none d-sm-block">Telah Diseminarkan</span>
+                            <span class="d-none d-sm-block">Telah Sidang</span>
                         </a>
                     </li>
                 </ul>
@@ -90,9 +90,9 @@
                             <th width="2%">No.</th>
                             <th width="40%">Judul</th>
                             @if (getInfoLogin()->hasRole('Admin'))
-                                <th>Mahasiswa</th>
+                            <th>Mahasiswa</th>
                             @endif
-                            <th>Dosen</th>
+                            <th width="20%">Dosen</th>
                             <th>Ruangan</th>
                             @if (getInfoLogin()->hasRole('Admin'))
                                 <th>Status</th>
@@ -171,8 +171,8 @@
                                     </td>
                                 @endif
                                 <td class="mb-3 text-center">
+                                    <a href="{{ route('apps.jadwal-sidang.detail', $item->id) }}" class="btn btn-sm btn-outline-primary my-1" title="Detail Sidang"><i class="bx bx-show" ></i></a>
                                     @if (getInfoLogin()->hasRole('Mahasiswa'))
-                                        <a href="{{ route('apps.jadwal-seminar.detail', $item->id) }}" class="btn btn-sm btn-outline-primary my-1"><i class="bx bx-show" title="Detail"></i></a>
                                         @if($item->status == 'belum_terjadwal')
                                             <a href="javascript:void(0);" onclick="daftarSidang('{{ $item->id }}', '{{ route('apps.jadwal-seminar.unggah-berkas', $item->id) }}')" class="btn btn-sm btn-outline-dark"><i class="bx bx-file"></i>
                                                 Daftar

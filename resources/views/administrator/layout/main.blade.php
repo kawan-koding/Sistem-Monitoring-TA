@@ -4,7 +4,7 @@
     <div class="main-content">
 
         <div class="page-content">
-            <div class="row mb-5 mb-md-0">
+            <div class="row mb-5 mb-lg-0">
                 <div class="col-12">
                     <div class="page-title-box d-flex align-items-center justify-content-between">
                         <h4 class="page-title mb-0 font-size-18">{{ $title }}</h4>

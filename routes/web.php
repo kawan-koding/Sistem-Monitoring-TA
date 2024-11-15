@@ -264,6 +264,7 @@ Route::prefix('apps')->middleware('auth')->group(function () {
 
     Route::prefix('jadwal-sidang')->middleware('can:read-daftar-sidang')->group( function() {
        Route::get('',[JadwalSidangController::class,'index'])->name('apps.jadwal-sidang'); 
+       Route::get('{sidang}/detail-sidang',[JadwalSidangController::class,'show'])->name('apps.jadwal-sidang.detail'); 
     });
 
     Route::prefix('profile-dosen')->group( function() {

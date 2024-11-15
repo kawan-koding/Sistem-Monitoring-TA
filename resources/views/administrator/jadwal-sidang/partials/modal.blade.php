@@ -9,7 +9,7 @@
             <form action="" id="daftarSidangAction" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
-                    @if ($item->status == 'belum_terjadwal')
+                    @if ($item->status == 'belum_daftar')
                         @foreach ($document_sidang->where('jenis', 'pra_sidang') as $key => $doc)
                             @php $document = $doc->pemberkasan()->where('tugas_akhir_id', $item->tugas_akhir->id)->first(); @endphp
                             <div class="d-flex align-items-center gap-2 mb-3 " id="document{{ $doc->id }}">

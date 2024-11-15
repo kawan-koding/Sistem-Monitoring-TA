@@ -91,7 +91,7 @@
                             @if (getInfoLogin()->hasRole('Admin'))
                                 <th>Mahasiswa</th>
                             @endif
-                            <th>Dosen</th>
+                            <th width="20%">Dosen</th>
                             <th>Ruangan</th>
                             @if (getInfoLogin()->hasRole('Admin'))
                                 <th>Status</th>

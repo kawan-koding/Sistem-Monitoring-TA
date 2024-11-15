@@ -71,31 +71,31 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>
                                         <span class="badge {{ isset($item->status) ? ($item->status == 'acc' ? 'badge-soft-success' : ($item->status == 'draft' ? 'bg-dark-subtle text-body' : 'badge-soft-danger')) : '-'}} small mb-1"> {{ ucfirst($item->status ?? '-')}} </span>
-                                        <p class="m-0"><strong>{{ $item->judul }}</strong></p>
-                                        <p class="m-0 text-muted small">{{ $item->topik->nama_topik }} - {{ $item->jenis_ta->nama_jenis}}</p>
+                                        <p class="m-0 small"><strong>{{ $item->judul }}</strong></p>
+                                        <p class="m-0 text-muted font-size-15 small">{{ $item->topik->nama_topik }} - {{ $item->jenis_ta->nama_jenis}}</p>
                                     </td>
-                                    <td>{{ $item->mahasiswa->nama_mhs }}</td>
+                                    <td><p class="small">{{ $item->mahasiswa->nama_mhs }}</p></td>
                                     <td>
-                                        <strong>Pembimbing</strong>
+                                        <p class="fw-bold small m-0">Pembimbing</p>
                                         <ol>
                                             @foreach ($item->bimbing_uji->where('jenis', 'pembimbing')->sortBy('urut') as $pembimbing)
-                                                <li>{{ $pembimbing->dosen->name }}</li>
+                                                <li class="small">{{ $pembimbing->dosen->name }}</li>
                                             @endforeach
                                         </ol>
-                                        <strong>Penguji</strong>
+                                        <p class="fw-bold small m-0">Penguji</p>
                                         <ol>
                                           @foreach ($item->bimbing_uji->where('jenis', 'penguji')->sortBy('urut') as $penguji)
-                                            <li>{{ $penguji->dosen->name }}</li>
+                                            <li class="small">{{ $penguji->dosen->name }}</li>
                                         @endforeach
                                         </ol>
                                     </td>
-                                    <td>{{ $item->periode_ta->nama }}</td>
+                                    <td><p class="small">{{ $item->periode_ta->nama }}</p></td>
                                     <td>
                                         @can('update-daftar-ta')
-                                        <a href="{{ route('apps.daftar-ta.edit', $item)}}" class="btn btn-sm btn-outline-primary mb-3" title="Edit"><i class="bx bx-edit-alt"></i></a>
+                                        <a href="{{ route('apps.daftar-ta.edit', $item)}}" class="btn btn-sm btn-outline-primary mb-1" title="Edit"><i class="bx bx-edit-alt"></i></a>
                                         @endcan
                                         @can('read-daftar-ta')
-                                        <a href="{{ route('apps.daftar-ta.show', $item)}}" class="btn btn-sm btn-outline-warning mb-3" title="Detail"><i class="bx bx-show"></i></a>
+                                        <a href="{{ route('apps.daftar-ta.show', $item)}}" class="btn btn-sm btn-outline-warning mb-1" title="Detail"><i class="bx bx-show"></i></a>
                                         @endcan
                                         @can('delete-daftar-ta')
                                         <button onclick="hapusDaftarTa('{{ $item->id }}', '{{ route('apps.daftar-ta.delete', $item->id) }}')" class="btn btn-sm btn-outline-dark mb-3" title="Hapus"><i class="bx bx-trash"></i></button>
