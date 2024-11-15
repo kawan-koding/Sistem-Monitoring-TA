@@ -11,9 +11,9 @@
                         <span><strong>{{isset($dataTA->topik->nama_topik) ? $dataTA->topik->nama_topik : '-'}}</strong> - {{isset($dataTA->jenis_ta->nama_jenis) ? $dataTA->jenis_ta->nama_jenis : '-'}}</span>
                     </div>
                 </div>
-                <div class="col-md-2 col-12 text-end">
-                    @if (getInfoLogin()->hasRole('Kaprodi'))
-                        @if ($dataTA->status == 'draft')
+                @if (getInfoLogin()->hasRole('Kaprodi'))
+                    @if ($dataTA->status == 'draft')
+                        <div class="col-md-2 col-12 text-end">
                             @can('acc-pengajuan-tugas-akhir')
                                 <button
                                     onclick="acceptTA('{{ $dataTA->id }}', '{{ route('apps.pengajuan-ta.accept', $dataTA->id) }}')"
@@ -24,9 +24,9 @@
                                 onclick="rejectTA('{{ $dataTA->id }}', '{{ route('apps.pengajuan-ta.reject', $dataTA->id) }}')"
                                 class="btn btn-outline-danger btn-sm mx-1 my-1"
                                 title="Reject">Tolak</button>
-                        @endif
+                        </div>
                     @endif
-                </div>
+                @endif
             </div>
             <hr style="border: 1.5px solid #a1a1a1;">
             <h5 class="fw-bold m-0">Informasi</h5>
@@ -77,11 +77,11 @@
                     <br>
                     <span class="small">{{$dataTA->status == 'acc' ? 'Selesai' : ($dataTA->status == 'reject' ? 'Ditolak' : ($dataTA->status == 'draft' ? 'Sedang Berlangsung': 'Tidak Dilanjutkan'))}}</span>
                 </div>
-                <div class="w-100 px-4 py-3 fw-bold text-center border-top {{isset($dataTA->status_seminar) || $dataTA->status == 'acc' ? ($dataTA->status_seminar == 'revisi' || $dataTA->status == 'acc' ? 'border-primary bg-soft-primary text-primary' : ($dataTA->status_seminar == 'acc' ? 'border-success bg-soft-success text-success' : 'border-danger bg-soft-danger text-danger')) : 'border-secondary bg-soft-secondary text-secondary'}}" style="white-space: nowrap">
-                    <i class="bx {{$dataTA->status_seminar == 'acc' ? 'bx-check' : ($dataTA->status_seminar == 'reject' ? 'bx-x' : 'bx-timer')}}"></i> 
+                <div class="w-100 px-4 py-3 fw-bold text-center border-top {{!is_null($dataTA->status_seminar) || $dataTA->status == 'acc' ? ($dataTA->status_seminar == 'revisi' || $dataTA->status == 'acc' ? 'border-primary bg-soft-primary text-primary' : ($dataTA->status_seminar == 'acc' && $dataTA->status_pemberkasan == 'sudah_lengkap' ? 'border-success bg-soft-success text-success' : 'border-danger bg-soft-danger text-danger')) : 'border-secondary bg-soft-secondary text-secondary'}}" style="white-space: nowrap">
+                    <i class="bx {{$dataTA->status_seminar == 'acc' && $dataTA->status_pemberkasan == 'sudah_lengkap' ? 'bx-check' : ($dataTA->status_seminar == 'reject' ? 'bx-x' : 'bx-timer')}}"></i> 
                     Seminar Proposal
                     <br>
-                    <span class="small">{{isset($dataTA->status_seminar) ? ($dataTA->status_seminar == 'acc' ? 'Selesai' : ($dataTA->status_seminar == 'revisi' ? 'Sedang Berlangsung' : 'Ditolak')) : ($dataTA->status == 'acc' ? 'Sedang Berlangsung' : '')}}</span>
+                    <span class="small">{{isset($dataTA->status_seminar) ? ($dataTA->status_seminar == 'acc' && $dataTA->status_pemberkasan == 'sudah_lengkap' ? 'Selesai' : ($dataTA->status_seminar == 'rejct' ? 'Ditolak' : 'Sedang Berlangsung')) : ($dataTA->status == 'acc' ? 'Sedang Berlangsung' : '')}}</span>
                 </div>
                 <div class="w-100 px-4 py-3 fw-bold text-center border-top border-secondary bg-soft-secondary text-secondary" style="white-space: nowrap"><i class="bx bx-timer"></i> Sidang Akhir</div>
             </div>
