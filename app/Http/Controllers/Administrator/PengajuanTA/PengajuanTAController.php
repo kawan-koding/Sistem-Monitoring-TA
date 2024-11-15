@@ -46,8 +46,11 @@ class PengajuanTAController extends Controller
             if($request->has('filter') && !empty($request->filter) && $request->filter != 'semua') {
                 $query = $query->where('tipe', $request->filter);
             }
-            if($request->has('filter2') && !empty($request->filter2) && $request->filter2 != 'semua') {
-                $query = $query->where('status', $request->filter2);
+
+            if($request->has('status') && !empty($request->status)) {
+                $query = $query->whereIn('status', [$request->status, 'cancel']);
+            } else {
+                $query = $query->whereIn('status', ['draft', 'reject']);
             }
 
             $query = $query->get();
@@ -68,7 +71,7 @@ class PengajuanTAController extends Controller
             ],
             'dataTA'   => $query,
             'filter' => $request->has('filter') ? $request->filter : 'semua',
-            'filter2' => $request->has('filter2') ? $request->filter2 : 'semua',
+            'status' => $request->has('status') ? $request->status : 'draft',
         ];
         
         return view('administrator.pengajuan-ta.index', $data);
@@ -127,10 +130,10 @@ class PengajuanTAController extends Controller
         try {
             DB::beginTransaction();
             $periode = PeriodeTa::where('is_active', 1)->first();
-            if(!is_null($periode) && !Carbon::parse($periode->akhir_daftar)->isFuture()){
+            if(!is_null($periode) && !Carbon::parse($periode->akhir_daftar)->addDays(1)->isFuture()){
                 return redirect()->back()->with('error', 'Pengajuan Tugas Akhir melebihi batas periode');
             }
-            if(!is_null($periode) && Carbon::parse($periode->mulai_daftar)->isFuture()){
+            if(!is_null($periode) && Carbon::parse($periode->mulai_daftar)->addDays(1)->isFuture()){
                 return redirect()->back()->with('error', 'Periode pengajuan Tugas Akhir belum aktif');
             }
             $myId = Auth::user()->username;
@@ -338,6 +341,7 @@ class PengajuanTAController extends Controller
 
         $data = [
             'title' => 'Detail Pengajuan Tugas Akhir',
+            'mods' => 'pengajuan_ta',
             'breadcrumbs' => [
                 [
                     'title' => 'Dashboard',

@@ -94,9 +94,15 @@ class SettingSeeder extends Seeder
             ],
             [
                 'type' => 'general',
-                'key' => 'app_template_filing',
+                'key' => 'app_seminar_registration_template',
+                'name' => 'Template Pendaftaran Seminar',
+                'value' => 'https://drive.google.com/drive/folders/1hFQ2eb9Yj0IckQGnQLTihuWHZ2mrEhmn?usp=sharing'
+            ],
+            [
+                'type' => 'general',
+                'key' => 'app_seminar_filing_template',
                 'name' => 'Template Pemberkasan Seminar',
-                'value' => 'https://drive.google.com/file/d/1CF7BnMwtpPVVmo3fkdBsJztGabu_I3FE/view?usp=sharing'
+                'value' => 'https://drive.google.com/drive/folders/1DSsvQRO7GfK6uEPTqX68iYnNTYxBgM-U?usp=sharing'
             ],
             ]);
     }
