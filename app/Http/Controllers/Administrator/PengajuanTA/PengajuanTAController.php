@@ -127,10 +127,10 @@ class PengajuanTAController extends Controller
         try {
             DB::beginTransaction();
             $periode = PeriodeTa::where('is_active', 1)->first();
-            if(!is_null($periode) && !Carbon::parse($periode->akhir_daftar)->isFuture()){
+            if(!is_null($periode) && !Carbon::parse($periode->akhir_daftar)->addDays(1)->isFuture()){
                 return redirect()->back()->with('error', 'Pengajuan Tugas Akhir melebihi batas periode');
             }
-            if(!is_null($periode) && Carbon::parse($periode->mulai_daftar)->isFuture()){
+            if(!is_null($periode) && Carbon::parse($periode->mulai_daftar)->addDays(1)->isFuture()){
                 return redirect()->back()->with('error', 'Periode pengajuan Tugas Akhir belum aktif');
             }
             $myId = Auth::user()->username;
