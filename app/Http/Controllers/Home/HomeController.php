@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Home;
 
+use App\Models\Sidang;
 use App\Models\PeriodeTa;
 use App\Models\TugasAkhir;
 use Illuminate\Http\Request;
+use App\Models\JadwalSeminar;
 use App\Models\RekomendasiTopik;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -17,10 +19,36 @@ class HomeController extends Controller
                 $q->where('status', 'Disetujui');
             }, '<', DB::raw('kuota'))->take(5)->get();
         $tugasAkhir = TugasAkhir::with(['topik','mahasiswa','jenis_ta','bimbing_uji'])->where('status','acc')->latest()->paginate(2, ['*'], 'tugas_akhir_page', $request->get('tugas_akhir_page', 1));
+
+        $selectedDate = now();  // You can replace this with logic to dynamically select a date
+        $tab = $request->get('tab', 'seminar');  // Get the selected tab, default to 'seminar'
+
+        // Generate the next 5 weekdays (working days)
+        $weekdays = [];
+        for ($i = 1; count($weekdays) < 5; $i++) {
+            $nextDay = $selectedDate->copy()->addDays($i);
+            if ($nextDay->isWeekend()) {
+                continue;  // Skip weekends
+            }
+            $weekdays[] = $nextDay->toDateString();
+        }
+
+        // Filter seminar or sidang data
+        if ($tab == 'seminar') {
+            $jadwalSeminar = JadwalSeminar::whereIn('tanggal', $weekdays)->get();
+        }
+
+        // For 'sidang' tab
+        $jadwalSidang = Sidang::whereIn('tanggal', $weekdays)->get();
+        
         $data = [
             'title' => 'Beranda',
             'tawaran' => $tawaran,
-            'tugasAkhir' => $tugasAkhir
+            'tugasAkhir' => $tugasAkhir,
+            'jadwalSeminar' => $jadwalSeminar,
+            'jadwalSidang' => $jadwalSidang,
+            'weekdays' => $weekdays,
+            'tab' => $tab,
         ];
     
         return view('index', $data);

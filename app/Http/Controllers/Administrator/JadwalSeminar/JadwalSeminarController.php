@@ -264,9 +264,7 @@ class JadwalSeminarController extends Controller
                 }
             }
             
-            // dd($validates);
             $request->validate($validates, $messages);
-            // dd($request->all());
             
             foreach($documentTypes as $item) {
                 if($jadwalSeminar->status == 'belum_terjadwal') {
