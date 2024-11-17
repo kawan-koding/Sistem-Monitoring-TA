@@ -44,7 +44,7 @@
         </div>
         @if ($tawaran->count() > 4)
         <div class="d-flex justify-content-center" style="margin-top: 40px">
-            <a href="{{ route('guest.rekomendasi-topik') }}" class="small text-primary">Lihat Semua...</a>
+            <a href="{{ route('guest.rekomendasi-topik') }}" style="color: var(--primary-color)" class="small">Lihat Semua...</a>
         </div>
         @endif
     </section>
@@ -81,7 +81,7 @@
         </div>
         @if ($tugasAkhir->count() > 4)
         <div class="d-flex justify-content-center" style="margin-top: 40px">
-            <a href="{{ route('guest.judul-tugas-akhir') }}" class="small text-primary">Lihat Semua...</a>
+            <a href="{{ route('guest.judul-tugas-akhir') }}" style="color: var(--primary-color)" class="small">Lihat Semua...</a>
         </div>
         @endif
     </section>
@@ -89,114 +89,129 @@
     <section id="jadwal" class="jadwal" style="padding: 60px 0 100px 0">
         <div class="container">
             <h5 class="font-size-24 text-center m-0 fw-bold mb-1">Jadwal Mahasiswa</h5>
-            
-            <!-- Tabs for Seminar and Sidang -->
-            <ul class="nav nav-pills w-100 mb-1">
+            <ul class="nav nav-pills w-100 mb-2">
                 <li class="flex-fill">
-                    <a class="nav-link @if($tab == 'seminar' || !request()->has('tab')) active @endif text-center fw-bold" 
-                    href="{{ route('apps.jadwal', ['tab' => 'seminar']) }}" style="color: var(--primary-color)">
-                    Akan Seminar
+                    <a  class="nav-link text-center fw-bold {{ $activeTab === 'pra_seminar' ? 'active' : '' }}"   href="{{ url()->current() }}?active_tab=pra_seminar&tanggal={{ $tanggal }}"  style="color: var(--primary-color)">
+                        Akan Seminar
                     </a>
                 </li>
                 <li class="flex-fill">
-                    <a class="nav-link @if($tab == 'sidang') active @endif text-center fw-bold" 
-                    href="{{ route('apps.jadwal', ['tab' => 'sidang']) }}" style="color: var(--primary-color)">
-                    Akan Sidang
+                    <a class="nav-link text-center fw-bold {{ $activeTab === 'pra_sidang' ? 'active' : '' }}" href="{{ url()->current() }}?active_tab=pra_sidang&tanggal={{ $tanggal }}" style="color: var(--primary-color)">
+                        Akan Sidang
                     </a>
                 </li>
             </ul>
-            
-            <!-- Date Pills (Next 5 dates) -->
+
             <ul class="nav nav-pills w-100 mb-3">
-                @foreach($weekdays as $key => $date)
+                @foreach ($tanggalTabs as $tabTanggal)
                     <li class="flex-fill">
-                        <a class="nav-link @if($key == 0) active @endif text-center" 
-                        style="font-size: 14px; color: var(--primary-color)" 
-                        data-bs-toggle="pill" href="#tab{{ $key+1 }}">
-                        {{ \Carbon\Carbon::parse($date)->format('d F Y') }}
+                        <a class="nav-link text-center {{ $tabTanggal === $tanggal ? 'active' : '' }}" style="font-size: 14px; color: var(--primary-color)"  href="{{ url()->current() }}?active_tab={{ $activeTab }}&tanggal={{ $tabTanggal }}">
+                            {{ $tabTanggal }}
                         </a>
                     </li>
                 @endforeach
             </ul>
 
-            <!-- Display the schedules -->
-            <div class="tab-content">
-                @foreach($weekdays as $key => $date)
-                    <div class="tab-pane fade @if($key == 0) show active @endif" id="tab{{ $key+1 }}">
-                        @php
-                            $schedule = $tab == 'seminar' ? $jadwalSeminar : $jadwalSidang;
-                            $dailySchedule = $schedule->where('tanngal', $date)->take(5);
-                        @endphp
-
-                        @foreach($dailySchedule as $item)
-                            <div class="row p-1 mt-3 g-0 mb-3 align-items-center" style="max-width: 650px;">
-                                <div class="col-md-2">
-                                    <img id="modal-image-{{ $loop->index }}" src="{{ asset('storage/files/pemberkasan/poster.jpg') }}" alt="Poster" class="img-fluid" style="width: 120px; height: 150px; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#imagePreviewModal-{{ $loop->index }}">
-                                    <div class="modal fade" id="imagePreviewModal-{{ $loop->index }}" tabindex="-1" aria-labelledby="imagePreviewLabel" aria-hidden="true" style="backdrop-filter: blur(5px); background-color: rgba(0, 0, 0, 0.5);">
-                                        <div class="modal-dialog modal-dialog-centered">
-                                            <div class="modal-content">
-                                                <div class="modal-body p-0">
-                                                    <img id="preview-image-{{ $loop->index }}" src="{{ asset('storage/files/pemberkasan/poster.jpg') }}" alt="Preview Poster" class="img-fluid preview-image">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-10">
-                                    <div class="ps-3">
-                                        <p class="m-0">11.00 - 11.00 WIB</p>
-                                        <h6 class="m-0"><b>{{ $item->title }}</b></h6>
-                                        <p class="m-0">
-                                            <span class="badge me-2" style="background-color: #dfdfdf; color:var(--primary-color); letter-spacing: 1px">Individu</span> |
-                                            <span class="ms-2">{{ $item->type }}</span>
-                                        </p>
-                                        <p class="m-0 fw-bold" style="font-size: 16px">{{ $item->name }}</p>
-                                        <p class="text-muted small m-0" style="font-size: 14px">
-                                            Pembimbing: <span class="me-2">{{ $item->pembimbing }}</span> /
-                                            <span class="ms-2">{{ $item->penguji }}</span>
-                                        </p>
+            @forelse ($jadwal as $key => $item)
+                <div class="row p-1 mt-3 g-0 mb-3 align-items-center" style="max-width: 650px;">
+                    <div class="col-md-2">
+                        <img id="modal-image-{{ $key }}" src="{{ asset('storage/files/pemberkasan/poster.jpg') }}" alt="Poster" class="img-fluid" style="width: 120px; height: 150px; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#imagePreviewModal-{{ $key }}">
+                        <div class="modal fade" id="imagePreviewModal-{{ $key }}" tabindex="-1" aria-labelledby="imagePreviewLabel" aria-hidden="true" style="backdrop-filter: blur(5px); background-color: rgba(0, 0, 0, 0.5);">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-body p-0">
+                                        <img id="preview-image-{{ $key }}" src="{{ asset('storage/files/pemberkasan/poster.jpg') }}" alt="Preview Poster" class="img-fluid preview-image">
                                     </div>
                                 </div>
                             </div>
-                        @endforeach
+                        </div>
                     </div>
-                @endforeach
-            </div>
+                    <div class="col-md-10">
+                        <div class="ps-3">
+                            <p class="m-0">11.00 - 11.00 WIB</p>
+                            <h6 class="m-0"><b>Sistem Informasi Manajemen Persuratan</b></h6>
+                            <p class="m-0">
+                                <span class="badge me-2" style="background-color: #dfdfdf; color:var(--primary-color); letter-spacing: 1px">Individu</span> |
+                                <span class="ms-2">Rancang Bangun - Penelitian</span>
+                            </p>
+                            <p class="m-0 fw-bold" style="font-size: 16px">Rikiansyah Aris Kurniawan</p>
+                            <p class="text-muted small m-0" style="font-size: 14px">
+                                Pembimbing: <span class="me-2">Dianni Yusuf, S.Kom., M.Kom</span> /
+                                <span class="ms-2">Lutfi Hakim, S.Pd., M.T</span>
+                            </p>
+                            <p class="text-muted small m-0" style="font-size: 14px">
+                                Penguji: <span class="me-2">Dianni Yusuf, S.Kom., M.Kom</span> /
+                                <span class="ms-2">Lutfi Hakim, S.Pd., M.T</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            @empty
+                <p class="text-center " style="color: #aeaeae">Belum ada data</p>
+            @endforelse
 
+            @if($jadwal->count() > 4)
             <div class="text-center mt-5">
-                <a href="#" style="color: var(--primary-color)">Lihat Lebih Banyak...</a>
+                <a href="#" style="color: var(--primary-color)" class="small">Lihat Semua...</a>
             </div>
+            @endif
         </div>
-
     </section>
 
     <section id="mahasiswa" class="mahasiswa" style="padding: 60px 0 100px 0">
         <div class="container">
             <h5 class="font-size-24 text-center m-0 fw-bold mb-1">Mahasiswa</h5>
             <ul class="nav nav-pills w-100 mb-5">
-                <li class="flex-fill"><a class="nav-link active text-center fw-bold" data-bs-toggle="pill"
-                        href="#tab1" style="color: var(--primary-color)">Sudah Seminar</a></li>
-                <li class="flex-fill"><a class="nav-link text-center fw-bold" data-bs-toggle="pill" href="#tab2"
-                        style="color: var(--primary-color)">Sudah Sidang</a></li>
+                <li class="flex-fill">
+                    <a class="nav-link {{ $tabs === 'seminar' ? 'active' : '' }} text-center fw-bold"  href="{{ url()->current() . '?' . http_build_query(array_merge(request()->query(), ['tabs' => 'seminar'])) }}" style="color: var(--primary-color)">
+                        Sudah Seminar
+                    </a>
+                </li>
+                <li class="flex-fill">
+                    <a class="nav-link {{ $tabs === 'sidang' ? 'active' : '' }} text-center fw-bold"  href="{{ url()->current() . '?' . http_build_query(array_merge(request()->query(), ['tabs' => 'sidang'])) }}" style="color: var(--primary-color)">
+                        Sudah Sidang
+                    </a>
+                </li>
             </ul>
-            <div class="row w-100 mb-4">
-                <div class="col-lg-9">
-                    <h6 class="m-0"><b>Sistem Informasi Manajemen Persuratan</b></h4>
-                        <p class="m-0"><span class="badge me-2"
-                                style="background-color: #AFB0DA; color:var(--primary-color); letter-spacing: 1px">Individu</span>|<span
-                                class="ms-2">Rancang Bangun - Penelitian</span></p>
-                        <p class="m-0 fw-bold" style="font-size: 16px">Rikiansyah Aris Kurniawan</p>
-                        <p class="text-muted small m-0" style="font-size: 14px">Pembimbing :<span class="me-2"> Dianni
-                                Yusuf, S.Kom., M.Kom</span>/<span class="ms-2"> Lutfi Hakim, S.Pd., M.T</span> </p>
-                        <p class="text-muted small m-0" style="font-size: 14px">Penguji :<span class="me-2"> Dianni
-                                Yusuf, S.Kom., M.Kom</span>/<span class="ms-2"> Lutfi Hakim, S.Pd., M.T</span> </p>
+            
+            @foreach ($completed as $key => $item)
+                <div class="row p-1 mt-3 g-0 mb-3 align-items-center" style="max-width: 650px;">
+                    <div class="col-md-2">
+                        <img id="modal-image-{{ $key }}" src="{{ asset('storage/files/pemberkasan/poster.jpg') }}" alt="Poster" class="img-fluid" style="width: 120px; height: 150px; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#imagePreviewModal-{{ $key }}">
+                        <div class="modal fade" id="imagePreviewModal-{{ $key }}" tabindex="-1" aria-labelledby="imagePreviewLabel" aria-hidden="true" style="backdrop-filter: blur(5px); background-color: rgba(0, 0, 0, 0.5);">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-body p-0">
+                                        <img id="preview-image-{{ $key }}" src="{{ asset('storage/files/pemberkasan/poster.jpg') }}" alt="Preview Poster" class="img-fluid preview-image">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-10">
+                        <div class="ps-3">
+                            <p class="m-0">11.00 - 11.00 WIB</p>
+                            <h6 class="m-0"><b>Sistem Informasi Manajemen Persuratan</b></h6>
+                            <p class="m-0">
+                                <span class="badge me-2" style="background-color: #dfdfdf; color:var(--primary-color); letter-spacing: 1px">Individu</span> |
+                                <span class="ms-2">Rancang Bangun - Penelitian</span>
+                            </p>
+                            <p class="m-0 fw-bold" style="font-size: 16px">Rikiansyah Aris Kurniawan</p>
+                            <p class="text-muted small m-0" style="font-size: 14px">
+                                Pembimbing: <span class="me-2">Dianni Yusuf, S.Kom., M.Kom</span> /
+                                <span class="ms-2">Lutfi Hakim, S.Pd., M.T</span>
+                            </p>
+                            <p class="text-muted small m-0" style="font-size: 14px">
+                                Penguji: <span class="me-2">Dianni Yusuf, S.Kom., M.Kom</span> /
+                                <span class="ms-2">Lutfi Hakim, S.Pd., M.T</span>
+                            </p>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-lg-3 d-flex align-items-center justify-content-start mt-1 justify-content-lg-end">
-                    <button class="btn btn-sm btn-outline-primary"> Lihat Poster</button>
-                </div>
-            </div>
+            @endforeach
+
             <div class="text-center mt-5">
-                <a href="#" class="">Lihat Lainnya <i class="bx bx-right-arrow-alt"></i></a>
+                <a href="#" style="color: var(--primary-color)" class="small">Lihat Semua...</i></a>
             </div>
         </div>
     </section>
@@ -211,5 +226,70 @@
             </div>
         </div>
     </section>
+
+@endsection
+
+@section('scripts')
+
+<script>
+    options = {
+        chart: {
+            height: 350,
+            type: "bar",
+            toolbar: {
+                show: !1
+            }
+        },
+        plotOptions: {
+            bar: {
+                horizontal: !1,
+                columnWidth: "45%",
+                endingShape: "rounded"
+            }
+        },
+        dataLabels: {
+            enabled: !1
+        },
+        stroke: {
+            show: !0,
+            width: 2,
+            colors: ["transparent"]
+        },
+        series: [{
+            name: "Net Profit",
+            data: [46, 57, 59, 54, 62, 58, 64, 60, 66]
+        }, {
+            name: "Revenue",
+            data: [74, 83, 102, 97, 86, 106, 93, 114, 94]
+        }, {
+            name: "Free Cash Flow",
+            data: [37, 42, 38, 26, 47, 50, 54, 55, 43]
+        }],
+        colors: ["#45cb85", "#3b5de7", "#eeb902"],
+        xaxis: {
+            categories: ["Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct"]
+        },
+        yaxis: {
+            title: {
+                text: "$ (thousands)"
+            }
+        },
+        grid: {
+            borderColor: "#f1f1f1"
+        },
+        fill: {
+            opacity: 1
+        },
+        tooltip: {
+            y: {
+                formatter: function (e) {
+                    return "$ " + e + " thousands"
+                }
+            }
+        }
+    };
+    (chart = new ApexCharts(document.querySelector("#column_chart"), options)).render();
+
+</script>
 
 @endsection
