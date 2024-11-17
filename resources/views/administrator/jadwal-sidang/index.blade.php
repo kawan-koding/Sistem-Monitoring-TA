@@ -109,7 +109,7 @@
                                         <span
                                             class="badge small mb-1 {{ !is_null($item->tugas_akhir->status_seminar) ? ($item->tugas_akhir->status_seminar == 'acc' ? 'badge-soft-success' : ($item->tugas_akhir->status_seminar == 'revisi' ? 'badge-soft-success' : 'badge-soft-danger')) : '' }}">{{ !is_null($item->tugas_akhir->status_seminar) ? ($item->tugas_akhir->status_seminar == 'acc' ? 'Disetujui' : ($item->tugas_akhir->status_seminar == 'revisi' ? 'Disetujui dengan revisi' : 'Ditolak')) : 'Belum Seminar' }}</span>
                                     @endif
-                                    <a href="{{ route('apps.jadwal-seminar.detail', $item->id) }}">
+                                    <a href="{{ route('apps.jadwal-sidang.detail', $item->id) }}">
                                         <h5 class="small font-size-14 m-0">{{ $item->tugas_akhir->judul }}</h5>
                                     </a>
                                     <p class="m-0 text-muted small">{{ $item->tugas_akhir->topik->nama_topik }} -
@@ -171,12 +171,12 @@
                                     </td>
                                 @endif
                                 <td class="mb-3 text-center">
-                                    <a href="{{ route('apps.jadwal-sidang.detail', $item->id) }}" class="btn btn-sm btn-outline-primary my-1" title="Detail Sidang"><i class="bx bx-show" ></i></a>
+                                    <a href="{{ route('apps.jadwal-sidang.detail-sidang', $item->id) }}" class="btn btn-sm btn-outline-primary my-1" title="Detail Sidang"><i class="bx bx-show" ></i></a>
                                     @if (getInfoLogin()->hasRole('Mahasiswa'))
                                         @if($item->status == 'belum_daftar')
-                                            <a href="javascript:void(0);" onclick="daftarSidang('{{ $item->id }}', '{{ route('apps.jadwal-seminar.unggah-berkas', $item->id) }}')" class="btn btn-sm btn-outline-dark"><i class="bx bx-file"></i>
+                                            <button onclick="daftarSidang('{{ $item->id }}', '{{ route('apps.jadwal-seminar.unggah-berkas', $item->id) }}')" class="btn btn-sm btn-outline-dark"><i class="bx bx-file"></i>
                                                 Daftar
-                                            </a>
+                                            </button>
                                             @else 
                                             <a href="javascript:void(0);" onclick="unggahFile('{{ $item->id }}', '{{ route('apps.jadwal-seminar.unggah-berkas', $item->id) }}')" class="btn btn-sm btn-outline-dark"><i class="bx bx-file"></i>
                                                 Unggah
@@ -197,23 +197,23 @@
         </div>
     </div>
 
-    @section('js')
-    <script>
-        function uploadFileSeminar(id, url) {
-            $('#id_jadwal_seminar').val(id);
-            $('#url_unggah_berkas').val(url);
-            $('#myModalUpload').find('form').trigger('reset');
-            $('#myModalUpload').find('form').attr("action", url);
-            $('#myModalUpload').modal('show');
-        }
-
-        function changeFile(target) {
-            var filename = $(target).find('[type="file"]').prop('files')[0].name;
-            $(target).find('.file-desc').html(filename);
-            $(target).find('.file-icon').attr('class', 'file-icon mdi mdi-alert-circle-outline text-warning');
-            $(target).find('.file-btn').html('Ganti');
-        }
-    </script>
-    @endsection
     
+@endsection
+@section('js')
+<script>
+    function uploadFileSeminar(id, url) {
+        $('#id_jadwal_seminar').val(id);
+        $('#url_unggah_berkas').val(url);
+        $('#myModalUpload').find('form').trigger('reset');
+        $('#myModalUpload').find('form').attr("action", url);
+        $('#myModalUpload').modal('show');
+    }
+
+    function changeFile(target) {
+        var filename = $(target).find('[type="file"]').prop('files')[0].name;
+        $(target).find('.file-desc').html(filename);
+        $(target).find('.file-icon').attr('class', 'file-icon mdi mdi-alert-circle-outline text-warning');
+        $(target).find('.file-btn').html('Ganti');
+    }
+</script>
 @endsection
