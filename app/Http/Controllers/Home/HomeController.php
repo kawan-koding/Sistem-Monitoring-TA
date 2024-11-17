@@ -47,7 +47,6 @@ class HomeController extends Controller
             $jadwal = Sidang::get();
         }
 
-
         $tabs = $request->get('tabs', 'seminar');
         if($tabs === 'seminar') {
             $completes = JadwalSeminar::with(['tugas_akhir.mahasiswa'])->where('status','telah_seminar')->whereHas('tugas_akhir',function($q) {
