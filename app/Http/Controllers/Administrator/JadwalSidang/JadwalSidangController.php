@@ -39,6 +39,8 @@ class JadwalSidangController extends Controller
                 $query = $query->where('status', 'belum_daftar');
             }
             $query = $query->get();
+            
+            // dd($query);
 
             $query = $query->map(function($item) {
                 $jenisDocument = JenisDokumen::whereIn('jenis', ['sidang', 'pra_sidang'])->count();

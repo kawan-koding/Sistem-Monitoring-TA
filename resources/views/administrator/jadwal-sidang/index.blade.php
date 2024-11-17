@@ -173,7 +173,7 @@
                                 <td class="mb-3 text-center">
                                     <a href="{{ route('apps.jadwal-sidang.detail', $item->id) }}" class="btn btn-sm btn-outline-primary my-1" title="Detail Sidang"><i class="bx bx-show" ></i></a>
                                     @if (getInfoLogin()->hasRole('Mahasiswa'))
-                                        @if($item->status == 'belum_terjadwal')
+                                        @if($item->status == 'belum_daftar')
                                             <a href="javascript:void(0);" onclick="daftarSidang('{{ $item->id }}', '{{ route('apps.jadwal-seminar.unggah-berkas', $item->id) }}')" class="btn btn-sm btn-outline-dark"><i class="bx bx-file"></i>
                                                 Daftar
                                             </a>
