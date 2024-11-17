@@ -420,7 +420,7 @@ class PengajuanTAController extends Controller
 
             Sidang::create([
                 'tugas_akhir_id' => $pengajuanTA->id,
-                'status' => 'belum_terjadwal'
+                'status' => 'belum_daftar'
             ]);
 
             return redirect()->route('apps.pengajuan-ta')->with('success', 'Berhasil menyetujui pengajuan TA');
