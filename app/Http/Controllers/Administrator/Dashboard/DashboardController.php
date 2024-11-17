@@ -38,6 +38,7 @@ class DashboardController extends Controller
 
         $data = [
             'title' => 'Dashboard',
+            'mods' => 'dashboard',
             'breadcrumbs' => [
                 [
                     'title' => 'Dashboard',

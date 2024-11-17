@@ -19,7 +19,6 @@
 </style>
 
 @if(getInfoLogin()->hasRole('Mahasiswa'))
-
     <div class="row">
         <div class="col-md-4 col-sm-12">
             <div class="card text-center border-{{ 
@@ -284,6 +283,26 @@
         </div>
     </div> --}}
 </div>
+
+<div class="row">
+    <div class="col-lg-6">
+        <div class="card" style="height: 100%; min-height: 400px;">
+            <div class="card-body">
+                <h4 class="card-title mb-1">Chart</h4>
+                <div id="column_chart" class="apex-charts" dir="ltr"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card" style="height: 100%; min-height: 400px;">
+            <div class="card-body">
+                <h4 class="card-title mb-1">Chart</h4>
+                <div id="donut_chart" class="apex-charts" dir="ltr"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endif
 
 @if(getInfoLogin()->hasRole('Dosen') && session('switchRoles') == 'Dosen')

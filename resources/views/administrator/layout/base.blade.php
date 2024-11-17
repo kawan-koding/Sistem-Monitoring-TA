@@ -85,6 +85,8 @@
     <script src="{{ asset('assets/libs/tinymce/tinymce.min.js') }}"></script>
     <!-- init js -->
     <script src="{{ asset('assets/js/pages/form-editor.init.js') }}"></script>
+    <!-- Appexcharts js -->
+    <script src="{{ asset('assets/libs/apexcharts/apexcharts.min.js') }}"></script>
     <!-- App js -->
     <script src="{{ asset('assets/js/app.js') }}"></script>
     {{-- @if (isset($jsInit))
