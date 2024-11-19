@@ -7,6 +7,7 @@
             </div>
             <form action="" id="myFormulir" method="post">
                 @csrf
+                 <input type="hidden" name="dosen_id" id="dosen_id">
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-6">

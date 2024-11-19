@@ -191,8 +191,9 @@ Route::prefix('apps')->middleware('auth')->group(function () {
 
     Route::prefix('kuota-dosen')->middleware('can:read-kuota')->group( function() {
         Route::get('', [KuotaDosenController::class, 'index'])->name('apps.kuota-dosen');
-        Route::post('store', [KuotaDosenController::class, 'store'])->name('apps.kuota-dosen.store')->middleware('can:update-kuota');
         Route::post('create-all', [KuotaDosenController::class, 'createAll'])->name('apps.kuota-dosen.create-all')->middleware('can:update-kuota');
+        Route::get('{id}/show', [KuotaDosenController::class, 'show'])->name('apps.kuota-dosen.show');
+        Route::post('store', [KuotaDosenController::class, 'update'])->name('apps.kuota-dosen.update')->middleware('can:update-kuota');
     });
     
     Route::prefix('settings')->middleware('can:read-setting')->group( function() {

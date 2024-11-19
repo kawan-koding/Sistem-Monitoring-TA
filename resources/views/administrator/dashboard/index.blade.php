@@ -117,7 +117,7 @@
                         </li>
                         @endforeach
                     </ul>
-                    @if($dataMahasiswa['topik']->count() > 3)
+                    @if($dataMahasiswa['topik']->count() > 2)
                     <div class="text-center">
                         <a href="{{ route('apps.rekomendasi-topik')}}" class="btn btn-primary btn-sm">Lihat Selengkapnya...</a>
                     </div>

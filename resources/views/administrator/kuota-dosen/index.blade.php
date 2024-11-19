@@ -39,12 +39,12 @@
                         <thead>
                             <tr>
                                 <th width="5%">No</th>
-                                <th width="20%">NIP/NIPPPK/NIK</th>
-                                <th width="40%">Nama</th>
+                                <th width="50%">Nama</th>
                                 <th style="width: 15%; white-space: nowrap;">Pembimbing 1</th>
                                 <th style="width: 15%; white-space: nowrap;">Pembimbing 2</th>
                                 <th style="width: 15%; white-space: nowrap;">Penguji 1</th>
                                 <th style="width: 15%; white-space: nowrap;">Penguji 2</th>
+                                <th style="width: 10%; white-space: nowrap;">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -52,26 +52,29 @@
                             <?php $kuota = \App\Models\KuotaDosen::where('dosen_id', $item->id)->where('periode_ta_id', $periode->id)->first(); ?>
                             <tr>
                                 <td>{{$loop->iteration}}</td>
-                                <td>{{$item->nip}}</td>
                                 <td>
                                     <div class="d-flex align-items-center">
                                         <div>
-                                            <strong>{{ucfirst($item->name)}}</strong>
+                                            <p class="m-0 font-size-14 fw-bold">{{ucfirst($item->name)}}</p>
                                             <p class="m-0 p-0 text-muted small">NIDN : {{$item->nidn}}</p>
+                                            <p class="m-0 p-0 text-muted small">NIP/NIPPPK/NIK : {{$item->nip}}</p>
                                         </div>
                                     </div>
                                 </td>
                                 <td>
-                                    <input type="number" id="pembimbing_1{{$item->id}}" value="{{$kuota->pembimbing_1 ?? 0}}" class="form-control" onchange="changeKuota('pembimbing_1', 'pembimbing_1{{$item->id}}', '{{$periode->id}}', '{{$item->id}}')">
+                                    <p>{{$kuota->pembimbing_1 ?? 0}}</p>
                                 </td>
                                 <td>
-                                    <input type="number" id="pembimbing_2{{$item->id}}" value="{{$kuota->pembimbing_2 ?? 0}}" class="form-control" onchange="changeKuota('pembimbing_2', 'pembimbing_2{{$item->id}}', '{{$periode->id}}', '{{$item->id}}')">
+                                    <p>{{$kuota->pembimbing_2 ?? 0}}</p>
                                 </td>
                                 <td>
-                                    <input type="number" id="penguji_1{{$item->id}}" value="{{$kuota->penguji_1 ?? 0}}" class="form-control" onchange="changeKuota('penguji_1', 'penguji_1{{$item->id}}', '{{$periode->id}}', '{{$item->id}}')">
+                                    <p>{{$kuota->penguji_1 ?? 0}}</p>
                                 </td>
                                 <td>
-                                    <input type="number" id="penguji_2{{$item->id}}" value="{{$kuota->penguji_2 ?? 0}}" class="form-control" onchange="changeKuota('penguji_2', 'penguji_2{{$item->id}}', '{{$periode->id}}', '{{$item->id}}')">
+                                    <p>{{$kuota->penguji_2 ?? 0}}</p>
+                                </td>
+                                <td>
+                                    <button onclick="editData('{{ $item->id }}', '{{ route('apps.kuota-dosen.show', $item->id) }}')" class="btn btn-outline-primary btn-sm mx-1 my-1"><i class="bx bx-edit-alt"></i></button>
                                 </td>
                             </tr>
                             @endforeach
