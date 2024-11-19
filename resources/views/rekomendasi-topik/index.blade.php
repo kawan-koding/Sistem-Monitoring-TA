@@ -30,7 +30,7 @@
           <div class="col-lg-12">
             <p class="m-0"><span class="badge rounded-pill bg-primary-subtle text-primary small mb-1">{{ $item->program_studi->nama }}</span></p>
             <h6 class="m-0"><b>{{ $item->judul }}</b></h4>
-            <p class="m-0" style="font-size: 14px">
+            <p class="m-0" style="font-size: 14px; text-align: justify">
               <span class="short-description">{{ Str::limit($item->deskripsi, 200) }}</span>
               <span class="full-description d-none">{{ $item->deskripsi }}</span>
               @if(strlen($item->deskripsi) > 200)<a href="javascript:void(0);" class="read-more" onclick="toggleDescription(this)">Selengkapnya</a>@endif
@@ -54,6 +54,5 @@
     {{ $tawaran->links() }}
   </div>
 </section>
-
 
 @endsection

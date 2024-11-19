@@ -310,3 +310,5 @@ function toggleDescription(element) {
         element.innerText = "Selengkapnya";
     }
 }
+
+

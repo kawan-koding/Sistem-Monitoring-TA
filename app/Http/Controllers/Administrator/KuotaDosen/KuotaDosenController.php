@@ -34,24 +34,63 @@ class KuotaDosenController extends Controller
         return view('administrator.kuota-dosen.index', $data);
     }
     
-    public function store(Request $request)
+    // public function store(Request $request)
+    // {
+    //     try {
+    //         $data = KuotaDosen::where('dosen_id', $request->dosen_id)->where('periode_ta_id', $request->periode_ta_id)->first();
+    //         if(isset($data->id)){
+    //             $data->update([
+    //                 $request->field => $request->value,
+    //             ]);
+    //         } else {
+    //             KuotaDosen::create([
+    //                 'dosen_id' => $request->dosen_id,
+    //                 'periode_ta_id' => $request->periode_ta_id,
+    //                 $request->field => $request->value,
+    //             ]);
+    //         }
+    //         return $this->successResponse('Data berhasil disimpan');
+    //     } catch(Exception $e) {
+    //         return $this->exceptionResponse($e);
+    //     }
+    // }
+
+    
+    public function show($id)
     {
+        $dsn = Dosen::findOrFail($id);
+        $periode = PeriodeTa::where('is_active', true)->first();
+        $kuotaDosen = KuotaDosen::where('dosen_id', $dsn->id)->where('periode_ta_id', $periode->id)->first();
+
+        return response()->json($kuotaDosen);
+    }
+
+    public function update(Request $request)
+    {
+        $request->validate([
+           'pembimbing_1' => 'nullable',
+           'pembimbing_2' => 'nullable',
+           'penguji_1' => 'nullable',
+           'penguji_2' => 'nullable',
+           'dosen_id' => 'required',
+        ]);
+
         try {
-            $data = KuotaDosen::where('dosen_id', $request->dosen_id)->where('periode_ta_id', $request->periode_ta_id)->first();
-            if(isset($data->id)){
-                $data->update([
-                    $request->field => $request->value,
-                ]);
+            $periode = PeriodeTa::where('is_active', true)->first();
+            $data = KuotaDosen::where('dosen_id', $request->dosen_id)->where('periode_ta_id', $periode->id)->first();
+            $fields = $request->only(['pembimbing_1', 'pembimbing_2', 'penguji_1', 'penguji_2']); 
+
+            if(isset($data->id)) {
+                $data->update($fields);
             } else {
-                KuotaDosen::create([
-                    'dosen_id' => $request->dosen_id,
-                    'periode_ta_id' => $request->periode_ta_id,
-                    $request->field => $request->value,
-                ]);
+                KuotaDosen::create(array_merge(
+                    ['dosen_id' => $request->dosen_id,'periode_ta_id' => $periode->id,],
+                    $fields
+                ));
             }
-            return $this->successResponse('Data berhasil disimpan');
-        } catch(Exception $e) {
-            return $this->exceptionResponse($e);
+            return redirect()->back()->with('success', 'Data berhasil diperbarui');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -73,12 +112,16 @@ class KuotaDosenController extends Controller
             $dosen = Dosen::all();
             $periode = PeriodeTa::where('is_active', true)->first();
             foreach($dosen as $item) {
-                $existingKuota = KuotaDosen::where('dosen_id', $item->id)->where('periode_ta_id', $periode->id)->first();
-                if($existingKuota) {
-                    $existingKuota->update($request->only(['pembimbing_1', 'pembimbing_2', 'penguji_1', 'penguji_2']));
-                } else {
-                    $request->merge(['dosen_id' => $item->id,'periode_ta_id' => $periode->id]);
-                    $kuota  = KuotaDosen::create($request->only(['dosen_id', 'periode_ta_id', 'pembimbing_1', 'pembimbing_2', 'penguji_1', 'penguji_2']));
+                $existingKuota = KuotaDosen::where('dosen_id', $item->id)->where('periode_ta_id', $periode->id)->exists();
+                if (!$existingKuota) {
+                    KuotaDosen::create([
+                        'dosen_id' => $item->id,
+                        'periode_ta_id' => $periode->id,
+                        'pembimbing_1' => $request->pembimbing_1,
+                        'pembimbing_2' => $request->pembimbing_2,
+                        'penguji_1' => $request->penguji_1,
+                        'penguji_2' => $request->penguji_2,
+                    ]);
                 }
             }
 

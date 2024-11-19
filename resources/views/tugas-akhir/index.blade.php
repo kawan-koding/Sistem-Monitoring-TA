@@ -42,8 +42,12 @@
     <hr>
     @endif
     @empty
-      <p class="text-center" style="color: #aeaeae">Data tidak ditemukan</p>
+      <p class="text-center" style="color: #aeaeae">Tidak ada tugas akhir</p>
     @endforelse
+  </div>
+
+  <div class="d-flex justify-content-center mt-5">
+    {{ $query->links() }}
   </div>
 </section>
 

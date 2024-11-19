@@ -191,8 +191,9 @@ Route::prefix('apps')->middleware('auth')->group(function () {
 
     Route::prefix('kuota-dosen')->middleware('can:read-kuota')->group( function() {
         Route::get('', [KuotaDosenController::class, 'index'])->name('apps.kuota-dosen');
-        Route::post('store', [KuotaDosenController::class, 'store'])->name('apps.kuota-dosen.store')->middleware('can:update-kuota');
         Route::post('create-all', [KuotaDosenController::class, 'createAll'])->name('apps.kuota-dosen.create-all')->middleware('can:update-kuota');
+        Route::get('{id}/show', [KuotaDosenController::class, 'show'])->name('apps.kuota-dosen.show');
+        Route::post('store', [KuotaDosenController::class, 'update'])->name('apps.kuota-dosen.update')->middleware('can:update-kuota');
     });
     
     Route::prefix('settings')->middleware('can:read-setting')->group( function() {
@@ -264,7 +265,9 @@ Route::prefix('apps')->middleware('auth')->group(function () {
 
     Route::prefix('jadwal-sidang')->middleware('can:read-daftar-sidang')->group( function() {
        Route::get('',[JadwalSidangController::class,'index'])->name('apps.jadwal-sidang'); 
-       Route::get('{sidang}/detail-sidang',[JadwalSidangController::class,'show'])->name('apps.jadwal-sidang.detail'); 
+       Route::get('{sidang}/detail',[JadwalSidangController::class,'show'])->name('apps.jadwal-sidang.detail'); 
+       Route::get('{sidang}/detail-sidang',[JadwalSidangController::class,'show'])->name('apps.jadwal-sidang.detail-sidang'); 
+       Route::post('{sidang}/daftar-sidang',[JadwalSidangController::class,'register'])->name('apps.jadwal-sidang.register'); 
     });
 
     Route::prefix('profile-dosen')->group( function() {
