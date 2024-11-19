@@ -50,7 +50,7 @@ class PengajuanTAController extends Controller
             if($request->has('status') && !empty($request->status)) {
                 $query = $query->whereIn('status', [$request->status, 'cancel']);
             } else {
-                $query = $query->whereIn('status', ['draft', 'reject']);
+                $query = $query->where('status', 'draft');
             }
 
             $query = $query->get();
