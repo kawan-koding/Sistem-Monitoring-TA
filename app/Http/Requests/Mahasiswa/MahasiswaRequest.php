@@ -43,6 +43,7 @@ class MahasiswaRequest extends FormRequest
             'jenis_kelamin' => 'nullable',
             'telp' => 'nullable',
             'program_studi_id' => 'required',
+            'periode_ta_id' => 'required',
         ];
     }
 
@@ -57,6 +58,7 @@ class MahasiswaRequest extends FormRequest
             'email.email' => 'Email harus valid',
             'email.unique' => 'Email sudah ada',
             'program_studi_id.required' => 'Program studi harus diisi',
+            'periode_ta_id' => 'Periode TA harus diisi'
         ];
     }
 }

@@ -20,7 +20,6 @@ return new class extends Migration
             $table->date('akhir_seminar')->nullable();
             $table->date('mulai_sidang')->nullable();
             $table->date('akhir_sidang')->nullable();
-            $table->date('akhir_pemberkasan')->nullable();
             $table->boolean('is_active')->default(false);
             $table->timestamps();
         });

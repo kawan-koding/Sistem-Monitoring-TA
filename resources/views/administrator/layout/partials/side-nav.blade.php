@@ -118,7 +118,7 @@
                 </li>
                 @endcan
 
-                @if (in_array(session('switchRoles'), ['Admin','Developer','Kajur']))  
+                @if (in_array(session('switchRoles'), ['Admin','Developer','Kajur','Kaprodi']))  
                     @canany(['read-mahasiswa', 'read-dosen', 'read-ruangan', 'read-topik', 'read-topik'])
                     <li>
                         <a href="javascript: void(0);" class="has-arrow waves-effect">

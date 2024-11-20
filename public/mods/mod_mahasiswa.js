@@ -8,6 +8,7 @@ function tambahData() {
     $('#email').val('')
     $('#telp').val('')
     $('#program_studi_id').val('')
+    $('#periode_ta_id').val('')
     $('#idMahasiswa').val('')
     $('#myModal').modal('show')
 }
@@ -34,6 +35,7 @@ function editData(id, urlShow) {
             $('#email').val(response.email)
             $('#telp').val(response.telp)
             $('#program_studi_id').val(response.program_studi_id)
+            $('#periode_ta_id').val(response.periode_ta_id)
         },
         error: function (xhr, status, error) {
             console.error(xhr.responseText);

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('email')->nullable()->unique();
             $table->string('telp')->nullable();
             $table->foreignId('program_studi_id')->nullable()->references('id')->on('program_studis')->onDelete('cascade');
+            $table->foreignId('periode_ta_id')->nullable()->references('id')->on('periode_tas')->onDelete('cascade');
             $table->timestamps();
         });
     }

@@ -214,6 +214,7 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::get('{tugasAkhir}/edit', [DaftarTaController::class, 'edit'])->name('apps.daftar-ta.edit');
         Route::post('{tugasAkhir}/update', [DaftarTaController::class, 'update'])->name('apps.daftar-ta.update')->middleware('can:update-daftar-ta');
         Route::get('{tugasAkhir}/destroy', [DaftarTaController::class, 'destroy'])->name('apps.daftar-ta.delete')->middleware('can:delete-daftar-ta');
+        Route::get('export-tugas-akhir', [DaftarTaController::class, 'exportAll'])->name('apps.daftar-ta.export'); 
     });
 
     Route::prefix('jadwal-seminar')->middleware('can:read-jadwal-seminar')->group( function() {

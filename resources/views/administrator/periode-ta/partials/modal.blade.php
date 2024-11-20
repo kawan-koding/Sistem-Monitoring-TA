@@ -57,10 +57,6 @@ aria-labelledby="myModalLabel" aria-hidden="true">
                         </div>
                     </div>
                 </div>
-                <div class="mb-3">
-                    <label for="">Akhir Pemberkasan</label>
-                    <input type="date" name="akhir_pemberkasan" id="akhir_pemberkasan" class="form-control">
-                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary waves-effect"

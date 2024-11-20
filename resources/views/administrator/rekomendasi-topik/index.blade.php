@@ -81,7 +81,7 @@
                         <thead>
                             <tr>
                                 <th width="5%"> No</th>
-                                <th width="30%">Topik</th>
+                                <th width="20%">Topik</th>
                                 <th width="20%" style="white-space: nowrap">Jenis Penyelesaian</th>
                                 <th style="white-space: nowrap">Jenis Topik</th>
                                 @if(in_array(session('switchRoles'), ['Dosen','Developer']))

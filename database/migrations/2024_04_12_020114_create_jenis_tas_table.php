@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('jenis_tas', function (Blueprint $table) {
             $table->id();
-            $table->string('nama_jenis', 100)->nullable()->default('text');
+            $table->string('nama_jenis')->nullable();
             $table->timestamps();
         });
     }

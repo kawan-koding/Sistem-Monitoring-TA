@@ -40,7 +40,6 @@
                                 <th>Pendaftaran</th>
                                 <th>Seminar Proposal</th>
                                 <th>Sidang Akhir</th>
-                                <th>Pemberkasan</th>
                                 <th>Status</th>
                                 <th width="15%">Aksi</th>
                             </tr>
@@ -64,9 +63,6 @@
                                     {{ $item->mulai_sidang ? \Carbon\Carbon::parse($item->mulai_sidang)->format('d/m/Y') : '-' }}
                                     -
                                     {{ $item->akhir_sidang ? \Carbon\Carbon::parse($item->akhir_sidang)->format('d/m/Y') : '-' }}
-                                </td>
-                                <td>
-                                    {{ $item->akhir_pemberkasan ? \Carbon\Carbon::parse($item->akhir_pemberkasan)->format('d/m/Y') : '-' }}
                                 </td>
                                 <td>
                                     <div class="form-check form-switch">

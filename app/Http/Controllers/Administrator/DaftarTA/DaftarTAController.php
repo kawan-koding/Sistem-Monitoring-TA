@@ -14,7 +14,9 @@ use App\Models\Pemberkasan;
 use App\Models\JenisDokumen;
 use App\Models\ProgramStudi;
 use Illuminate\Http\Request;
+use App\Exports\TugasAkhirExport;
 use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
 
 class DaftarTAController extends Controller
 {
@@ -328,5 +330,10 @@ class DaftarTAController extends Controller
         } catch(\Exception $e) {
             return $this->exceptionResponse($e);
         }
+    }
+
+    public function exportAll()
+    {
+        return Excel::download(new TugasAkhirExport, 'Data Tugas Akhir.xlsx');
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Administrator\Mahasiswa;
 
 use App\Models\User;
 use App\Models\Mahasiswa;
+use App\Models\PeriodeTa;
 use App\Models\ProgramStudi;
 use Illuminate\Http\Request;
 use App\Exports\MahasiswaExport;
@@ -18,9 +19,16 @@ class MahasiswaController extends Controller
      /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-         $data = [
+        $mahasiswa = Mahasiswa::query();
+
+        if ($request->has('program_studi') && !empty($request->program_studi) && $request->program_studi !== 'semua') {
+            $mahasiswa->where('program_studi_id', $request->program_studi);
+        }
+        $mahasiswa = $mahasiswa->get();
+
+        $data = [
             "title" => "Mahasiswa",
             'mods' => 'mahasiswa',
             'breadcrumbs' => [
@@ -37,8 +45,9 @@ class MahasiswaController extends Controller
                     'is_active' => true
                 ],
             ],
-            'mhs' => Mahasiswa::all(),
+            'mhs' => $mahasiswa,
             'prodi' => ProgramStudi::all(),
+            'periode' => PeriodeTa::all(),
         ];
 
         return view('administrator.mahasiswa.index', $data);
@@ -51,7 +60,7 @@ class MahasiswaController extends Controller
             if(isset($user->id)){
                 return redirect()->route('apps.mahasiswa')->with('error', 'Nim sudah digunakan');
             }
-            $mhs = Mahasiswa::create($request->only(['kelas','email','nim','nama_mhs','program_studi_id','jenis_kelamin','telp']));
+            $mhs = Mahasiswa::create($request->only(['kelas','email','nim','nama_mhs','program_studi_id','jenis_kelamin','telp', 'periode_ta_id']));
             $existingUser = User::where('username', $mhs->nim)->orWhere('email', $mhs->email)->first();
             if(!$existingUser) {
                 $request->merge(['name' => $mhs->nama_mhs,'username' => $mhs->nim,'password' => Hash::make($mhs->nim),'userable_type' => Mahasiswa::class, 'userable_id' => $mhs->id]);
@@ -80,7 +89,7 @@ class MahasiswaController extends Controller
     public function update(MahasiswaRequest $request, Mahasiswa $mahasiswa)
     {
         try {
-            $mahasiswa->update($request->only(['kelas','email','nim','nama_mhs','program_studi_id','jenis_kelamin','telp']));
+            $mahasiswa->update($request->only(['kelas','email','nim','nama_mhs','program_studi_id','jenis_kelamin','telp','periode_ta_id']));
             $user = $mahasiswa->user;
             $existingUser = User::where('username', $mahasiswa->nim)->where('id', '!=', $user->id)->first();
             if(is_null($existingUser)) {

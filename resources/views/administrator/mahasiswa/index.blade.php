@@ -5,13 +5,36 @@
         <div class="col-md-12 col-sm-12 col-g-12">
             <div class="card">
                 <div class="card-body">
-                    @can('create-mahasiswa')
-                    <button onclick="tambahData()" class="btn btn-primary"><i class="fa fa-plus"></i> Tambah</button>
-                    @endcan
-                    @can('import-mahasiswa')
-                    <button onclick="importData()" class="btn btn-success"><i class="fa fa-file-excel"></i> Import</button>
+                    <form action="" class="d-flex flex-column flex-md-row justify-content-between">
+                        <div class="d-flex gap-2 mb-2 mb-md-0">
+                            @can('create-mahasiswa')
+                                <button onclick="tambahData()" class="btn btn-primary"><i class="fa fa-plus"></i> Tambah</button>
+                            @endcan
+                            @can('import-mahasiswa')
+                                <button onclick="importData()" class="btn btn-success"><i class="fa fa-file-excel"></i> Import</button>
+                            @endcan
+                        </div>
+                    
+                        <div class="d-flex gap-2 flex-column flex-md-row">
+                            <select name="program_studi" id="program_studi" class="form-control" onchange="this.form.submit()">
+                                <option selected disabled hidden>Filter Program Studi</option>
+                                <option value="semua" {{ request('program_studi') == 'semua' ? 'selected' : '' }}>Semua Program Studi</option>
+                                @foreach($prodi as $p)
+                                    <option value="{{ $p->id }}" {{ request('program_studi') == $p->id ? 'selected' : '' }}>{{ $p->nama }}</option>
+                                @endforeach
+                            </select>
+                            <select name="periode" id="periode" class="form-control" onchange="this.form.submit()">
+                                <option selected disabled hidden>Filter Periode</option>
+                                <option value="semua" {{ request('periode') == 'semua' ? 'selected' : '' }}>Semua Periode</option>
+                                @foreach($periode as $p)
+                                    <option value="{{ $p->id }}" {{ request('periode') == $p->id ? 'selected' : '' }}>{{ $p->nama }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </form>
+                    
                     <hr>
-                    @endcan
+
                     @if(session('success'))
                         <div class="alert alert-success alert-dismissible fade show" role="alert">
                             <i class="mdi mdi-check-all me-2"></i> {{ session('success') }}
@@ -39,6 +62,7 @@
                             </button>
                         </div>
                     @endif
+
                     <div class="table-responsive">
                         <table class="table table-striped" id="datatable">
                             <thead>
@@ -49,6 +73,7 @@
                                     <th>Email</th>
                                     <th>Jenis Kelamin</th>
                                     <th>Program Studi</th>
+                                    <th>Periode TA</th>
                                     @if(session('switchRoles') !== 'Kajur')
                                     <th>Aksi</th>
                                     @endif
@@ -77,6 +102,7 @@
                                     </td>
                                     <td>{{$item->jenis_kelamin == 'Laki-laki' ? 'Laki-Laki' : ($item->jenis_kelamin == 'Perempuan' ? 'Perempuan' : 'Lainnya')}}</td>
                                     <td>{{ $item->programStudi->nama ?? '' }}</td>
+                                    <td>{{ $item->periodeTa->nama ?? '' }}</td>
                                     @if(session('switchRoles') !== 'Kajur')
                                     <td>
                                         @can('update-mahasiswa')

@@ -12,7 +12,16 @@ class KuotaDosenController extends Controller
 {
     public function index()
     {
-        $dosen = Dosen::all(); 
+        $dosen = Dosen::query();
+        
+        if(session('switchRoles') == 'Kaprodi'){
+            $user = getInfoLogin()->userable;
+            $prodi = $user->programStudi->id;
+            $dosen->where('program_studi_id', $prodi);
+        }
+
+        $dosen = $dosen->get();
+        
         $periode = PeriodeTa::where('is_active', true)->first();
         $data = [
             'title' => 'Kuota Dosen',
