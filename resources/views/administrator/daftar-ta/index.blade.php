@@ -33,7 +33,7 @@
                                 <select name="periode" id="periode" class="form-control" onchange="this.form.submit()">
                                     <option selected disabled hidden>Filter Periode</option>
                                     @foreach($periode as $p)
-                                        <option value="{{ $p->id }}" {{ request('periode') == $p->id ? 'selected' : '' }}>{{ $p->nama }}</option>
+                                        <option value="{{ $p->id }}" {{ request('periode') == $p->id ? 'selected' : '' }}>{{ $p->nama }} - {{ 'Prodi' . ' ' . $p->programStudi->display }}</option>
                                     @endforeach
                                 </select>
                             </div>

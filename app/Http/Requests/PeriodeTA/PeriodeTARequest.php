@@ -32,16 +32,13 @@ class PeriodeTARequest extends FormRequest
     {
 
        return [
-            'nama' => [
-                'required',
-                $this->routeName == 'apps.periode.store' ? 'unique:periode_tas,nama' : Rule::unique('periode_tas', 'nama')->ignoreModel($this->periode)
-            ],
+            'nama' => 'required',
             'mulai_daftar' => 'nullable',
             'akhir_daftar' => 'nullable',
             'mulai_seminar' => 'nullable',
             'akhir_seminar' => 'nullable',
             'mulai_sidang' => 'nullable',
-            'akhir_sidang' => 'nullable',    
+            'akhir_sidang' => 'nullable', 
         ];
     }
 
@@ -49,7 +46,6 @@ class PeriodeTARequest extends FormRequest
     {
         return [
             'nama.required' => 'Periode tugas akhir harus diisi',
-            'nama.unique' => 'Periode tugas akhir sudah ada',
         ];
     }
 }
