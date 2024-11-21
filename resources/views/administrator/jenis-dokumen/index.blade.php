@@ -42,6 +42,8 @@
                                 <tr>
                                     <th width="5%">No</th>
                                     <th>Nama</th>
+                                    <th>Jenis</th>
+                                    <th>Maks. Ukuran</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
@@ -62,7 +64,9 @@
                                             </span> <br>
                                             {{ $item->nama }}
                                         </p>
-                                        </td>                                    
+                                    </td>                                    
+                                    <td>{{ strtoupper($item->tipe_dokumen) }}</td>
+                                    <td>{{ $item->max_ukuran }} KB</td>
                                     <td>
                                         @can('update-jenis-dokumen')
                                             <button onclick="editData('{{ $item->id }}', '{{ route('apps.jenis-dokumen.show', $item->id) }}')" class="btn btn-outline-primary btn-sm mx-1 my-1"><i class="bx bx-edit-alt"></i></button>

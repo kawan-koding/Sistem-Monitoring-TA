@@ -167,7 +167,7 @@
                                 </td>
                                 @if (getInfoLogin()->hasRole('Admin'))
                                     <td class="text-align-center justify-content-center">
-                                        <p style="white-space: nowrap" class="font-size-12 small {{ $item->document_complete ? 'badge badge-soft-success text-success' : 'badge badge-soft-danger text-danger' }}">{{ $item->document_complete ? 'Berkas sudah lengkap' : 'Berkas belum lengkap' }}</p>
+                                        <p style="white-space: nowrap" class="font-size-12 small {{ !is_null($item->status_sidang) && $item->document_complete ? 'badge badge-soft-success text-success' : 'badge badge-soft-danger text-danger' }}">{{ !is_null($item->status_sidang) &&    $item->document_complete ? 'Berkas sudah lengkap' : 'Berkas belum lengkap' }}</p>
                                     </td>
                                 @endif
                                 <td class="mb-3 text-center">
@@ -182,8 +182,13 @@
                                                 Unggah
                                             </a>
                                         @endif
-                                        @include('administrator.jadwal-sidang.partials.modal')
                                     @endif
+                                    @if(getInfoLogin()->hasRole('Admin'))
+                                        @if($item->status == 'sudah_daftar' || $item->status == 'sudah_sidang')
+                                          <a href="javascript:void(0);" onclick="validasiFile('{{ $item->id}}', '{{ route('apps.jadwal-sidang.validasi-berkas', $item->id) }}')" class="btn btn-sm btn-outline-secondary my-1" title="Detail Berkas"><i class="bx bx-folder-open"></i></a>
+                                        @endif
+                                    @endif
+                                    @include('administrator.jadwal-sidang.partials.modal')
                                 </td>
                             </tr>
                         @empty
@@ -215,5 +220,33 @@
         $(target).find('.file-icon').attr('class', 'file-icon mdi mdi-alert-circle-outline text-warning');
         $(target).find('.file-btn').html('Ganti');
     }
+
+    $('.update-status').unbind().on('click', async function(e) {
+        e.preventDefault()
+        $(this).parent().find('.update-status').html('<i class="bx bx-loader bx-spin"></i>').attr('disabled', 'disabled');
+        const res = await fetch($(this).attr('href'), {
+            headers: {
+                'accept': 'application/json'
+            }
+        })
+        
+        $($(this).parent().find('.update-status')[0]).html('<i class="bx bx-check"></i>').removeAttr('disabled');
+        $($(this).parent().find('.update-status')[1]).html('<i class="bx bx-x"></i>').removeAttr('disabled');
+        if(res.status == 200) {
+            var data = await res.json()
+
+            if(data.status == 'approve') {
+                $(this).parent().find('.icon-display').attr('class', 'file-icon bx bx-check-circle text-success icon-display')
+            }
+
+            if(data.status == 'reject') {
+                $(this).parent().find('.icon-display').attr('class', 'file-icon mdi mdi-close-circle-outline text-danger icon-display')
+            }
+
+            $(this).parent().find('.update-status').remove()
+        } else {
+
+        }
+    })
 </script>
 @endsection

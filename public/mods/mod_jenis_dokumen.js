@@ -17,6 +17,8 @@ function editData(id, urlShow) {
         success: function (response) {
             $('#nama').val(response.nama)
             $('#jenis').val(response.jenis)
+            $('#tipe_dokumen').val(response.tipe_dokumen)
+            $('#max_ukuran').val(response.max_ukuran)
         },
         error: function (xhr, status, error) {
             console.error(xhr.responseText);

@@ -78,6 +78,13 @@
                                 <span class="d-none d-sm-block">Telah Diseminarkan</span>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link @if (url()->full() == route('apps.jadwal-seminar', ['status_pemberkasan' => 'sudah_lengkap'])) active @endif"
+                                href="{{ route('apps.jadwal-seminar', ['status_pemberkasan' => 'sudah_lengkap']) }}">
+                                <span class="d-block d-sm-none"><i class="bx bx-check-circle"></i></span>
+                                <span class="d-none d-sm-block">Sudah Pemberkasan</span>
+                            </a>
+                        </li>
                     </ul>
                     @endcan
                 @endif
@@ -87,10 +94,10 @@
                     <thead>
                         <tr>
                             <th width="2%">No.</th>
-                            <th width="40%">Judul</th>
                             @if (getInfoLogin()->hasRole('Admin'))
                                 <th>Mahasiswa</th>
                             @endif
+                            <th width="40%">Judul</th>
                             <th width="20%">Dosen</th>
                             <th>Ruangan</th>
                             @if (getInfoLogin()->hasRole('Admin'))
@@ -103,20 +110,21 @@
                         @forelse ($data as $item)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
+                                @if (getInfoLogin()->hasRole('Admin'))
+                                    <td><p class="small">{{ $item->tugas_akhir->mahasiswa->nama_mhs }}</p></td>
+                                @endif
                                 <td>
                                     @if ($item->status == 'telah_seminar')
                                         <span
-                                            class="badge small mb-1 {{ !is_null($item->tugas_akhir->status_seminar) ? ($item->tugas_akhir->status_seminar == 'acc' ? 'badge-soft-success' : ($item->tugas_akhir->status_seminar == 'revisi' ? 'badge-soft-success' : 'badge-soft-danger')) : '' }}">{{ !is_null($item->tugas_akhir->status_seminar) ? ($item->tugas_akhir->status_seminar == 'acc' ? 'Disetujui' : ($item->tugas_akhir->status_seminar == 'revisi' ? 'Disetujui dengan revisi' : 'Ditolak')) : 'Belum Seminar' }}</span>
+                                            class="badge small mb-1 {{ !is_null($item->tugas_akhir->status_seminar) ? ($item->tugas_akhir->status_seminar == 'acc' ? 'badge-soft-success' : ($item->tugas_akhir->status_seminar == 'revisi' ? 'badge-soft-success' : 'badge-soft-danger')) : 'badge-soft-secondary' }}">{{ !is_null($item->tugas_akhir->status_seminar) ? ($item->tugas_akhir->status_seminar == 'acc' ? 'Disetujui' : ($item->tugas_akhir->status_seminar == 'revisi' ? 'Disetujui dengan revisi' : 'Ditolak')) : 'Belum Seminar' }}</span>
                                     @endif
                                     <a href="{{ route('apps.jadwal-seminar.detail', $item->id) }}">
                                         <h5 class="small font-size-14 m-0">{{ $item->tugas_akhir->judul }}</h5>
                                     </a>
                                     <p class="m-0 text-muted small">{{ $item->tugas_akhir->topik->nama_topik }} -
                                         {{ $item->tugas_akhir->jenis_ta->nama_jenis }}</p>
+                                    <span class="badge small mb-1 badge-soft-secondary">{{isset($item->tugas_akhir) ? ($item->tugas_akhir->tipe == 'I' ? 'Individu' : 'Kelompok') : ''}}</span>
                                 </td>
-                                @if (getInfoLogin()->hasRole('Admin'))
-                                    <td><p class="small">{{ $item->tugas_akhir->mahasiswa->nama_mhs }}</p></td>
-                                @endif
                                 <td>
                                     <p class="fw-bold small m-0">Pembimbing</p>
                                     <ol>
@@ -179,8 +187,8 @@
                                         @endif
                                         @if($item->status == 'telah_seminar')
                                             <a href="{{ route('apps.jadwal-seminar.show', $item)}}" class="btn btn-sm btn-outline-warning mb-3" title="Detail"><i class="bx bx-show"></i></a>
-                                            @if($item->tugas_akhir->status_pemberkasan != 'sudah_lengkap')
-                                                <a href="javascript:void(0)" onClick="validate('{{ $item->id }}')" class="btn btn-sm btn-outline-success mb-3" title="Validasi Berkas"><i class="bx bx-pencil"></i></a>
+                                            @if($item->tugas_akhir->status_pemberkasan != 'sudah_lengkap' && is_null($item->tugas_akhir->status_sidang))
+                                            <a href="javascript:void(0)" onclick="validasiFile('{{ $item->id}}', '{{ route('apps.jadwal-seminar.validate', $item->id) }}')" class="btn btn-sm btn-outline-success mb-3" title="Validasi Berkas"><i class="bx bx-pencil"></i></a>
                                             @endif
                                         @endif
                                     @endif
@@ -194,8 +202,8 @@
                                             <i class="bx bx-file"></i>
                                             Unggah
                                         </a>
-                                        @include('administrator.jadwal-seminar.partials.modal')
                                     @endif
+                                    @include('administrator.jadwal-seminar.partials.modal')
                                 </td>
                             </tr>
                         @empty
