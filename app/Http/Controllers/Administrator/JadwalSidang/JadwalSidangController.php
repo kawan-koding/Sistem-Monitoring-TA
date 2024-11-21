@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use App\Models\KategoriNilai;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Exception;
 use Illuminate\Support\Facades\File;
 
 class JadwalSidangController extends Controller
@@ -162,10 +163,10 @@ class JadwalSidangController extends Controller
         try {
             DB::beginTransaction();
             $periode = PeriodeTa::where('is_active', true)->first();
-            if(!is_null($periode) && !Carbon::parse($periode->mulai_sidang)->addDays(1)->isFuture()){
+            if(!is_null($periode) && !Carbon::parse($periode->akhir_sidang)->addDays(1)->isFuture()){
                 return redirect()->back()->with('error', 'Pendaftaran sidang melebihi batas periode');
             }
-            if(!is_null($periode) && Carbon::parse($periode->akhir_sidang)->addDays(1)->isFuture()){
+            if(!is_null($periode) && Carbon::parse($periode->mulai_sidang)->addDays(1)->isFuture()){
                 return redirect()->back()->with('error', 'Pendaftaran Sidang Akhir belum aktif');
             }
             $documentTypes = JenisDokumen::all();
@@ -173,7 +174,7 @@ class JadwalSidangController extends Controller
             $messages = [];
             $inserts = [];
             foreach($documentTypes as $item) {
-                if($jadwalSeminar->status == 'belum_terjadwal') {
+                if($sidang->status == 'belum_terjadwal') {
                     if($item->jenis == 'pra_sidang') {
                         $validates['document_'. $item->id] = '|mimes:pdf,png,jpeg,jpg|max:2048';
                         $messages['document_'. $item->id .'.mimes'] = 'Dokumen '. strtolower($item->nama) .' harus dalam format PDF, PNG, JPEG dan JPG';
@@ -241,6 +242,48 @@ class JadwalSidangController extends Controller
             $sidang->update(['status' => 'sudah_daftar']);
             DB::commit();
             return redirect()->back()->with(['success' => 'Dokumen berhasil ditambahkan']);
+        } catch(Exception $e) {
+            return redirect()->back()->with(['error' => $e->getMessage()]);
+        }
+    }
+
+    public function validasiBerkas(Pemberkasan $pemberkasan)
+    {
+        try {
+            $pemberkasan->update(['status' => 'valid']);
+
+            return response()->json([
+                'status' => 'approve', 
+            ]);
+        } catch(Exception $e) {
+            return response()->json([
+                'status' => 'fail',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function reject(Pemberkasan $pemberkasan)
+    {
+        try {
+            $pemberkasan->update(['status' => 'tidak_valid']);
+
+            return response()->json([
+                'status' => 'reject',
+            ]);
+        } catch(Exception $e) {
+            return response()->json([
+                 'status' => 'fail',
+                 'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function berkasLengkap(Sidang $sidang)
+    {
+        try {
+            $sidang->tugas_akhir->update(['status_pemberkasan' => 'sudah_lengkap']);
+            return redirect()->back()->with(['success' => 'Berhasil memperbarui data']);
         } catch(Exception $e) {
             return redirect()->back()->with(['error' => $e->getMessage()]);
         }

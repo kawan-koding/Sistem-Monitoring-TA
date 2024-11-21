@@ -66,6 +66,13 @@
                                 <span class="d-none d-sm-block">Acc</span>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link @if (url()->full() == route('apps.pengajuan-ta', ['status' => 'reject'])) active @endif"
+                                href="{{ route('apps.pengajuan-ta', ['status' => 'reject']) }}">
+                                <span class="d-block d-sm-none small">Reject</i></span>
+                                <span class="d-none d-sm-block">Reject</span>
+                            </a>
+                        </li>
                     </ul>
                     @endif
                     <hr>

@@ -38,7 +38,7 @@ class JenisDokumenController extends Controller
     public function store(JenisDokumenRequest $request)
     {
         try {
-            JenisDokumen::create($request->only(['nama', 'jenis']));
+            JenisDokumen::create($request->only(['nama', 'jenis', 'tipe_dokumen', 'max_ukuran']));
             return redirect()->route('apps.jenis-dokumen')->with('success', 'Data berhasil ditambahkan');
         } catch(Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
@@ -53,7 +53,7 @@ class JenisDokumenController extends Controller
     public function update(JenisDokumenRequest $request, JenisDokumen $jenisDokumen)
     {
         try {
-            $jenisDokumen->update($request->only(['nama', 'jenis']));
+            $jenisDokumen->update($request->only(['nama', 'jenis', 'tipe_dokumen', 'max_ukuran']));
             return redirect()->route('apps.jenis-dokumen')->with('success', 'Data berhasil diperbarui');
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());

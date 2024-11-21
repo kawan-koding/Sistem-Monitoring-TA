@@ -227,7 +227,7 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::post('{jadwalSeminar}/unggah-berkas', [JadwalSeminarController::class, 'uploadDocument'])->name('apps.jadwal-seminar.unggah-berkas');
         Route::get('{jadwalSeminar}/detail', [JadwalSeminarController::class, 'detail'])->name('apps.jadwal-seminar.detail');
         Route::get('{jadwalSeminar}/show', [JadwalSeminarController::class, 'show'])->name('apps.jadwal-seminar.show');
-        Route::get('{jadwalSeminar}/validate', [JadwalSeminarController::class, 'validasiBerkas'])->name('apps.jadwal-seminar.validate');
+        Route::post('{jadwalSeminar}/validate', [JadwalSeminarController::class, 'validasiBerkas'])->name('apps.jadwal-seminar.validate');
     });
 
     Route::prefix('kategori-nilai')->middleware('can:read-kategori-nilai')->group( function() {
@@ -269,6 +269,8 @@ Route::prefix('apps')->middleware('auth')->group(function () {
        Route::get('{sidang}/detail',[JadwalSidangController::class,'show'])->name('apps.jadwal-sidang.detail'); 
        Route::get('{sidang}/detail-sidang',[JadwalSidangController::class,'show'])->name('apps.jadwal-sidang.detail-sidang'); 
        Route::post('{sidang}/daftar-sidang',[JadwalSidangController::class,'register'])->name('apps.jadwal-sidang.register'); 
+       Route::get('{pemberkasan}/validasi-berkas',[JadwalSidangController::class,'validasiBerkas'])->name('apps.jadwal-sidang.validasi-berkas');
+       Route::get('{pemberkasan}/reject', [JadwalSidangController::class, 'reject'])->name('apps.jadwal-sidang.reject');
     });
 
     Route::prefix('profile-dosen')->group( function() {

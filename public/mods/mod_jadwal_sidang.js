@@ -9,3 +9,9 @@ function unggahFile(id, url) {
     $('#daftarSidangLabel').html('Unggah Berkas Pasca Sidang')
     $('#modalDaftarSidang').modal('show')
 }
+
+function validasiFile(id, url) {
+    $('#validasiFileAction').attr("action", `${BASE_URL}/apps/jadwal-sidang/${id}/validasi-berkas`);
+    $('#validasiFileLabel').html('Validasi Berkas Sidang');
+    $('#modalValidasiFile').modal('show')
+}

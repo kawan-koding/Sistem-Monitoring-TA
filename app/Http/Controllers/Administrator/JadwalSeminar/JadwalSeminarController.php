@@ -33,9 +33,17 @@ class JadwalSeminarController extends Controller
             }
 
             if($request->has('status') && !empty($request->status)) {
-                $query = $query->where('status', $request->status);
+                $query = $query->where('status', $request->status)->whereHas('tugas_akhir', function ($q) use($request) {
+                    $q->where('status_pemberkasan', 'belum_lengkap');
+                });
             } else {
-                $query = $query->where('status', 'belum_terjadwal');
+                if($request->has('status_pemberkasan') && !empty($request->status_pemberkasan)) {
+                    $query = $query->whereHas('tugas_akhir', function ($q) use($request) {
+                        $q->where('status_pemberkasan', $request->status_pemberkasan);
+                    });
+                } else {
+                    $query = $query->where('status', 'belum_terjadwal');
+                }
             }
             $query = $query->get();
 
@@ -63,6 +71,7 @@ class JadwalSeminarController extends Controller
         // $doc = Pemberkasan::where('jenis_dokumen_id', $docSeminar[0]->id)->get();
         $data = [
             'title' =>  'Jadwal Seminar',
+            'mods' => 'jadwal_seminar',
             'breadcrumbs' =>[
                 [
                     'title' => 'Dashboard',
@@ -251,15 +260,15 @@ class JadwalSeminarController extends Controller
             foreach($documentTypes as $item) {
                 if($jadwalSeminar->status == 'belum_terjadwal') {
                     if($item->jenis == 'pra_seminar') {
-                        $validates['document_'. $item->id] = '|mimes:pdf|max:2048';
-                        $messages['document_'. $item->id .'.mimes'] = 'Dokumen '. strtolower($item->nama) .' harus dalam format PDF';
-                        $messages['document_'. $item->id .'.max'] = 'Dokumen '. strtolower($item->nama) .' tidak boleh lebih dari 2 MB';
+                        $validates['document_'. $item->id] = $item->tipe_dokumen == 'pdf' ? '|mimes:pdf|max:'. $item->max_ukuran : 'mimes:png,jpg,jpeg,webp|max:'. $item->max_ukuran;
+                        $messages['document_'. $item->id .'.mimes'] = 'Dokumen '. strtolower($item->nama) .' harus dalam format '. ($item->tipe_dokumen == 'pdf' ? 'PDF' : 'PNG, JPEG, JPG, WEBP');
+                        $messages['document_'. $item->id .'.max'] = 'Dokumen '. strtolower($item->nama) .' tidak boleh lebih dari '. $item->max_ukuran .' KB';
                     }
                 } else {
                     if($item->jenis == 'seminar') {
-                        $validates['document_'. $item->id] = '|mimes:pdf|max:2048';
-                        $messages['document_'. $item->id .'.mimes'] = 'Dokumen '. strtolower($item->nama) .' harus dalam format PDF';
-                        $messages['document_'. $item->id .'.max'] = 'Dokumen '. strtolower($item->nama) .' tidak boleh lebih dari 2 MB';
+                        $validates['document_'. $item->id] = $item->tipe_dokumen == 'pdf' ? '|mimes:pdf|max:'. $item->max_ukuran : 'mimes:png,jpg,jpeg,webp|max:'. $item->max_ukuran;
+                        $messages['document_'. $item->id .'.mimes'] = 'Dokumen '. strtolower($item->nama) .' harus dalam format '. ($item->tipe_dokumen == 'pdf' ? 'PDF' : 'PNG, JPEG, JPG, WEBP');
+                        $messages['document_'. $item->id .'.max'] = 'Dokumen '. strtolower($item->nama) .' tidak boleh lebih dari '. $item->max_ukuran .' KB';
                     }
                 }
             }

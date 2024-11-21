@@ -23,6 +23,23 @@ aria-labelledby="myModalLabel" aria-hidden="true">
                         <option value="sidang">Sidang</option>
                     </select>
                 </div>
+                <div class="mb-3">
+                    <label for="">Tipe Dokumen <span class="text-danger">*</span></label>
+                    <select name="tipe_dokumen" id="tipe_dokumen" class="form-control">
+                        <option value="" selected disabled hidden>Pilih Tipe Dokumen</option>
+                        <option value="pdf">PDF</option>
+                        <option value="gambar">GAMBAR</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="">Maks. Ukuran</label>
+                    <div class="input-group">
+                        <input class="input form-control" name="max_ukuran" id="max_ukuran" placeholder="Maks. Ukuran" value="500">
+                        <div class="input-group-append">
+                            <span class="input-group-text">KB</span>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary waves-effect" data-bs-dismiss="modal">Keluar</button>

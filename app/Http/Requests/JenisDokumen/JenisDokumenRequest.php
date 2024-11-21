@@ -24,6 +24,8 @@ class JenisDokumenRequest extends FormRequest
         return [
             'nama' => 'required',
             'jenis' => 'required',
+            'tipe_dokumen' => 'required',
+            'max_ukuran' => 'required',
         ];
     }
 
@@ -32,6 +34,8 @@ class JenisDokumenRequest extends FormRequest
         return [
             'nama.required' => 'Nama harus diisi',
             'jenis.required' => 'Jenis harus diisi',
+            'tipe_dokumen.required' => 'Tipe dokumen harus diisi',
+            'max_ukuran.required' => 'Maks. ukuran harus diisi',
         ];
     }
 }
