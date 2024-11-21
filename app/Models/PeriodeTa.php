@@ -12,4 +12,9 @@ class PeriodeTa extends Model
     protected $table = 'periode_tas';
     protected $primaryKey = 'id';
     protected $guarded = [];
+
+    public function programStudi()
+    {
+        return $this->belongsTo(ProgramStudi::class);
+    }
 }

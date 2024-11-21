@@ -23,7 +23,13 @@ class DaftarTAController extends Controller
     public function index(Request $request)
     {
         $periode = PeriodeTa::where('is_active', 1)->first();
-        $dataTa = TugasAkhir::with(['mahasiswa','bimbing_uji','periode_ta','topik','jenis_ta'])->where('periode_ta_id', $periode->id);    
+        $dataTa = TugasAkhir::with(['mahasiswa','bimbing_uji','periode_ta','topik','jenis_ta']);
+        if ($request->has('periode') && !empty($request->periode)) {
+            $dataTa->where('periode_ta_id', $request->periode);
+        } else {
+            $dataTa->where('periode_ta_id', $periode->id);
+        }
+
         if (session('switchRoles') == 'Kaprodi') {
             $user = getInfoLogin()->userable;
             $prodi = $user->programStudi->id;
@@ -36,11 +42,12 @@ class DaftarTAController extends Controller
             }
         }
 
-        if ($request->has('tipe') && $request->tipe != 'Semua') {
+        if ($request->has('program_studi') && !empty($request->program_studi) && $request->program_studi !== 'semua') {
             $dataTa->whereHas('mahasiswa', function($query) use ($request) {
-                $query->where('program_studi_id', $request->tipe);
+                $query->where('program_studi_id', $request->program_studi);
             });
         }
+        
         $dataTa = $dataTa->get();
         $data = [
             'title' => 'Daftar Tugas Akhir',
@@ -61,6 +68,7 @@ class DaftarTAController extends Controller
             ],
             'data' => $dataTa,
             'prodi' => ProgramStudi::all(),
+            'periode' => PeriodeTa::all(),
         ];
         
         return view('administrator.daftar-ta.index', $data);

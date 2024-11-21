@@ -42,7 +42,7 @@
                         <thead>
                             <tr>
                                 <th width="5%">No</th>
-                                <th width="30%">Nama</th>
+                                <th width="40%">Nama</th>
                                 <th>Email</th>
                                 <th>Jenis Kelamin</th>
                                 <th>Program Studi</th>

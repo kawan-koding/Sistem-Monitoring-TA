@@ -21,6 +21,7 @@ return new class extends Migration
             $table->date('mulai_sidang')->nullable();
             $table->date('akhir_sidang')->nullable();
             $table->boolean('is_active')->default(false);
+            $table->foreignId('program_studi_id')->nullable()->references('id')->on('program_studis')->onDelete('cascade');
             $table->timestamps();
         });
     }

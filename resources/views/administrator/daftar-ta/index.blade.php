@@ -10,7 +10,7 @@
                     <a href="{{ route('apps.daftar-ta.export') }}" target="_blank" class="btn btn-primary mb-3 mb-md-0" style="max-width: 150px;">
                         <i class="fa fa-file-excel"></i> Export Data
                     </a>
-                        <form method="GET" action="{{ route('apps.daftar-ta') }}" class="d-flex align-items-center">
+                        {{-- <form method="GET" action="{{ route('apps.daftar-ta') }}" class="d-flex align-items-center">
                             <div class="input-group">
                                 <select name="tipe" id="tipe" class="form-control" onchange="this.form.submit()">
                                     <option disabled selected hidden>Filter Berdasarkan Program Studi : </option>
@@ -20,7 +20,25 @@
                                     @endforeach
                                 </select>
                             </div>
+                        </form> --}}
+                        <form action="" >
+                            <div class="d-flex gap-2 flex-column flex-md-row">
+                                <select name="program_studi" id="program_studi" class="form-control" onchange="this.form.submit()">
+                                    <option selected disabled hidden>Filter Program Studi</option>
+                                    <option value="semua" {{ request('program_studi') == 'semua' ? 'selected' : '' }}>Semua Program Studi</option>
+                                    @foreach($prodi as $p)
+                                        <option value="{{ $p->id }}" {{ request('program_studi') == $p->id ? 'selected' : '' }}>{{ $p->nama }}</option>
+                                    @endforeach
+                                </select>
+                                <select name="periode" id="periode" class="form-control" onchange="this.form.submit()">
+                                    <option selected disabled hidden>Filter Periode</option>
+                                    @foreach($periode as $p)
+                                        <option value="{{ $p->id }}" {{ request('periode') == $p->id ? 'selected' : '' }}>{{ $p->nama }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </form>
+
                     </div>
                     <hr>
                 @endif
@@ -55,8 +73,8 @@
                         <thead>
                             <tr>
                                 <th width="5%">No</th>
-                                <th width="40%">Judul</th>
                                 <th width="20%">Mahasiswa</th>
+                                <th width="40%">Judul</th>
                                 <th width="20%">Dosen</th>
                                 <th width="10%">Periode</th>
                                 <th>Aksi</th>
@@ -67,11 +85,15 @@
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>
+                                        <p class="m-0 badge rounded-pill bg-primary-subtle text-primary small">{{ $item->mahasiswa->programStudi->display }}</p>                                            
+                                        <p class="m-0 p-0 small fw-bold">{{ $item->mahasiswa->nama_mhs }}</p>
+                                        <p class="m-0 p-0 text-muted small">NIM : {{$item->mahasiswa->nim}}</p>
+                                    </td>
+                                    <td>
                                         <span class="badge {{ isset($item->status) ? ($item->status == 'acc' ? 'badge-soft-success' : ($item->status == 'draft' ? 'bg-dark-subtle text-body' : 'badge-soft-danger')) : '-'}} small mb-1"> {{ ucfirst($item->status ?? '-')}} </span>
                                         <p class="m-0 small"><strong>{{ $item->judul }}</strong></p>
                                         <p class="m-0 text-muted font-size-15 small">{{ $item->topik->nama_topik }} - {{ $item->jenis_ta->nama_jenis}}</p>
                                     </td>
-                                    <td><p class="small">{{ $item->mahasiswa->nama_mhs }}</p></td>
                                     <td>
                                         <p class="fw-bold small m-0">Pembimbing</p>
                                         <ol>

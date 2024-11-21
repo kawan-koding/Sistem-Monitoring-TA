@@ -3685,3 +3685,6 @@ table.dataTable.dtr-inline.collapsed > tbody > tr > td.dtr-control:before {
 }
 
 
+table th {
+  white-space: nowrap;
+}

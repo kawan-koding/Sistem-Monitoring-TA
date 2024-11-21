@@ -21,6 +21,10 @@ aria-labelledby="myModalLabel" aria-hidden="true">
                     <input type="text" name="nama" id="nama" placeholder="Nama program studi" autocomplete="off" class="form-control">
                 </div>
                 <div class="mb-3">
+                    <label for="">Singkatan Program Studi <span class="text-danger">*</span></label>
+                    <input type="text" name="display" id="display" placeholder="Singkatan program studi" autocomplete="off" class="form-control">
+                </div>
+                <div class="mb-3">
                     <label for="">Jurusan <span class="text-danger">*</span></label>
                     <select name="jurusan_id" id="jurusan_id" required class="form-control">
                         <option value="" selected disabled hidden>Pilih Jurusan</option>

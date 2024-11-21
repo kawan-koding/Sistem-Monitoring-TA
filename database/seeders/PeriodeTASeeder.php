@@ -16,6 +16,7 @@ class PeriodeTASeeder extends Seeder
         PeriodeTa::create([
             'nama' => '2024/2025',
             'is_active' => 1,
+            'program_studi_id' => 2,
         ]);
     }
 }

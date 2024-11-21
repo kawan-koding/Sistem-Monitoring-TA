@@ -112,7 +112,9 @@ class DashboardController extends Controller
         $uji = BimbingUji::where('dosen_id', $user->id)->where('jenis', 'penguji');
         $periode = PeriodeTa::where('is_active', 1)->first();
         $kuota = KuotaDosen::where('periode_ta_id', $periode->id)->where('dosen_id', $user->id)->first();
-
+        // $totalKuota = $kuota->sum(function ($item) {
+        //     return $item->pembimbing_1 + $item->pembimbing_2 + $item->penguji_1 + $item->penguji_2;
+        // });
         return[
             'bimbing' => $bimbing,
             'uji' => $uji,

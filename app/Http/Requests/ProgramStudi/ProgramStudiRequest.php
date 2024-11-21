@@ -39,6 +39,10 @@ class ProgramStudiRequest extends FormRequest
                 'required',
                 $this->routeName == 'apps.program-studi.store' ? 'unique:program_studis,nama' : Rule::unique('program_studis', 'nama')->ignoreModel($this->programStudi)
             ],
+            'display' => [
+                'required',
+                $this->routeName == 'apps.program-studi.store' ? 'unique:program_studis,display' : Rule::unique('program_studis', 'display')->ignoreModel($this->programStudi)
+            ],
             'jurusan_id' => 'required'
         ];
     }
@@ -50,6 +54,8 @@ class ProgramStudiRequest extends FormRequest
             'kode.unique' => 'Kode program studi sudah ada',
             'nama.required' => 'Nama program studi harus diisi',
             'nama.unique' => 'Nama program studi sudah ada',
+            'display.required' => 'Singkatan program studi harus diisi',
+            'display.unique' => 'Singkatan program studi sudah ada',
             'jurusan_id.required' => 'Pilih jurusan'
         ];
     }

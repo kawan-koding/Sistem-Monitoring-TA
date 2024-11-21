@@ -3,6 +3,7 @@ function tambahData() {
     $('#myModalLabel').html('Tambah Program Studi')
     $('#kode').val('')
     $('#nama').val('')
+    $('#display').val('')
     $('#jurusan_id').val('')
     $('#myModal').modal('show')
 }
@@ -18,6 +19,7 @@ function editData(id, urlShow) {
         success: function (response) {
             $('#kode').val(response.kode)
             $('#nama').val(response.nama)
+            $('#display').val(response.display)
             $('#jurusan_id').val(response.jurusan_id)
         },
         error: function (xhr, status, error) {

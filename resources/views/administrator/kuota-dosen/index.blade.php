@@ -72,7 +72,7 @@
                                     <div class="d-flex align-items-center">
                                         <div>
                                             @if(session('switchRoles') == 'Admin')
-                                            <p class="m-0"><span class="badge rounded-pill bg-primary-subtle text-primary small mb-1">{{ $item->programStudi->nama }}</span></p>
+                                            <p class="m-0"><span class="badge rounded-pill bg-primary-subtle text-primary small mb-1">{{ $item->programStudi->display }}</span></p>
                                             @endif
                                             <p class="m-0 font-size-14 fw-bold">{{ucfirst($item->dosen->name)}}</p>
                                             <p class="m-0 p-0 text-muted small">NIDN : {{$item->dosen->nidn}}</p>

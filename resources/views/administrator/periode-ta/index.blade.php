@@ -41,6 +41,9 @@
                                 <th>Seminar Proposal</th>
                                 <th>Sidang Akhir</th>
                                 <th>Status</th>
+                                @if(session('switchRoles') == 'Admin')
+                                    <th>Program Studi</th>
+                                @endif
                                 <th width="15%">Aksi</th>
                             </tr>
                         </thead>
@@ -69,6 +72,11 @@
                                         <input class="form-check-input" type="checkbox" id="isActivePeriode" onchange="changeIsActive('{{route('apps.periode.change', $item->id)}}', '{{$item->is_active}}')" @if ($item->is_active == 1) checked @endif >
                                     </div>
                                 </td>
+                                @if(session('switchRoles') == 'Admin')
+                                <td>
+                                    <p class="m-0"><span class="badge rounded-pill bg-primary-subtle text-primary small mb-1">{{ $item->programStudi->display }}</span></p>                                    
+                                </td>
+                                @endif
                                 <td>
                                     <button onclick="editData('{{ $item->id }}', '{{route('apps.periode.show', $item->id)}}')" class="btn btn-outline-primary btn-sm mx-1 my-1" title="Edit"><i class="bx bx-edit-alt"></i></button>
                                     <button class="btn btn-outline-dark btn-sm mx-1 my-1" onclick="hapusPeriode('{{ $item->id }}', '{{route('apps.periode.delete', $item->id)}}')" title="Hapus"><i class="bx bx-trash"></i></button>

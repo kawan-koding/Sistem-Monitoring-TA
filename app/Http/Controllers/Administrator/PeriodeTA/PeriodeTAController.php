@@ -24,9 +24,8 @@ class PeriodeTAController extends Controller
                     'is_active' => true
                 ]
             ],
-            'periode' => PeriodeTa::all()
+            'periode' => PeriodeTa::with(['programStudi'])->get(),
         ];
-
         return view('administrator.periode-ta.index', $data);
     }
 

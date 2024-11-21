@@ -18,16 +18,19 @@ class ProgramStudiSeeder extends Seeder
                 'jurusan_id' => 1,
                 'kode' => '58302',
                 'nama' => 'S1 Terapan Teknologi Rekayasa Komputer',
+                'display' => 'TRK',
             ],
             [
                 'jurusan_id' => 1,
                 'kode' => '55401',
                 'nama' => 'S1 Terapan Teknologi Rekayasa Perangkat Lunak',
+                'display' => 'TRPL',
             ],
             [
                 'jurusan_id' => 1,
                 'kode' => '61316',
                 'nama' => 'S1 Terapan Bisnis Digital',
+                'display' => 'BD',
             ],
 
         ]);

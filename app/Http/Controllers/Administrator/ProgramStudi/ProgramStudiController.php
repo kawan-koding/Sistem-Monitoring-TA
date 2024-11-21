@@ -39,7 +39,7 @@ class ProgramStudiController extends Controller
     public function store(ProgramStudiRequest $request)
     {
         try {
-            ProgramStudi::create($request->only(['kode', 'nama', 'jurusan_id']));
+            ProgramStudi::create($request->only(['kode', 'nama', 'display', 'jurusan_id']));
     
             return redirect()->route('apps.program-studi')->with('success', 'Data berhasil ditambahkan');
         } catch (\Exception $e) {
@@ -56,7 +56,7 @@ class ProgramStudiController extends Controller
     public function update(ProgramStudiRequest $request, ProgramStudi $programStudi)
     {
         try {
-            $programStudi->update($request->only(['kode', 'nama', 'jurusan_id']));
+            $programStudi->update($request->only(['kode', 'nama', 'display', 'jurusan_id']));
             return redirect()->route('apps.program-studi')->with('success', 'Data berhasil diperbarui');
         } catch (\Exception $e) {
             return redirect()->route('apps.program-studi')->with('error', $e->getMessage());

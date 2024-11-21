@@ -15,7 +15,6 @@
                             @endcan
                         </div>
                         <form action="" >
-                        
                             <div class="d-flex gap-2 flex-column flex-md-row">
                                 <select name="program_studi" id="program_studi" class="form-control" onchange="this.form.submit()">
                                     <option selected disabled hidden>Filter Program Studi</option>
@@ -69,12 +68,12 @@
                             <thead>
                                 <tr>
                                     <th width="5%">No</th>
-                                    <th>Kelas</th>
-                                    <th>Nama</th>
-                                    <th>Email</th>
-                                    <th>Jenis Kelamin</th>
-                                    <th>Program Studi</th>
-                                    <th>Periode TA</th>
+                                    <th style="white-space: nowrap;">Kelas</th>
+                                    <th style="white-space: nowrap;">Nama</th>
+                                    <th style="white-space: nowrap;">Email</th>
+                                    <th style="white-space: nowrap;">Jenis Kelamin</th>
+                                    <th style="white-space: nowrap;">Program Studi</th>
+                                    <th style="white-space: nowrap;">Periode TA</th>
                                     @if(session('switchRoles') !== 'Kajur')
                                     <th>Aksi</th>
                                     @endif
