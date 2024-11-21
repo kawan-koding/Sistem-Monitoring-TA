@@ -7,6 +7,8 @@ function tambahData() {
     $('#akhir_daftar').val('')
     $('#mulai_seminar').val('')
     $('#akhir_seminar').val('')
+    $('#mulai_sidang').val('')
+    $('#akhir_sidang').val('')
     $('#myModal').modal('show')
 }
 
@@ -23,6 +25,8 @@ function editData(id, urlShow) {
             $('#akhir_daftar').val(response.akhir_daftar)
             $('#mulai_seminar').val(response.mulai_seminar)
             $('#akhir_seminar').val(response.akhir_seminar)
+            $('#mulai_sidang').val(response.mulai_sidang)
+            $('#akhir_sidang').val(response.akhir_sidang)
         },
         error: function (xhr, status, error) {
             console.error(xhr.responseText);

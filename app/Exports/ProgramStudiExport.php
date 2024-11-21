@@ -12,11 +12,11 @@ class ProgramStudiExport implements FromCollection, WithHeadings, WithTitle
     public function collection()
     {
         return ProgramStudi::select('kode', 'nama')->get();
+
     }
 
     public function headings(): array
     {
-        // Definisi heading untuk sheet kedua
         return [
             'Kode Program Studi',
             'Nama Program Studi'

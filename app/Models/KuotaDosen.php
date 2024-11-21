@@ -19,6 +19,11 @@ class KuotaDosen extends Model
         return $this->belongsTo(Dosen::class);
     }
 
+    public function programStudi()
+    {
+        return $this->belongsTo(ProgramStudi::class);
+    }
+
     public function periodeTa()
     {
         return $this->belongsTo(PeriodeTa::class);

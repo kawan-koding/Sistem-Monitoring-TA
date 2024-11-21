@@ -42,15 +42,14 @@
                         <thead>
                             <tr>
                                 <th width="5%">No</th>
-                                <th>NIP/NIPPPK/NIK</th>
-                                <th>Nama</th>
+                                <th width="30%">Nama</th>
                                 <th>Email</th>
                                 <th>Jenis Kelamin</th>
                                 <th>Program Studi</th>
                                 <th>Bidang Keahlian</th>
                                 <th>Tanda Tangan</th>
                                 @if(session('switchRoles') !== 'Kajur')
-                                <th width="20%">Aksi</th>
+                                <th>Aksi</th>
                                 @endif
                             </tr>
                         </thead>
@@ -58,12 +57,12 @@
                             @foreach ($dataDosen as $item)
                             <tr>
                                 <td>{{$loop->iteration}}</td>
-                                <td>{{$item->nip ?? '-'}}</td>
                                 <td>
                                     <div class="d-flex align-items-center">
                                         <div class="">
                                             <strong>{{ucfirst($item->name)}}</strong>
                                             <p class="m-0 p-0 text-muted small">NIDN : {{$item->nidn}}</p>
+                                            <p class="m-0 p-0 text-muted small">NIP/NIPPPK/NIK: {{$item->nip}}</p>
                                         </div>
                                     </div>
                                 </td>

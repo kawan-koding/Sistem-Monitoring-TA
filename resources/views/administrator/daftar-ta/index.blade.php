@@ -6,25 +6,22 @@
         <div class="card">
             <div class="card-body">
                 @if (in_array(session('switchRoles'), ['Admin','Developer','Kajur']))
-                    <form method="GET" action="{{ route('apps.daftar-ta') }}">
-                        <div class="row">
-                            <div class="col-md-5 col-sm-12">
-                                <div class="position-relative">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">Filter :</span>
-                                        </div>
-                                        <select name="tipe" id="tipe" class="form-control" onchange="this.form.submit()">
-                                            <option value="Semua" {{ request('tipe') == 'Semua' ? 'selected' : '' }}>Semua</option>
-                                            @foreach ($prodi as $item)
-                                                <option value="{{ $item->id }}" {{ request('tipe') == $item->id ? 'selected' : '' }}>{{ $item->nama }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
+                    <a href="{{ route('apps.daftar-ta.export') }}" target="_blank" class="btn btn-primary mb-3 mb-md-0" style="max-width: 150px;">
+                        <i class="fa fa-file-excel"></i> Export Data
+                    </a>
+                        <form method="GET" action="{{ route('apps.daftar-ta') }}" class="d-flex align-items-center">
+                            <div class="input-group">
+                                <select name="tipe" id="tipe" class="form-control" onchange="this.form.submit()">
+                                    <option disabled selected hidden>Filter Berdasarkan Program Studi : </option>
+                                    <option value="Semua" {{ request('tipe') == 'Semua' ? 'selected' : '' }}>Semua</option>
+                                    @foreach ($prodi as $item)
+                                        <option value="{{ $item->id }}" {{ request('tipe') == $item->id ? 'selected' : '' }}>{{ $item->nama }}</option>
+                                    @endforeach
+                                </select>
                             </div>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
                     <hr>
                 @endif
 
@@ -59,9 +56,9 @@
                             <tr>
                                 <th width="5%">No</th>
                                 <th width="40%">Judul</th>
-                                <th>Mahasiswa</th>
-                                <th>Dosen</th>
-                                <th>Periode</th>
+                                <th width="20%">Mahasiswa</th>
+                                <th width="20%">Dosen</th>
+                                <th width="10%">Periode</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -84,9 +81,9 @@
                                         </ol>
                                         <p class="fw-bold small m-0">Penguji</p>
                                         <ol>
-                                          @foreach ($item->bimbing_uji->where('jenis', 'penguji')->sortBy('urut') as $penguji)
-                                            <li class="small">{{ $penguji->dosen->name }}</li>
-                                        @endforeach
+                                            @foreach ($item->bimbing_uji->where('jenis', 'penguji')->sortBy('urut') as $penguji)
+                                                <li class="small">{{ $penguji->dosen->name }}</li>
+                                            @endforeach
                                         </ol>
                                     </td>
                                     <td><p class="small">{{ $item->periode_ta->nama }}</p></td>

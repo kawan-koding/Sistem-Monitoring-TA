@@ -18,7 +18,11 @@ class Mahasiswa extends Model
         return $this->belongsTo(ProgramStudi::class);
     }
 
-    
+    public function periodeTa()
+    {
+        return $this->belongsTo(PeriodeTa::class);
+    }
+
     public function user()
     {
         return $this->morphOne(User::class, 'userable');

@@ -48,6 +48,15 @@
                                 @endforeach
                             </select>
                         </div>
+                        <div class="mb-3">
+                            <label for="">Periode <span class="text-danger">*</span></label>
+                            <select name="periode_ta_id" id="periode_ta_id" required class="form-control">
+                                <option value="" selected disabled hidden>Pilih Periode</option>
+                                @foreach ($periode as $item)
+                                    <option value="{{ $item->id }}">{{$item->nama }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">

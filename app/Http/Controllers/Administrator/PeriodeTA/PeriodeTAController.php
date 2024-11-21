@@ -33,7 +33,7 @@ class PeriodeTAController extends Controller
     public function store(PeriodeTARequest $request)
     {
         try {
-            PeriodeTa::create($request->only('nama', 'mulai_daftar', 'akhir_daftar', 'mulai_seminar', 'akhir_seminar', 'mulai_sidang', 'akhir_sidang', 'mulai_pemberkasan', 'akhir_pemberkasan'));
+            PeriodeTa::create($request->only('nama', 'mulai_daftar', 'akhir_daftar', 'mulai_seminar', 'akhir_seminar', 'mulai_sidang', 'akhir_sidang'));
             return redirect()->route('apps.periode')->with('success', 'Data berhasil ditambahkan');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
@@ -48,7 +48,7 @@ class PeriodeTAController extends Controller
     public function update(PeriodeTARequest $request, PeriodeTa $periode)
     {
         try {
-            $periode->update($request->only('nama', 'mulai_daftar', 'akhir_daftar', 'mulai_seminar', 'akhir_seminar', 'mulai_sidang', 'akhir_sidang', 'mulai_pemberkasan', 'akhir_pemberkasan'));
+            $periode->update($request->only('nama', 'mulai_daftar', 'akhir_daftar', 'mulai_seminar', 'akhir_seminar', 'mulai_sidang', 'akhir_sidang'));
             return redirect()->route('apps.periode')->with('success', 'Data berhasil diubah');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());

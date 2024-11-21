@@ -5,15 +5,31 @@ namespace App\Http\Controllers\Administrator\KuotaDosen;
 use App\Models\Dosen;
 use App\Models\PeriodeTa;
 use App\Models\KuotaDosen;
+use App\Models\ProgramStudi;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class KuotaDosenController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $dosen = Dosen::all(); 
+        // $dosen = Dosen::get();
         $periode = PeriodeTa::where('is_active', true)->first();
+        $query = KuotaDosen::where('periode_ta_id', $periode->id)->with(['dosen']);
+        if(session('switchRoles') == 'Admin') {
+            if ($request->has('program_studi') && !empty($request->program_studi) && $request->program_studi !== 'semua') {
+                $query->where('program_studi_id', $request->program_studi);
+            }
+        }
+        
+        if(session('switchRoles') == 'Kaprodi') {
+            $user = getInfoLogin()->userable;
+            $prodi = $user->programStudi;
+            $query->where('program_studi_id', $prodi->id);
+        }
+
+        $query = $query->get();
+
         $data = [
             'title' => 'Kuota Dosen',
             'mods' => 'kuota_dosen',
@@ -27,67 +43,30 @@ class KuotaDosenController extends Controller
                     'is_active' => true
                 ]
             ],
-            'data' => $dosen,
+            'data' => $query,
+            'prodi' => ProgramStudi::all(),
             'periode' => $periode,
         ];
-
         return view('administrator.kuota-dosen.index', $data);
     }
-    
-    // public function store(Request $request)
-    // {
-    //     try {
-    //         $data = KuotaDosen::where('dosen_id', $request->dosen_id)->where('periode_ta_id', $request->periode_ta_id)->first();
-    //         if(isset($data->id)){
-    //             $data->update([
-    //                 $request->field => $request->value,
-    //             ]);
-    //         } else {
-    //             KuotaDosen::create([
-    //                 'dosen_id' => $request->dosen_id,
-    //                 'periode_ta_id' => $request->periode_ta_id,
-    //                 $request->field => $request->value,
-    //             ]);
-    //         }
-    //         return $this->successResponse('Data berhasil disimpan');
-    //     } catch(Exception $e) {
-    //         return $this->exceptionResponse($e);
-    //     }
-    // }
 
-    
-    public function show($id)
+    public function show(KuotaDosen $kuotaDosen)
     {
-        $dsn = Dosen::findOrFail($id);
-        $periode = PeriodeTa::where('is_active', true)->first();
-        $kuotaDosen = KuotaDosen::where('dosen_id', $dsn->id)->where('periode_ta_id', $periode->id)->first();
-
         return response()->json($kuotaDosen);
     }
 
-    public function update(Request $request)
+    public function update(KuotaDosen $kuotaDosen, Request $request)
     {
         $request->validate([
-           'pembimbing_1' => 'nullable',
-           'pembimbing_2' => 'nullable',
-           'penguji_1' => 'nullable',
-           'penguji_2' => 'nullable',
-           'dosen_id' => 'required',
+            'dosen_id' => 'required',
+            'pembimbing_1' => 'nullable',
+            'pembimbing_2' => 'nullable',
+            'penguji_1' => 'nullable',
+            'penguji_2' => 'nullable',
         ]);
 
         try {
-            $periode = PeriodeTa::where('is_active', true)->first();
-            $data = KuotaDosen::where('dosen_id', $request->dosen_id)->where('periode_ta_id', $periode->id)->first();
-            $fields = $request->only(['pembimbing_1', 'pembimbing_2', 'penguji_1', 'penguji_2']); 
-
-            if(isset($data->id)) {
-                $data->update($fields);
-            } else {
-                KuotaDosen::create(array_merge(
-                    ['dosen_id' => $request->dosen_id,'periode_ta_id' => $periode->id,],
-                    $fields
-                ));
-            }
+            $kuotaDosen->update($request->only(['pembimbing_1', 'pembimbing_2', 'penguji_1', 'penguji_2']));
             return redirect()->back()->with('success', 'Data berhasil diperbarui');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
@@ -95,25 +74,42 @@ class KuotaDosenController extends Controller
     }
 
     public function createAll(Request $request)
-    {
-        $request->validate([
-            'pembimbing_1' => 'required',
-            'pembimbing_2' => 'required',
-            'penguji_1' => 'required',
-            'penguji_2' => 'required'
-        ],[
-            'pembimbing_1' => 'Kuota Pembimbing 1 wajib diisi',
-            'pembimbing_1' => 'Kuota Pembimbing 2 wajib diisi',
-            'penguji_1' => 'Kuota Penguji 1 wajib diisi',
-            'penguji_2' => 'Kuota Penguji 2 wajib diisi',
-        ]);
-
+    {        
         try {
-            $dosen = Dosen::all();
+            $request->validate([
+                'pembimbing_1' => 'required',
+                'pembimbing_2' => 'required',
+                'penguji_1' => 'required',
+                'penguji_2' => 'required',
+            ],[
+                'pembimbing_1' => 'Kuota Pembimbing 1 wajib diisi',
+                'pembimbing_2' => 'Kuota Pembimbing 2 wajib diisi',
+                'penguji_1' => 'Kuota Penguji 1 wajib diisi',
+                'penguji_2' => 'Kuota Penguji 2 wajib diisi',
+            ]);
+            if(session('switchRoles') == 'Kaprodi') {
+                $user = getInfoLogin()->userable;
+                $prodi = $user->programStudi;
+                $request->merge([
+                    'program_studi_id' => $prodi->id,
+                ]);
+            }
+
+            if(session('switchRoles') == 'Admin') {
+                $request->validate([
+                    'program_studi_id' => 'required',
+                ],[
+                    'program_studi_id' => 'Program Studi wajib diisi',
+                ]);
+            }
+            
             $periode = PeriodeTa::where('is_active', true)->first();
+            $dosen = Dosen::all();
             foreach($dosen as $item) {
-                $existingKuota = KuotaDosen::where('dosen_id', $item->id)->where('periode_ta_id', $periode->id)->exists();
-                if (!$existingKuota) {
+                $existingKuota = KuotaDosen::where('dosen_id', $item->id)->where('periode_ta_id', $periode->id)->where('program_studi_id', $request->program_studi_id)->exists();
+                if ($existingKuota) {
+                    return redirect()->back()->with('error', "Data sudah ada");
+                } else {
                     KuotaDosen::create([
                         'dosen_id' => $item->id,
                         'periode_ta_id' => $periode->id,
@@ -121,11 +117,11 @@ class KuotaDosenController extends Controller
                         'pembimbing_2' => $request->pembimbing_2,
                         'penguji_1' => $request->penguji_1,
                         'penguji_2' => $request->penguji_2,
+                        'program_studi_id' => $request->program_studi_id
                     ]);
                 }
             }
-
-            return redirect()->route('apps.kuota-dosen')->with('success', 'Berhasil menyimpan data');
+            return redirect()->back()->with('success', 'Berhasil menyimpan data');
         } catch (\Exception $e) {
             return redirect()->back()->with($e->getMessage());
         }

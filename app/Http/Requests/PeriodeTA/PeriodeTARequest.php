@@ -42,7 +42,6 @@ class PeriodeTARequest extends FormRequest
             'akhir_seminar' => 'nullable',
             'mulai_sidang' => 'nullable',
             'akhir_sidang' => 'nullable',    
-            'akhir_pemberkasan' => 'nullable',    
         ];
     }
 
