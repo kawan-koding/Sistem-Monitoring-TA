@@ -5,7 +5,7 @@
         <div class="col-md-12 col-sm-12 col-g-12">
             <div class="card">
                 <div class="card-body">
-                    <form action="" class="d-flex flex-column flex-md-row justify-content-between">
+                    <div class="d-flex flex-column flex-md-row justify-content-between">
                         <div class="d-flex gap-2 mb-2 mb-md-0">
                             @can('create-mahasiswa')
                                 <button onclick="tambahData()" class="btn btn-primary"><i class="fa fa-plus"></i> Tambah</button>
@@ -14,25 +14,26 @@
                                 <button onclick="importData()" class="btn btn-success"><i class="fa fa-file-excel"></i> Import</button>
                             @endcan
                         </div>
-                    
-                        <div class="d-flex gap-2 flex-column flex-md-row">
-                            <select name="program_studi" id="program_studi" class="form-control" onchange="this.form.submit()">
-                                <option selected disabled hidden>Filter Program Studi</option>
-                                <option value="semua" {{ request('program_studi') == 'semua' ? 'selected' : '' }}>Semua Program Studi</option>
-                                @foreach($prodi as $p)
-                                    <option value="{{ $p->id }}" {{ request('program_studi') == $p->id ? 'selected' : '' }}>{{ $p->nama }}</option>
-                                @endforeach
-                            </select>
-                            <select name="periode" id="periode" class="form-control" onchange="this.form.submit()">
-                                <option selected disabled hidden>Filter Periode</option>
-                                <option value="semua" {{ request('periode') == 'semua' ? 'selected' : '' }}>Semua Periode</option>
-                                @foreach($periode as $p)
-                                    <option value="{{ $p->id }}" {{ request('periode') == $p->id ? 'selected' : '' }}>{{ $p->nama }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </form>
-                    
+                        <form action="" >
+                        
+                            <div class="d-flex gap-2 flex-column flex-md-row">
+                                <select name="program_studi" id="program_studi" class="form-control" onchange="this.form.submit()">
+                                    <option selected disabled hidden>Filter Program Studi</option>
+                                    <option value="semua" {{ request('program_studi') == 'semua' ? 'selected' : '' }}>Semua Program Studi</option>
+                                    @foreach($prodi as $p)
+                                        <option value="{{ $p->id }}" {{ request('program_studi') == $p->id ? 'selected' : '' }}>{{ $p->nama }}</option>
+                                    @endforeach
+                                </select>
+                                <select name="periode" id="periode" class="form-control" onchange="this.form.submit()">
+                                    <option selected disabled hidden>Filter Periode</option>
+                                    <option value="semua" {{ request('periode') == 'semua' ? 'selected' : '' }}>Semua Periode</option>
+                                    @foreach($periode as $p)
+                                        <option value="{{ $p->id }}" {{ request('periode') == $p->id ? 'selected' : '' }}>{{ $p->nama }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </form>
+                    </div>  
                     <hr>
 
                     @if(session('success'))

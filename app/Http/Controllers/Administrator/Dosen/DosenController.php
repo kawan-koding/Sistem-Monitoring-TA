@@ -90,6 +90,7 @@ class DosenController extends Controller
                     ]);
                 }
             }
+
             DB::commit();
             return redirect()->route('apps.dosen')->with('success', 'Data berhasil ditambahkan');
         } catch(\Exception $e) {
@@ -100,9 +101,6 @@ class DosenController extends Controller
     public function show(Dosen $dosen)
     {
         return response()->json($dosen);
-        // $topik = Dosen::find($id);
-
-        // echo json_encode($topik);
     }
 
     public function update(DosenRequest $request, Dosen $dosen)
