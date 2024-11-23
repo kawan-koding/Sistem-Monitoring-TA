@@ -22,14 +22,24 @@ class JadwalSeminarController extends Controller
     public function index(Request $request)
     {
         $query = [];
-        $periode = PeriodeTa::where('is_active', 1)->first();
+        $periode = $request->has('filter2') && !empty($request->filter2 && $request->filter2 != 'semua') ? $request->filter2 : PeriodeTa::where('is_active', 1)->first()->id;
         if(getInfoLogin()->hasRole('Admin')) {
             $query = JadwalSeminar::whereHas('tugas_akhir', function ($q) use($periode) { 
-                $q->where('status', 'acc')->where('periode_ta_id', $periode->id); 
+                $q->where('status', 'acc')->where('periode_ta_id', $periode); 
             });
 
             if($request->has('tanggal') && !empty($request->tanggal)) {
                 $query = $query->whereDate('tanggal', $request->tanggal);
+            }
+
+            if($request->has('filter1') && !empty($request->filter1) && $request->filter1 != 'semua') {
+                $query = $query->whereHas('tugas_akhir', function ($q) use($request) {
+                    $q->whereHas('mahasiswa', function ($q) use($request) {
+                        $q->whereHas('programStudi', function ($q) use($request) {
+                            $q->where('display', $request->filter1);
+                        });
+                    });
+                });
             }
 
             if($request->has('status') && !empty($request->status)) {
@@ -45,6 +55,16 @@ class JadwalSeminarController extends Controller
                     $query = $query->where('status', 'belum_terjadwal');
                 }
             }
+
+
+            if($request->has('programStudi') && !empty($request->program_studi)) {
+                $query = $query->whereHas('tugas_akhir', function ($q) use($request) {
+                    $q->whereHas('mahasiswa', function ($q) use($request) {
+                        $q->where('program_studi_id', $request->program_studi);
+                    });
+                });
+            } 
+
             $query = $query->get();
 
             $query = $query->map(function($item) {
@@ -68,7 +88,6 @@ class JadwalSeminarController extends Controller
         }
 
         $docSeminar = JenisDokumen::whereIn('jenis', ['seminar', 'pra_seminar'])->get();
-        // $doc = Pemberkasan::where('jenis_dokumen_id', $docSeminar[0]->id)->get();
         $data = [
             'title' =>  'Jadwal Seminar',
             'mods' => 'jadwal_seminar',
@@ -83,10 +102,12 @@ class JadwalSeminarController extends Controller
                 ]
                 ],
             'data' => $query,
+            'periodes' => PeriodeTa::all(),
+            'periode' => $periode,
             'status' => $request->has('status') ? $request->status : null,
             'document_seminar' => $docSeminar,
-            // 'doc' => $doc->count() > 0 ? $doc[0] : collect([]),
-            // 'documents' => $query->count() > 0 ? Dokumen::where('model_type', JadwalSeminar::class)->where('model_id', $query[0]->id)->get() : collect([]), 
+            'filter1' => $request->has('filter1') ? $request->filter1 : null,
+            'filter2' => $request->has('filter2') ? $request->filter2 : null,
         ];
         
         return view('administrator.jadwal-seminar.index', $data);
@@ -222,6 +243,15 @@ class JadwalSeminarController extends Controller
         $recapPenguji1 = $recapPenguji1 > 0 ? $recapPenguji1 / $jadwalSeminar->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 1)->first()->penilaian()->where('type', 'Seminar')->count() : 0;
         $recapPenguji2 = $jadwalSeminar->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 2)->first()->penilaian()->where('type', 'Seminar')->sum('nilai');
         $recapPenguji2 = $recapPenguji2 > 0 ? $recapPenguji2 / $jadwalSeminar->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 2)->first()->penilaian()->where('type', 'Seminar')->count() : 0;
+
+        $nearestSchedule = [];
+        $currentDate = Carbon::now();
+        while(count($nearestSchedule) < 5) {
+            if($currentDate->isWeekday()) {
+                $nearestSchedule[] = $currentDate->format('d-m-Y');
+            }
+            $currentDate->addDay();
+        }
 
         $data = [
             'title' => 'Jadwal Seminar',

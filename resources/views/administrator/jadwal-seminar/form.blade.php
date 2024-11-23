@@ -61,7 +61,7 @@
         <div class="col-lg-6 col-md-6 col-sm-12">
             <div class="card">
                 <div class="card-body">
-                    <h4>Jadwal Terdaftar</h4>
+                    <h4>Jadwal Dosen Terdaftar</h4>
                     <hr class="mb-3">
                     <div class="accordion" id="accordion">
                         @foreach ($jadwalSeminar->tugas_akhir->bimbing_uji as $item)
@@ -230,5 +230,27 @@
                 </div>
             </div>
         </div>
+        <div class="col-md-6 col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <h4>Jadwal Mahasiswa Terdaftar</h4>
+                    <hr class="mb-0">
+                    <table class="table table-responsive">
+                        <thead style="color: steelblue">
+                            <th>Nama Mahasiswa</th>
+                            <th>Jenis</th>
+                            <th>Tanggal</th>
+                            <th>Waktu</th>
+                        </thead>
+                        <tbody>
+                            <td>Sadesty Rahmadhani</td>
+                            <td>Individu</td>
+                            <td>20/11/2024</td>
+                            <td>15.00 - 16.00</td>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>  
     </div>
 @endsection
