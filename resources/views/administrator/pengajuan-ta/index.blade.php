@@ -189,7 +189,7 @@
                                                     @endif
                                                 @endif
                                                 @if (getInfoLogin()->hasRole('Mahasiswa'))
-                                                    @if($item->status !== 'cancel')
+                                                    @if($item->status !== 'cancel' || $item->status !== 'reject')
                                                     @can('update-pengajuan-tugas-akhir')
                                                         <a href="{{ route('apps.pengajuan-ta.edit', ['pengajuanTA' => $item->id]) }}"
                                                             class="btn btn-sm btn-outline-primary my-1 mx-1" title="Edit"><i
