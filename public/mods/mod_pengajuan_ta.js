@@ -22,6 +22,13 @@ function cancelTA(id) {
 
 }
 
+function revisiTA(id) {
+    $('#myModal').find('form').attr('action', `${BASE_URL}/apps/pengajuan-ta/${id}/revisi`);
+    $('#myModal').find('.modal-title').html('Revisi TA?');
+    $('#myModal').modal('show');
+
+}
+
 
 $(document).ready(function () {
      $('select[name="jenis_ta_id"]').on('change', function () {
