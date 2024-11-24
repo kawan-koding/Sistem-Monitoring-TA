@@ -22,7 +22,6 @@ class MahasiswaController extends Controller
     public function index(Request $request)
     {
         $mahasiswa = Mahasiswa::query();
-
         if ($request->has('program_studi') && !empty($request->program_studi) && $request->program_studi !== 'semua') {
             $mahasiswa->where('program_studi_id', $request->program_studi);
         }
@@ -30,9 +29,13 @@ class MahasiswaController extends Controller
         if ($request->has('periode') && !empty($request->periode) && $request->periode !== 'semua') {
             $mahasiswa->where('periode_ta_id', $request->periode);
         }
-        
         $mahasiswa = $mahasiswa->get();
 
+        $periode = PeriodeTa::query();
+        if ($request->has('program_studi') && !empty($request->program_studi) && $request->program_studi !== 'semua') {
+            $periode->where('program_studi_id', $request->program_studi);
+        }
+        $periode = $periode->get();
         $data = [
             "title" => "Mahasiswa",
             'mods' => 'mahasiswa',
@@ -52,7 +55,7 @@ class MahasiswaController extends Controller
             ],
             'mhs' => $mahasiswa,
             'prodi' => ProgramStudi::all(),
-            'periode' => PeriodeTa::all(),
+            'periode' => $periode,
         ];
 
         return view('administrator.mahasiswa.index', $data);

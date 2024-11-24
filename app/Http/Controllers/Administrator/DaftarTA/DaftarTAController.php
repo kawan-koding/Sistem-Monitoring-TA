@@ -24,7 +24,7 @@ class DaftarTAController extends Controller
     {
         $periode = PeriodeTa::where('is_active', 1)->first();
         $dataTa = TugasAkhir::with(['mahasiswa','bimbing_uji','periode_ta','topik','jenis_ta']);
-        if ($request->has('periode') && !empty($request->periode)) {
+        if ($request->has('periode') && !empty($request->periode) && $request->program_studi !== 'semua') {
             $dataTa->where('periode_ta_id', $request->periode);
         } else {
             $dataTa->where('periode_ta_id', $periode->id);
@@ -49,6 +49,13 @@ class DaftarTAController extends Controller
         }
         
         $dataTa = $dataTa->get();
+
+        $periode = PeriodeTa::query();
+        if ($request->has('program_studi') && !empty($request->program_studi) && $request->program_studi !== 'semua') {
+            $periode->where('program_studi_id', $request->program_studi);
+        }
+        $periode = $periode->get();
+
         $data = [
             'title' => 'Daftar Tugas Akhir',
             'mods' => 'daftar_ta',
@@ -68,7 +75,7 @@ class DaftarTAController extends Controller
             ],
             'data' => $dataTa,
             'prodi' => ProgramStudi::all(),
-            'periode' => PeriodeTa::all(),
+            'periode' => $periode,
         ];
         
         return view('administrator.daftar-ta.index', $data);
