@@ -157,6 +157,7 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::post('{pengajuanTA}/accept', [PengajuanTAController::class, 'accept'])->name('apps.pengajuan-ta.accept')->middleware('can:acc-pengajuan-tugas-akhir');
         Route::post('{pengajuanTA}/reject', [PengajuanTAController::class, 'reject'])->name('apps.pengajuan-ta.reject')->middleware('can:reject-pengajuan-tugas-akhir');
         Route::post('{pengajuanTA}/cancel', [PengajuanTAController::class, 'cancel'])->name('apps.pengajuan-ta.cancel')->middleware('can:cancel-pengajuan-tugas-akhir');
+        Route::post('{pengajuanTA}/revisi', [PengajuanTAController::class, 'revisi'])->name('apps.pengajuan-ta.revisi');
     });
 
     Route::prefix('rekomendasi-topik')->middleware('can:read-rekomendasi-topik')->group(function () {

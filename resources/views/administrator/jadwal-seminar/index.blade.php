@@ -33,27 +33,51 @@
                 class="far fa-file-alt"></i> Template Pemberkasan Seminar</a>
             <hr>
             @if (getInfoLogin()->hasRole('Admin'))
-                <div class="col-md-8 col-sm-12">
-                    <form action="">
-                        @if(!is_null($status))
-                        <input type="hidden" name="status" value="{{ $status }}">
-                        @endif
-                        <label for="">Filter Tanggal</label>
-                        <div class="inner mb-3 row">
-                            <div class="col-md-8 col-sm-6">
-                                <div class="position-relative">
-                                    <div class="input-group">
-                                        <input type="date" name="tanggal" class="inner form-control" placeholder="cari berdasarkan tanggal">
-                                        <div class="input-group-prepend">
-                                            <button type="submit" class="btn btn-primary input-group-text inner">Filter</button>
-                                            <a href="{{ route('apps.jadwal-seminar') }}" class="btn btn-secondary input-group-text inner">Reset</a>
+                <form action="">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12">
+                            @if(!is_null($status))
+                            <input type="hidden" name="status" value="{{ $status }}">
+                            @endif
+                            <label for="">Filter Tanggal</label>
+                            <div class="inner mb-3 row">
+                                <div class="col-md-8 col-sm-6">
+                                    <div class="position-relative">
+                                        <div class="input-group">
+                                            <input type="date" name="tanggal" class="inner form-control" placeholder="cari berdasarkan tanggal">
+                                            <div class="input-group-prepend">
+                                                <button type="submit" class="btn btn-primary input-group-text inner">Filter</button>
+                                                <a href="{{ route('apps.jadwal-seminar') }}" class="btn btn-secondary input-group-text inner">Reset</a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </form>
-                </div>
+                        <div class="col-md-6 col-sm-12">
+                            <label for="">Filter berdasarkan Prodi / Periode</label>
+                            <div class="row">
+                                <div class="col-6">
+                                    <select name="filter1" class="form-control" onchange="this.form.submit()">
+                                        <option value="semua" {{ $filter1 == 'semua' ? 'selected' : '' }}>Semua Program Studi</option>
+                                        <option value="TRK" {{ $filter1 == 'TRK' ? 'selected' : '' }}>TRK</option>
+                                        <option value="TRPL" {{  $filter1 == 'TRPL' ? 'selected' : '' }}>TRPL</option>
+                                        <option value="BD" {{  $filter1 == 'BD' ? 'selected' : '' }}>BD</option>
+                                    </select>
+                                </div>
+                                <div class="col-6">
+                                    <select name="filter2" class="form-control" onchange="this.form.submit()">
+                                        <option value="semua" {{ $filter2 == 'semua' ? 'selected' : '' }}>Semua Periode</option>
+                                        @foreach($periodes as $item)
+                                            <option value="{{$item->id}}" {{ ($filter2 ?? $periode) == $item->id ? 'selected' : '' }}>{{$item->nama}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <hr class="mb-0">
 
                 @can('read-jadwal-seminar')
                     <ul class="nav nav-tabs nav-tabs-custom nav-justified mt-1 mb-2" role="tablist">
@@ -98,6 +122,9 @@
                                 <th>Mahasiswa</th>
                             @endif
                             <th width="40%">Judul</th>
+                            @if(getInfoLogin()->hasRole('Admin'))
+                            <th>Periode</th>
+                            @endif
                             <th width="20%">Dosen</th>
                             <th>Ruangan</th>
                             @if (getInfoLogin()->hasRole('Admin'))
@@ -111,7 +138,12 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 @if (getInfoLogin()->hasRole('Admin'))
-                                    <td><p class="small">{{ $item->tugas_akhir->mahasiswa->nama_mhs }}</p></td>
+                                    <td>
+                                        @if(getInfoLogin()->hasRole('Admin'))
+                                            <span class="badge badge-soft-primary">{{ !is_null($item->tugas_akhir->mahasiswa->programStudi) ? $item->tugas_akhir->mahasiswa->programStudi->display : ''}}</span>
+                                        @endif
+                                        <p class="small">{{ $item->tugas_akhir->mahasiswa->nama_mhs }}</p>
+                                    </td>
                                 @endif
                                 <td>
                                     @if ($item->status == 'telah_seminar')
@@ -125,6 +157,7 @@
                                         {{ $item->tugas_akhir->jenis_ta->nama_jenis }}</p>
                                     <span class="badge small mb-1 badge-soft-secondary">{{isset($item->tugas_akhir) ? ($item->tugas_akhir->tipe == 'I' ? 'Individu' : 'Kelompok') : ''}}</span>
                                 </td>
+                                <td>{{ !is_null($item->tugas_akhir->periode_ta) ? $item->tugas_akhir->periode_ta->nama : '-' }}</td>
                                 <td>
                                     <p class="fw-bold small m-0">Pembimbing</p>
                                     <ol>

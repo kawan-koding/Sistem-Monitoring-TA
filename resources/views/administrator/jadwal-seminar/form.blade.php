@@ -61,7 +61,7 @@
         <div class="col-lg-6 col-md-6 col-sm-12">
             <div class="card">
                 <div class="card-body">
-                    <h4>Jadwal Terdaftar</h4>
+                    <h4>Jadwal Dosen Terdaftar</h4>
                     <hr class="mb-3">
                     <div class="accordion" id="accordion">
                         @foreach ($jadwalSeminar->tugas_akhir->bimbing_uji as $item)
@@ -230,5 +230,31 @@
                 </div>
             </div>
         </div>
+        <div class="col-md-6 col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <h4>Jadwal Mahasiswa Terdaftar</h4>
+                    <hr class="mb-0">
+                    <table class="table table-responsive">
+                        <thead style="color: steelblue">
+                            <th>Nama Mahasiswa</th>
+                            <th>Jenis</th>
+                            <th>Tanggal</th>
+                            <th>Waktu</th>
+                        </thead>
+                        <tbody>
+                            @foreach($mahasiswaTerdaftar as $item)
+                            <tr>
+                                <td>{{ $item->tugas_akhir->mahasiswa->nama_mhs }}</td>
+                                <td>{{ $item->tugas_akhir->tipe == 'K' ? 'Kelompok' : 'Individu' }}</td>
+                                <td>{{ \Carbon\Carbon::parse($item->tanggal)->locale('id')->translatedFormat('l, d F Y') }}</td>
+                                <td>{{ \Carbon\Carbon::parse($item->jam_mulai)->locale('id')->translatedFormat('H:i') }} - {{ \Carbon\Carbon::parse($item->jam_selesai)->locale('id')->translatedFormat('H:i') }}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>  
     </div>
 @endsection

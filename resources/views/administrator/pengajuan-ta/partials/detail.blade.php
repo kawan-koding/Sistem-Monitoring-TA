@@ -6,7 +6,7 @@
                 <div class="col-md-10 col-12">
                     <h5 class="fw-bold mb-1">{{isset($dataTA->judul) ? $dataTA->judul : '-'}}</h5>
                     <div class="d-flex gap-2 small text-muted">
-                        <div class="badge rounded-pill font-size-12 px-2 {{isset($dataTA->status) ? ($dataTA->status == 'acc' ? 'badge-soft-success' : ($dataTA->status == 'draft' ? 'bg-dark-subtle text-body' : 'badge-soft-danger')) : ''}}">{{isset($dataTA->status) ? $dataTA->status : '-'}}</div>
+                        <div class="badge rounded-pill font-size-12 px-2 {{isset($dataTA->status) ? ($dataTA->status == 'acc' ? 'badge-soft-success' : ($dataTA->status == 'draft' ? 'bg-dark-subtle text-body' : ($dataTA->status == 'revisi' ? 'badge-soft-warning' : 'badge-soft-danger'))) : ''}}">{{isset($dataTA->status) ? $dataTA->status : '-'}}</div>
                         |
                         <span><strong>{{isset($dataTA->topik->nama_topik) ? $dataTA->topik->nama_topik : '-'}}</strong> - {{isset($dataTA->jenis_ta->nama_jenis) ? $dataTA->jenis_ta->nama_jenis : '-'}}</span>
                     </div>
@@ -71,11 +71,11 @@
             </table>
             <br><br>
             <div class="d-flex flex-column flex-md-row">
-                <div class="w-100 px-4 py-3 fw-bold text-center border-top {{isset($dataTA->status) ? ($dataTA->status == 'draft' ? 'border-primary bg-soft-primary text-primary' : ($dataTA->status == 'acc' ? 'border-success bg-soft-success text-success' : 'border-danger bg-soft-danger text-danger')) : 'border-secondary bg-soft-secondary text-secondary'}}" style="white-space: nowrap">
+                <div class="w-100 px-4 py-3 fw-bold text-center border-top {{isset($dataTA->status) ? ($dataTA->status == 'draft' || $dataTA->status == 'revisi' ? 'border-primary bg-soft-primary text-primary' : ($dataTA->status == 'acc' ? 'border-success bg-soft-success text-success' : 'border-danger bg-soft-danger text-danger')) : 'border-secondary bg-soft-secondary text-secondary'}}" style="white-space: nowrap">
                     <i class="bx {{$dataTA->status == 'acc' ? 'bx-check' : ($dataTA->status == 'reject' ? 'bx-x' : 'bx-timer')}}"></i> 
                     Pengajuan Topik
                     <br>
-                    <span class="small">{{$dataTA->status == 'acc' ? 'Selesai' : ($dataTA->status == 'reject' ? 'Ditolak' : ($dataTA->status == 'draft' ? 'Sedang Berlangsung': 'Tidak Dilanjutkan'))}}</span>
+                    <span class="small">{{$dataTA->status == 'acc' ? 'Selesai' : ($dataTA->status == 'reject' ? 'Ditolak' : ($dataTA->status == 'draft' || $dataTA->status == 'revisi' ? 'Sedang Berlangsung': 'Tidak Dilanjutkan'))}}</span>
                 </div>
                 {{-- <div class="w-100 px-4 py-3 fw-bold text-center border-top {{!is_null($dataTA->status_seminar) || $dataTA->status == 'acc' ? ($dataTA->status_seminar == 'revisi' || $dataTA->status == 'acc' ? 'border-primary bg-soft-primary text-primary' : ($dataTA->status_seminar == 'acc' && $dataTA->status_pemberkasan == 'sudah_lengkap' ? 'border-success bg-soft-success text-success' : 'border-danger bg-soft-danger text-danger')) : 'border-secondary bg-soft-secondary text-secondary'}}" style="white-space: nowrap"> --}}
                 <div class="w-100 px-4 py-3 fw-bold text-center border-top {{ !is_null($dataTA->status) && $dataTA->status == 'acc' ? ($dataTA->status_seminar == 'reject' ? 'border-danger bg-soft-danger text-danger' : (($dataTA->status_seminar == 'acc' || $dataTA->status_seminar == 'revisi') && $dataTA->status_pemberkasan == 'sudah_lengkap' || !is_null($dataTA->status_sidang) && ($dataTA->status_seminar == 'acc' || $dataTA->status_seminar == 'revisi') ? 'border-success bg-soft-success text-success' : 'border-primary bg-soft-primary text-primary')) : 'border-secondary bg-soft-secondary text-secondary' }}" style="white-space: nowrap">

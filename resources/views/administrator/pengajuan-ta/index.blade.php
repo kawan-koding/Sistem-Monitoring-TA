@@ -60,6 +60,13 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link @if (url()->full() == route('apps.pengajuan-ta', ['status' => 'revisi'])) active @endif"
+                                href="{{ route('apps.pengajuan-ta', ['status' => 'revisi']) }}">
+                                <span class="d-block d-sm-none small">Revisi</i></span>
+                                <span class="d-none d-sm-block">Revisi</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link @if (url()->full() == route('apps.pengajuan-ta', ['status' => 'acc'])) active @endif"
                                 href="{{ route('apps.pengajuan-ta', ['status' => 'acc']) }}">
                                 <span class="d-block d-sm-none small">Acc</i></span>
@@ -152,8 +159,13 @@
                                                         <span
                                                             class='badge small rounded-pill badge-soft-danger font-size-11'>{{ ucfirst($item->status) }}</span>
                                                     @else
-                                                        <span
-                                                            class='badge small rounded-pill badge-soft-secondary font-size-11'>{{ ucfirst($item->status) }}</span>
+                                                        @if($item->status == 'revisi')
+                                                            <span
+                                                                class='badge small rounded-pill badge-soft-warning font-size-11'>{{ ucfirst($item->status) }}</span>
+                                                        @else
+                                                            <span
+                                                                class='badge small rounded-pill badge-soft-secondary font-size-11'>{{ ucfirst($item->status) }}</span>
+                                                        @endif
                                                     @endif
                                                 @endif
                                             </td>
@@ -170,10 +182,14 @@
                                                             onclick="rejectTA('{{ $item->id }}', '{{ route('apps.pengajuan-ta.reject', $item->id) }}')"
                                                             class="btn btn-outline-danger btn-sm mx-1 my-1"
                                                             title="Reject"><i class="bx bx-x"></i></button>
+                                                        <button
+                                                            onclick="revisiTA('{{ $item->id }}', '{{ route('apps.pengajuan-ta.revisi', $item->id) }}')"
+                                                            class="btn btn-outline-secondary btn-sm mx-1 my-1"
+                                                            title="Revisi"><i class="bx bx-revision"></i></button>
                                                     @endif
                                                 @endif
                                                 @if (getInfoLogin()->hasRole('Mahasiswa'))
-                                                    @if($item->status !== 'cancel')
+                                                    @if($item->status !== 'cancel' || $item->status !== 'reject')
                                                     @can('update-pengajuan-tugas-akhir')
                                                         <a href="{{ route('apps.pengajuan-ta.edit', ['pengajuanTA' => $item->id]) }}"
                                                             class="btn btn-sm btn-outline-primary my-1 mx-1" title="Edit"><i

@@ -467,5 +467,23 @@ class PengajuanTAController extends Controller
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
-    }    
+    } 
+    
+    public function revisi(TugasAkhir $pengajuanTA, Request $request)
+    {
+        $request->validate([
+            'catatan' => 'nullable'
+        ]);
+
+        try {
+            $pengajuanTA->update([
+                'status' => 'revisi',
+                'catatan' => $request->catatan
+            ]);
+
+            return redirect()->back()->with('success', 'Pengajuan TA telah di revisi');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
 }
