@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignId('periode_ta_id')->references('id')->on('periode_tas')->onDelete('cascade');
             $table->text('judul');
             $table->enum('tipe', ['K', 'I']);
-            $table->enum('status', ['draft', 'acc', 'reject', 'cancel', 'revisi']);
+            $table->enum('status', ['draft', 'acc', 'reject', 'cancel', 'revisi','pengajuan ulang']);
             $table->text('catatan')->nullable();
             $table->enum('status_seminar', ['revisi', 'acc', 'reject'])->nullable();
             $table->enum('status_sidang', ['revisi', 'acc', 'reject'])->nullable();

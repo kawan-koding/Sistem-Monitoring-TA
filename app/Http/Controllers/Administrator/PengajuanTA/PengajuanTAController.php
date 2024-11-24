@@ -50,7 +50,7 @@ class PengajuanTAController extends Controller
             if($request->has('status') && !empty($request->status)) {
                 $query = $query->whereIn('status', [$request->status, 'cancel']);
             } else {
-                $query = $query->where('status', 'draft');
+                $query = $query->whereIn('status', ['draft','pengajuan ulang']);
             }
 
             $query = $query->get();
@@ -79,7 +79,9 @@ class PengajuanTAController extends Controller
 
     public function create()
     {
-        $periode = PeriodeTa::where('is_active', 1)->first();
+        $user = getInfoLogin()->userable;
+        $prodi = $user->programStudi;
+        $periode = PeriodeTa::where('is_active', 1)->where('program_studi_id', $prodi->id)->first();
         $dataDosen = Dosen::all();
         $dosen = [];
         foreach ($dataDosen as $key) {
@@ -129,7 +131,9 @@ class PengajuanTAController extends Controller
     {   
         try {
             DB::beginTransaction();
-            $periode = PeriodeTa::where('is_active', 1)->first();
+            $user = getInfoLogin()->userable;
+            $prodi = $user->programStudi;
+            $periode = PeriodeTa::where('is_active', 1)->where('program_studi_id', $prodi->id)->first();
             if(!is_null($periode) && !Carbon::parse($periode->akhir_daftar)->addDays(1)->isFuture()){
                 return redirect()->back()->with('error', 'Pengajuan Tugas Akhir melebihi batas periode');
             }
@@ -208,7 +212,9 @@ class PengajuanTAController extends Controller
 
     public function edit(TugasAkhir $pengajuanTA)
     {
-        $periode = PeriodeTa::where('is_active', 1)->first();
+        $user = getInfoLogin()->userable;
+        $prodi = $user->programStudi;
+        $periode = PeriodeTa::where('is_active', 1)->where('program_studi_id', $prodi->id)->first();
         $dataDosen = Dosen::all();
         $dosen = [];
         foreach ($dataDosen as $key) {
@@ -264,12 +270,11 @@ class PengajuanTAController extends Controller
         try {
             DB::beginTransaction();
 
-            if($pengajuanTA->status == 'reject'){
-                $status = 'draft';
-            }else{
-                $status = $pengajuanTA->status;
+            if($pengajuanTA->status == 'revisi'){
+                $status = 'pengajuan ulang';
+            } else {
+               $status = $pengajuanTA->status;
             }
-
             
             if($request->jenis_ta_new !== null) {
                 $newJenis =JenisTa::create(['nama_jenis' => $request->jenis_ta_new]);
@@ -281,9 +286,12 @@ class PengajuanTAController extends Controller
             if($request->topik_ta_new !== null) {
                 $newTopik =Topik::create(['nama_topik' => $request->topik_ta_new]);
                 $topik = $newTopik->id;
-
             } else {
                 $topik = $request->topik;
+            }
+
+            if($pengajuanTA->status == 'acc') {
+                $catatan = $pengajuanTA->catatan;
             }
 
             $pengajuanTA->update([
@@ -292,7 +300,7 @@ class PengajuanTAController extends Controller
                 'judul' => $request->judul,
                 'tipe' => $request->tipe,    
                 'status' => $status,
-                'catatan' => null,
+                'catatan' => $catatan
             ]);
 
             $docPengajuan = JenisDokumen::where('jenis','pendaftaran')->get();
@@ -408,6 +416,7 @@ class PengajuanTAController extends Controller
         ]);
         
         try {
+
             $pengajuanTA->update([
                 'status' => 'acc',
                 'catatan' => $request->catatan
@@ -471,6 +480,7 @@ class PengajuanTAController extends Controller
     
     public function revisi(TugasAkhir $pengajuanTA, Request $request)
     {
+        // dd($request->all());
         $request->validate([
             'catatan' => 'nullable'
         ]);

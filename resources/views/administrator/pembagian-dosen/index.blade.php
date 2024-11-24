@@ -54,8 +54,8 @@
                         <thead>
                             <tr>
                                 <th width="5%">No</th>
-                                <th width="40%">Judul</th>
                                 <th>Mahasiswa</th>
+                                <th width="40%">Judul</th>
                                 <th>Dosen</th>
                                 <th>Status</th>
                                 <th>Aksi</th>
@@ -66,11 +66,14 @@
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>
+                                        <p class="small fw-bold m-0">{{ $item->mahasiswa->nama_mhs }}</p>
+                                        <p class="m-0 p-0 text-muted small">NIM : {{$item->mahasiswa->nim}}</p>
+                                    </td>
+                                    <td>
                                         <span class="badge {{ isset($item->status) ? ($item->status == 'acc' ? 'badge-soft-success' : ($item->status == 'draft' ? 'bg-dark-subtle text-body' : 'badge-soft-danger')) : '-'}} small mb-1"> {{ ucfirst($item->status ?? '-')}} </span>
                                         <p class="m-0 small font-size-14"><strong>{{ $item->judul }}</strong></p>
                                         <p class="m-0 text-muted small">{{ $item->topik->nama_topik }} - {{ $item->jenis_ta->nama_jenis}}</p>
                                     </td>
-                                    <td><p class="small m-0">{{ $item->mahasiswa->nama_mhs }}</p></td>
                                     <td>
                                         <p class="fw-bold small m-0">Pembimbing</p>
                                         <ol>

@@ -61,7 +61,7 @@ class DashboardController extends Controller
         $topik = RekomendasiTopik::where('status', 'Disetujui')->whereHas('ambilTawaran', function ($q) {
                 $q->where('status', 'Disetujui');
             }, '<', DB::raw('kuota'))->where('program_studi_id', $prodi->id)->take(3)->get();
-        $tugasAkhir = TugasAkhir::with(['mahasiswa','jenis_ta','topik','periode_ta','bimbing_uji'])->where('mahasiswa_id', $mhs->id)->first();
+        $tugasAkhir = TugasAkhir::with(['mahasiswa','jenis_ta','topik','periode_ta','bimbing_uji'])->where('mahasiswa_id', $mhs->id)->latest()->first();
         return [
             'mhs' => $mhs,
             'topik' => $topik,

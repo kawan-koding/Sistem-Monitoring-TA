@@ -88,10 +88,10 @@
                             <thead>
                                 <tr>
                                     <th width="2%">No</th>
-                                    <th min-width="250px">Judul</th>
                                     @if(!getInfoLogin()->hasRole('Mahasiswa'))
                                     <th>Mahasiswa</th>
                                     @endif
+                                    <th min-width="250px">Judul</th>
                                     <th min-width="200px">Dosen</th>
                                     <th>Status</th>
                                     <th>Aksi</th>
@@ -101,9 +101,14 @@
                                     @forelse ($dataTA as $item)
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
+                                            @if(!getInfoLogin()->hasRole('Mahasiswa'))
+                                            <td> 
+                                                <p class="small fw-bold m-0">{{$item->mahasiswa->nama_mhs}}</p>
+                                                <p class="m-0 p-0 text-muted small">NIM : {{$item->mahasiswa->nim}}</p>
+                                            </td> 
+                                            @endif
                                             <td>
-                                                <span
-                                                    class="badge badge-soft-primary small mb-1 fw-bold">{{ $item->tipe == 'I' ? 'Individu' : 'Kelompok' }}</span>
+                                                <span class="badge badge-soft-primary small mb-1 fw-bold">{{ $item->tipe == 'I' ? 'Individu' : 'Kelompok' }}</span>
                                                 <h5 class="fw-bold small m-0">{{ $item->judul }}</h5>
                                                 <p class="m-0 text-muted small">{{ $item->topik->nama_topik }} -
                                                     {{ $item->jenis_ta->nama_jenis }}</p>
@@ -111,9 +116,6 @@
                                                     <p class="m-0 text-muted small">Catatan : <span class="text-danger">{{ $item->catatan ?? '-' }}</span></p>
                                                 @endif
                                             </td>
-                                            @if(!getInfoLogin()->hasRole('Mahasiswa'))
-                                            <td> <p class="small">{{$item->mahasiswa->nama_mhs}}</p></td> 
-                                            @endif
                                             <td>
                                                 <p class="small fw-bold m-0">Pembimbing</p>
                                                 <ol>
@@ -171,7 +173,7 @@
                                             </td>
                                             <td class="mb-3">
                                                 @if (getInfoLogin()->hasRole('Kaprodi'))
-                                                    @if ($item->status == 'draft')
+                                                    @if (in_array($item->status , ['draft', 'pengajuan ulang']))
                                                         @can('acc-pengajuan-tugas-akhir')
                                                             <button
                                                                 onclick="acceptTA('{{ $item->id }}', '{{ route('apps.pengajuan-ta.accept', $item->id) }}')"
@@ -189,23 +191,16 @@
                                                     @endif
                                                 @endif
                                                 @if (getInfoLogin()->hasRole('Mahasiswa'))
-                                                    @if($item->status !== 'cancel' || $item->status !== 'reject')
                                                     @can('update-pengajuan-tugas-akhir')
-                                                        <a href="{{ route('apps.pengajuan-ta.edit', ['pengajuanTA' => $item->id]) }}"
-                                                            class="btn btn-sm btn-outline-primary my-1 mx-1" title="Edit"><i
-                                                                class="bx bx-edit-alt"></i></a>
+                                                        @if(!in_array($item->status, ['cancel', 'reject']))
+                                                            <a href="{{ route('apps.pengajuan-ta.edit', ['pengajuanTA' => $item->id]) }}" class="btn btn-sm btn-outline-primary my-1 mx-1" title="Edit"><i class="bx bx-edit-alt"></i></a>
+                                                        @endif
                                                     @endcan
-                                                    @endif
                                                 @endif
-                                                <a href="{{ route('apps.pengajuan-ta.show', ['pengajuanTA' => $item->id]) }}"
-                                                    class="btn btn-sm btn-outline-warning mx-1 my-1" title="Detail"><i
-                                                        class="bx bx-show"></i></a>
+                                                <a href="{{ route('apps.pengajuan-ta.show', ['pengajuanTA' => $item->id]) }}" class="btn btn-sm btn-outline-warning mx-1 my-1" title="Detail"><i class="bx bx-show"></i></a>
                                                 @can('cancel-pengajuan-tugas-akhir')
                                                 @if($item->status == 'acc')
-                                                <button
-                                                    onclick="cancelTA('{{ $item->id }}', '{{ route('apps.pengajuan-ta.cancel', $item->id) }}')"
-                                                    class="btn btn-sm btn-outline-danger mx-1 my-1"
-                                                    title="Batalkan Tugas Akhir"><i class="bx bxs-no-entry"></i></button>
+                                                <button onclick="cancelTA('{{ $item->id }}', '{{ route('apps.pengajuan-ta.cancel', $item->id) }}')" class="btn btn-sm btn-outline-danger mx-1 my-1" title="Batalkan Tugas Akhir"><i class="bx bxs-no-entry"></i></button>
                                                 @endif
                                                 @endcan
                                             </td>
