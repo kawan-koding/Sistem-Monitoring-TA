@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('nama');
             $table->enum('jenis',['pra_seminar','seminar','pra_sidang','sidang', 'pendaftaran']);
             $table->enum('tipe_dokumen', ['pdf', 'gambar']);
-            $table->int('max_ukuran');
+            $table->integer('max_ukuran');
             $table->timestamps();
         });
     }

@@ -116,6 +116,19 @@ class JadwalSeminarController extends Controller
 
     public function edit(JadwalSeminar $jadwalSeminar)
     {
+        $currentWeekDays = [];
+        $i = 0;
+        
+        while(count($currentWeekDays) <= 7) {
+            $date = Carbon::now()->addDays($i);
+
+            if($date->isWeekday()) {
+                $currentWeekDays[] = $date->format('Y-m-d');
+            }
+
+            $i++;
+        }
+
         $data = [
             'title' => 'Jadwal Seminar',
             'breadcrumbs' =>[
@@ -183,7 +196,7 @@ class JadwalSeminarController extends Controller
                     $query->where('jenis', 'penguji')->where('urut', 2);
                 });
             })->where('status', 'sudah_terjadwal')->get(),
-            
+            'mahasiswaTerdaftar' => JadwalSeminar::where('status', 'sudah_terjadwal')->whereIn('tanggal', $currentWeekDays)->orderBy('tanggal', 'asc')->get(),
         ];
 
         // dd($data);

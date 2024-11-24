@@ -243,10 +243,14 @@
                             <th>Waktu</th>
                         </thead>
                         <tbody>
-                            <td>Sadesty Rahmadhani</td>
-                            <td>Individu</td>
-                            <td>20/11/2024</td>
-                            <td>15.00 - 16.00</td>
+                            @foreach($mahasiswaTerdaftar as $item)
+                            <tr>
+                                <td>{{ $item->tugas_akhir->mahasiswa->nama_mhs }}</td>
+                                <td>{{ $item->tugas_akhir->tipe == 'K' ? 'Kelompok' : 'Individu' }}</td>
+                                <td>{{ \Carbon\Carbon::parse($item->tanggal)->locale('id')->translatedFormat('l, d F Y') }}</td>
+                                <td>{{ \Carbon\Carbon::parse($item->jam_mulai)->locale('id')->translatedFormat('H:i') }} - {{ \Carbon\Carbon::parse($item->jam_selesai)->locale('id')->translatedFormat('H:i') }}</td>
+                            </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
