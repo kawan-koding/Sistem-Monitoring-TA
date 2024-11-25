@@ -22,7 +22,7 @@ class JadwalSeminarController extends Controller
     public function index(Request $request)
     {
         $query = [];
-        $periode = $request->has('filter2') && !empty($request->filter2 && $request->filter2 != 'semua') ? $request->filter2 : PeriodeTa::where('is_active', 1)->first();
+        $periode = $request->has('filter2') && !empty($request->filter2 && $request->filter2 != 'semua') ? $request->filter2 : PeriodeTa::where('is_active', 1)->first()->id;
         if(getInfoLogin()->hasRole('Admin')) {
             $query = JadwalSeminar::whereHas('tugas_akhir', function ($q) use($periode) { 
                 $q->where('status', 'acc')->where('periode_ta_id', $periode); 
@@ -82,7 +82,7 @@ class JadwalSeminarController extends Controller
             $mahasiswa = Mahasiswa::where('id', $myId->id)->first();
             if($mahasiswa) {
                 $query = JadwalSeminar::whereHas('tugas_akhir', function ($q) use($periode, $mahasiswa) {
-                    $q->where('periode_ta_id', $periode->id)->where('mahasiswa_id', $mahasiswa->id);
+                    $q->where('periode_ta_id', $periode)->where('mahasiswa_id', $mahasiswa->id);
                 })->get();
             }
         }

@@ -28,26 +28,29 @@
                 </div>
             @endif
             <a href="{{ getSetting('app_seminar_registration_template') }}" target="_blank" class="btn btn-success mb-2"><i
-                class="far fa-file-alt"></i> Template Pendaftaran Seminar</a>
+                    class="far fa-file-alt"></i> Template Pendaftaran Seminar</a>
             <a href="{{ getSetting('app_seminar_filing_template') }}" target="_blank" class="btn btn-secondary mb-2"><i
-                class="far fa-file-alt"></i> Template Pemberkasan Seminar</a>
+                    class="far fa-file-alt"></i> Template Pemberkasan Seminar</a>
             <hr>
             @if (getInfoLogin()->hasRole('Admin'))
                 <form action="">
                     <div class="row">
                         <div class="col-md-6 col-sm-12">
-                            @if(!is_null($status))
-                            <input type="hidden" name="status" value="{{ $status }}">
+                            @if (!is_null($status))
+                                <input type="hidden" name="status" value="{{ $status }}">
                             @endif
                             <label for="">Filter Tanggal</label>
                             <div class="inner mb-3 row">
                                 <div class="col-md-8 col-sm-6">
                                     <div class="position-relative">
                                         <div class="input-group">
-                                            <input type="date" name="tanggal" class="inner form-control" placeholder="cari berdasarkan tanggal">
+                                            <input type="date" name="tanggal" class="inner form-control"
+                                                placeholder="cari berdasarkan tanggal">
                                             <div class="input-group-prepend">
-                                                <button type="submit" class="btn btn-primary input-group-text inner">Filter</button>
-                                                <a href="{{ route('apps.jadwal-seminar') }}" class="btn btn-secondary input-group-text inner">Reset</a>
+                                                <button type="submit"
+                                                    class="btn btn-primary input-group-text inner">Filter</button>
+                                                <a href="{{ route('apps.jadwal-seminar') }}"
+                                                    class="btn btn-secondary input-group-text inner">Reset</a>
                                             </div>
                                         </div>
                                     </div>
@@ -59,17 +62,21 @@
                             <div class="row">
                                 <div class="col-6">
                                     <select name="filter1" class="form-control" onchange="this.form.submit()">
-                                        <option value="semua" {{ $filter1 == 'semua' ? 'selected' : '' }}>Semua Program Studi</option>
+                                        <option value="semua" {{ $filter1 == 'semua' ? 'selected' : '' }}>Semua Program
+                                            Studi</option>
                                         <option value="TRK" {{ $filter1 == 'TRK' ? 'selected' : '' }}>TRK</option>
-                                        <option value="TRPL" {{  $filter1 == 'TRPL' ? 'selected' : '' }}>TRPL</option>
-                                        <option value="BD" {{  $filter1 == 'BD' ? 'selected' : '' }}>BD</option>
+                                        <option value="TRPL" {{ $filter1 == 'TRPL' ? 'selected' : '' }}>TRPL</option>
+                                        <option value="BD" {{ $filter1 == 'BD' ? 'selected' : '' }}>BD</option>
                                     </select>
                                 </div>
                                 <div class="col-6">
                                     <select name="filter2" class="form-control" onchange="this.form.submit()">
-                                        <option value="semua" {{ $filter2 == 'semua' ? 'selected' : '' }}>Semua Periode</option>
-                                        @foreach($periodes as $item)
-                                            <option value="{{$item->id}}" {{ ($filter2 ?? $periode) == $item->id ? 'selected' : '' }}>{{$item->nama}}</option>
+                                        <option value="semua" {{ $filter2 == 'semua' ? 'selected' : '' }}>Semua Periode
+                                        </option>
+                                        @foreach ($periodes as $item)
+                                            <option value="{{ $item->id }}"
+                                                {{ ($filter2 ?? $periode) == $item->id ? 'selected' : '' }}>
+                                                {{ $item->nama }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -110,8 +117,8 @@
                             </a>
                         </li>
                     </ul>
-                    @endcan
-                @endif
+                @endcan
+            @endif
 
             <div class="table-responsive">
                 <table class="table table-striped" id="datatable">
@@ -122,8 +129,8 @@
                                 <th>Mahasiswa</th>
                             @endif
                             <th width="40%">Judul</th>
-                            @if(getInfoLogin()->hasRole('Admin'))
-                            <th>Periode</th>
+                            @if (getInfoLogin()->hasRole('Admin'))
+                                <th>Periode</th>
                             @endif
                             <th width="20%">Dosen</th>
                             <th>Ruangan</th>
@@ -139,8 +146,9 @@
                                 <td>{{ $loop->iteration }}</td>
                                 @if (getInfoLogin()->hasRole('Admin'))
                                     <td>
-                                        @if(getInfoLogin()->hasRole('Admin'))
-                                            <span class="badge badge-soft-primary">{{ !is_null($item->tugas_akhir->mahasiswa->programStudi) ? $item->tugas_akhir->mahasiswa->programStudi->display : ''}}</span>
+                                        @if (getInfoLogin()->hasRole('Admin'))
+                                            <span
+                                                class="badge badge-soft-primary">{{ !is_null($item->tugas_akhir->mahasiswa->programStudi) ? $item->tugas_akhir->mahasiswa->programStudi->display : '' }}</span>
                                         @endif
                                         <p class="small">{{ $item->tugas_akhir->mahasiswa->nama_mhs }}</p>
                                     </td>
@@ -155,43 +163,47 @@
                                     </a>
                                     <p class="m-0 text-muted small">{{ $item->tugas_akhir->topik->nama_topik }} -
                                         {{ $item->tugas_akhir->jenis_ta->nama_jenis }}</p>
-                                    <span class="badge small mb-1 badge-soft-secondary">{{isset($item->tugas_akhir) ? ($item->tugas_akhir->tipe == 'I' ? 'Individu' : 'Kelompok') : ''}}</span>
+                                    <span
+                                        class="badge small mb-1 badge-soft-secondary">{{ isset($item->tugas_akhir) ? ($item->tugas_akhir->tipe == 'I' ? 'Individu' : 'Kelompok') : '' }}</span>
                                 </td>
-                                <td>{{ !is_null($item->tugas_akhir->periode_ta) ? $item->tugas_akhir->periode_ta->nama : '-' }}</td>
+                                @if (getInfoLogin()->hasRole('Admin'))
+                                    <td>{{ !is_null($item->tugas_akhir->periode_ta) ? $item->tugas_akhir->periode_ta->nama : '-' }}
+                                    </td>
+                                @endif
                                 <td>
                                     <p class="fw-bold small m-0">Pembimbing</p>
                                     <ol>
-                                    @for ($i = 0; $i < 2; $i++)
-                                        @if ($item->tugas_akhir->bimbing_uji()->where('jenis', 'pembimbing')->count() > $i)
-                                            @foreach ($item->tugas_akhir->bimbing_uji as $pemb)
-                                                @if ($pemb->jenis == 'pembimbing' && $pemb->urut == 1 && $i == 0)
-                                                    <li class="small">{{ $pemb->dosen->name ?? '-' }}</li>
-                                                @endif
-                                                @if ($pemb->jenis == 'pembimbing' && $pemb->urut == 2 && $i == 1)
-                                                    <li class="small">{{ $pemb->dosen->name ?? '-' }}</li>
-                                                @endif
-                                            @endforeach
-                                        @else
-                                            <li class="small">-</li>
-                                        @endif
-                                    @endfor
+                                        @for ($i = 0; $i < 2; $i++)
+                                            @if ($item->tugas_akhir->bimbing_uji()->where('jenis', 'pembimbing')->count() > $i)
+                                                @foreach ($item->tugas_akhir->bimbing_uji as $pemb)
+                                                    @if ($pemb->jenis == 'pembimbing' && $pemb->urut == 1 && $i == 0)
+                                                        <li class="small">{{ $pemb->dosen->name ?? '-' }}</li>
+                                                    @endif
+                                                    @if ($pemb->jenis == 'pembimbing' && $pemb->urut == 2 && $i == 1)
+                                                        <li class="small">{{ $pemb->dosen->name ?? '-' }}</li>
+                                                    @endif
+                                                @endforeach
+                                            @else
+                                                <li class="small">-</li>
+                                            @endif
+                                        @endfor
                                     </ol>
                                     <p class="fw-bold small m-0">Penguji</p>
                                     <ol>
-                                    @for ($i = 0; $i < 2; $i++)
-                                        @if ($item->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->count() > $i)    
-                                            @foreach ($item->tugas_akhir->bimbing_uji as $pemb)
-                                                @if ($pemb->jenis == 'penguji' && $pemb->urut == 1 && $i == 0)
-                                                    <li class="small">{{ $pemb->dosen->name ?? '-' }}</li>
-                                                @endif
-                                                @if ($pemb->jenis == 'penguji' && $pemb->urut == 2 && $i == 1)
-                                                    <li class="small">{{ $pemb->dosen->name ?? '-' }}</li>
-                                                @endif
-                                            @endforeach
-                                        @else
-                                            <li class="small">-</li>
-                                        @endif
-                                    @endfor
+                                        @for ($i = 0; $i < 2; $i++)
+                                            @if ($item->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->count() > $i)
+                                                @foreach ($item->tugas_akhir->bimbing_uji as $pemb)
+                                                    @if ($pemb->jenis == 'penguji' && $pemb->urut == 1 && $i == 0)
+                                                        <li class="small">{{ $pemb->dosen->name ?? '-' }}</li>
+                                                    @endif
+                                                    @if ($pemb->jenis == 'penguji' && $pemb->urut == 2 && $i == 1)
+                                                        <li class="small">{{ $pemb->dosen->name ?? '-' }}</li>
+                                                    @endif
+                                                @endforeach
+                                            @else
+                                                <li class="small">-</li>
+                                            @endif
+                                        @endfor
                                     </ol>
                                 </td>
                                 <td>
@@ -207,28 +219,37 @@
                                 </td>
                                 @if (getInfoLogin()->hasRole('Admin'))
                                     <td class="text-align-center justify-content-center">
-                                        <p style="white-space: nowrap" class="font-size-12 {{ $item->tugas_akhir->status_pemberkasan == 'sudah_lengkap' ? 'badge badge-soft-success text-success' : 'badge badge-soft-danger text-danger' }}">{{ $item->tugas_akhir->status_pemberkasan == 'sudah_lengkap' ? 'Berkas sudah lengkap' : 'Berkas belum lengkap' }}</p>
+                                        <p style="white-space: nowrap"
+                                            class="font-size-12 {{ $item->tugas_akhir->status_pemberkasan == 'sudah_lengkap' ? 'badge badge-soft-success text-success' : 'badge badge-soft-danger text-danger' }}">
+                                            {{ $item->tugas_akhir->status_pemberkasan == 'sudah_lengkap' ? 'Berkas sudah lengkap' : 'Berkas belum lengkap' }}
+                                        </p>
                                     </td>
                                 @endif
                                 <td class="mb-3 text-center">
                                     @if (getInfoLogin()->hasRole('Admin'))
-                                        @if($item->status != 'telah_seminar')
+                                        @if ($item->status != 'telah_seminar')
                                             @can('update-jadwal-seminar')
                                                 <a href="{{ route('apps.jadwal-seminar.edit', ['jadwalSeminar' => $item->id]) }}"
                                                     class="btn btn-sm btn-primary"><i class="bx bx-calendar-event"></i></a>
                                             @endcan
                                         @endif
-                                        @if($item->status == 'telah_seminar')
-                                            <a href="{{ route('apps.jadwal-seminar.show', $item)}}" class="btn btn-sm btn-outline-warning mb-3" title="Detail"><i class="bx bx-show"></i></a>
-                                            @if($item->tugas_akhir->status_pemberkasan != 'sudah_lengkap' && is_null($item->tugas_akhir->status_sidang))
-                                            <a href="javascript:void(0)" onclick="validasiFile('{{ $item->id}}', '{{ route('apps.jadwal-seminar.validate', $item->id) }}')" class="btn btn-sm btn-outline-success mb-3" title="Validasi Berkas"><i class="bx bx-pencil"></i></a>
+                                        @if ($item->status == 'telah_seminar')
+                                            <a href="{{ route('apps.jadwal-seminar.show', $item) }}"
+                                                class="btn btn-sm btn-outline-warning mb-3" title="Detail"><i
+                                                    class="bx bx-show"></i></a>
+                                            @if ($item->tugas_akhir->status_pemberkasan != 'sudah_lengkap' && is_null($item->tugas_akhir->status_sidang))
+                                                <a href="javascript:void(0)"
+                                                    onclick="validasiFile('{{ $item->id }}', '{{ route('apps.jadwal-seminar.validate', $item->id) }}')"
+                                                    class="btn btn-sm btn-outline-success mb-3" title="Validasi Berkas"><i
+                                                        class="bx bx-pencil"></i></a>
                                             @endif
                                         @endif
                                     @endif
 
                                     @if (getInfoLogin()->hasRole('Mahasiswa'))
                                         <a href="{{ route('apps.jadwal-seminar.detail', $item->id) }}"
-                                            class="btn btn-sm btn-outline-primary my-1"><i class="bx bx-show" title="Detail"></i></a>
+                                            class="btn btn-sm btn-outline-primary my-1"><i class="bx bx-show"
+                                                title="Detail"></i></a>
                                         <a href="javascript:void(0);"
                                             onclick="uploadFileSeminar('{{ $item->id }}', '{{ route('apps.jadwal-seminar.unggah-berkas', $item->id) }}')"
                                             class="btn btn-sm btn-outline-dark">
@@ -277,7 +298,7 @@
                 showCancelButton: true,
                 confirmButtonText: "Ya, validasi!"
             }).then((result) => {
-                if(result.value) {
+                if (result.value) {
                     window.location.href = "{{ route('apps.jadwal-seminar.validate', ':id') }}".replace(':id', id);
                 }
             })
