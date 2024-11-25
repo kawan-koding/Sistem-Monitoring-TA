@@ -291,6 +291,8 @@ class PengajuanTAController extends Controller
             }
 
             if($pengajuanTA->status == 'acc') {
+                $catatan = null;
+            } else {
                 $catatan = $pengajuanTA->catatan;
             }
 

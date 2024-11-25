@@ -82,7 +82,9 @@
                         </li>
                     </ul>
                     @endif
+                    @if(!getInfoLogin()->hasRole('Kaprodi'))
                     <hr>
+                    @endif
                     <div class="table-responsive">
                         <table class="table table-striped" id="datatable">
                             <thead>
