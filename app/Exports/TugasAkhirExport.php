@@ -25,17 +25,30 @@ class TugasAkhirExport implements FromCollection, WithHeadings, WithMapping, Wit
 
     public function map($row): array
     {
+        static $no = 1;
         return [
+            $no++,
             $row->mahasiswa,
             "'" . $row->nim,
+            'Dosen Pembimbing 1',
+            'Tepat Waktu',
+            'Dosen Pembimbing 2',
+            'Tidak Tepat Waktu',
+            '-',
+            '-',
+            '-',
+            '-',
+            '-',
+            '-',
+            '-',
         ];
     }
 
     public function headings(): array
     {
         return [
-            ['No', 'Nama', 'Pembimbing'],
-            ['', '', 'Nama Pembimbing', 'Periode'],
+            ['No', 'Nama Mahasiswa', 'NIM', 'Pembimbing 1', '','Pembimbing 2','', 'Penguji 1', 'Penguji 2','Judul Tugas Akhir','Yudisium','Tanggal Sidang','Nilai Huruf','Nilai Angka'],
+            ['', '', '', 'Nama Dosen', 'Tepat Waktu/Tidak Tepat Waktu', 'Nama Dosen', 'Tepat Waktu/Tidak Tepat Waktu', '','','','','','',''],
         ];
     }
 
@@ -44,11 +57,21 @@ class TugasAkhirExport implements FromCollection, WithHeadings, WithMapping, Wit
         return [
             AfterSheet::class => function (AfterSheet $event) {
                 $sheet = $event->sheet->getDelegate();
+
                 $sheet->mergeCells('A1:A2');
                 $sheet->mergeCells('B1:B2');
-                $sheet->mergeCells('C1:D1');
+                $sheet->mergeCells('C1:C2');
+                $sheet->mergeCells('D1:E1');
+                $sheet->mergeCells('F1:G1');
+                $sheet->mergeCells('H1:H2');
+                $sheet->mergeCells('I1:I2');
+                $sheet->mergeCells('J1:J2');
+                $sheet->mergeCells('K1:K2');
+                $sheet->mergeCells('L1:L2');
+                $sheet->mergeCells('M1:M2');
+                $sheet->mergeCells('N1:N2');
 
-                $sheet->getStyle('A1:D2')->applyFromArray([
+                $sheet->getStyle('A1:N2')->applyFromArray([
                     'alignment' => [
                         'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
                         'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
@@ -61,15 +84,36 @@ class TugasAkhirExport implements FromCollection, WithHeadings, WithMapping, Wit
                             'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
                         ],
                     ],
+                    'fill' => [
+                        'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                        'startColor' => ['argb' => 'FFFE01'],
+                    ],
                 ]);
 
                 $sheet->getColumnDimension('A')->setWidth(5);
                 $sheet->getColumnDimension('B')->setWidth(20);
-                $sheet->getColumnDimension('C')->setWidth(30);
-                $sheet->getColumnDimension('D')->setWidth(15);
+                $sheet->getColumnDimension('C')->setWidth(15);
+                $sheet->getColumnDimension('D')->setWidth(30);
+                $sheet->getColumnDimension('E')->setWidth(20);
+                $sheet->getColumnDimension('F')->setWidth(30);
+                $sheet->getColumnDimension('G')->setWidth(20);
+                $sheet->getColumnDimension('H')->setWidth(30);
+                $sheet->getColumnDimension('I')->setWidth(30);
+                $sheet->getColumnDimension('J')->setWidth(50);
+                $sheet->getColumnDimension('K')->setWidth(15);
+                $sheet->getColumnDimension('L')->setWidth(20);
+                $sheet->getColumnDimension('M')->setWidth(15);
+                $sheet->getColumnDimension('N')->setWidth(15);
+
+                $sheet->getStyle('K1:K1000')->applyFromArray([
+                    'font' => [
+                        'color' => ['argb' => 'FF0000'],
+                    ],
+                ]);
             },
         ];
     }
+
 
     public function title(): string
     {
