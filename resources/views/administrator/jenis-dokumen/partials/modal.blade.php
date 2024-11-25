@@ -21,6 +21,7 @@ aria-labelledby="myModalLabel" aria-hidden="true">
                         <option value="seminar">Seminar</option>
                         <option value="pra_sidang">Pra Sidang</option>
                         <option value="sidang">Sidang</option>
+                        <option value="pendaftaran">Pendaftaran</option>
                     </select>
                 </div>
                 <div class="mb-3">
@@ -34,7 +35,7 @@ aria-labelledby="myModalLabel" aria-hidden="true">
                 <div class="mb-3">
                     <label for="">Maks. Ukuran</label>
                     <div class="input-group">
-                        <input class="input form-control" name="max_ukuran" id="max_ukuran" placeholder="Maks. Ukuran" value="500">
+                        <input class="input form-control" name="max_ukuran" id="max_ukuran" placeholder="Maks. Ukuran" value="5120">
                         <div class="input-group-append">
                             <span class="input-group-text">KB</span>
                         </div>

@@ -13,10 +13,7 @@ class KuotaDosenController extends Controller
 {
     public function index(Request $request)
     {
-        // $dosen = Dosen::get();
-        $user = getInfoLogin()->userable;
-        $prodi = $user->programStudi;
-        $periode = PeriodeTa::where('is_active', true)->where('program_studi_id', $prodi->id)->first();
+        $periode = PeriodeTa::where('is_active', true)->first();
         $query = KuotaDosen::where('periode_ta_id', $periode->id)->with(['dosen']);
         if(session('switchRoles') == 'Admin') {
             if ($request->has('program_studi') && !empty($request->program_studi) && $request->program_studi !== 'semua') {
