@@ -21,9 +21,9 @@
                                 <td width="25">{{ $loop->iteration }}.</td>
                                 <td>{{ $item->nama }}</td>
                                 <td>
-                                    <input type="text" name="nilai_{{ $item->id }}" data-grade-display="#grade-display-{{ $item->id }}" class="form-control numberOnly text-center w-25" value="{{ $nilais->where('kategori_nilai_id', $item->id)->first()->nilai ?? '' }}">
+                                    <input type="text" name="nilai_{{ $item->id }}" data-grade-display="#grade-display-{{ $item->id }}" class="form-control numberOnly text-center w-25" value="{{ isset($nilais) ? $nilais->where('kategori_nilai_id', $item->id)->first()->nilai : '' }}">
                                 </td>
-                                <td id="grade-display-{{ $item->id }}">{{ grade($nilais->where('kategori_nilai_id', $item->id)->first()->nilai ?? 0) }}</td>
+                                <td id="grade-display-{{ $item->id }}">{{ isset($nilais) ? grade($nilais->where('kategori_nilai_id', $item->id)->first()->nilai ?? 0) : 0 }}</td>
                             </tr>
                         @endforeach
                     @else
@@ -35,11 +35,11 @@
                 <tfoot class="bg-light">
                     <tr>
                         <td colspan="2">Total Nilai Angka</td>
-                        <td colspan="2" class="average-display">{{ number_format($nilais->sum('nilai') > 0 ? $nilais->sum('nilai') / $nilais->count() : 0, 2, '.', ',') }}</td>
+                        <td colspan="2" class="average-display">{{ isset($nilais) && number_format($nilais->sum('nilai') > 0 ? $nilais->sum('nilai') / $nilais->count() : 0, 2, '.', ',') }}</td>
                     </tr>
                     <tr>
                         <td colspan="2">Total Nilai Huruf</td>
-                        <td colspan="2" class="average-grade-display">{{ grade($nilais->sum('nilai') > 0 ? $nilais->sum('nilai') / $nilais->count() : 0) }}</td>
+                        <td colspan="2" class="average-grade-display">{{ isset($nilais) && grade($nilais->sum('nilai') > 0 ? $nilais->sum('nilai') / $nilais->count() : 0) }}</td>
                     </tr>
                 </tfoot>
             </table>

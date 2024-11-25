@@ -176,19 +176,21 @@ class JadwalSidangController extends Controller
             foreach($documentTypes as $item) {
                 if($sidang->status == 'belum_terjadwal') {
                     if($item->jenis == 'pra_sidang') {
-                        $validates['document_'. $item->id] = '|mimes:pdf,png,jpeg,jpg|max:2048';
-                        $messages['document_'. $item->id .'.mimes'] = 'Dokumen '. strtolower($item->nama) .' harus dalam format PDF, PNG, JPEG dan JPG';
-                        $messages['document_'. $item->id .'.max'] = 'Dokumen '. strtolower($item->nama) .' tidak boleh lebih dari 2 MB';
+                        $validates['document_'. $item->id] = $item->tipe_dokumen == 'pdf' ? '|mimes:pdf|max:'. $item->max_ukuran : 'mimes:png,jpg,jpeg,webp|max:'. $item->max_ukuran;
+                        $messages['document_'. $item->id .'.mimes'] = 'Dokumen '. strtolower($item->nama) .' harus dalam format '. ($item->tipe_dokumen == 'pdf' ? 'PDF' : 'PNG, JPEG, JPG, WEBP');
+                        $messages['document_'. $item->id .'.max'] = 'Dokumen '. strtolower($item->nama) .' tidak boleh lebih dari '. $item->max_ukuran .' KB';
                     }
                 } else {
                     if($item->jenis == 'sidang') {
-                        $validates['document_'. $item->id] = '|mimes:pdf,png,jpeg,jpg|max:2048';
-                        $messages['document_'. $item->id .'.mimes'] = 'Dokumen '. strtolower($item->nama) .' harus dalam format PDF, PNG, JPEG dan JPG';
-                        $messages['document_'. $item->id .'.max'] = 'Dokumen '. strtolower($item->nama) .' tidak boleh lebih dari 2 MB';
+                        $validates['document_'. $item->id] = $item->tipe_dokumen == 'pdf' ? '|mimes:pdf|max:'. $item->max_ukuran : 'mimes:png,jpg,jpeg,webp|max:'. $item->max_ukuran;
+                        $messages['document_'. $item->id .'.mimes'] = 'Dokumen '. strtolower($item->nama) .' harus dalam format '. ($item->tipe_dokumen == 'pdf' ? 'PDF' : 'PNG, JPEG, JPG, WEBP');
+                        $messages['document_'. $item->id .'.max'] = 'Dokumen '. strtolower($item->nama) .' tidak boleh lebih dari '. $item->max_ukuran .' KB';
                     }
                 }
             }
+            
             $request->validate($validates, $messages);
+
             foreach($documentTypes as $item) {
                 if($sidang->status == 'belum_daftar') {
                     if($item->jenis == 'pra_sidang' && $request->hasFile('document_'. $item->id)) {
