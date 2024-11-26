@@ -85,7 +85,7 @@ class PengajuanTAController extends Controller
         $dataDosen = Dosen::all();
         $dosen = [];
         foreach ($dataDosen as $key) {
-            $kuota = KuotaDosen::where('dosen_id', $key->id)->where('periode_ta_id', $periode->id)->first();
+            $kuota = KuotaDosen::where('dosen_id', $key->id)->where('periode_ta_id', $periode->id)->where('program_studi_id', $prodi->id)->first();
             $bimbingUji = BimbingUji::with(['tugas_akhir', 'dosen'])->where('dosen_id', $key->id)->where('jenis', 'pembimbing')->where('urut', 1)->whereHas('tugas_akhir', function ($q) use($periode){
                 $q->where('periode_ta_id', $periode->id);
             })->count();
