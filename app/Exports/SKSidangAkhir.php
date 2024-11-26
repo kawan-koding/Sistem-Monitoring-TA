@@ -12,7 +12,7 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\FromCollection;
 
-class TugasAkhirExport implements FromCollection, WithHeadings, WithMapping, WithEvents, WithTitle
+class SKSidangAkhir implements FromCollection, WithHeadings, WithMapping, WithEvents, WithTitle
 {
     public function collection()
     {
@@ -105,7 +105,7 @@ class TugasAkhirExport implements FromCollection, WithHeadings, WithMapping, Wit
                     ],
                     'fill' => [
                         'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
-                        'startColor' => ['argb' => 'FFFF00'],
+                        'startColor' => ['argb' => 'FFFF00'], // Warna kuning
                     ],
                 ]);
 
@@ -119,7 +119,7 @@ class TugasAkhirExport implements FromCollection, WithHeadings, WithMapping, Wit
                     ],
                     'fill' => [
                         'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
-                        'startColor' => ['argb' => 'FFFF00'],
+                        'startColor' => ['argb' => 'FFFF00'], // Warna kuning
                     ],
                 ]);
 
@@ -151,6 +151,6 @@ class TugasAkhirExport implements FromCollection, WithHeadings, WithMapping, Wit
 
     public function title(): string
     {
-        return 'Tugas Akhir';
+        return 'SK SIDANG AKHIR';
     }
 }
