@@ -15,9 +15,9 @@ class DaftarBimbinganController extends Controller
     {
         $query = [];
         $user = getInfoLogin()->userable;
-        $periode = PeriodeTa::where('is_active', 1)->first();
+        $periode = PeriodeTa::where('is_active', 1)->get();
         $query = BimbingUji::with(['tugas_akhir', 'dosen'])->where('dosen_id', $user->id)->whereHas('tugas_akhir', function($q) use ($periode){
-            $q->where('periode_ta_id', $periode->id)->whereIn('status', ['acc','draft']);
+            $q->whereIn('periode_ta_id', $periode->pluck('id'));
         });
         if ($request->status == 'mahasiswa_uji') {
             $query->where('jenis', 'penguji');
@@ -25,9 +25,24 @@ class DaftarBimbinganController extends Controller
             $query->where('jenis', 'pembimbing');
         }
         $query = $query->get();
+        $kuota = KuotaDosen::whereIn('periode_ta_id', $periode->pluck('id'))->where('dosen_id', $user->id)->with('programStudi')->get();
+        $bimbing = BimbingUji::where('dosen_id', $user->id)->where('jenis', 'pembimbing')->where('urut', 1)->whereHas('tugas_akhir', function ($query) {
+            $query->whereNotIn('status', ['reject', 'cancel']);
+        })->with(['tugas_akhir.mahasiswa.programStudi'])->get()->groupBy('tugas_akhir.mahasiswa.program_studi_id')->map(function ($group) {
+            return $group->count();
+        });
         
-        $kuota = KuotaDosen::where('periode_ta_id', $periode->id)->where('dosen_id', $user->id)->first();
-        $bimbing = BimbingUji::where('dosen_id', $user->id)->where('jenis', 'pembimbing');
+        $sisaKuota = $kuota->map(function ($item) use ($bimbing) {
+            $programStudiId = $item->program_studi_id;
+            $mahasiswaBimbing = $bimbing->get($programStudiId, 0);
+            return [
+                'prodi' => $item->programStudi->display ?? 'Tidak Diketahui',
+                'total_kuota' => $item->pembimbing_1 ?? 0,
+                'sisa_kuota' => max($item->pembimbing_1 - $mahasiswaBimbing, 0),
+            ];
+        });
+        
+
         $data = [
             'title' => 'Mahasiswa Bimbingan',
             'mods' => 'daftar_bimbingan',
@@ -43,6 +58,7 @@ class DaftarBimbinganController extends Controller
             ],
             'data' => $query,
             'kuota' => $kuota,
+            'sisaKuota' => $sisaKuota,
             'bimbing' => $bimbing,
         ];
         

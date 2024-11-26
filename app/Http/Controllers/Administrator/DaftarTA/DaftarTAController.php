@@ -135,20 +135,21 @@ class DaftarTAController extends Controller
         $bimbingUji = $tugasAkhir->bimbing_uji;
         $pembimbing = $bimbingUji->where('jenis', 'pembimbing')->sortBy('urut')->values();
         $penguji = $bimbingUji->where('jenis', 'penguji')->sortBy('urut')->values();
-        $periode = PeriodeTa::where('is_active', true)->first();
+        $prodi = $tugasAkhir->mahasiswa->program_studi_id;
+        $periode = PeriodeTa::where('is_active', true)->where('program_studi_id', $prodi)->first();
         $dosen = Dosen::all()->map(function($dosen) use ($periode) {
             $kuota = KuotaDosen::where('dosen_id', $dosen->id)->where('periode_ta_id', $periode->id)->first();
             $totalPembimbing1 = BimbingUji::where('dosen_id', $dosen->id)->where('jenis', 'pembimbing')->where('urut', 1)->whereHas('tugas_akhir', function($query) use ($periode) {
-                                    $query->where('periode_ta_id', $periode->id);
+                                    $query->where('periode_ta_id', $periode->id)->whereNotIn('status', ['reject', 'cancel']);
                                 })->count();
             $totalPembimbing2 = BimbingUji::where('dosen_id', $dosen->id)->where('jenis', 'pembimbing')->where('urut', 2)->whereHas('tugas_akhir', function($query) use ($periode) {
-                                    $query->where('periode_ta_id', $periode->id);
+                                    $query->where('periode_ta_id', $periode->id)->whereNotIn('status', ['reject', 'cancel']);
                                 })->count();
             $totalPenguji1 = BimbingUji::where('dosen_id', $dosen->id)->where('jenis', 'penguji')->where('urut', 1)->whereHas('tugas_akhir', function($query) use ($periode) {
-                                $query->where('periode_ta_id', $periode->id);
+                                $query->where('periode_ta_id', $periode->id)->whereNotIn('status', ['reject', 'cancel']);
                             })->count();
             $totalPenguji2 = BimbingUji::where('dosen_id', $dosen->id)->where('jenis', 'penguji')->where('urut', 2)->whereHas('tugas_akhir', function($query) use ($periode) {
-                                $query->where('periode_ta_id', $periode->id);
+                                $query->where('periode_ta_id', $periode->id)->whereNotIn('status', ['reject', 'cancel']);
                             })->count();
             return (object)[
                 'id' => $dosen->id,

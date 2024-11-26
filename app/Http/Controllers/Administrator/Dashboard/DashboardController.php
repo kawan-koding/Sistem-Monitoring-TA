@@ -110,15 +110,18 @@ class DashboardController extends Controller
         $user = getInfoLogin()->userable;
         $bimbing = BimbingUji::where('dosen_id', $user->id)->where('jenis', 'pembimbing');
         $uji = BimbingUji::where('dosen_id', $user->id)->where('jenis', 'penguji');
-        $periode = PeriodeTa::where('is_active', 1)->first();
-        $kuota = KuotaDosen::where('periode_ta_id', $periode->id)->where('dosen_id', $user->id)->first();
-        // $totalKuota = $kuota->sum(function ($item) {
-        //     return $item->pembimbing_1 + $item->pembimbing_2 + $item->penguji_1 + $item->penguji_2;
-        // });
+        $periode = PeriodeTa::where('is_active', 1)->get();
+        $kuota = KuotaDosen::whereIn('periode_ta_id', $periode->pluck('id'))->where('dosen_id', $user->id)->get();
+        $totalKuota = $kuota->sum('pembimbing_1');
+        $bimbingUji = BimbingUji::whereIn('tugas_akhir_id', function ($query) use ($periode) {
+            $query->select('id')->from('tugas_akhirs')->whereIn('periode_ta_id', $periode->pluck('id'));
+        })->where('dosen_id', $user->id)->where('jenis', 'pembimbing')->where('urut', 1)->count();
+        $sisaKuota = $totalKuota - $bimbingUji;
         return[
             'bimbing' => $bimbing,
             'uji' => $uji,
             'kuota' => $kuota,
+            'sisaKuota' => $sisaKuota,
         ];
 
     }

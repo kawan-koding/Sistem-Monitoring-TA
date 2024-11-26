@@ -63,20 +63,21 @@ class PembagianDosenController extends Controller
         $bimbingUji = $tugasAkhir->bimbing_uji;
         $pembimbing = $bimbingUji->where('jenis', 'pembimbing')->sortBy('urut')->values();
         $penguji = $bimbingUji->where('jenis', 'penguji')->sortBy('urut')->values();
-        $periode = PeriodeTa::where('is_active', true)->first();
+        $prodi = $tugasAkhir->mahasiswa->program_studi_id;
+        $periode = PeriodeTa::where('is_active', true)->where('program_studi_id', $prodi)->first();
         $dosen = Dosen::all()->map(function($dosen) use ($periode) {
             $kuota = KuotaDosen::where('dosen_id', $dosen->id)->where('periode_ta_id', $periode->id)->first();
             $totalPembimbing1 = BimbingUji::where('dosen_id', $dosen->id)->where('jenis', 'pembimbing')->where('urut', 1)->whereHas('tugas_akhir', function($query) use ($periode) {
-                                    $query->where('periode_ta_id', $periode->id);
+                                    $query->where('periode_ta_id', $periode->id)->whereNotIn('status', ['reject', 'cancel']);
                                 })->count();
             $totalPembimbing2 = BimbingUji::where('dosen_id', $dosen->id)->where('jenis', 'pembimbing')->where('urut', 2)->whereHas('tugas_akhir', function($query) use ($periode) {
-                                    $query->where('periode_ta_id', $periode->id);
+                                    $query->where('periode_ta_id', $periode->id)->whereNotIn('status', ['reject', 'cancel']);
                                 })->count();
             $totalPenguji1 = BimbingUji::where('dosen_id', $dosen->id)->where('jenis', 'penguji')->where('urut', 1)->whereHas('tugas_akhir', function($query) use ($periode) {
-                                $query->where('periode_ta_id', $periode->id);
+                                $query->where('periode_ta_id', $periode->id)->whereNotIn('status', ['reject', 'cancel']);
                             })->count();
             $totalPenguji2 = BimbingUji::where('dosen_id', $dosen->id)->where('jenis', 'penguji')->where('urut', 2)->whereHas('tugas_akhir', function($query) use ($periode) {
-                                $query->where('periode_ta_id', $periode->id);
+                                $query->where('periode_ta_id', $periode->id)->whereNotIn('status', ['reject', 'cancel']);
                             })->count();
             return (object)[
                 'id' => $dosen->id,
@@ -146,7 +147,7 @@ class PembagianDosenController extends Controller
 
          try {
             DB::beginTransaction();
-            $periode = PeriodeTa::where('is_active', 1)->first();
+            $periode = PeriodeTa::where('is_active', 1)->where('program_studi_id', $tugasAkhir->mahasiswa->program_studi_id)->first();
             $dat1 = $request->pemb_1;
             $dat2 = $request->pembimbing_2;
             $dat3 = $request->penguji_1;
@@ -158,7 +159,7 @@ class PembagianDosenController extends Controller
             $pemb_2 = BimbingUji::with(['tugas_akhir', 'dosen'])->where('jenis', 'pembimbing')->where('urut', 2)->where('tugas_akhir_id', $tugasAkhir->id)->first();
             $kuota = KuotaDosen::where('dosen_id', $dat2)->where('periode_ta_id', $periode->id)->first();
             $bimbingUji2 = BimbingUji::with(['tugas_akhir', 'dosen'])->where('jenis', 'pembimbing')->where('urut', 2)->where('dosen_id', $dat2)->whereHas('tugas_akhir', function ($q) use($periode){
-                $q->where('periode_ta_id', $periode->id);
+                $q->where('periode_ta_id', $periode->id)->whereNotIn('status',['reject', 'cancel']);
             })->count();
             if(($pemb_2->dosen_id ?? null) != $dat2){
                 if($bimbingUji2 >= $kuota->pembimbing_2){
@@ -181,7 +182,7 @@ class PembagianDosenController extends Controller
             $peng_1 = BimbingUji::with(['tugas_akhir', 'dosen'])->where('jenis', 'penguji')->where('urut', 1)->where('tugas_akhir_id', $tugasAkhir->id)->first();
             $kuota = KuotaDosen::where('dosen_id', $dat3)->where('periode_ta_id', $periode->id)->first();
             $bimbingUji3 = BimbingUji::with(['tugas_akhir', 'dosen'])->where('jenis', 'penguji')->where('urut', 1)->where('dosen_id', $dat3)->whereHas('tugas_akhir', function ($q) use($periode){
-                $q->where('periode_ta_id', $periode->id);
+                $q->where('periode_ta_id', $periode->id)->whereNotIn('status',['reject', 'cancel']);
             })->count();
             if(($peng_1->dosen_id ?? null) !== $dat3){
                 if($bimbingUji3 >= $kuota->penguji_1){
@@ -204,7 +205,7 @@ class PembagianDosenController extends Controller
             $peng_2 = BimbingUji::with(['tugas_akhir', 'dosen'])->where('jenis', 'penguji')->where('urut', 2)->where('tugas_akhir_id', $tugasAkhir->id)->first();
             $kuota = KuotaDosen::where('dosen_id', $dat4)->where('periode_ta_id', $periode->id)->first();
             $bimbingUji4 = BimbingUji::with(['tugas_akhir', 'dosen'])->where('jenis', 'penguji')->where('urut', 2)->where('dosen_id', $dat4)->whereHas('tugas_akhir', function ($q) use($periode){
-                $q->where('periode_ta_id', $periode->id);
+                $q->where('periode_ta_id', $periode->id)->whereNotIn('status',['reject', 'cancel']);
             })->count();
             if(($peng_2->dosen_id ?? null) !== $dat4){
                 if($bimbingUji4 >= $kuota->penguji_2){

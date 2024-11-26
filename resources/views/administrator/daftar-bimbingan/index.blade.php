@@ -12,8 +12,12 @@
                         </span>
                     </div>
                     <div class="flex-1">
-                        <div class="font-size-16 mt-1">Total Kuota Bimbingan</div>
-                        <p class="font-size-18 fw-bold text-primary m-0">{{ $kuota->pembimbing_1 ?? 0}}</p>
+                        <div class="font-size-16 mt-1 fw-bold">Total Kuota Bimbingan</div>
+                        <p class="font-size-14 mt-1 text-muted m-0">
+                            @foreach ($kuota as $item)
+                                {{ $item->programStudi->display ?? '-' }} : <span class="text-primary">{{ $item->pembimbing_1 ?? 0}}</span> @if(!$loop->last) | @endif 
+                            @endforeach
+                        </p>
                     </div>
                 </div>
             </div>
@@ -29,8 +33,12 @@
                         </span>
                     </div>
                     <div class="flex-1">
-                        <div class="font-size-16 mt-1">Sisa Kuota Bimbingan</div>
-                        <p class="font-size-18 fw-bold text-primary m-0"> {{ ($kuota && $kuota->pembimbing_1 ? $kuota->pembimbing_1 : 0) - $bimbing->where('urut', 1)->count() >= 0 ? ($kuota && $kuota->pembimbing_1 ? $kuota->pembimbing_1 : 0) - $bimbing->where('urut', 1)->count() : 0 }} </p>
+                        <div class="font-size-16 mt-1 fw-bold">Sisa Kuota Bimbingan</div>
+                        <p class="font-size-14 mt-1 text-muted m-0">
+                            @foreach ($sisaKuota as $item)
+                                {{ $item['prodi'] ?? '-' }} : <span class="text-primary">{{ $item['sisa_kuota'] ?? 0}}</span> @if(!$loop->last) | @endif 
+                            @endforeach
+                        </p>
                     </div>
                 </div>
             </div>
@@ -65,8 +73,8 @@
                         <thead>
                             <tr>
                                 <th width="5%">No</th>
-                                <th >Judul</th>
                                 <th>Mahasiswa</th>
+                                <th>Judul</th>
                                 <th>Periode</th>
                                 <th>Status</th>
                                 <th>Aksi</th>
@@ -77,12 +85,13 @@
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>
-                                        <p class="m-0"><strong>{{ $item->tugas_akhir->judul }}</strong></p>
-                                        <p class="m-0 text-muted small">{{ $item->tugas_akhir->topik->nama_topik }} - {{ $item->tugas_akhir->jenis_ta->nama_jenis}}</p>
+                                        <p class="m-0"><span class="badge rounded-pill bg-primary-subtle text-primary small mb-1">{{ $item->tugas_akhir->mahasiswa->programStudi->display }}</span></p>
+                                        <p class="m-0"><strong>{{ $item->tugas_akhir->mahasiswa->nama_mhs }} - {{ $item->tugas_akhir->mahasiswa->kelas }}</strong></p>
+                                        <p class="m-0 p-0 text-muted small">NIM : {{$item->tugas_akhir->mahasiswa->nim}}</p>
                                     </td>
                                     <td>
-                                        <p class="m-0"><strong>{{ $item->tugas_akhir->mahasiswa->nama_mhs }}/{{ $item->tugas_akhir->mahasiswa->kelas }}</strong></p>
-                                        <p class="m-0 text-muted small">{{ $item->tugas_akhir->mahasiswa->programStudi->nama }}</p>
+                                        <p class="m-0"><strong>{{ $item->tugas_akhir->judul }}</strong></p>
+                                        <p class="m-0 text-muted small">{{ $item->tugas_akhir->topik->nama_topik }} - {{ $item->tugas_akhir->jenis_ta->nama_jenis}}</p>
                                     </td>
                                     <td>
                                         {{ $item->tugas_akhir->periode_ta->nama }}

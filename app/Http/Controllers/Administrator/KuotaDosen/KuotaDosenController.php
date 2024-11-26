@@ -13,21 +13,22 @@ class KuotaDosenController extends Controller
 {
     public function index(Request $request)
     {
-        $periode = PeriodeTa::where('is_active', true)->first();
-        $query = KuotaDosen::where('periode_ta_id', $periode->id)->with(['dosen']);
         if(session('switchRoles') == 'Admin') {
+            $periode = PeriodeTa::where('is_active', true)->get();
+            $query = KuotaDosen::whereIn('periode_ta_id', $periode->pluck('id'))->with(['dosen']);
             if ($request->has('program_studi') && !empty($request->program_studi) && $request->program_studi !== 'semua') {
                 $query->where('program_studi_id', $request->program_studi);
             }
+            $query = $query->get();
         }
         
         if(session('switchRoles') == 'Kaprodi') {
+            $periode = PeriodeTa::where('is_active', true)->get();
             $user = getInfoLogin()->userable;
             $prodi = $user->programStudi;
-            $query->where('program_studi_id', $prodi->id);
+            $query = KuotaDosen::where('periode_ta_id', $periode->id)->with(['dosen'])->where('program_studi_id', $prodi->id)->get();
         }
 
-        $query = $query->get();
 
         $data = [
             'title' => 'Kuota Dosen',
@@ -103,6 +104,9 @@ class KuotaDosenController extends Controller
             }
             
             $periode = PeriodeTa::where('is_active', true)->where('program_studi_id', $request->program_studi_id)->first();
+            if(empty($periode)) {
+                return redirect()->back()->with('error', 'Periode TA belum dibuat');
+            }
             $dosen = Dosen::all();
             foreach($dosen as $item) {
                 $existingKuota = KuotaDosen::where('dosen_id', $item->id)->where('periode_ta_id', $periode->id)->where('program_studi_id', $request->program_studi_id)->exists();

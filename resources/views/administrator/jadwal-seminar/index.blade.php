@@ -31,6 +31,17 @@
                     class="far fa-file-alt"></i> Template Pendaftaran Seminar</a>
             <a href="{{ getSetting('app_seminar_filing_template') }}" target="_blank" class="btn btn-secondary mb-2"><i
                     class="far fa-file-alt"></i> Template Pemberkasan Seminar</a>
+            <div class="btn-group" role="group">
+                <button id="btnGroupVerticalDrop1" type="button" class="btn btn-primary dropdown-toggle mb-2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fa fa-file-excel me-2"></i> Export <i class="mdi mdi-chevron-down"></i>
+                </button>
+                <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1">
+                    <a class="dropdown-item" href="#">Belum Terjadwal</a>
+                    <a class="dropdown-item" href="#">Sudah Terjadwal</a>
+                    <a class="dropdown-item" href="#">Telah Diseminarkan</a>
+                    <a class="dropdown-item" href="#">Sudah Pemberkasan</a>
+                </div>
+            </div>
             <hr>
             @if (getInfoLogin()->hasRole('Admin'))
                 <form action="">
@@ -76,7 +87,7 @@
                                         @foreach ($periodes as $item)
                                             <option value="{{ $item->id }}"
                                                 {{ ($filter2 ?? $periode) == $item->id ? 'selected' : '' }}>
-                                                {{ $item->nama }}</option>
+                                                {{ $item->nama }} - {{ 'Prodi' . ' ' . $item->programStudi->display }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -150,7 +161,8 @@
                                             <span
                                                 class="badge badge-soft-primary">{{ !is_null($item->tugas_akhir->mahasiswa->programStudi) ? $item->tugas_akhir->mahasiswa->programStudi->display : '' }}</span>
                                         @endif
-                                        <p class="small">{{ $item->tugas_akhir->mahasiswa->nama_mhs }}</p>
+                                        <p class="fw-bold m-0">{{ $item->tugas_akhir->mahasiswa->nama_mhs }}</p>
+                                        <p class="small text-muted">NIM : {{ $item->tugas_akhir->mahasiswa->nim }}</p>
                                     </td>
                                 @endif
                                 <td>
