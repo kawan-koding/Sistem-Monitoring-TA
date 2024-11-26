@@ -45,6 +45,8 @@
             <hr>
             @if (getInfoLogin()->hasRole('Admin'))
                 <form action="">
+                    <input type="hidden" name="{{ !is_null($status) ? 'status' : 'status_pemberkasan' }}"
+                        value="{{ !is_null($status) ? $status : $status_pemberkasan }}">
                     <div class="row">
                         <div class="col-md-6 col-sm-12">
                             @if (!is_null($status))
@@ -75,9 +77,11 @@
                                     <select name="filter1" class="form-control" onchange="this.form.submit()">
                                         <option value="semua" {{ $filter1 == 'semua' ? 'selected' : '' }}>Semua Program
                                             Studi</option>
-                                        <option value="TRK" {{ $filter1 == 'TRK' ? 'selected' : '' }}>TRK</option>
-                                        <option value="TRPL" {{ $filter1 == 'TRPL' ? 'selected' : '' }}>TRPL</option>
-                                        <option value="BD" {{ $filter1 == 'BD' ? 'selected' : '' }}>BD</option>
+                                        @foreach ($programStudies as $item)
+                                            <option value="{{ $item->id }}"
+                                                {{ $filter1 == $item->id ? 'selected' : '' }}>{{ $item->display }}
+                                            </option>
+                                        @endforeach
                                     </select>
                                 </div>
                                 <div class="col-6">

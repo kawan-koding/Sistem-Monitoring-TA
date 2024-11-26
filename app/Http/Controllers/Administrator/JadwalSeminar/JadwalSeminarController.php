@@ -11,6 +11,7 @@ use App\Models\KategoriNilai;
 use App\Models\Mahasiswa;
 use App\Models\Pemberkasan;
 use App\Models\PeriodeTa;
+use App\Models\ProgramStudi;
 use App\Models\Ruangan;
 use Carbon\Carbon;
 use Exception;
@@ -35,9 +36,7 @@ class JadwalSeminarController extends Controller
             if($request->has('filter1') && !empty($request->filter1) && $request->filter1 != 'semua') {
                 $query = $query->whereHas('tugas_akhir', function ($q) use($request) {
                     $q->whereHas('mahasiswa', function ($q) use($request) {
-                        $q->whereHas('programStudi', function ($q) use($request) {
-                            $q->where('display', $request->filter1);
-                        });
+                        $q->where('program_studi_id', $request->filter1);
                     });
                 });
             }
@@ -102,9 +101,11 @@ class JadwalSeminarController extends Controller
                 ]
                 ],
             'data' => $query,
-            'periodes' => PeriodeTa::all(),
+            'periodes' => $request->has('filter1') && $request->filter1 != 'semua' ? PeriodeTa::where('program_studi_id', $request->filter1)->get() : PeriodeTa::whereIsActive(true)->get(),
+            'programStudies' => ProgramStudi::all(),
             'periode' => $periode,
             'status' => $request->has('status') ? $request->status : null,
+            'status_pemberkasan' => $request->has('status_pemberkasan') ? $request->status_pemberkasan : null,
             'document_seminar' => $docSeminar,
             'filter1' => $request->has('filter1') ? $request->filter1 : null,
             'filter2' => $request->has('filter2') ? $request->filter2 : null,
