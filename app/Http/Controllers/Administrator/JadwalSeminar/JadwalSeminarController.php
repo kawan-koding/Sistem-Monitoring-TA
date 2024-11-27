@@ -76,6 +76,7 @@ class JadwalSeminarController extends Controller
                 return $item;
             });
         }
+        
         if(getInfoLogin()->hasRole('Mahasiswa')) {
             $myId = getInfoLogin()->userable;
             $mahasiswa = Mahasiswa::where('id', $myId->id)->first();

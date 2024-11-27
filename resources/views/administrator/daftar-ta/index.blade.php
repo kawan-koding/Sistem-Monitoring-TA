@@ -10,38 +10,26 @@
                     <a href="{{ route('apps.daftar-ta.export') }}" target="_blank" class="btn btn-primary mb-3 mb-md-0" style="max-width: 150px;">
                         <i class="fa fa-file-excel"></i> Export Data
                     </a>
-                        {{-- <form method="GET" action="{{ route('apps.daftar-ta') }}" class="d-flex align-items-center">
-                            <div class="input-group">
-                                <select name="tipe" id="tipe" class="form-control" onchange="this.form.submit()">
-                                    <option disabled selected hidden>Filter Berdasarkan Program Studi : </option>
-                                    <option value="Semua" {{ request('tipe') == 'Semua' ? 'selected' : '' }}>Semua</option>
-                                    @foreach ($prodi as $item)
-                                        <option value="{{ $item->id }}" {{ request('tipe') == $item->id ? 'selected' : '' }}>{{ $item->nama }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </form> --}}
-                        <form action="" >
-                            <div class="d-flex gap-2 flex-column flex-md-row">
-                                <select name="program_studi" id="program_studi" class="form-control" onchange="this.form.submit()">
-                                    <option selected disabled hidden>Filter Program Studi</option>
-                                    <option value="semua" {{ request('program_studi') == 'semua' ? 'selected' : '' }}>Semua Program Studi</option>
-                                    @foreach($prodi as $p)
-                                        <option value="{{ $p->id }}" {{ request('program_studi') == $p->id ? 'selected' : '' }}>{{ $p->nama }}</option>
-                                    @endforeach
-                                </select>
-                                <select name="periode" id="periode" class="form-control" onchange="this.form.submit()">
-                                    <option selected disabled hidden>Filter Periode</option>
-                                    <option value="semua" {{ request('periode') == 'semua' ? 'selected' : '' }}>Semua Periode</option>
-                                    @foreach($periode as $p)
-                                        <option value="{{ $p->id }}" {{ request('periode') == $p->id ? 'selected' : '' }}>{{ $p->nama }} - {{ 'Prodi' . ' ' . $p->programStudi->display }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </form>
-
-                    </div>
-                    <hr>
+                    <form action="" >
+                        <div class="d-flex gap-2 flex-column flex-md-row">
+                            <select name="program_studi" id="program_studi" class="form-control" onchange="this.form.submit()">
+                                <option selected disabled hidden>Filter Program Studi</option>
+                                <option value="semua" {{ request('program_studi') == 'semua' ? 'selected' : '' }}>Semua Program Studi</option>
+                                @foreach($prodi as $p)
+                                    <option value="{{ $p->id }}" {{ request('program_studi') == $p->id ? 'selected' : '' }}>{{ $p->nama }}</option>
+                                @endforeach
+                            </select>
+                            <select name="periode" id="periode" class="form-control" onchange="this.form.submit()">
+                                <option selected disabled hidden>Filter Periode</option>
+                                <option value="semua" {{ request('periode') == 'semua' ? 'selected' : '' }}>Semua Periode</option>
+                                @foreach($periode as $p)
+                                    <option value="{{ $p->id }}" {{ request('periode') == $p->id ? 'selected' : '' }}>{{ $p->nama }} - {{ 'Prodi' . ' ' . $p->programStudi->display }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <hr>
                 @endif
 
                 @if(session('success'))
