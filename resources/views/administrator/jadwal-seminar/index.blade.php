@@ -31,17 +31,18 @@
                     class="far fa-file-alt"></i> Template Pendaftaran Seminar</a>
             <a href="{{ getSetting('app_seminar_filing_template') }}" target="_blank" class="btn btn-secondary mb-2"><i
                     class="far fa-file-alt"></i> Template Pemberkasan Seminar</a>
+            @if(session('switchRoles') == 'Admin')        
             <div class="btn-group" role="group">
                 <button id="btnGroupVerticalDrop1" type="button" class="btn btn-primary dropdown-toggle mb-2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="fa fa-file-excel me-2"></i> Export <i class="mdi mdi-chevron-down"></i>
                 </button>
                 <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1">
                     <a class="dropdown-item" href="#">Belum Terjadwal</a>
-                    <a class="dropdown-item" href="#">Sudah Terjadwal</a>
                     <a class="dropdown-item" href="#">Telah Diseminarkan</a>
                     <a class="dropdown-item" href="#">Sudah Pemberkasan</a>
                 </div>
             </div>
+            @endif
             <hr>
             @if (getInfoLogin()->hasRole('Admin'))
                 <form action="">
@@ -75,23 +76,17 @@
                             <div class="row">
                                 <div class="col-6">
                                     <select name="filter1" class="form-control" onchange="this.form.submit()">
-                                        <option value="semua" {{ $filter1 == 'semua' ? 'selected' : '' }}>Semua Program
-                                            Studi</option>
+                                        <option value="semua" {{ $filter1 == 'semua' ? 'selected' : '' }}>Semua Program Studi</option>
                                         @foreach ($programStudies as $item)
-                                            <option value="{{ $item->id }}"
-                                                {{ $filter1 == $item->id ? 'selected' : '' }}>{{ $item->display }}
-                                            </option>
+                                            <option value="{{ $item->id }}"{{ $filter1 == $item->id ? 'selected' : '' }}>{{ $item->display }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <div class="col-6">
                                     <select name="filter2" class="form-control" onchange="this.form.submit()">
-                                        <option value="semua" {{ $filter2 == 'semua' ? 'selected' : '' }}>Semua Periode
-                                        </option>
+                                        <option value="semua" {{ $filter2 == 'semua' ? 'selected' : '' }}>Semua Periode</option>
                                         @foreach ($periodes as $item)
-                                            <option value="{{ $item->id }}"
-                                                {{ ($filter2 ?? $periode) == $item->id ? 'selected' : '' }}>
-                                                {{ $item->nama }} - {{ 'Prodi' . ' ' . $item->programStudi->display }}</option>
+                                            <option value="{{ $item->id }}" {{ ($filter2 ?? $periode) == $item->id ? 'selected' : '' }}>{{ $item->nama }} - {{ 'Prodi' . ' ' . $item->programStudi->display }}</option>
                                         @endforeach
                                     </select>
                                 </div>
