@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use App\Models\KategoriNilai;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\Ruangan;
 use Exception;
 use Illuminate\Support\Facades\File;
 
@@ -39,9 +40,25 @@ class JadwalSidangController extends Controller
             }
 
             if($request->has('status') && !empty($request->status)) {
-                $query = $query->where('status', $request->status);
+                if($request->status == 'sudah_sidang') {
+                    $query = $query->where('status', $request->status)->whereHas('tugas_akhir', function ($q) use($request) {
+                        $q->where('status_pemberkasan', 'belum_lengkap');
+                    });
+                } else {
+                    $query = $query->where('status', $request->status)->whereHas('tugas_akhir', function ($q) use($request) {
+                        $q->whereNull('status_sidang');
+                        $q->where('status_pemberkasan', 'sudah_lengkap');
+                    });
+                }
             } else {
-                $query = $query->where('status', 'belum_daftar');
+                if($request->has('status_pemberkasan') && !empty($request->status_pemberkasan)) {
+                    $query = $query->whereHas('tugas_akhir', function ($q) use($request) {
+                        $q->whereNotNull('status_sidang');
+                        $q->where('status_pemberkasan', $request->status_pemberkasan);
+                    });
+                } else {
+                    $query = $query->where('status', 'sudah_daftar');
+                }
             }
             $query = $query->get();
             
@@ -77,6 +94,138 @@ class JadwalSidangController extends Controller
         ];
         
         return view('administrator.jadwal-sidang.index', $data);
+    }
+
+    public function edit(Sidang $jadwalSidang)
+    {
+        $currentWeekDays = [];
+        $i = 0;
+        
+        while(count($currentWeekDays) <= 7) {
+            $date = Carbon::now()->addDays($i);
+
+            if($date->isWeekday()) {
+                $currentWeekDays[] = $date->format('Y-m-d');
+            }
+
+            $i++;
+        }
+        // dd($jadwalSidang);
+        $data = [
+            'title' => 'Jadwal Sidang',
+            'breadcrumbs' =>[
+                [
+                    'title' => 'Dashboard',
+                    'url' => route('apps.dashboard'),
+                ],
+                [
+                    'title' => 'Jadwal Sidang',
+                    'is_active' => true,
+                ]
+            ],
+            'jadwalSidang' => $jadwalSidang,
+            'ruangan' => Ruangan::all(),
+            'editedData' => $jadwalSidang,
+            'jadwalPembimbing1' => Sidang::whereHas('tugas_akhir', function ($query) use ($jadwalSidang) {
+                $query->whereHas('bimbing_uji', function ($query) use ($jadwalSidang) {
+                    $dosenId = $jadwalSidang->tugas_akhir->bimbing_uji()->where('jenis', 'pembimbing')->where('urut', 1)->first();
+                    $dosenId = is_null($dosenId) ? null : $dosenId->dosen_id;
+
+                    if(is_null($dosenId)) {
+                        $query->whereNull('dosen_id');
+                    } else {
+                        $query->where('dosen_id', $dosenId);
+                    }
+                    $query->where('jenis', 'pembimbing')->where('urut', 1);
+                });
+            })->where('status', 'sudah_terjadwal')->get(),
+            'jadwalPembimbing2' => Sidang::whereHas('tugas_akhir', function ($query) use ($jadwalSidang) {
+                $query->whereHas('bimbing_uji', function ($query) use ($jadwalSidang) {
+                    $dosenId = $jadwalSidang->tugas_akhir->bimbing_uji()->where('jenis', 'pembimbing')->where('urut', 2)->first();
+                    $dosenId = is_null($dosenId) ? null : $dosenId->dosen_id;
+
+                    if(is_null($dosenId)) {
+                        $query->whereNull('dosen_id');
+                    } else {
+                        $query->where('dosen_id', $dosenId);
+                    }
+                    $query->where('jenis', 'pembimbing')->where('urut', 2);
+                });
+            })->where('status', 'sudah_terjadwal')->get(),
+            'jadwalPenguji1' => Sidang::whereHas('tugas_akhir', function ($query) use ($jadwalSidang) {
+                $query->whereHas('bimbing_uji', function ($query) use ($jadwalSidang) {
+                    $dosenId = $jadwalSidang->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 1)->first();
+                    $dosenId = is_null($dosenId) ? null : $dosenId->dosen_id;
+
+                    if(is_null($dosenId)) {
+                        $query->whereNull('dosen_id');
+                    } else {
+                        $query->where('dosen_id', $dosenId);
+                    }
+                    $query->where('jenis', 'penguji')->where('urut', 1);
+                });
+            })->where('status', 'sudah_terjadwal')->get(),
+            'jadwalPenguji2' => Sidang::whereHas('tugas_akhir', function ($query) use ($jadwalSidang) {
+                $query->whereHas('bimbing_uji', function ($query) use ($jadwalSidang) {
+                    $dosenId = $jadwalSidang->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 2)->first();
+                    $dosenId = is_null($dosenId) ? null : $dosenId->dosen_id;
+
+                    if(is_null($dosenId)) {
+                        $query->whereNull('dosen_id');
+                    } else {
+                        $query->where('dosen_id', $dosenId);
+                    }
+                    $query->where('jenis', 'penguji')->where('urut', 2);
+                });
+            })->where('status', 'sudah_terjadwal')->get(),
+            'mahasiswaTerdaftar' => Sidang::where('status', 'sudah_terjadwal')->whereIn('tanggal', $currentWeekDays)->orderBy('tanggal', 'asc')->get(),
+        ];
+
+        // dd($data);
+        return view('administrator.jadwal-sidang.form', $data);
+    }
+
+    public function update(Request $request, Sidang $jadwalSidang) 
+    {
+        $request->validate([
+            'ruangan' => 'required',
+            'tanggal' => 'required',
+            'jam_mulai' => 'required',
+            'jam_selesai' => 'required',
+        ],
+        [
+            'ruangan.required' => 'Ruangan harus diisi',
+            'tanggal.required' => 'Tanggal harus diisi',
+            'jam_mulai.required' => 'Jam mulai harus diisi',
+            'jam_selesai.required' => 'Jam selesai harus diisi',
+        ]);
+        try {
+            // dd($request->tanggal);
+            $periode = PeriodeTa::where('is_active', 1)->first();
+            if(!is_null($periode) && Carbon::createFromFormat('Y-m-d',$request->tanggal)->greaterThan(Carbon::parse($periode->akhir_sidang))){
+                return redirect()->back()->with(['error' => 'Jadwal sidang melebihi batas periode']);
+            }
+            if(!is_null($periode) && !Carbon::createFromFormat('Y-m-d', $request->tanggal)->greaterThan(Carbon::parse($periode->mulai_sidang))){
+                return redirect()->back()->with(['error' => 'Periode sidang belum aktif']);
+            }
+
+            $check = Sidang::whereRuanganId($request->ruangan)->whereDate('tanggal', $request->tanggal)->where('jam_mulai', '>=', $request->jam_mulai)->where('jam_selesai', '<=', $request->jam_selesai)->first();
+
+            if(!is_null($check)) {
+                return redirect()->back()->with(['error' => 'Jadwal ini sudah ada']);
+            }
+
+            $jadwalSidang->update([
+                'ruangan_id' => $request->ruangan,
+                'tanggal' => $request->tanggal,
+                'jam_mulai' => $request->jam_mulai,
+                'jam_selesai' => $request->jam_selesai,
+                'status' => 'sudah_terjadwal'
+            ]);
+            return redirect()->route('apps.jadwal-sidang')->with(['success' => 'Berhasil menyimpan data']);
+        } catch (\Exception $e) {
+            return redirect()->back()->with(['error' => $e->getMessage()]);
+        }
     }
 
     public function detail(Sidang $sidang)

@@ -24,7 +24,7 @@ class DaftarTAController extends Controller
     {
         $periode = PeriodeTa::where('is_active', 1)->get();
         $dataTa = TugasAkhir::with(['mahasiswa','bimbing_uji','periode_ta','topik','jenis_ta']);
-        if ($request->has('periode') && !empty($request->periode) && $request->program_studi !== 'semua') {
+        if ($request->has('periode') && !empty($request->periode) && $request->periode != 'semua') {
             $dataTa->where('periode_ta_id', $request->periode);
         } else {
             $dataTa->whereIn('periode_ta_id', $periode->pluck('id'));

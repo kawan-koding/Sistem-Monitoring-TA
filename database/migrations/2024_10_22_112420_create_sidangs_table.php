@@ -18,7 +18,7 @@ return new class extends Migration
             $table->time('jam_mulai')->nullable();
             $table->time('jam_selesai')->nullable();
             $table->date('tanggal')->nullable();
-            $table->enum('status', ['belum_daftar','sudah_daftar','sudah_sidang']);
+            $table->enum('status', ['belum_daftar','sudah_daftar','sudah_terjadwal','sudah_sidang']);
             $table->timestamps();
         });
     }
