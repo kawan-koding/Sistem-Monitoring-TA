@@ -55,7 +55,6 @@ class JadwalSeminarController extends Controller
                 }
             }
 
-
             if($request->has('programStudi') && !empty($request->program_studi)) {
                 $query = $query->whereHas('tugas_akhir', function ($q) use($request) {
                     $q->whereHas('mahasiswa', function ($q) use($request) {
@@ -76,7 +75,7 @@ class JadwalSeminarController extends Controller
                 return $item;
             });
         }
-        
+
         if(getInfoLogin()->hasRole('Mahasiswa')) {
             $myId = getInfoLogin()->userable;
             $mahasiswa = Mahasiswa::where('id', $myId->id)->first();
