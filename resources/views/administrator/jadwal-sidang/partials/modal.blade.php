@@ -89,7 +89,47 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    @foreach ($document_sidang->where('jenis', 'pra_sidang') as $key => $doc)
+                    {{dd($data)}}
+                    @if($data->status == 'sudah_daftar')
+                        @foreach ($document_sidang->where('jenis', 'pra_sidang') as $key => $doc)
+                            @php $document = $doc->pemberkasan()->where('tugas_akhir_id', $item->tugas_akhir->id)->first(); @endphp
+                            <div class="col-md-4 col-sm-6 col-12 border p-3" style="position: relative">
+                                <div class="d-block text-center fw-bold" style="height: calc(100% - 115px);">{{ ucwords(strtolower($doc->nama)) }}</div>
+                                <div class="d-flex align-items-center justify-content-center my-3" style="height: 50px">
+                                    @if($document)
+                                        <i class="fa fa-file-pdf text-danger fa-3x"></i>
+                                    @endif
+                                </div>
+                                <div class="text-center">
+                                    @if($document)
+                                        <a href="{{ asset('storage/files/pemberkasan/' . $document->filename) }}" class="btn btn-secondary btn-sm" target="_blank">Lihat Berkas</a>
+                                    @else
+                                        <i class="text-danger">*</i>) Belum ada berkas
+                                    @endif
+                                </div>
+                            </div>
+                        @endforeach
+                    @elseif($data->status == 'sudah sidang')
+                        @foreach ($document_sidang->where('jenis', 'sidang') as $key => $doc)
+                            @php $document = $doc->pemberkasan()->where('tugas_akhir_id', $item->tugas_akhir->id)->first(); @endphp
+                            <div class="col-md-4 col-sm-6 col-12 border p-3" style="position: relative">
+                                <div class="d-block text-center fw-bold" style="height: calc(100% - 115px);">{{ ucwords(strtolower($doc->nama)) }}</div>
+                                <div class="d-flex align-items-center justify-content-center my-3" style="height: 50px">
+                                    @if($document)
+                                        <i class="fa fa-file-pdf text-danger fa-3x"></i>
+                                    @endif
+                                </div>
+                                <div class="text-center">
+                                    @if($document)
+                                        <a href="{{ asset('storage/files/pemberkasan/' . $document->filename) }}" class="btn btn-secondary btn-sm" target="_blank">Lihat Berkas</a>
+                                    @else
+                                        <i class="text-danger">*</i>) Belum ada berkas
+                                    @endif
+                                </div>
+                            </div>
+                        @endforeach
+                    @endif
+                    {{-- @foreach ($document_sidang->where('jenis', 'pra_sidang') as $key => $doc)
                     @php $document = $doc->pemberkasan()->where('tugas_akhir_id', $item->tugas_akhir->id)->first(); @endphp
                         <div class="d-flex align-items-center gap-2 mb-3 " id="document{{ $doc->id }}">
                             @if ($document)
@@ -120,7 +160,7 @@
                                 <a href="{{ route('apps.jadwal-sidang.reject', $document->id) }}" class="file-btn btn btn-outline-danger btn-sm update-status"><i class="bx bx-x"></i></a>
                             @endif
                         </div>
-                    @endforeach
+                    @endforeach --}}
                 </div>
                 @if($item->status == 'sudah_sidang')
                 <div class="modal-footer">

@@ -336,7 +336,7 @@
             </div>
             <div class="card-body">
                 <h3 class="mb-2">{{ $dosen['kuota']->sum('pembimbing_1')  ?? 0}} </h3>
-                <p class="mb-0">Jumlah Kuota Bimbingan</p>
+                <p class="mb-0">Jumlah Kuota Pembimbing 1</p>
             </div>
         </div>
     </div>
@@ -349,7 +349,7 @@
                 <h3 class="mb-2">
                     {{ $dosen['sisaKuota'] ?? 0}}
                 </h3>
-                <p class="mb-0">Sisa Kuota Bimbingan</p>
+                <p class="mb-0">Sisa Kuota Pembimbing 1</p>
             </div>
         </div>
     </div>
