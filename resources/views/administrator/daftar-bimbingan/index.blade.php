@@ -12,7 +12,7 @@
                         </span>
                     </div>
                     <div class="flex-1">
-                        <div class="font-size-16 mt-1 fw-bold">Total Kuota Bimbingan</div>
+                        <div class="font-size-16 mt-1 fw-bold">Total Kuota Pembimbing 1</div>
                         <p class="font-size-14 mt-1 text-muted m-0">
                             @foreach ($kuota as $item)
                                 {{ $item->programStudi->display ?? '-' }} : <span class="text-primary">{{ $item->pembimbing_1 ?? 0}}</span> @if(!$loop->last) | @endif 
@@ -33,7 +33,7 @@
                         </span>
                     </div>
                     <div class="flex-1">
-                        <div class="font-size-16 mt-1 fw-bold">Sisa Kuota Bimbingan</div>
+                        <div class="font-size-16 mt-1 fw-bold">Sisa Kuota Pembimbing 1</div>
                         <p class="font-size-14 mt-1 text-muted m-0">
                             @foreach ($sisaKuota as $item)
                                 {{ $item['prodi'] ?? '-' }} : <span class="text-primary">{{ $item['sisa_kuota'] ?? 0}}</span> @if(!$loop->last) | @endif 

@@ -185,7 +185,7 @@
                                     @endif
                                     @if(getInfoLogin()->hasRole('Admin'))
                                         @if($item->status == 'sudah_daftar' || $item->status == 'sudah_sidang')
-                                          <a href="javascript:void(0);" onclick="validasiFile('{{ $item->id}}', '{{ route('apps.jadwal-sidang.validasi-berkas', $item->id) }}')" class="btn btn-sm btn-outline-secondary my-1" title="Detail Berkas"><i class="bx bx-folder-open"></i></a>
+                                          <a href="javascript:void(0);" onclick="validasiFile('{{ $item->id}}', '{{ route('apps.jadwal-sidang.validasi-berkas', $item->id) }}')" class="btn btn-sm btn-outline-success my-1" title="Detail Berkas"><i class="bx bx-pencil"></i></a>
                                         @endif
                                     @endif
                                     @include('administrator.jadwal-sidang.partials.modal')

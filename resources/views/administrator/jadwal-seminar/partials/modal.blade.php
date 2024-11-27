@@ -15,7 +15,7 @@
                     <button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="close"></button>
                 </div>
                 <div class="modal-body" style="position: relative">
-                    @if ($item->status == 'belum_terjadwal')
+                    @if ($item->status == 'belum_terjadwal' || $item->status == 'sudah_terjadwal')
                         @foreach ($document_seminar->where('jenis', 'pra_seminar') as $key => $doc)
                             @php $document = $doc->pemberkasan()->where('tugas_akhir_id', $item->tugas_akhir->id)->first(); @endphp
                             <div class="d-flex align-items-center gap-2 mb-3 " id="document{{ $doc->id }}">

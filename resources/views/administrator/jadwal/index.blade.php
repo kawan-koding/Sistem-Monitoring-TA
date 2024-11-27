@@ -69,13 +69,12 @@
                                                 <span class="badge rounded-pill badge-soft-primary">Belum Terjadwal</span>
                                             @else
                                                 @if (!is_null($item->tugas_akhir->jadwal_seminar()->orderBy('id', 'desc')->first()) && $item->tugas_akhir->jadwal_seminar()->orderBy('id', 'desc')->first()->status == 'sudah_terjadwal')
-                                                    <span class="badge rounded-pill badge-soft-primary">Sudah
-                                                        Terjadwal</span>
+                                                    <span class="badge rounded-pill badge-soft-primary">Sudah Terjadwal</span>
                                                 @else
                                                     <span class="badge rounded-pill badge-soft-primary">Telah Seminar</span>
                                                 @endif
                                             @endif
-                                            <h5>
+                                            <h5 class="font-size-14">
                                                 {{ $item->tugas_akhir->judul }}
                                             </h5>
                                             <p>{{ $item->tugas_akhir->mahasiswa->nama_mhs }}</p>
