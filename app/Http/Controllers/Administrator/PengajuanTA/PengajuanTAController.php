@@ -27,30 +27,30 @@ class PengajuanTAController extends Controller
     public function index(Request $request)
     {
         $query = [];
-        if(getInfoLogin()->hasRole('Mahasiswa')){
+        if (getInfoLogin()->hasRole('Mahasiswa')) {
             $myId = getInfoLogin()->username;
             $mahasiswa = Mahasiswa::where('nim', $myId)->first();
-            if($mahasiswa) {
+            if ($mahasiswa) {
                 $query = TugasAkhir::with(['jenis_ta', 'topik'])->where('mahasiswa_id', $mahasiswa->id)->get();
             }
         }
-        if(getInfoLogin()->hasRole('Kaprodi')){
+        if (getInfoLogin()->hasRole('Kaprodi')) {
             $login = Dosen::where('id', getInfoLogin()->userable_id)->first();
             $prodi = $login->programStudi->nama;
-            $query = TugasAkhir::with(['jenis_ta', 'topik'])->whereHas('mahasiswa', function ($query) use($prodi) {
-                $query->whereHas('programStudi', function ($q) use($prodi) {
+            $query = TugasAkhir::with(['jenis_ta', 'topik'])->whereHas('mahasiswa', function ($query) use ($prodi) {
+                $query->whereHas('programStudi', function ($q) use ($prodi) {
                     $q->where('nama', $prodi);
                 });
             });
 
-            if($request->has('filter') && !empty($request->filter) && $request->filter != 'semua') {
+            if ($request->has('filter') && !empty($request->filter) && $request->filter != 'semua') {
                 $query = $query->where('tipe', $request->filter);
             }
 
-            if($request->has('status') && !empty($request->status)) {
+            if ($request->has('status') && !empty($request->status)) {
                 $query = $query->whereIn('status', [$request->status, 'cancel']);
             } else {
-                $query = $query->whereIn('status', ['draft','pengajuan ulang']);
+                $query = $query->whereIn('status', ['draft', 'pengajuan ulang']);
             }
 
             $query = $query->get();
@@ -73,7 +73,7 @@ class PengajuanTAController extends Controller
             'filter' => $request->has('filter') ? $request->filter : 'semua',
             'status' => $request->has('status') ? $request->status : 'draft',
         ];
-        
+
         return view('administrator.pengajuan-ta.index', $data);
     }
 
@@ -86,7 +86,7 @@ class PengajuanTAController extends Controller
         $dosen = [];
         foreach ($dataDosen as $key) {
             $kuota = KuotaDosen::where('dosen_id', $key->id)->where('periode_ta_id', $periode->id)->where('program_studi_id', $prodi->id)->first();
-            $bimbingUji = BimbingUji::with(['tugas_akhir', 'dosen'])->where('dosen_id', $key->id)->where('jenis', 'pembimbing')->where('urut', 1)->whereHas('tugas_akhir', function ($q) use($periode){
+            $bimbingUji = BimbingUji::with(['tugas_akhir', 'dosen'])->where('dosen_id', $key->id)->where('jenis', 'pembimbing')->where('urut', 1)->whereHas('tugas_akhir', function ($q) use ($periode) {
                 $q->where('periode_ta_id', $periode->id);
             })->count();
             $dosen[] = (object)[
@@ -99,7 +99,7 @@ class PengajuanTAController extends Controller
             ];
         }
 
-        $docPengajuan = JenisDokumen::where('jenis','pendaftaran')->get();
+        $docPengajuan = JenisDokumen::where('jenis', 'pendaftaran')->get();
         $data = [
             'title' => 'Pengajuan Tugas Akhir',
             'dataJenis'   => JenisTa::all(),
@@ -128,40 +128,39 @@ class PengajuanTAController extends Controller
     }
 
     public function store(PengajuanTARequest $request)
-    {   
+    {
         try {
             DB::beginTransaction();
             $user = getInfoLogin()->userable;
             $prodi = $user->programStudi;
             $periode = PeriodeTa::where('is_active', 1)->where('program_studi_id', $prodi->id)->first();
-            if(!is_null($periode) && !Carbon::parse($periode->akhir_daftar)->addDays(1)->isFuture()){
+            if (!is_null($periode) && !Carbon::parse($periode->akhir_daftar)->addDays(1)->isFuture()) {
                 return redirect()->back()->with('error', 'Pengajuan Tugas Akhir melebihi batas periode');
             }
-            if(!is_null($periode) && Carbon::parse($periode->mulai_daftar)->addDays(1)->isFuture()){
+            if (!is_null($periode) && Carbon::parse($periode->mulai_daftar)->addDays(1)->isFuture()) {
                 return redirect()->back()->with('error', 'Periode pengajuan Tugas Akhir belum aktif');
             }
             $myId = Auth::user()->username;
             $mahasiswa = Mahasiswa::where('nim', $myId)->first();
 
             $kuota = KuotaDosen::where('dosen_id', $request->pembimbing_1)->where('periode_ta_id', $periode->id)->first();
-            $bimbingUji = BimbingUji::with(['tugas_akhir', 'dosen'])->where('jenis', 'pembimbing')->where('urut', 1)->where('dosen_id', $request->pembimbing_1)->whereHas('tugas_akhir', function ($q) use($periode){
+            $bimbingUji = BimbingUji::with(['tugas_akhir', 'dosen'])->where('jenis', 'pembimbing')->where('urut', 1)->where('dosen_id', $request->pembimbing_1)->whereHas('tugas_akhir', function ($q) use ($periode) {
                 $q->where('periode_ta_id', $periode->id);
             })->count();
-            if($bimbingUji >= (!is_null($kuota) ? $kuota->pembimbing_1 : 0)){
+            if ($bimbingUji >= (!is_null($kuota) ? $kuota->pembimbing_1 : 0)) {
                 return redirect()->back()->with('error', 'Kuota dosen pembimbing 1 yang di pilih telah mencapai batas');
             }
 
-            if($request->jenis_ta_new !== null) {
-                $newJenis =JenisTa::create(['nama_jenis' => $request->jenis_ta_new]);
+            if ($request->jenis_ta_new !== null) {
+                $newJenis = JenisTa::create(['nama_jenis' => $request->jenis_ta_new]);
                 $jenis = $newJenis->id;
             } else {
                 $jenis = $request->jenis_ta_id;
             }
 
-            if($request->topik_ta_new !== null) {
-                $newTopik =Topik::create(['nama_topik' => $request->topik_ta_new]);
+            if ($request->topik_ta_new !== null) {
+                $newTopik = Topik::create(['nama_topik' => $request->topik_ta_new]);
                 $topik = $newTopik->id;
-
             } else {
                 $topik = $request->topik;
             }
@@ -169,7 +168,7 @@ class PengajuanTAController extends Controller
             $result = TugasAkhir::create([
                 'jenis_ta_id' => $jenis,
                 'topik_id' => $topik,
-                'mahasiswa_id' =>$mahasiswa->id,
+                'mahasiswa_id' => $mahasiswa->id,
                 'periode_ta_id' => $periode->id,
                 'judul' => $request->judul,
                 'tipe' => $request->tipe,
@@ -183,25 +182,34 @@ class PengajuanTAController extends Controller
                 'urut' => 1,
             ]);
 
-            $docPengajuan = JenisDokumen::where('jenis','pendaftaran')->get();
-            foreach($docPengajuan as $item) {
-                $request->validate([
-                    'dokumen_'.$item->id => 'required|mimes:pdf,docx|max:2048'
-                ], [
-                    'dokumen_'. $item->id .'.required' => 'Dokumen '. ucwords(strtolower($item->nama)) .' harus diisi',
-                    'dokumen_'. $item->id .'.mimes' => 'Dokumen harus dalam format PDF atau Docx',
-                    'dokumen_'. $item->id .'.max' => 'Dokumen tidak boleh lebih dari 2 MB',
-                ]);
-                $file = $request->file('dokumen_'.$item->id);
-                $filename = 'document_' . rand(0, 999999999) .'_'. rand(0, 999999999) .'.'. $file->getClientOriginalExtension();
+            $docPengajuan = JenisDokumen::where('jenis', 'pendaftaran')->get();
+            $validates = [];
+            $messages = [];
+            $inserts = [];
+
+            foreach ($docPengajuan as $item) {
+                $validates['document_' . $item->id] = $item->tipe_dokumen == 'pdf' ? '|mimes:pdf|max:' . $item->max_ukuran : 'mimes:png,jpg,jpeg,webp|max:' . $item->max_ukuran;
+                $messages['document_' . $item->id . '.mimes'] = 'Dokumen ' . strtolower($item->nama) . ' harus dalam format ' . ($item->tipe_dokumen == 'pdf' ? 'PDF' : 'PNG, JPEG, JPG, WEBP');
+                $messages['document_' . $item->id . '.max'] = 'Dokumen ' . strtolower($item->nama) . ' tidak boleh lebih dari ' . $item->max_ukuran . ' KB';
+            }
+
+            $request->validate($validates, $messages);
+
+            foreach ($docPengajuan as $item) {
+                $file = $request->file('dokumen_' . $item->id);
+                $filename = 'document_' . rand(0, 999999999) . '_' . rand(0, 999999999) . '.' . $file->getClientOriginalExtension();
                 $file->move(public_path('storage/files/pemberkasan'), $filename);
-    
-                Pemberkasan::create([
+
+                $inserts[] = [
                     'tugas_akhir_id' => $result->id,
                     'jenis_dokumen_id' => $item->id,
                     'filename' => $filename,
-                ]);
+                    'updated_at' => now(),
+                    'created_at' => now()
+                ];
             }
+
+            Pemberkasan::insert($inserts);
 
             DB::commit();
             return redirect()->route('apps.pengajuan-ta')->with('success', 'Data berhasil ditambahkan');
@@ -220,7 +228,7 @@ class PengajuanTAController extends Controller
         foreach ($dataDosen as $key) {
             # code...
             $kuota = KuotaDosen::where('dosen_id', $key->id)->where('periode_ta_id', $periode->id)->first();
-            $bimbingUji = BimbingUji::with(['tugas_akhir', 'dosen'])->where('dosen_id', $key->id)->where('jenis', 'pembimbing')->where('urut', 1)->whereHas('tugas_akhir', function ($q) use($periode){
+            $bimbingUji = BimbingUji::with(['tugas_akhir', 'dosen'])->where('dosen_id', $key->id)->where('jenis', 'pembimbing')->where('urut', 1)->whereHas('tugas_akhir', function ($q) use ($periode) {
                 $q->where('periode_ta_id', $periode->id);
             })->count();
             // dd($kuota);
@@ -233,7 +241,7 @@ class PengajuanTAController extends Controller
                 'total_pembimbing_1' => $bimbingUji,
             ];
         }
-        $docPengajuan = JenisDokumen::where('jenis','pendaftaran')->get();
+        $docPengajuan = JenisDokumen::where('jenis', 'pendaftaran')->get();
 
         $data = [
             'title' => 'Pengajuan Tugas Akhir',
@@ -270,27 +278,27 @@ class PengajuanTAController extends Controller
         try {
             DB::beginTransaction();
 
-            if($pengajuanTA->status == 'revisi'){
+            if ($pengajuanTA->status == 'revisi') {
                 $status = 'pengajuan ulang';
             } else {
-               $status = $pengajuanTA->status;
+                $status = $pengajuanTA->status;
             }
-            
-            if($request->jenis_ta_new !== null) {
-                $newJenis =JenisTa::create(['nama_jenis' => $request->jenis_ta_new]);
+
+            if ($request->jenis_ta_new !== null) {
+                $newJenis = JenisTa::create(['nama_jenis' => $request->jenis_ta_new]);
                 $jenis = $newJenis->id;
             } else {
                 $jenis = $request->jenis_ta_id;
             }
 
-            if($request->topik_ta_new !== null) {
-                $newTopik =Topik::create(['nama_topik' => $request->topik_ta_new]);
+            if ($request->topik_ta_new !== null) {
+                $newTopik = Topik::create(['nama_topik' => $request->topik_ta_new]);
                 $topik = $newTopik->id;
             } else {
                 $topik = $request->topik;
             }
 
-            if($pengajuanTA->status == 'acc') {
+            if ($pengajuanTA->status == 'acc') {
                 $catatan = null;
             } else {
                 $catatan = $pengajuanTA->catatan;
@@ -300,26 +308,26 @@ class PengajuanTAController extends Controller
                 'jenis_ta_id' => $jenis,
                 'topik_id' => $topik,
                 'judul' => $request->judul,
-                'tipe' => $request->tipe,    
+                'tipe' => $request->tipe,
                 'status' => $status,
                 'catatan' => $catatan
             ]);
 
-            $docPengajuan = JenisDokumen::where('jenis','pendaftaran')->get();
-            foreach($docPengajuan as $item) {
+            $docPengajuan = JenisDokumen::where('jenis', 'pendaftaran')->get();
+            foreach ($docPengajuan as $item) {
                 $request->validate([
-                    'dokumen_'.$item->id => 'mimes:pdf,docx|max:2048'
+                    'dokumen_' . $item->id => 'mimes:pdf,docx|max:2048'
                 ], [
-                    'dokumen_'. $item->id .'.mimes' => 'Dokumen harus dalam format PDF atau Docx',
-                    'dokumen_'. $item->id .'.max' => 'Dokumen tidak boleh lebih dari 2 MB',
+                    'dokumen_' . $item->id . '.mimes' => 'Dokumen harus dalam format PDF atau Docx',
+                    'dokumen_' . $item->id . '.max' => 'Dokumen tidak boleh lebih dari 2 MB',
                 ]);
-                if($request->hasFile('dokumen_'.$item->id)) {
-                    $file = $request->file('dokumen_'.$item->id);
-                    $filename = 'document_' . rand(0, 999999999) .'_'. rand(0, 999999999) .'.'. $file->getClientOriginalExtension();
+                if ($request->hasFile('dokumen_' . $item->id)) {
+                    $file = $request->file('dokumen_' . $item->id);
+                    $filename = 'document_' . rand(0, 999999999) . '_' . rand(0, 999999999) . '.' . $file->getClientOriginalExtension();
                     $file->move(public_path('storage/files/pemberkasan'), $filename);
                     $pemberkasan = Pemberkasan::where('tugas_akhir_id', $pengajuanTA->id)->where('jenis_dokumen_id', $item->id)->first();
-                    if(!is_null($pemberkasan)) {
-                        File::delete(public_path('Storage/files/pemberkasan/'.$pemberkasan->filename));
+                    if (!is_null($pemberkasan)) {
+                        File::delete(public_path('Storage/files/pemberkasan/' . $pemberkasan->filename));
                         $pemberkasan->update([
                             'filename' => $filename,
                         ]);
@@ -332,7 +340,7 @@ class PengajuanTAController extends Controller
                     }
                 }
             }
-            
+
             DB::commit();
             return redirect()->route('apps.pengajuan-ta')->with('success', 'Data berhasil diperbarui');
         } catch (\Exception $e) {
@@ -399,7 +407,7 @@ class PengajuanTAController extends Controller
     //                 File::delete(public_path('storage/files/tugas-akhir/'.$pengajuanTA->file_persetujuan_pemb_2));
     //             }
     //         }
-            
+
     //         $data->update([
     //             'file_persetujuan_pemb_2' => $dokumenPemb2,
     //         ]);
@@ -411,19 +419,19 @@ class PengajuanTAController extends Controller
     //     }
     // }
 
-    public function accept(TugasAkhir $pengajuanTA, Request $request) 
+    public function accept(TugasAkhir $pengajuanTA, Request $request)
     {
         $request->validate([
-           'catatan' => 'nullable'
+            'catatan' => 'nullable'
         ]);
-        
+
         try {
 
             $pengajuanTA->update([
                 'status' => 'acc',
                 'catatan' => $request->catatan
             ]);
-            
+
             JadwalSeminar::create([
                 'tugas_akhir_id' => $pengajuanTA->id,
                 'status' => 'belum_terjadwal'
@@ -438,18 +446,17 @@ class PengajuanTAController extends Controller
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
-
     }
 
-    public function reject(TugasAkhir $pengajuanTA, Request $request) 
+    public function reject(TugasAkhir $pengajuanTA, Request $request)
     {
         $request->validate([
-           'catatan' => 'nullable'
+            'catatan' => 'nullable'
         ]);
-        
+
         try {
             $data = TugasAkhir::where('id', $pengajuanTA->id)->first();
-    
+
             $data->update([
                 'status' => 'reject',
                 'catatan' => $request->catatan
@@ -478,8 +485,8 @@ class PengajuanTAController extends Controller
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
-    } 
-    
+    }
+
     public function revisi(TugasAkhir $pengajuanTA, Request $request)
     {
         // dd($request->all());
