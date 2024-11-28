@@ -301,30 +301,34 @@ class DaftarTAController extends Controller
             }
 
             $docPengajuan = JenisDokumen::where('jenis','pendaftaran')->get();
+            $validates = [];
+            $messages = [];
+            $inserts = [];
+
+            foreach ($docPengajuan as $item) {
+                $validates['document_' . $item->id] = $item->tipe_dokumen == 'pdf' ? '|mimes:pdf|max:' . $item->max_ukuran : 'mimes:png,jpg,jpeg,webp|max:' . $item->max_ukuran;
+                $messages['document_' . $item->id . '.mimes'] = 'Dokumen ' . strtolower($item->nama) . ' harus dalam format ' . ($item->tipe_dokumen == 'pdf' ? 'PDF' : 'PNG, JPEG, JPG, WEBP');
+                $messages['document_' . $item->id . '.max'] = 'Dokumen ' . strtolower($item->nama) . ' tidak boleh lebih dari ' . $item->max_ukuran . ' KB';
+            }
+            
+            $request->validate($validates, $messages);
+
             foreach($docPengajuan as $item) {
-                $request->validate([
-                    'dokumen_'.$item->id => 'mimes:pdf,docx|max:2048'
-                ], [
-                    'dokumen_'. $item->id .'.mimes' => 'Dokumen harus dalam format PDF atau Docx',
-                    'dokumen_'. $item->id .'.max' => 'Dokumen tidak boleh lebih dari 2 MB',
-                ]);
-                if($request->hasFile('dokumen_'.$item->id)) {
-                    $file = $request->file('dokumen_'.$item->id);
-                    $filename = 'document_' . rand(0, 999999999) .'_'. rand(0, 999999999) .'.'. $file->getClientOriginalExtension();
-                    $file->move(public_path('storage/files/pemberkasan'), $filename);
-                    $pemberkasan = Pemberkasan::where('tugas_akhir_id', $tugasAkhir->id)->where('jenis_dokumen_id', $item->id)->first();
-                    if(!is_null($pemberkasan)) {
-                        File::delete(public_path('Storage/files/pemberkasan/'.$pemberkasan->filename));
-                        $pemberkasan->update([
-                            'filename' => $filename,
-                        ]);
-                    } else {
-                        Pemberkasan::create([
-                            'tugas_akhir_id' => $pengajuanTA->id,
-                            'jenis_dokumen_id' => $item->id,
-                            'filename' => $filename,
-                        ]);
-                    }
+                $file = $request->file('dokumen_'.$item->id);
+                $filename = 'document_' . rand(0, 999999999) .'_'. rand(0, 999999999) .'.'. $file->getClientOriginalExtension();
+                $file->move(public_path('storage/files/pemberkasan'), $filename);
+                $pemberkasan = Pemberkasan::where('tugas_akhir_id', $tugasAkhir->id)->where('jenis_dokumen_id', $item->id)->first();
+                if(!is_null($pemberkasan)) {
+                    File::delete(public_path('Storage/files/pemberkasan/'.$pemberkasan->filename));
+                    $pemberkasan->update([
+                        'filename' => $filename,
+                    ]);
+                } else {
+                    Pemberkasan::create([
+                        'tugas_akhir_id' => $pengajuanTA->id,
+                        'jenis_dokumen_id' => $item->id,
+                        'filename' => $filename,
+                    ]);
                 }
             }
 
