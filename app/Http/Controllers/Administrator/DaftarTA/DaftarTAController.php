@@ -26,7 +26,7 @@ class DaftarTAController extends Controller
         $periode = $request->has('filter2') && !empty($request->filter2 && $request->filter2 != 'semua') ? $request->filter2 : PeriodeTa::where('is_active', 1)->first()->id;
 
         $dataTa = TugasAkhir::with(['mahasiswa','bimbing_uji','periode_ta','topik','jenis_ta']);
-        if ($request->has('periode') && !empty($request->periode) && $request->program_studi !== 'semua') {
+        if ($request->has('periode') && !empty($request->periode) && $request->periode != 'semua') {
             $dataTa->where('periode_ta_id', $request->periode);
         } else {
             // $dataTa->whereIn('periode_ta_id', $periode->pluck('id'));

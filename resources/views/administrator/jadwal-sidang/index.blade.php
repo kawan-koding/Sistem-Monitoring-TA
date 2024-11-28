@@ -62,14 +62,14 @@
                         <a class="nav-link @if (url()->full() == route('apps.jadwal-sidang')) active @endif"
                             href="{{ route('apps.jadwal-sidang') }}">
                             <span class="d-block d-sm-none"><i class="bx bx-timer"></i></span>
-                            <span class="d-none d-sm-block">Belum Daftar</span>
+                            <span class="d-none d-sm-block">Belum Terjadwal</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link @if (url()->full() == route('apps.jadwal-sidang', ['status' => 'sudah_daftar'])) active @endif"
-                            href="{{ route('apps.jadwal-sidang', ['status' => 'sudah_daftar']) }}">
+                        <a class="nav-link @if (url()->full() == route('apps.jadwal-sidang', ['status' => 'sudah_terjadwal'])) active @endif"
+                            href="{{ route('apps.jadwal-sidang', ['status' => 'sudah_terjadwal']) }}">
                             <span class="d-block d-sm-none"><i class="bx bx-list-check"></i></span>
-                            <span class="d-none d-sm-block">Sudah Daftar</span>
+                            <span class="d-none d-sm-block">Sudah Terjadwal</span>
                         </a>
                     </li>
                     <li class="nav-item">
@@ -77,6 +77,13 @@
                             href="{{ route('apps.jadwal-sidang', ['status' => 'sudah_sidang']) }}">
                             <span class="d-block d-sm-none"><i class="bx bx-check-circle"></i></span>
                             <span class="d-none d-sm-block">Telah Sidang</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @if (url()->full() == route('apps.jadwal-sidang', ['status_pemberkasan' => 'sudah_lengkap'])) active @endif"
+                            href="{{ route('apps.jadwal-sidang', ['status_pemberkasan' => 'sudah_lengkap']) }}">
+                            <span class="d-block d-sm-none"><i class="bx bx-check-circle"></i></span>
+                            <span class="d-none d-sm-block">Sudah Pemberkasan</span>
                         </a>
                     </li>
                 </ul>
@@ -171,8 +178,8 @@
                                     </td>
                                 @endif
                                 <td class="mb-3 text-center">
-                                    <a href="{{ route('apps.jadwal-sidang.detail-sidang', $item->id) }}" class="btn btn-sm btn-outline-primary my-1" title="Detail Sidang"><i class="bx bx-show" ></i></a>
                                     @if (getInfoLogin()->hasRole('Mahasiswa'))
+                                    <a href="{{ route('apps.jadwal-sidang.detail-sidang', $item->id) }}" class="btn btn-sm btn-outline-primary my-1" title="Detail Sidang"><i class="bx bx-show" ></i></a>
                                         @if($item->status == 'belum_daftar')
                                             <button onclick="daftarSidang('{{ $item->id }}', '{{ route('apps.jadwal-seminar.unggah-berkas', $item->id) }}')" class="btn btn-sm btn-outline-dark"><i class="bx bx-file"></i>
                                                 Daftar
@@ -184,8 +191,12 @@
                                         @endif
                                     @endif
                                     @if(getInfoLogin()->hasRole('Admin'))
-                                        @if($item->status == 'sudah_daftar' || $item->status == 'sudah_sidang')
+                                        {{-- @if($item->status == 'sudah_daftar' || $item->status == 'sudah_sidang')
                                           <a href="javascript:void(0);" onclick="validasiFile('{{ $item->id}}', '{{ route('apps.jadwal-sidang.validasi-berkas', $item->id) }}')" class="btn btn-sm btn-outline-success my-1" title="Detail Berkas"><i class="bx bx-pencil"></i></a>
+                                        @endif --}}
+                                        @if($item->status == 'sudah_daftar' || $item->status == 'sudah_terjadwal')
+                                            <a href="{{ route('apps.jadwal-sidang.edit', ['jadwalSidang' => $item->id]) }}"
+                                            class="btn btn-sm btn-primary"><i class="bx bx-calendar-event"></i></a>
                                         @endif
                                     @endif
                                     @include('administrator.jadwal-sidang.partials.modal')

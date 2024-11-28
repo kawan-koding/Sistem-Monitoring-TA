@@ -270,8 +270,10 @@ Route::prefix('apps')->middleware('auth')->group(function () {
        Route::get('{sidang}/detail',[JadwalSidangController::class,'show'])->name('apps.jadwal-sidang.detail'); 
        Route::get('{sidang}/detail-sidang',[JadwalSidangController::class,'show'])->name('apps.jadwal-sidang.detail-sidang'); 
        Route::post('{sidang}/daftar-sidang',[JadwalSidangController::class,'register'])->name('apps.jadwal-sidang.register'); 
-       Route::get('{pemberkasan}/validasi-berkas',[JadwalSidangController::class,'validasiBerkas'])->name('apps.jadwal-sidang.validasi-berkas');
-       Route::get('{pemberkasan}/reject', [JadwalSidangController::class, 'reject'])->name('apps.jadwal-sidang.reject');
+       Route::post('{jadwalSidang}/update',[JadwalSidangController::class,'update'])->name('apps.jadwal-sidang.update'); 
+       Route::get('{jadwalSidang}/edit',[JadwalSidangController::class,'edit'])->name('apps.jadwal-sidang.edit'); 
+    //    Route::get('{pemberkasan}/validasi-berkas',[JadwalSidangController::class,'validasiBerkas'])->name('apps.jadwal-sidang.validasi-berkas');
+    //    Route::get('{pemberkasan}/reject', [JadwalSidangController::class, 'reject'])->name('apps.jadwal-sidang.reject');
     });
 
     Route::prefix('profile-dosen')->group( function() {

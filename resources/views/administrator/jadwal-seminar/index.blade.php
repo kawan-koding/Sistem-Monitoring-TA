@@ -50,9 +50,9 @@
                         value="{{ !is_null($status) ? $status : $status_pemberkasan }}">
                     <div class="row">
                         <div class="col-md-6 col-sm-12">
-                            @if (!is_null($status))
+                            {{-- @if (!is_null($status))
                                 <input type="hidden" name="status" value="{{ $status }}">
-                            @endif
+                            @endif --}}
                             <label for="">Filter Tanggal</label>
                             <div class="inner mb-3 row">
                                 <div class="col-md-8 col-sm-6">

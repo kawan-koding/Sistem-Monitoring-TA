@@ -89,8 +89,8 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    {{dd($data)}}
-                    @if($data->status == 'sudah_daftar')
+                    {{-- {{dd($data[0])}} --}}
+                    @if($item->status == 'sudah_daftar')
                         @foreach ($document_sidang->where('jenis', 'pra_sidang') as $key => $doc)
                             @php $document = $doc->pemberkasan()->where('tugas_akhir_id', $item->tugas_akhir->id)->first(); @endphp
                             <div class="col-md-4 col-sm-6 col-12 border p-3" style="position: relative">
@@ -109,7 +109,7 @@
                                 </div>
                             </div>
                         @endforeach
-                    @elseif($data->status == 'sudah sidang')
+                    @elseif($item->status == 'sudah sidang')
                         @foreach ($document_sidang->where('jenis', 'sidang') as $key => $doc)
                             @php $document = $doc->pemberkasan()->where('tugas_akhir_id', $item->tugas_akhir->id)->first(); @endphp
                             <div class="col-md-4 col-sm-6 col-12 border p-3" style="position: relative">
