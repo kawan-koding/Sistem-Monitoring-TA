@@ -91,7 +91,7 @@ class DashboardController extends Controller
         $prodi = $user->programStudi->id;
         $belumAcc = RekomendasiTopik::where('status','Menunggu')->where('program_studi_id', $prodi)->get();
         $sudahAcc = RekomendasiTopik::where('status','Disetujui')->where('program_studi_id', $prodi)->get();
-        $taDraft = TugasAkhir::where('status','draft')->whereHas('mahasiswa', function($query) use ($prodi) {
+        $taDraft = TugasAkhir::whereIn('status',['draft','pengajuan ulang'])->whereHas('mahasiswa', function($query) use ($prodi) {
             $query->where('program_studi_id', $prodi);
         })->get();
         $taAcc = TugasAkhir::where('status','acc')->whereHas('mahasiswa', function($query) use ($prodi) {
