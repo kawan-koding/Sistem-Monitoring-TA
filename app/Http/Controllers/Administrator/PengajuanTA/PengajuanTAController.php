@@ -87,7 +87,7 @@ class PengajuanTAController extends Controller
         foreach ($dataDosen as $key) {
             $kuota = KuotaDosen::where('dosen_id', $key->id)->where('periode_ta_id', $periode->id)->where('program_studi_id', $prodi->id)->first();
             $bimbingUji = BimbingUji::with(['tugas_akhir', 'dosen'])->where('dosen_id', $key->id)->where('jenis', 'pembimbing')->where('urut', 1)->whereHas('tugas_akhir', function ($q) use ($periode) {
-                $q->where('periode_ta_id', $periode->id);
+                $q->where('periode_ta_id', $periode->id)->whereNotIn('status', ['reject', 'cancel']);
             })->count();
             $dosen[] = (object)[
                 'id' => $key->id,
@@ -229,7 +229,7 @@ class PengajuanTAController extends Controller
             # code...
             $kuota = KuotaDosen::where('dosen_id', $key->id)->where('periode_ta_id', $periode->id)->first();
             $bimbingUji = BimbingUji::with(['tugas_akhir', 'dosen'])->where('dosen_id', $key->id)->where('jenis', 'pembimbing')->where('urut', 1)->whereHas('tugas_akhir', function ($q) use ($periode) {
-                $q->where('periode_ta_id', $periode->id);
+                $q->where('periode_ta_id', $periode->id)->whereNotIn('status', ['reject', 'cancel']);
             })->count();
             // dd($kuota);
             $dosen[] = (object)[
