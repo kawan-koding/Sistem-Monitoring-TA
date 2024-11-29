@@ -31,7 +31,7 @@ class MahasiswaController extends Controller
         }
         $mahasiswa = $mahasiswa->get();
 
-        $periode = PeriodeTa::query();
+        $periode = PeriodeTa::whereIsActive(true);
         if ($request->has('program_studi') && !empty($request->program_studi) && $request->program_studi !== 'semua') {
             $periode->where('program_studi_id', $request->program_studi);
         }

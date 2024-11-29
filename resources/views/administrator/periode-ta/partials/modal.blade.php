@@ -57,6 +57,16 @@ aria-labelledby="myModalLabel" aria-hidden="true">
                         </div>
                     </div>
                 </div>
+                @if(session('switchRoles') == 'Admin')
+                <div class="mb-3" id="prodi">
+                    <label for="">Program Studi<span class="text-danger">*</span></label>
+                    <select name="program_studi_id[]" id="program_studi_id" multiple class="select2 form-select" autocomplete="off" required>
+                        @foreach ($prodi as $item)
+                            <option value="{{ $item->id }}">{{ $item->display }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                @endif
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary waves-effect"

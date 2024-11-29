@@ -356,8 +356,15 @@ class DaftarTAController extends Controller
         }
     }
 
-    public function exportAll()
+    public function exportAll(Request $request)
     {
-        return Excel::download(new TugasAkhirExport, 'Data Tugas Akhir.xlsx');
+        $prodiId = $request->query('prodi');
+        $prodi = ProgramStudi::find($prodiId);
+        
+        if (!$prodi) {
+            return redirect()->back()->with('error', 'Program studi tidak ditemukan.');
+        }
+
+        return Excel::download(new TugasAkhirExport($prodiId), "Data Tugas Akhir  - {$prodi->display} .xlsx");
     }
 }

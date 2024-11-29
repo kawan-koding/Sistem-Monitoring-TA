@@ -6,6 +6,7 @@ function tambahData() {
     $('#penguji_1').val('')
     $('#penguji_2').val('')
     $('#myModal').modal('show')
+    $('#prodi').show();
 }
 
 function editData(id, urlShow) {
