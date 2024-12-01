@@ -4,6 +4,8 @@ namespace App\Exports;
 
 use App\Models\Mahasiswa;
 use App\Models\TugasAkhir;
+use App\Models\ProgramStudi;
+use Maatwebsite\Excel\Events\AfterSheet;
 use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use Maatwebsite\Excel\Concerns\WithMapping;
@@ -16,6 +18,7 @@ class TugasAkhirClass implements FromCollection, WithHeadings, WithMapping, With
     protected $prodiId;
     protected $kelas;
     protected $periodeId;
+    protected $no = 1; 
 
     public function __construct($prodiId, $kelas, $periodeId)
     {
@@ -24,91 +27,82 @@ class TugasAkhirClass implements FromCollection, WithHeadings, WithMapping, With
         $this->periodeId = $periodeId;
     }
 
+    public function beforeSheet(BeforeSheet $event)
+    {
+        $this->no = 1;
+    }
+
     public function collection()
     {
-        $mahasiswa = Mahasiswa::where('program_studi_id', $this->prodiId)
-            ->where('kelas', $this->kelas)
-            ->get();
-
+        $mahasiswa = Mahasiswa::whereProgramStudiId($this->prodiId)->whereKelas($this->kelas)->get();
         $tugasAkhirData = collect();
         foreach ($mahasiswa as $mhs) {
-            $tugasAkhir = TugasAkhir::with(['mahasiswa','bimbing_uji'])->where('mahasiswa_id', $mhs->id)
-                ->where('periode_ta_id', $this->periodeId)
-                ->where('status', 'acc')
-                ->first();
-
+            $tugasAkhir = TugasAkhir::with(['mahasiswa','bimbing_uji'])->whereMahasiswaId($mhs->id)->wherePeriodeTaId($this->periodeId)->whereIn('status', ['acc', 'draft','pengajuan ulang'])->first();
             if ($tugasAkhir) {
-                $tugasAkhirData->push($tugasAkhir);
-            } else {
-                $tugasAkhirData->push((object) [
+
+                $bimbingUjiData = $tugasAkhir->bimbing_uji->mapWithKeys(function ($item) {
+                    if ($item->jenis === 'pengganti') {
+                        return [
+                            $item->jenis . $item->urut => $item->dosen->name ?? '-',
+                        ];
+                    }
+                    return [
+                        $item->jenis . $item->urut => $item->dosen->name ?? '-',
+                    ];
+                });
+
+                $tugasAkhirData->push([
                     'mahasiswa' => $mhs,
-                    'judul' => '-',
-                    'status' => 'Belum ada',
+                    'tugasAkhir' => $tugasAkhir,
+                    'bimbingUji' => $bimbingUjiData
+                ]);
+            } else {
+                $tugasAkhirData->push([
+                    'mahasiswa' => $mhs,
+                    'tugasAkhir' => $tugasAkhir,
+                    'bimbingUji' => []
                 ]);
             }
         }
-
         return $tugasAkhirData;
     }
 
     public function headings(): array
     {
-        return [
-            'No',
-            'NIM',
-            'Nama',
-            'NO HP',
-            'JUDUL/TOPIK',
-            'DOSEN PEMBIMBING 1',
-            'DOSEN PEMBIMBING 2',
-            'DOSEN PENGUJI 1',
-            'DOSEN PENGUJI 2',
-        ];
+        return ['No','NIM','Nama','NO HP','JUDUL/TOPIK','DOSEN PEMBIMBING 1','DOSEN PEMBIMBING 2','DOSEN PENGUJI 1','DOSEN PENGUJI 2',];
     }
     
     public function map($row): array
     {
-        static $no = 1;
-        $dosenPembimbing1 = '-';
-        $dosenPembimbing2 = '-';
-        $penguji1 = '-';
-        $penguji2 = '-';
-    
-        if (is_object($row) && isset($row->mahasiswa)) {
-            $judul = '-';
-        } else {
-            $dosenPembimbing1 = $row->bimbing_uji->where('jenis', 'pembimbing')->where('urut', 1)->first();
-            $dosenPembimbing2 = $row->bimbing_uji->where('jenis', 'pembimbing')->where('urut', 2)->first();
-            $dosenPenguji1 = $row->bimbing_uji->where('jenis', 'penguji')->where('urut', 1)->first();
-            $dosenPenguji2 = $row->bimbing_uji->where('jenis', 'penguji')->where('urut', 2)->first();
-    
-            if ($dosenPembimbing1 && $dosenPembimbing1->jenis === 'pengganti') {
-                $dosenPembimbing1 = $dosenPembimbing1->dosen ?? '-';
-            }
-            if ($dosenPembimbing2 && $dosenPembimbing2->jenis === 'pengganti') {
-                $dosenPembimbing2 = $dosenPembimbing2->dosen ?? '-';
-            }
-    
-            $penguji1 = $dosenPenguji1 ? $dosenPenguji1->dosen->nama ?? '-' : '-';
-            $penguji2 = $dosenPenguji2 ? $dosenPenguji2->dosen->nama ?? '-' : '-';
-            $judul = $row->judul ?? '-';
-        }
+        $mahasiswa = $row['mahasiswa'] ?? new \stdClass();
+        $bimbingUji = $row['bimbingUji'] ?? new \stdClass();
+        $tugasAkhir = $row['tugasAkhir'] ?? new \stdClass();
+
+        $pembimbing1 = optional($bimbingUji)['pembimbing1'] ?? '-';
+        $pembimbing2 = optional($bimbingUji)['pembimbing2'] ?? '-';
+        
+        $penguji1 = optional($bimbingUji)['pengganti1'] ?? optional($bimbingUji)['penguji1'] ?? '-';
+        $penguji2 = optional($bimbingUji)['pengganti2'] ?? optional($bimbingUji)['penguji2'] ?? '-';
+
         return [
-            $no++,
-            "'" . $row->mahasiswa->nim ?? '-',
-            $row->mahasiswa->nama_mhs ?? '-',
-            "'" . $row->mahasiswa->no_hp ?? '-',
-            $row->judul ?? '-',
-            $dosenPembimbing1 ? $dosenPembimbing1->dosen->nama ?? '-' : '-',
-            $dosenPembimbing2 ? $dosenPembimbing2->dosen->nama ?? '-' : '-',
+            $this->no++,
+            "'" . optional($mahasiswa)['nim'] ?? '-',
+            optional($mahasiswa)['nama_mhs'] ?? '-',
+            "'" . optional($mahasiswa)['telp'] ?? '-',
+            optional($tugasAkhir)['judul'] ?? '-',
+            $pembimbing1,
+            $pembimbing2,
             $penguji1,
             $penguji2,
         ];
     }
-
+    
     public function title(): string
     {
-        return "Kelas " . $this->kelas;
+        $programStudi = ProgramStudi::find($this->prodiId);
+        $title = $programStudi->display . ' ' . $this->kelas;
+
+        return $title;
     }
 
     public function styles(Worksheet $sheet)
@@ -127,12 +121,17 @@ class TugasAkhirClass implements FromCollection, WithHeadings, WithMapping, With
             1 => [
                 'font' => [
                     'bold' => true,
-                    'color' => ['argb' => 'FFFFFF'],
+                    'color' => ['argb' => '000000'],
                 ],
                 'fill' => [
                     'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
                     'startColor' => [
                         'argb' => 'FFFF00',
+                    ],
+                ],
+                'borders' => [
+                    'allBorders' => [
+                        'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
                     ],
                 ],
                 'alignment' => [
@@ -142,5 +141,4 @@ class TugasAkhirClass implements FromCollection, WithHeadings, WithMapping, With
             ],
         ];
     }
-
 }

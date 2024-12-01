@@ -27,19 +27,32 @@
                     </button>
                 </div>
             @endif
-            <a href="{{ getSetting('app_seminar_registration_template') }}" target="_blank" class="btn btn-success mb-2"><i
-                    class="far fa-file-alt"></i> Template Pendaftaran Seminar</a>
-            <a href="{{ getSetting('app_seminar_filing_template') }}" target="_blank" class="btn btn-secondary mb-2"><i
-                    class="far fa-file-alt"></i> Template Pemberkasan Seminar</a>
-            @if(session('switchRoles') == 'Admin')        
-            <div class="btn-group" role="group">
-                <button id="btnGroupVerticalDrop1" type="button" class="btn btn-primary dropdown-toggle mb-2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="fa fa-file-excel me-2"></i> Export <i class="mdi mdi-chevron-down"></i>
-                </button>
-                <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1">
-                    <a class="dropdown-item" href="#">Belum Terjadwal</a>
-                    <a class="dropdown-item" href="#">Telah Diseminarkan</a>
-                    <a class="dropdown-item" href="#">Sudah Pemberkasan</a>
+            <div class="d-flex flex-wrap align-items-center gap-2">
+                <a href="{{ getSetting('app_seminar_registration_template') }}" target="_blank" class="btn btn-success mb-2"><i
+                        class="far fa-file-alt"></i> Template Pendaftaran Seminar</a>
+                <a href="{{ getSetting('app_seminar_filing_template') }}" target="_blank" class="btn btn-secondary mb-2"><i
+                        class="far fa-file-alt"></i> Template Pemberkasan Seminar</a>
+                @if(session('switchRoles') == 'Admin')        
+                <div class="dropdown mb-2">
+                    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-file-excel me-2"></i> Export <i class="mdi mdi-chevron-down"></i>
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <div class="dropdown dropend">
+                            <a class="dropdown-item dropdown-toggle" href="#" id="dropdown-belum-terjadwal" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Belum Terjadwal  <i class="mdi mdi-chevron-right"></i></a>
+                            <div class="dropdown-menu" aria-labelledby="dropdown-belum-terjadwal">
+                                <a class="dropdown-item" href="#">TRPL </a>
+                            </div>
+                            <a class="dropdown-item dropdown-toggle" href="#" id="dropdown-telah-seminar" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Telah Diseminarkan  <i class="mdi mdi-chevron-right"></i></a>
+                            <div class="dropdown-menu" aria-labelledby="dropdown-telah-seminar">
+                                <a class="dropdown-item" href="#">TRK </a>
+                            </div>
+                            <a class="dropdown-item dropdown-toggle" href="#" id="dropdown-sudah-pemberkasan" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sudah Pemberkasan  <i class="mdi mdi-chevron-right"></i></a>
+                            <div class="dropdown-menu" aria-labelledby="dropdown-sudah-pemberkasan">
+                                <a class="dropdown-item" href="#">BD </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             @endif

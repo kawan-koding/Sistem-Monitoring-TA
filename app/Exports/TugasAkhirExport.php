@@ -18,7 +18,7 @@ class TugasAkhirExport implements WithMultipleSheets
     }
     public function sheets(): array
     {
-        $periode = PeriodeTa::whereIsActive(true)->first();
+        $periode = PeriodeTa::whereIsActive(true)->whereProgramStudiId($this->prodiId)->first();
         $kelasGroups = TugasAkhir::where('periode_ta_id', $periode->id)->where('status', 'acc')->whereHas('mahasiswa', function ($query) {
             $query->where('program_studi_id', $this->prodiId);
         })->with('mahasiswa:id,kelas')->get()->pluck('mahasiswa.kelas')->unique()->values();
