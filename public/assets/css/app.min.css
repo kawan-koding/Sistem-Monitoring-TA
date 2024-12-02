@@ -3688,3 +3688,9 @@ table.dataTable.dtr-inline.collapsed > tbody > tr > td.dtr-control:before {
 table th {
   white-space: nowrap;
 }
+
+/* .dropdown-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+} */

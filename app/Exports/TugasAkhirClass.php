@@ -34,12 +34,11 @@ class TugasAkhirClass implements FromCollection, WithHeadings, WithMapping, With
 
     public function collection()
     {
-        $mahasiswa = Mahasiswa::whereProgramStudiId($this->prodiId)->whereKelas($this->kelas)->get();
+        $mahasiswa = Mahasiswa::whereProgramStudiId($this->prodiId)->wherePeriodeTaId($this->periodeId)->whereKelas($this->kelas)->get();
         $tugasAkhirData = collect();
         foreach ($mahasiswa as $mhs) {
             $tugasAkhir = TugasAkhir::with(['mahasiswa','bimbing_uji'])->whereMahasiswaId($mhs->id)->wherePeriodeTaId($this->periodeId)->whereIn('status', ['acc', 'draft','pengajuan ulang'])->first();
             if ($tugasAkhir) {
-
                 $bimbingUjiData = $tugasAkhir->bimbing_uji->mapWithKeys(function ($item) {
                     if ($item->jenis === 'pengganti') {
                         return [

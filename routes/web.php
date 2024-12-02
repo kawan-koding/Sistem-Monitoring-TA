@@ -220,6 +220,7 @@ Route::prefix('apps')->middleware('auth')->group(function () {
 
     Route::prefix('jadwal-seminar')->middleware('can:read-jadwal-seminar')->group( function() {
         Route::get('', [JadwalSeminarController::class, 'index'])->name('apps.jadwal-seminar');
+        Route::get('export', [JadwalSeminarController::class, 'export'])->name('apps.jadwal-seminar.export');
         Route::post('sudah-terjadwal', [JadwalSeminarController::class, 'scheduled'])->name('apps.jadwal-seminar.sudah-terjadwal');
         Route::post('telah-seminar', [JadwalSeminarController::class, 'haveSeminar'])->name('apps.jadwal-seminar.telah-seminar');
         Route::get('{jadwalSeminar}/edit', [JadwalSeminarController::class, 'edit'])->name('apps.jadwal-seminar.edit');
