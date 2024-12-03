@@ -9,7 +9,9 @@ function tambahData() {
     $('#akhir_seminar').val('')
     $('#mulai_sidang').val('')
     $('#akhir_sidang').val('')
+    $('#program_studi_id').val('')
     $('#myModal').modal('show')
+    $('#prodi').show();
 }
 
 function editData(id, urlShow) {
@@ -27,11 +29,13 @@ function editData(id, urlShow) {
             $('#akhir_seminar').val(response.akhir_seminar)
             $('#mulai_sidang').val(response.mulai_sidang)
             $('#akhir_sidang').val(response.akhir_sidang)
+            $('#prodi').hide()
         },
         error: function (xhr, status, error) {
             console.error(xhr.responseText);
         }
     });
+    
     $('#myModal').modal('show')
 }
 

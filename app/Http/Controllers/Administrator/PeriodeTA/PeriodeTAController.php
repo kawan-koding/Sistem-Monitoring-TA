@@ -31,6 +31,7 @@ class PeriodeTAController extends Controller
                     'is_active' => true
                 ]
             ],
+            'prodi' => ProgramStudi::all(),
             'periode' => $periode,
         ];
         return view('administrator.periode-ta.index', $data);
@@ -45,13 +46,21 @@ class PeriodeTAController extends Controller
             }
             
             if(session('switchRoles') == 'Admin') {
-                $prodi = ProgramStudi::all();
-                foreach ($prodi as $item) {
-                    $exists = PeriodeTa::where('nama', $request->nama)->where('program_studi_id', $item->id)->exists();
+                $prodi = $request->input('program_studi_id', []);
+                if (empty($prodi) || !is_array($prodi)) {
+                    return redirect()->back()->with('error', 'Program studi harus dipilih.');
+                }
+                
+                foreach ($prodi as $id) {
+                    if (!ProgramStudi::where('id', $id)->exists()) {
+                        return redirect()->back()->with('error', 'Program studi dengan ID ' . $id . ' tidak valid.');
+                    }
+
+                    $exists = PeriodeTa::where('nama', $request->nama)->where('program_studi_id', $id)->exists();
                     if($exists) {
                         return redirect()->back()->with('error', 'Periode TA  sudah ada');
                     } else {
-                        $request->merge(['program_studi_id' => $item->id]);
+                        $request->merge(['program_studi_id' => $id]);
                         PeriodeTa::create($request->only('nama', 'mulai_daftar', 'akhir_daftar', 'mulai_seminar', 'akhir_seminar', 'mulai_sidang', 'akhir_sidang', 'program_studi_id'));
                     }
                 }

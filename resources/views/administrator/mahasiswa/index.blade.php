@@ -20,7 +20,7 @@
                                     <option selected disabled hidden>Filter Program Studi</option>
                                     <option value="semua" {{ request('program_studi') == 'semua' ? 'selected' : '' }}>Semua Program Studi</option>
                                     @foreach($prodi as $p)
-                                        <option value="{{ $p->id }}" {{ request('program_studi') == $p->id ? 'selected' : '' }}>{{ $p->nama }}</option>
+                                        <option value="{{ $p->id }}" {{ request('program_studi') == $p->id ? 'selected' : '' }}>{{ $p->display }}</option>
                                     @endforeach
                                 </select>
                                 <select name="periode" id="periode" class="form-control" onchange="this.form.submit()">

@@ -53,7 +53,7 @@
                             <select name="periode_ta_id" id="periode_ta_id" required class="form-control">
                                 <option value="" selected disabled hidden>Pilih Periode</option>
                                 @foreach ($periode as $item)
-                                    <option value="{{ $item->id }}">{{$item->nama }}</option>
+                                    <option value="{{ $item->id }}">{{$item->nama . ' ' . '-' . ' ' . $item->programStudi->display}}</option>
                                 @endforeach
                             </select>
                         </div>

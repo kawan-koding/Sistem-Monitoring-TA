@@ -27,19 +27,22 @@
                     </button>
                 </div>
             @endif
-            <a href="{{ getSetting('app_seminar_registration_template') }}" target="_blank" class="btn btn-success mb-2"><i
-                    class="far fa-file-alt"></i> Template Pendaftaran Seminar</a>
-            <a href="{{ getSetting('app_seminar_filing_template') }}" target="_blank" class="btn btn-secondary mb-2"><i
-                    class="far fa-file-alt"></i> Template Pemberkasan Seminar</a>
-            @if(session('switchRoles') == 'Admin')        
-            <div class="btn-group" role="group">
-                <button id="btnGroupVerticalDrop1" type="button" class="btn btn-primary dropdown-toggle mb-2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="fa fa-file-excel me-2"></i> Export <i class="mdi mdi-chevron-down"></i>
-                </button>
-                <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1">
-                    <a class="dropdown-item" href="#">Belum Terjadwal</a>
-                    <a class="dropdown-item" href="#">Telah Diseminarkan</a>
-                    <a class="dropdown-item" href="#">Sudah Pemberkasan</a>
+            <div class="d-flex flex-wrap align-items-center gap-2">
+                <a href="{{ getSetting('app_seminar_registration_template') }}" target="_blank" class="btn btn-success mb-2"><i
+                        class="far fa-file-alt"></i> Template Pendaftaran Seminar</a>
+                <a href="{{ getSetting('app_seminar_filing_template') }}" target="_blank" class="btn btn-secondary mb-2"><i
+                        class="far fa-file-alt"></i> Template Pemberkasan Seminar</a>
+                @if(session('switchRoles') == 'Admin')   
+                <div class="btn-group" role="group">
+                    <button id="btnGroupVerticalDrop1" type="button" class="btn btn-primary dropdown-toggle mb-2" style="max-width: 150px;" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-file-excel me-2"></i> Export <i class="mdi mdi-chevron-down"></i>
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1">
+                        <a class="dropdown-item" target="_blank" href="{{ route('apps.jadwal-seminar.export', ['type' => 'belum_terjadwal'])}}">Belum Terjadwal</a>
+                        <a class="dropdown-item" target="_blank" href="{{ route('apps.jadwal-seminar.export', ['type' => 'telah_diseminarkan'])}}">Telah Diseminarkan</a>
+                        <a class="dropdown-item" target="_blank" href="{{ route('apps.jadwal-seminar.export', ['type' => 'sudah_pemberkasan'])}}">Sudah Pemberkasan Seminar</a>
+                        <a class="dropdown-item" target="_blank" href="{{ route('apps.jadwal-seminar.export', ['type' => 'st_sempro'])}}">ST Sempro</a>
+                    </div>
                 </div>
             </div>
             @endif

@@ -6,6 +6,7 @@ use App\Models\PeriodeTa;
 use App\Models\BimbingUji;
 use App\Models\KuotaDosen;
 use App\Models\JenisDokumen;
+use App\Models\ProgramStudi;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -19,6 +20,13 @@ class DaftarBimbinganController extends Controller
         $query = BimbingUji::with(['tugas_akhir', 'dosen'])->where('dosen_id', $user->id)->whereHas('tugas_akhir', function($q) use ($periode){
             $q->whereIn('periode_ta_id', $periode->pluck('id'));
         });
+
+        if ($request->has('program_studi') && !empty($request->program_studi) && $request->program_studi !== 'semua') {
+            $query->whereHas('tugas_akhir.mahasiswa', function($query) use ($request) {
+                $query->whereProgramStudiId($request->program_studi);
+            });
+        }
+
         if ($request->status == 'mahasiswa_uji') {
             $query->where('jenis', 'penguji');
         } else {
@@ -31,6 +39,7 @@ class DaftarBimbinganController extends Controller
         })->with(['tugas_akhir.mahasiswa.programStudi'])->get()->groupBy('tugas_akhir.mahasiswa.program_studi_id')->map(function ($group) {
             return $group->count();
         });
+        // dd($bimbing);
         
         $sisaKuota = $kuota->map(function ($item) use ($bimbing) {
             $programStudiId = $item->program_studi_id;
@@ -42,7 +51,6 @@ class DaftarBimbinganController extends Controller
             ];
         });
         
-
         $data = [
             'title' => 'Mahasiswa Bimbingan',
             'mods' => 'daftar_bimbingan',
@@ -60,6 +68,7 @@ class DaftarBimbinganController extends Controller
             'kuota' => $kuota,
             'sisaKuota' => $sisaKuota,
             'bimbing' => $bimbing,
+            'prodi' => ProgramStudi::all(),
         ];
         
         return view('administrator.daftar-bimbingan.index', $data);

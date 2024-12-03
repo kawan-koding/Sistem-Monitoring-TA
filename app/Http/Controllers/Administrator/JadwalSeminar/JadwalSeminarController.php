@@ -2,21 +2,23 @@
 
 namespace App\Http\Controllers\Administrator\JadwalSeminar;
 
-use App\Http\Controllers\Controller;
-use App\Models\BimbingUji;
-use App\Models\Dokumen;
-use App\Models\JadwalSeminar;
-use App\Models\JenisDokumen;
-use App\Models\KategoriNilai;
-use App\Models\Mahasiswa;
-use App\Models\Pemberkasan;
-use App\Models\PeriodeTa;
-use App\Models\ProgramStudi;
-use App\Models\Ruangan;
-use Carbon\Carbon;
 use Exception;
+use Carbon\Carbon;
+use App\Models\Dokumen;
+use App\Models\Ruangan;
+use App\Models\Mahasiswa;
+use App\Models\PeriodeTa;
+use App\Models\BimbingUji;
+use App\Models\Pemberkasan;
+use App\Models\JenisDokumen;
+use App\Models\ProgramStudi;
 use Illuminate\Http\Request;
+use App\Models\JadwalSeminar;
+use App\Models\KategoriNilai;
+use App\Exports\STSemproExport;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
+use Maatwebsite\Excel\Facades\Excel;
 
 class JadwalSeminarController extends Controller
 {
@@ -110,6 +112,7 @@ class JadwalSeminarController extends Controller
             'document_seminar' => $docSeminar,
             'filter1' => $request->has('filter1') ? $request->filter1 : null,
             'filter2' => $request->has('filter2') ? $request->filter2 : null,
+            'prodi' => ProgramStudi::all(),
         ];
         
         return view('administrator.jadwal-seminar.index', $data);
@@ -423,5 +426,29 @@ class JadwalSeminarController extends Controller
         } catch (Exception $e) {
             return redirect()->back()->with(['error' => $e->getMessage()]);
         }
+    }
+
+
+    public function export(Request $request) 
+    {
+        $status = $request->input('type');
+       
+        $title = '';
+        if($status == 'st_sempro') {
+            $export = new STSemproExport();
+            $sheets = $export->sheets();
+            $title = 'ST SEMPRO';
+        } elseif($status == 'belum_terjadwal') {  
+            $export = new STSemproExport($status);
+            $sheets = $export->sheets();
+            $title = 'Mahasiswa Belum Terjadwal Sempro';
+        }
+
+        if (empty($sheets) || count($sheets) === 1 && $sheets[0] instanceof DummySheet) {
+            return redirect()->back()->with('error', 'Data Tidak Ditemukan.');
+        }
+
+        return Excel::download($export, "{$title}.xlsx");
+
     }
 }

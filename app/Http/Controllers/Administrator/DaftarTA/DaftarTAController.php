@@ -303,32 +303,33 @@ class DaftarTAController extends Controller
             $docPengajuan = JenisDokumen::where('jenis','pendaftaran')->get();
             $validates = [];
             $messages = [];
-            $inserts = [];
 
             foreach ($docPengajuan as $item) {
                 $validates['document_' . $item->id] = $item->tipe_dokumen == 'pdf' ? '|mimes:pdf|max:' . $item->max_ukuran : 'mimes:png,jpg,jpeg,webp|max:' . $item->max_ukuran;
                 $messages['document_' . $item->id . '.mimes'] = 'Dokumen ' . strtolower($item->nama) . ' harus dalam format ' . ($item->tipe_dokumen == 'pdf' ? 'PDF' : 'PNG, JPEG, JPG, WEBP');
                 $messages['document_' . $item->id . '.max'] = 'Dokumen ' . strtolower($item->nama) . ' tidak boleh lebih dari ' . $item->max_ukuran . ' KB';
             }
-            
+
             $request->validate($validates, $messages);
 
-            foreach($docPengajuan as $item) {
-                $file = $request->file('dokumen_'.$item->id);
-                $filename = 'document_' . rand(0, 999999999) .'_'. rand(0, 999999999) .'.'. $file->getClientOriginalExtension();
-                $file->move(public_path('storage/files/pemberkasan'), $filename);
-                $pemberkasan = Pemberkasan::where('tugas_akhir_id', $tugasAkhir->id)->where('jenis_dokumen_id', $item->id)->first();
-                if(!is_null($pemberkasan)) {
-                    File::delete(public_path('Storage/files/pemberkasan/'.$pemberkasan->filename));
-                    $pemberkasan->update([
-                        'filename' => $filename,
-                    ]);
-                } else {
-                    Pemberkasan::create([
-                        'tugas_akhir_id' => $pengajuanTA->id,
-                        'jenis_dokumen_id' => $item->id,
-                        'filename' => $filename,
-                    ]);
+            foreach ($docPengajuan as $item) {;
+                if ($request->hasFile('dokumen_' . $item->id)) {
+                    $file = $request->file('dokumen_' . $item->id);
+                    $filename = 'document_' . rand(0, 999999999) . '_' . rand(0, 999999999) . '.' . $file->getClientOriginalExtension();
+                    $file->move(public_path('storage/files/pemberkasan'), $filename);
+                    $pemberkasan = Pemberkasan::where('tugas_akhir_id', $pengajuanTA->id)->where('jenis_dokumen_id', $item->id)->first();
+                    if (!is_null($pemberkasan)) {
+                        File::delete(public_path('Storage/files/pemberkasan/' . $pemberkasan->filename));
+                        $pemberkasan->update([
+                            'filename' => $filename,
+                        ]);
+                    } else {
+                        Pemberkasan::create([
+                            'tugas_akhir_id' => $pengajuanTA->id,
+                            'jenis_dokumen_id' => $item->id,
+                            'filename' => $filename,
+                        ]);
+                    }
                 }
             }
 
@@ -356,8 +357,22 @@ class DaftarTAController extends Controller
         }
     }
 
-    public function exportAll()
+    public function exportAll(Request $request)
     {
-        return Excel::download(new TugasAkhirExport, 'Data Tugas Akhir.xlsx');
+        $prodiId = $request->query('prodi');
+        $prodi = ProgramStudi::find($prodiId);
+        
+        if (!$prodi) {
+            return redirect()->back()->with('error', 'Program studi tidak ditemukan.');
+        }
+
+        $export = new TugasAkhirExport($prodiId);
+        $sheets = $export->sheets();
+
+        if (empty($sheets) || count($sheets) === 1 && $sheets[0] instanceof DummySheet) {
+            return redirect()->back()->with('error', 'Data Tidak Ditemukan.');
+        }
+
+        return Excel::download($export, "Data Tugas Akhir - {$prodi->display}.xlsx");
     }
 }

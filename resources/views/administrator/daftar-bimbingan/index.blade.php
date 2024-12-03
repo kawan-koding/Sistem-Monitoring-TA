@@ -46,11 +46,13 @@
     </div>
 </div>
 
+
+
 <div class="row">
     <div class="col-md-12 col-sm-12 col-g-12">
         <div class="card">
             @can('read-daftar-bimbingan')
-                <ul class="nav nav-tabs nav-tabs-custom nav-justified mt-1 mb-2" role="tablist">
+                <ul class="nav nav-tabs nav-tabs-custom nav-justified mt-1 mb-1" role="tablist">
                     <li class="nav-item">
                         <a class="nav-link @if (url()->full() == route('apps.daftar-bimbingan')) active @endif"
                             href="{{ route('apps.daftar-bimbingan') }}">
@@ -68,6 +70,19 @@
                 </ul>
             @endcan
             <div class="card-body">
+                <div class="mb-3 d-flex gap-2 flex-column justify-content-end flex-md-row" >
+                    <form action="">
+                        <select name="program_studi" id="program_studi" class="form-control" style="min-width: 300px; width: 100%" onchange="this.form.submit()">
+                            <option selected disabled hidden>Filter Program Studi</option>
+                            <option value="semua" {{ request('program_studi') == 'semua' ? 'selected' : '' }}>Semua Program Studi</option>
+                            @foreach($prodi as $p)
+                                <option value="{{ $p->id }}" {{ request('program_studi') == $p->id ? 'selected' : '' }}>{{ $p->display }}</option>
+                            @endforeach
+                        </select>
+                    </form>
+                </div>
+                <hr>
+
                 <div class="table-responsive">
                     <table class="table table-striped" id="datatable">
                         <thead>
@@ -114,7 +129,8 @@
                                                 ($item->tugas_akhir->status == 'acc' ? 'badge-soft-info' : 
                                                 ($item->tugas_akhir->status == 'draft' ? 'badge-soft-dark' : 
                                                 ($item->tugas_akhir->status == 'reject' ? 'badge-soft-danger' : 
-                                                ($item->tugas_akhir->status == 'cancel' ? 'badge-soft-danger' : 'badge-soft-secondary'))))
+                                                ($item->tugas_akhir->status == 'revisi' ? 'badge-soft-danger' : 
+                                                ($item->tugas_akhir->status == 'cancel' ? 'badge-soft-danger' : 'badge-soft-secondary')))))
                                                 : 'badge-soft-secondary'
                                             ))
                                         }} small mb-1">
@@ -134,8 +150,10 @@
                                                 (isset($item->tugas_akhir->status) ? 
                                                     ($item->tugas_akhir->status == 'acc' ? 'Proses penyusunan proposal' : 
                                                     ($item->tugas_akhir->status == 'draft' ? 'Proses pengajuan' : 
+                                                    ($item->tugas_akhir->status == 'pengajuan ulang' ? 'Pengajuan Ulang' : 
+                                                    ($item->tugas_akhir->status == 'revisi' ? 'Revisi' : 
                                                     ($item->tugas_akhir->status == 'reject' ? 'Topik ditolak' : 
-                                                    ($item->tugas_akhir->status == 'cancel' ? 'Tidak dilanjutkan' : '-'))))
+                                                    ($item->tugas_akhir->status == 'cancel' ? 'Tidak dilanjutkan' : '-'))))))
                                                     : '-'
                                                 ))
                                             }}

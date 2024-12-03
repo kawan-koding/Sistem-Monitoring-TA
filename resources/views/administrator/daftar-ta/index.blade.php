@@ -7,9 +7,18 @@
             <div class="card-body">
                 @if (in_array(session('switchRoles'), ['Admin','Developer','Kajur']))
                 <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
-                    <a href="{{ route('apps.daftar-ta.export') }}" target="_blank" class="btn btn-primary mb-3 mb-md-0" style="max-width: 150px;">
-                        <i class="fa fa-file-excel"></i> Export Data
-                    </a>
+                    @if(in_array(session('switchRoles'), ['Admin','Developer']))
+                    <div class="btn-group" role="group">
+                        <button id="btnGroupVerticalDrop1" type="button" class="btn btn-primary dropdown-toggle mb-2" style="max-width: 150px;" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-file-excel me-2"></i> Export Data <i class="mdi mdi-chevron-down"></i>
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1">
+                            @foreach ($prodi as $item)
+                                <a class="dropdown-item" target="_blank" href="{{ route('apps.daftar-ta.export', ['prodi' => $item->id]) }}">{{ $item->display }}</a>
+                            @endforeach
+                        </div>
+                    </div>
+                    @endif
                     <form action="" >
                         <div class="d-flex gap-2 flex-column flex-md-row">
                             <select name="program_studi" id="program_studi" class="form-control" onchange="this.form.submit()">
