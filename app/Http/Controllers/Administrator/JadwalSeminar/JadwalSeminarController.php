@@ -439,7 +439,7 @@ class JadwalSeminarController extends Controller
             $sheets = $export->sheets();
             $title = 'ST SEMPRO';
         } elseif($status == 'belum_terjadwal') {  
-            $export = new STSemproExport();
+            $export = new STSemproExport($status);
             $sheets = $export->sheets();
             $title = 'Mahasiswa Belum Terjadwal Sempro';
         }
