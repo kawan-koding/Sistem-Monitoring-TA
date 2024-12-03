@@ -33,6 +33,25 @@
                 </div>
             @endif
 
+            @if(getInfoLogin()->hasRole('Dosen'))
+                <ul class="nav nav-tabs nav-tabs-custom nav-justified mt-1 mb-2" role="tablist">
+                    <li class="nav-item">
+                        <a href="{{ route('apps.jadwal-sidang') }}"
+                            class="nav-link @if (url()->full() == route('apps.jadwal-sidang')) active @endif">
+                            <span class="d-block d-sm-none small">Mahasiswa Bimbing</span>
+                            <span class="d-none d-sm-block fw-bold">Mahasiswa Bimbing</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('apps.jadwal-sidang', ['jenis' => 'penguji']) }}"
+                            class="nav-link @if (url()->full() == route('apps.jadwal-sidang', ['jenis' => 'penguji'])) active @endif">
+                            <span class="d-block d-sm-none small">Mahasiswa Uji</span>
+                            <span class="d-none d-sm-block fw-bold">Mahasiswa Uji</span>
+                        </a>
+                    </li>
+                </ul>
+            @endif
+
             @if (getInfoLogin()->hasRole('Admin'))
                 <div class="col-md-8 col-sm-12">
                     <form action="">
@@ -99,9 +118,11 @@
                             @if (getInfoLogin()->hasRole('Admin'))
                             <th>Mahasiswa</th>
                             @endif
+                            @if(getInfoLogin()->hasRole('Admin') || getInfoLogin()->hasRole('Mahasiswa'))
                             <th width="20%">Dosen</th>
+                            @endif
                             <th>Ruangan</th>
-                            @if (getInfoLogin()->hasRole('Admin'))
+                            @if (getInfoLogin()->hasRole('Admin') || getInfoLogin()->hasRole('Dosen'))
                                 <th>Status</th>
                             @endif
                             <th>Aksi</th>
@@ -112,74 +133,115 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>
-                                    @if ($item->status == 'telah_seminar')
-                                        <span
-                                            class="badge small mb-1 {{ !is_null($item->tugas_akhir->status_seminar) ? ($item->tugas_akhir->status_seminar == 'acc' ? 'badge-soft-success' : ($item->tugas_akhir->status_seminar == 'revisi' ? 'badge-soft-success' : 'badge-soft-danger')) : '' }}">{{ !is_null($item->tugas_akhir->status_seminar) ? ($item->tugas_akhir->status_seminar == 'acc' ? 'Disetujui' : ($item->tugas_akhir->status_seminar == 'revisi' ? 'Disetujui dengan revisi' : 'Ditolak')) : 'Belum Seminar' }}</span>
+                                    @if(getInfoLogin()->hasRole('Admin') || getInfoLogin()->hasRole('Mahasiswa'))
+                                        @if ($item->status == 'sudah_sidang')
+                                            <span
+                                            <span class="badge small mb-1 {{ !is_null($item->tugas_akhir->status_sidang) ? ($item->tugas_akhir->status_sidang == 'acc' ? 'badge-soft-success' : ($item->tugas_akhir->status_sidang == 'revisi' ? 'badge-soft-success' : 'badge-soft-danger')) : 'badge-soft-secondary' }}">{{ !is_null($item->tugas_akhir->status_sidang) ? ($item->tugas_akhir->status_sidang == 'acc' ? 'Disetujui' : ($item->tugas_akhir->status_sidang == 'revisi' ? 'Disetujui dengan revisi' : 'Ditolak')) : '-' }}</span>
+                                        @endif
                                     @endif
-                                    <a href="{{ route('apps.jadwal-sidang.detail', $item->id) }}">
-                                        <h5 class="small font-size-14 m-0">{{ $item->tugas_akhir->judul }}</h5>
-                                    </a>
+                                    @if(getInfoLogin()->hasRole('Dosen'))
+                                        @if (!is_null($item->tugas_akhir->sidang()->orderBy('id', 'desc')->first()) && $item->tugas_akhir->sidang()->orderBy('id', 'desc')->first()->status == 'sudah_daftar')
+                                            <span class="badge rounded-pill badge-soft-primary">Belum Terjadwal</span>
+                                        @else
+                                            @if (!is_null($item->tugas_akhir->sidang()->orderBy('id', 'desc')->first()) && $item->tugas_akhir->sidang()->orderBy('id', 'desc')->first()->status == 'sudah_terjadwal')
+                                                <span class="badge rounded-pill badge-soft-primary">Sudah Terjadwal</span>
+                                            @else
+                                                <span class="badge rounded-pill badge-soft-primary">Sudah Sidang</span>
+                                            @endif
+                                        @endif
+                                    @endif
+                                    <h5 class="font-size-14 m-0">{{ $item->tugas_akhir->judul }}</h5>
                                     <p class="m-0 text-muted small">{{ $item->tugas_akhir->topik->nama_topik }} -
                                         {{ $item->tugas_akhir->jenis_ta->nama_jenis }}</p>
+                                    @if(getInfoLogin()->hasRole('Dosen'))
+                                        <p class="mt-2">{{ $item->tugas_akhir->mahasiswa->nama_mhs }}</p>
+                                    @endif
                                 </td>
                                 @if (getInfoLogin()->hasRole('Admin'))
                                     <td><p class="small">{{ $item->tugas_akhir->mahasiswa->nama_mhs }}</p></td>
                                 @endif
+                                @if(getInfoLogin()->hasRole('Admin') || getInfoLogin()->hasRole('Mahasiswa'))
+                                    <td>
+                                        <p class="fw-bold small m-0">Pembimbing</p>
+                                        <ol>
+                                        @for ($i = 0; $i < 2; $i++)
+                                            @if ($item->tugas_akhir->bimbing_uji()->where('jenis', 'pembimbing')->count() > $i)
+                                                @foreach ($item->tugas_akhir->bimbing_uji as $pemb)
+                                                    @if ($pemb->jenis == 'pembimbing' && $pemb->urut == 1 && $i == 0)
+                                                        <li class="small">{{ $pemb->dosen->name ?? '-' }}</li>
+                                                    @endif
+                                                    @if ($pemb->jenis == 'pembimbing' && $pemb->urut == 2 && $i == 1)
+                                                        <li class="small">{{ $pemb->dosen->name ?? '-' }}</li>
+                                                    @endif
+                                                @endforeach
+                                            @else
+                                                <li class="small">-</li>
+                                            @endif
+                                        @endfor
+                                        </ol>
+                                        <p class="fw-bold small m-0">Penguji</p>
+                                        <ol>
+                                        @for ($i = 0; $i < 2; $i++)
+                                            @if ($item->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->count() > $i)    
+                                                @foreach ($item->tugas_akhir->bimbing_uji as $pemb)
+                                                    @if ($pemb->jenis == 'penguji' && $pemb->urut == 1 && $i == 0)
+                                                        <li class="small">{{ $pemb->dosen->name ?? '-' }}</li>
+                                                    @endif
+                                                    @if ($pemb->jenis == 'penguji' && $pemb->urut == 2 && $i == 1)
+                                                        <li class="small">{{ $pemb->dosen->name ?? '-' }}</li>
+                                                    @endif
+                                                @endforeach
+                                            @else
+                                                <li class="small">-</li>
+                                            @endif
+                                        @endfor
+                                        </ol>
+                                    </td>
+                                @endif
                                 <td>
-                                    <p class="fw-bold small m-0">Pembimbing</p>
-                                    <ol>
-                                    @for ($i = 0; $i < 2; $i++)
-                                        @if ($item->tugas_akhir->bimbing_uji()->where('jenis', 'pembimbing')->count() > $i)
-                                            @foreach ($item->tugas_akhir->bimbing_uji as $pemb)
-                                                @if ($pemb->jenis == 'pembimbing' && $pemb->urut == 1 && $i == 0)
-                                                    <li class="small">{{ $pemb->dosen->name ?? '-' }}</li>
-                                                @endif
-                                                @if ($pemb->jenis == 'pembimbing' && $pemb->urut == 2 && $i == 1)
-                                                    <li class="small">{{ $pemb->dosen->name ?? '-' }}</li>
-                                                @endif
-                                            @endforeach
-                                        @else
-                                            <li class="small">-</li>
-                                        @endif
-                                    @endfor
-                                    </ol>
-                                    <p class="fw-bold small m-0">Penguji</p>
-                                    <ol>
-                                    @for ($i = 0; $i < 2; $i++)
-                                        @if ($item->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->count() > $i)    
-                                            @foreach ($item->tugas_akhir->bimbing_uji as $pemb)
-                                                @if ($pemb->jenis == 'penguji' && $pemb->urut == 1 && $i == 0)
-                                                    <li class="small">{{ $pemb->dosen->name ?? '-' }}</li>
-                                                @endif
-                                                @if ($pemb->jenis == 'penguji' && $pemb->urut == 2 && $i == 1)
-                                                    <li class="small">{{ $pemb->dosen->name ?? '-' }}</li>
-                                                @endif
-                                            @endforeach
-                                        @else
-                                            <li class="small">-</li>
-                                        @endif
-                                    @endfor
-                                    </ol>
+                                    {{-- @dd($item->tugas_akhir->sidang) --}}
+                                    @if(getInfoLogin()->hasRole('Dosen'))
+                                        <strong>{{ isset($item->tugas_akhir->sidang->ruangan->nama_ruangan) ? $item->tugas_akhir->sidang->ruangan->nama_ruangan : '-' }}</strong>
+                                        <p class="m-0 small">Tanggal:
+                                            {{ $item->tugas_akhir->sidang->tanggal ? Carbon\Carbon::parse($item->tugas_akhir->sidang->tanggal)->format('d/m/Y') : ' -' }}
+                                        </p>
+                                        <p class="m-0 small">Waktu:
+                                            {{ $item->tugas_akhir->sidang->jam_mulai ? Carbon\Carbon::parse($item->tugas_akhir->sidang->jam_mulai)->format('H:i') : '' }}
+                                            -
+                                            {{ $item->tugas_akhir->sidang->jam_selesai ? Carbon\Carbon::parse($item->tugas_akhir->sidang->jam_selesai)->format('H:i') : '' }}
+                                        </p>
+                                    @else
+                                        <strong>{{ isset($item->ruangan->nama_ruangan) ? $item->ruangan->nama_ruangan : '-' }}</strong>
+                                        <p class="m-0 small">Tanggal:
+                                            {{ $item->tanggal ? Carbon\Carbon::parse($item->tanggal)->format('d/m/Y') : ' -' }}
+                                        </p>
+                                        <p class="m-0 small">Waktu:
+                                            {{ $item->jam_mulai ? Carbon\Carbon::parse($item->jam_mulai)->format('H:i') : '' }}
+                                            -
+                                            {{ $item->jam_selesai ? Carbon\Carbon::parse($item->jam_selesai)->format('H:i') : '' }}
+                                        </p>
+                                    @endif
                                 </td>
+                                @if(getInfoLogin()->hasRole('Dosen'))
                                 <td>
-                                    <strong>{{ isset($item->ruangan->nama_ruangan) ? $item->ruangan->nama_ruangan : '-' }}</strong>
-                                    <p class="m-0 small">Tanggal:
-                                        {{ $item->tanggal ? Carbon\Carbon::parse($item->tanggal)->format('d/m/Y') : ' -' }}
-                                    </p>
-                                    <p class="m-0 small">Waktu:
-                                        {{ $item->jam_mulai ? Carbon\Carbon::parse($item->jam_mulai)->format('H:i') : '' }}
-                                        -
-                                        {{ $item->jam_selesai ? Carbon\Carbon::parse($item->jam_selesai)->format('H:i') : '' }}
-                                    </p>
+                                    <span class="badge small mb-1 {{ !is_null($item->tugas_akhir->status_sidang) ? ($item->tugas_akhir->status_sidang == 'acc' ? 'badge-soft-success' : ($item->tugas_akhir->status_sidang == 'revisi' ? 'badge-soft-success' : 'badge-soft-danger')) : 'badge-soft-secondary' }}">{{ !is_null($item->tugas_akhir->status_sidang) ? ($item->tugas_akhir->status_sidang == 'acc' ? 'Disetujui' : ($item->tugas_akhir->status_sidang == 'revisi' ? 'Disetujui dengan revisi' : 'Ditolak')) : '-' }}</span>
                                 </td>
+                                @endif
                                 @if (getInfoLogin()->hasRole('Admin'))
                                     <td class="text-align-center justify-content-center">
                                         <p style="white-space: nowrap" class="font-size-12 small {{ !is_null($item->status_sidang) && $item->document_complete ? 'badge badge-soft-success text-success' : 'badge badge-soft-danger text-danger' }}">{{ !is_null($item->status_sidang) &&    $item->document_complete ? 'Berkas sudah lengkap' : 'Berkas belum lengkap' }}</p>
                                     </td>
                                 @endif
                                 <td class="mb-3 text-center">
+                                    @if(getInfoLogin()->hasRole('Dosen'))
+                                        <a href="{{ route('apps.jadwal-sidang.detail', $item->tugas_akhir->sidang->id) }}" class="btn btn-sm btn-outline-primary my-1" title="Detail Sidang"><i class="bx bx-show" ></i></a>
+                                        @if ($item->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->where('jenis', 'pembimbing')->where('urut', 1)->count() > 0 && $item->tugas_akhir->status_sidang != 'acc' && (!is_null($item->tugas_akhir->sidang) && $item->tugas_akhir->sidang->status == 'sudah_sidang'))
+                                            <button class="btn btn-outline-warning btn-sm mb-1" type="button" data-bs-toggle="modal" data-bs-target="#myModal">Setujui?</button>
+                                            @include('administrator.jadwal-sidang.partials.modal')
+                                        @endif
+                                    @endif
                                     @if (getInfoLogin()->hasRole('Mahasiswa'))
-                                    <a href="{{ route('apps.jadwal-sidang.detail-sidang', $item->id) }}" class="btn btn-sm btn-outline-primary my-1" title="Detail Sidang"><i class="bx bx-show" ></i></a>
+                                        <a href="{{ route('apps.jadwal-sidang.detail', $item->id) }}" class="btn btn-sm btn-outline-primary my-1" title="Detail Sidang"><i class="bx bx-show" ></i></a>
                                         @if($item->status == 'belum_daftar')
                                             <button onclick="daftarSidang('{{ $item->id }}', '{{ route('apps.jadwal-seminar.unggah-berkas', $item->id) }}')" class="btn btn-sm btn-outline-dark"><i class="bx bx-file"></i>
                                                 Daftar
@@ -191,9 +253,9 @@
                                         @endif
                                     @endif
                                     @if(getInfoLogin()->hasRole('Admin'))
-                                        {{-- @if($item->status == 'sudah_daftar' || $item->status == 'sudah_sidang')
+                                        @if($item->status != 'sudah_pemberkasan')
                                           <a href="javascript:void(0);" onclick="validasiFile('{{ $item->id}}', '{{ route('apps.jadwal-sidang.validasi-berkas', $item->id) }}')" class="btn btn-sm btn-outline-success my-1" title="Detail Berkas"><i class="bx bx-pencil"></i></a>
-                                        @endif --}}
+                                        @endif
                                         @if($item->status == 'sudah_daftar' || $item->status == 'sudah_terjadwal')
                                             <a href="{{ route('apps.jadwal-sidang.edit', ['jadwalSidang' => $item->id]) }}"
                                             class="btn btn-sm btn-primary"><i class="bx bx-calendar-event"></i></a>

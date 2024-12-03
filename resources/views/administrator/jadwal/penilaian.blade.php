@@ -78,7 +78,7 @@
             refreshTab()
         })
 
-        function refreshTab() {
+        function refreshTab() { 
             $('.tab-item').hide()
             $('.tab-item.active').show('fade')
         }

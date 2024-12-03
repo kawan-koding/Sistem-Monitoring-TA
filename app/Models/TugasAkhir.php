@@ -31,4 +31,7 @@ class TugasAkhir extends Model
     public function jadwal_seminar(){
         return $this->hasOne(JadwalSeminar::class);
     }
+    public function sidang() {
+        return $this->hasOne(Sidang::class);
+    }
 }

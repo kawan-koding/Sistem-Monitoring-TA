@@ -12,13 +12,16 @@ use Illuminate\Http\Request;
 use App\Models\KategoriNilai;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\BimbingUji;
+use App\Models\Penilaian;
+use App\Models\Revisi;
 use App\Models\Ruangan;
 use Exception;
 use Illuminate\Support\Facades\File;
 
 class JadwalSidangController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, $jenis = 'pembimbing')
     {
         $query = [];
         $periode = PeriodeTa::where('is_active', 1)->first();
@@ -34,13 +37,22 @@ class JadwalSidangController extends Controller
             }
         }
 
+        if(getInfoLogin()->hasRole('Dosen')) {
+            $user = getInfoLogin()->userable;
+            $query = BimbingUji::where('dosen_id', $user->id)->where('jenis', $jenis)->whereHas('tugas_akhir', function($q) use ($periode) {
+                $q->where('periode_ta_id', $periode->id)->whereHas('sidang', function ($q) {
+                    $q->whereIn('status', ['sudah_daftar', 'sudah_terjadwal', 'sudah_sidang']);
+                });
+            })->get();
+        }
+
         if(getInfoLogin()->hasRole('Admin')) {
             if($request->has('tanggal') && !empty($request->tanggal)) {
                 $query = $query->whereDate('tanggal', $request->tanggal);
             }
 
             if($request->has('status') && !empty($request->status)) {
-                if($request->status == 'sudah_sidang') {
+                if($request->status == 'sudah_sidang' || $request->status == 'sudah_terjadwal') {
                     $query = $query->where('status', $request->status)->whereHas('tugas_akhir', function ($q) use($request) {
                         $q->where('status_pemberkasan', 'belum_lengkap');
                     });
@@ -277,7 +289,8 @@ class JadwalSidangController extends Controller
         $recapPenguji1 = $recapPenguji1 > 0 ? $recapPenguji1 / $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 1)->first()->penilaian()->where('type', 'Sidang')->count() : 0;
         $recapPenguji2 = $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 2)->first()->penilaian()->where('type', 'Sidang')->sum('nilai');
         $recapPenguji2 = $recapPenguji2 > 0 ? $recapPenguji2 / $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 2)->first()->penilaian()->where('type', 'Sidang')->count() : 0;
-
+        
+        
         $data = [
             'title' => 'Jadwal Sidang',
             'breadcrumbs' => [
@@ -296,6 +309,7 @@ class JadwalSidangController extends Controller
             ],
             'data' => $sidang,
             'kategoriNilais' => KategoriNilai::all(),
+            'nilais' => getInfoLogin()->hasRole('Mahasiswa') ? null : $sidang->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->first()->penilaian()->where('type', 'sidang')->get(),
             'bimbingUjis' => $sidang->tugas_akhir->bimbing_uji()->orderBy('jenis', 'desc')->orderBy('urut', 'asc')->get(),
             'recapPemb1' => $recapPemb1,
             'recapPemb2' => $recapPemb2,
@@ -398,35 +412,14 @@ class JadwalSidangController extends Controller
         }
     }
 
-    public function validasiBerkas(Pemberkasan $pemberkasan)
+    public function validasiBerkas(Sidang $jadwalSidang)
     {
         try {
-            $pemberkasan->update(['status' => 'valid']);
+            $jadwalSidang->tugas_akhir()->update(['status_pemberkasan' => 'sudah_lengkap']);
 
-            return response()->json([
-                'status' => 'approve', 
-            ]);
-        } catch(Exception $e) {
-            return response()->json([
-                'status' => 'fail',
-                'message' => $e->getMessage()
-            ], 500);
-        }
-    }
-
-    public function reject(Pemberkasan $pemberkasan)
-    {
-        try {
-            $pemberkasan->update(['status' => 'tidak_valid']);
-
-            return response()->json([
-                'status' => 'reject',
-            ]);
-        } catch(Exception $e) {
-            return response()->json([
-                 'status' => 'fail',
-                 'message' => $e->getMessage()
-            ], 500);
+            return redirect()->back()->with(['success' => 'Berkas berhasil diperbarui']);
+        } catch (Exception $e) {
+            return redirect()->back()->with(['error' => $e->getMessage()]);
         }
     }
 
@@ -435,6 +428,96 @@ class JadwalSidangController extends Controller
         try {
             $sidang->tugas_akhir->update(['status_pemberkasan' => 'sudah_lengkap']);
             return redirect()->back()->with(['success' => 'Berhasil memperbarui data']);
+        } catch(Exception $e) {
+            return redirect()->back()->with(['error' => $e->getMessage()]);
+        }
+    }
+
+    public function nilai(Request $request, Sidang $sidang)
+    {
+        try {
+            DB::beginTransaction();
+            $categories = KategoriNilai::all();
+            $ratings = [];
+
+            foreach($categories as $category) {
+                $request->validate([
+                    'nilai_'.$category->id => 'required'
+                ]);
+
+                // check if exist
+                $check = $sidang->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->first()->penilaian()->where('kategori_nilai_id', $category->id)->where('type', 'Sidang')->first();
+
+                if($check) {
+                    $check->update([
+                        'nilai' => $request->input('nilai_'.$category->id)
+                    ]);
+                } else {
+                    $ratings[] = [
+                        'bimbing_uji_id' => $sidang->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->first()->id,
+                        'kategori_nilai_id' => $category->id,
+                        'nilai' => $request->input('nilai_'.$category->id),
+                        'type' => 'Sidang',
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ];
+                }
+            }
+
+            if(count($ratings) > 0) {
+                Penilaian::insert($ratings);
+            }
+            $sidang->update(['status' => 'sudah_sidang']);
+            DB::commit();
+
+            return redirect()->back()->with(['success' => 'Nilai berhasil disimpan']);
+        } catch(Exception $e) {
+            return redirect()->back()->with(['error' => $e->getMessage()]);
+        }
+    }
+
+    public function revisi(Request $request, Sidang $sidang)
+    {
+        $request->validate([
+            'revisi' => 'required'
+        ]);
+        
+        try {
+            // get penguji
+            $bimbingUji = $sidang->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->first();
+
+            // check revisi
+            $check = Revisi::where('bimbing_uji_id', $bimbingUji->id)->where('type', 'Sidang');
+
+            if($check->count() > 0) {
+                $check->update(['catatan' => $request->revisi]);
+            } else {
+                // insert revision
+                Revisi::create([
+                    'bimbing_uji_id' => $bimbingUji->id,
+                    'type' => 'Sidang',
+                    'catatan' => $request->revisi,
+                ]);
+            }
+
+            return redirect()->back()->with(['success' => 'Revisi berhasil disimpan']);
+        } catch(Exception $e) {
+            return redirect()->back()->with(['error' => $e->getMessage()]);
+        }
+    }
+
+    public function updateStatus(Request $request, Sidang $sidang)
+    {
+        $request->validate([
+            'status' => 'required',
+        ]);
+
+        try {
+            $sidang->tugas_akhir->update([
+                'status_sidang' => $request->status,
+            ]);
+
+            return redirect()->back()->with(['success' => 'Berhasil mengubah status']);
         } catch(Exception $e) {
             return redirect()->back()->with(['error' => $e->getMessage()]);
         }

@@ -15,5 +15,11 @@ class Sidang extends Model
     {
         return $this->belongsTo(TugasAkhir::class);
     }
+
+    public function ruangan()
+    {
+        return $this->belongsTo(Ruangan::class);
+    }
+
 }
 

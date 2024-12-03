@@ -74,17 +74,19 @@
                                                     <span class="badge rounded-pill badge-soft-primary">Telah Seminar</span>
                                                 @endif
                                             @endif
-                                            <h5 class="font-size-14">
+                                            <h5 class="font-size-14 mb-0">
                                                 {{ $item->tugas_akhir->judul }}
                                             </h5>
+                                            <p class="mt-0 text-muted small">{{ $item->tugas_akhir->topik->nama_topik }} -
+                                                {{ $item->tugas_akhir->jenis_ta->nama_jenis }}</p>
                                             <p>{{ $item->tugas_akhir->mahasiswa->nama_mhs }}</p>
                                         </td>
                                         <td>
                                             <strong>{{ is_null($item->tugas_akhir->jadwal_seminar()->orderBy('id', 'desc')->first()) || is_null($item->tugas_akhir->jadwal_seminar()->orderBy('id', 'desc')->first()->ruangan) ? '-' : $item->tugas_akhir->jadwal_seminar()->orderBy('id', 'desc')->first()->ruangan->nama_ruangan }}</strong>
-                                            <p class="mb-0">Tanggal:
+                                            <p class="mb-0 small">Tanggal:
                                                 {{ is_null($item->tugas_akhir->jadwal_seminar()->orderBy('id', 'desc')->first()) || is_null($item->tugas_akhir->jadwal_seminar()->orderBy('id', 'desc')->first()->tanggal)? '-': \Carbon\Carbon::createFromFormat('Y-m-d', $item->tugas_akhir->jadwal_seminar()->orderBy('id', 'desc')->first()->tanggal)->locale('id')->translatedFormat('l, d M Y') }}
                                             </p>
-                                            <p>Waktu:
+                                            <p class="mb-0 small">Waktu:
                                                 {{ !is_null($item->tugas_akhir->jadwal_seminar()->orderBy('id', 'desc')->first()) ? $item->tugas_akhir->jadwal_seminar()->orderBy('id', 'desc')->first()->jam_mulai : '' }}
                                                 -
                                                 {{ !is_null($item->tugas_akhir->jadwal_seminar()->orderBy('id', 'desc')->first()) ? $item->tugas_akhir->jadwal_seminar()->orderBy('id', 'desc')->first()->jam_selesai : ''}}
