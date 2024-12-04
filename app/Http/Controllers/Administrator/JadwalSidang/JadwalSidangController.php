@@ -2,21 +2,22 @@
 
 namespace App\Http\Controllers\Administrator\JadwalSidang;
 
+use Exception;
 use Carbon\Carbon;
+use App\Models\Revisi;
 use App\Models\Sidang;
+use App\Models\Ruangan;
 use App\Models\Mahasiswa;
+use App\Models\Penilaian;
 use App\Models\PeriodeTa;
+use App\Models\BimbingUji;
 use App\Models\Pemberkasan;
 use App\Models\JenisDokumen;
 use Illuminate\Http\Request;
 use App\Models\KategoriNilai;
 use Illuminate\Support\Facades\DB;
+use App\Exports\SKSidangAkhirExport;
 use App\Http\Controllers\Controller;
-use App\Models\BimbingUji;
-use App\Models\Penilaian;
-use App\Models\Revisi;
-use App\Models\Ruangan;
-use Exception;
 use Illuminate\Support\Facades\File;
 
 class JadwalSidangController extends Controller
@@ -521,5 +522,45 @@ class JadwalSidangController extends Controller
         } catch(Exception $e) {
             return redirect()->back()->with(['error' => $e->getMessage()]);
         }
+    }
+
+    public function export(Request $request)
+    {
+        $status = $request->input('type');
+        $title = '';
+        $export = null;
+
+        
+        switch ($status) {
+            case 'sk_sidang':
+                $export = new SKSidangAkhirExport();
+                $title = 'SK SIDANG';
+                break;
+    
+            case 'belum_terjadwal':
+                $export = new SemproExport($status);
+                $title = 'Belum Terjadwal Sempro';
+                break;
+    
+            case 'telah_seminar':
+                $export = new SemproExport($status);
+                $title = 'Telah Diseminarkan';
+                break;
+    
+            case 'sudah_pemberkasan':
+                $export = new SemproExport($status);
+                $title = 'Sudah Pemberkasan Seminar';
+                break;
+    
+            default:
+                return redirect()->back()->with('error', 'Jenis export tidak valid.');
+        }
+    
+        $sheets = $export->sheets();
+        if (empty($sheets) || count($sheets) === 1 && $sheets[0] instanceof DummySheet) {
+            return redirect()->back()->with('error', 'Data Tidak Ditemukan.');
+        }
+
+        return Export::download($export, "{$title}.xlsx");
     }
 }

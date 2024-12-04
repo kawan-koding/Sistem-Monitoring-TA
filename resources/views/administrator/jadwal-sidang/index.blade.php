@@ -18,8 +18,25 @@
                     </button>
                 </div>
             @endif
-            <a href="#" target="_blank" class="btn btn-success mb-2"><i class="far fa-file-alt"></i> Template Pendaftaran Sidang</a>
-            <a href="#" target="_blank" class="btn btn-secondary mb-2"><i class="far fa-file-alt"></i> Template Pemberkasan Sidang</a>
+            {{-- <a href="#" target="_blank" class="btn btn-success mb-2"><i class="far fa-file-alt"></i> Template Pendaftaran Sidang</a>
+            <a href="#" target="_blank" class="btn btn-secondary mb-2"><i class="far fa-file-alt"></i> Template Pemberkasan Sidang</a> --}}
+            <div class="d-flex flex-wrap align-items-center gap-2">
+                <a href="{{ getSetting('app_seminar_registration_template') }}" target="_blank" class="btn btn-success mb-2"><i class="far fa-file-alt"></i> Template Pendaftaran Sidang</a>
+                <a href="{{ getSetting('app_seminar_filing_template') }}" target="_blank" class="btn btn-secondary mb-2"><i class="far fa-file-alt"></i> Template Pemberkasan Sidang</a>
+                @if(session('switchRoles') == 'Admin')   
+                <div class="btn-group" role="group">
+                    <button id="btnGroupVerticalDrop1" type="button" class="btn btn-primary dropdown-toggle mb-2" style="max-width: 150px;" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-file-excel me-2"></i> Export <i class="mdi mdi-chevron-down"></i>
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1">
+                        <a class="dropdown-item" target="_blank" href="{{ route('apps.jadwal-sidang.export', ['type' => 'sk_sidang'])}}">SK Sidang</a>
+                        {{-- <a class="dropdown-item" target="_blank" href="{{ route('apps.jadwal-seminar.export', ['type' => 'telah_seminar'])}}">Telah Diseminarkan</a>
+                        <a class="dropdown-item" target="_blank" href="{{ route('apps.jadwal-seminar.export', ['type' => 'sudah_pemberkasan'])}}">Sudah Pemberkasan Seminar</a>
+                        <a class="dropdown-item" target="_blank" href="{{ route('apps.jadwal-seminar.export', ['type' => 'st_sempro'])}}">ST Sempro</a> --}}
+                    </div>
+                </div>
+                @endif
+            </div>
             <hr>
             @if ($errors->any())
                 <div class="alert alert-error alert-danger alert-dismissible fade show" role="alert">

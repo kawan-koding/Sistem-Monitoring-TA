@@ -12,7 +12,7 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\FromCollection;
 
-class SKSidangAkhir implements FromCollection, WithHeadings, WithMapping, WithEvents, WithTitle
+class SKSidangAkhirExport implements FromCollection, WithHeadings, WithMapping, WithEvents, WithTitle
 {
     public function collection()
     {
