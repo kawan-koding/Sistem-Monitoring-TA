@@ -36,13 +36,13 @@ class SemproQueryExport implements FromCollection, WithHeadings, WithMapping, Wi
 
     public function collection()
     {
-        $ta = TugasAkhir::with(['mahasiswa', 'jadwal_seminar', 'bimbing_uji'])
-            ->wherePeriodeTaId($this->periodeId)
-            ->whereStatus('acc')
-            ->whereHas('jadwal_seminar', function($q) { 
-                $q->whereStatus($this->status);
-            })
-            ->get();
+        if($this->status == 'sudah_pemberkasan') {
+            $ta = TugasAkhir::with(['mahasiswa', 'jadwal_seminar', 'bimbing_uji'])->wherePeriodeTaId($this->periodeId)->whereStatus('acc')->whereNull('status_sidang')->whereStatusPemberkasan('sudah_lengkap')->get();
+        } else {
+            $ta = TugasAkhir::with(['mahasiswa', 'jadwal_seminar', 'bimbing_uji'])->wherePeriodeTaId($this->periodeId)->whereStatus('acc')->whereHas('jadwal_seminar', function($q) { 
+                    $q->whereStatus($this->status);
+                })->get();
+        }
 
         $ta = $ta->map(function ($tugasAkhir, $index) {
             $bimbingUjiData = $tugasAkhir->bimbing_uji->mapWithKeys(function ($item) {

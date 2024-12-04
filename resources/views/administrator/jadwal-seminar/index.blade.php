@@ -39,7 +39,7 @@
                     </button>
                     <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1">
                         <a class="dropdown-item" target="_blank" href="{{ route('apps.jadwal-seminar.export', ['type' => 'belum_terjadwal'])}}">Belum Terjadwal</a>
-                        <a class="dropdown-item" target="_blank" href="{{ route('apps.jadwal-seminar.export', ['type' => 'telah_diseminarkan'])}}">Telah Diseminarkan</a>
+                        <a class="dropdown-item" target="_blank" href="{{ route('apps.jadwal-seminar.export', ['type' => 'telah_seminar'])}}">Telah Diseminarkan</a>
                         <a class="dropdown-item" target="_blank" href="{{ route('apps.jadwal-seminar.export', ['type' => 'sudah_pemberkasan'])}}">Sudah Pemberkasan Seminar</a>
                         <a class="dropdown-item" target="_blank" href="{{ route('apps.jadwal-seminar.export', ['type' => 'st_sempro'])}}">ST Sempro</a>
                     </div>
