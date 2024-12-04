@@ -13,6 +13,7 @@ use App\Models\Pemberkasan;
 use App\Models\JenisDokumen;
 use App\Models\ProgramStudi;
 use Illuminate\Http\Request;
+use App\Exports\SemproExport;
 use App\Models\JadwalSeminar;
 use App\Models\KategoriNilai;
 use App\Exports\STSemproExport;
@@ -432,23 +433,40 @@ class JadwalSeminarController extends Controller
     public function export(Request $request) 
     {
         $status = $request->input('type');
-       
         $title = '';
-        if($status == 'st_sempro') {
-            $export = new STSemproExport();
-            $sheets = $export->sheets();
-            $title = 'ST SEMPRO';
-        } elseif($status == 'belum_terjadwal') {  
-            $export = new STSemproExport($status);
-            $sheets = $export->sheets();
-            $title = 'Mahasiswa Belum Terjadwal Sempro';
+        $export = null;
+    
+        switch ($status) {
+            case 'st_sempro':
+                $export = new STSemproExport();
+                $title = 'ST SEMPRO';
+                break;
+    
+            case 'belum_terjadwal':
+                $export = new SemproExport($status);
+                $title = 'Belum Terjadwal Sempro';
+                break;
+    
+            case 'telah_diseminarkan':
+                $export = new SemproExport($status);
+                $title = 'Telah Diseminarkan';
+                break;
+    
+            case 'sudah_pemberkasan':
+                $export = new SemproExport($status);
+                $title = 'Sudah Pemberkasan Seminar';
+                break;
+    
+            default:
+                return redirect()->back()->with('error', 'Jenis export tidak valid.');
         }
-
+    
+        $sheets = $export->sheets();
         if (empty($sheets) || count($sheets) === 1 && $sheets[0] instanceof DummySheet) {
             return redirect()->back()->with('error', 'Data Tidak Ditemukan.');
         }
-
+    
         return Excel::download($export, "{$title}.xlsx");
-
     }
+    
 }

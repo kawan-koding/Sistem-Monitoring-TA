@@ -3,24 +3,29 @@
 namespace App\Exports;
 
 use App\Models\PeriodeTa;
-use App\Exports\BelumTerjadwalSemproQueryExport;
+use App\Models\TugasAkhir;
+use App\Exports\SemproQueryExport;
 use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 
-class BelumTerjadwalSemproExport implements WithMultipleSheets
+class SemproExport implements WithMultipleSheets
 {
-    /**
-    * @return \Illuminate\Support\Collection
-    */
-    public function sheets()
+    protected $status;
+
+    public function __construct($status)
+    {
+        $this->status = $status;
+    }
+    public function sheets(): array
     {
         $sheets = [];
         $activePeriods = PeriodeTa::whereIsActive(true)->with('programStudi')->get();
         foreach ($activePeriods as $periode) {
-            $sheets[] = new BelumTerjadwalSemproQueryExport(
+            $sheets[] = new SemproQueryExport(
                 $periode->id,
                 $periode->program_studi_id,
                 $periode->programStudi->display,
-                $periode->nama
+                $periode->nama,
+                $this->status
             );
         }
 
