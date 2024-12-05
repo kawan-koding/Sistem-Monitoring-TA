@@ -18,6 +18,7 @@ use App\Models\KategoriNilai;
 use Illuminate\Support\Facades\DB;
 use App\Exports\SKSidangAkhirExport;
 use App\Http\Controllers\Controller;
+use App\Models\Dosen;
 use Illuminate\Support\Facades\File;
 
 class JadwalSidangController extends Controller
@@ -126,6 +127,7 @@ class JadwalSidangController extends Controller
         // dd($jadwalSidang);
         $data = [
             'title' => 'Jadwal Sidang',
+            'mods' => 'jadwal_sidang',
             'breadcrumbs' =>[
                 [
                     'title' => 'Dashboard',
@@ -192,6 +194,7 @@ class JadwalSidangController extends Controller
                 });
             })->where('status', 'sudah_terjadwal')->get(),
             'mahasiswaTerdaftar' => Sidang::where('status', 'sudah_terjadwal')->whereIn('tanggal', $currentWeekDays)->orderBy('tanggal', 'asc')->get(),
+            'pengujiPengganti'=> Dosen::all(),
         ];
 
         // dd($data);
@@ -222,7 +225,7 @@ class JadwalSidangController extends Controller
                 return redirect()->back()->with(['error' => 'Periode sidang belum aktif']);
             }
 
-            $check = Sidang::whereRuanganId($request->ruangan)->whereDate('tanggal', $request->tanggal)->where('jam_mulai', '>=', $request->jam_mulai)->where('jam_selesai', '<=', $request->jam_selesai)->first();
+            $check = Sidang::whereRuanganId($request->ruangan)->whereDate('tanggal', $request->tanggal)->where('jam_mulai', '>=', $request->jam_mulai)->where('jam_selesai', '<=', $request->jam_selesai)->whereNot('id', $jadwalSidang->id)->first();
 
             if(!is_null($check)) {
                 return redirect()->back()->with(['error' => 'Jadwal ini sudah ada']);
@@ -235,6 +238,35 @@ class JadwalSidangController extends Controller
                 'jam_selesai' => $request->jam_selesai,
                 'status' => 'sudah_terjadwal'
             ]);
+
+            if($request->has('pengganti1') && !empty($request->pengganti1)) {
+                $cek = BimbingUji::where('tugas_akhir_id', $jadwalSidang->tugas_akhir_id)->where('jenis', 'pengganti')->where('urut', 1);
+                if($cek->count() > 0) {
+                    $cek->update(['dosen_id' => $request->pengganti1]);
+                } else {
+                    BimbingUji::create([
+                        'tugas_akhir_id' => $jadwalSidang->tugas_akhir_id,
+                        'dosen_id' => $request->pengganti1,
+                        'jenis' => 'pengganti',
+                        'urut' => 1
+                    ]);
+                }
+            }
+
+            if($request->has('pengganti2') && !empty($request->pengganti2)) {
+                $cek = BimbingUji::where('tugas_akhir_id', $jadwalSidang->tugas_akhir_id)->where('jenis', 'pengganti')->where('urut', 2);
+                if($cek->count() > 0) {
+                    $cek->update(['dosen_id' => $request->pengganti2]);
+                } else {
+                    BimbingUji::create([
+                        'tugas_akhir_id' => $jadwalSidang->tugas_akhir_id,
+                        'dosen_id' => $request->pengganti2,
+                        'jenis' => 'pengganti',
+                        'urut' => 2
+                    ]);
+                }
+            }
+
             return redirect()->route('apps.jadwal-sidang')->with(['success' => 'Berhasil menyimpan data']);
         } catch (\Exception $e) {
             return redirect()->back()->with(['error' => $e->getMessage()]);

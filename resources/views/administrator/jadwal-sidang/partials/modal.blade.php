@@ -175,7 +175,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="myModal">
+<div class="modal fade" id="myModal{{$item->id}}">
     <div class="modal-dialog text-start">
         <div class="modal-content">
             <form action="{{ route('apps.jadwal-sidang.update-status', $item->tugas_akhir->sidang->id) }}" method="POST">
@@ -187,9 +187,9 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="">Status Sidang Akhir <span class="text-danger">*</span></label><br>
-                        <label for="acc" class="me-2"><input type="radio" name="status" id="acc" value="acc" {{$item->tugas_akhir->status_sidang == 'acc' ? 'checked' : ''}}> Setujui</label>
-                        <label for="revisi" class="me-2"><input type="radio" name="status" id="revisi" value="revisi" {{$item->tugas_akhir->status_sidang == 'revisi' ? 'checked' : ''}}> Disetujui dengan revisi</label>
-                        <label for="reject" class="me-2"><input type="radio" name="status" id="reject" value="reject" {{$item->tugas_akhir->status_sidang == 'reject' ? 'checked' : ''}}> Ditolak</label>
+                        <label for="acc{{$item->id}}" class="me-2"><input type="radio" name="status" id="acc{{$item->id}}" value="acc" {{$item->tugas_akhir->status_sidang == 'acc' ? 'checked' : ''}}> Setujui</label>
+                        <label for="revisi{{$item->id}}" class="me-2"><input type="radio" name="status" id="revisi{{$item->id}}" value="revisi" {{$item->tugas_akhir->status_sidang == 'revisi' ? 'checked' : ''}}> Disetujui dengan revisi</label>
+                        <label for="reject{{$item->id}}" class="me-2"><input type="radio" name="status" id="reject{{$item->id}}" value="reject" {{$item->tugas_akhir->status_sidang == 'reject' ? 'checked' : ''}}> Ditolak</label>
                     </div>
                 </div>
                 <div class="modal-footer">

@@ -88,7 +88,7 @@
                                         <p class="m-0 p-0 text-muted small">NIM : {{$item->mahasiswa->nim}}</p>
                                     </td>
                                     <td>
-                                        <span class="badge {{ isset($item->status) ? ($item->status == 'acc' ? 'badge-soft-success' : ($item->status == 'draft' ? 'bg-dark-subtle text-body' : 'badge-soft-danger')) : '-'}} small mb-1"> {{ ucfirst($item->status ?? '-')}} </span>
+                                        <span class="badge {{ isset($item->status) ? ($item->status == 'acc' ? 'badge-soft-success' : ($item->status == 'draft' ? 'bg-dark-subtle text-body' : ($item->status == 'revisi' ? 'badge-soft-warning' : 'badge-soft-danger'))) : ''}} small mb-1"> {{ ucfirst($item->status ?? '-')}} </span>
                                         <p class="m-0 small"><strong>{{ $item->judul }}</strong></p>
                                         <p class="m-0 text-muted font-size-15 small">{{ $item->topik->nama_topik }} - {{ $item->jenis_ta->nama_jenis}}</p>
                                     </td>

@@ -52,7 +52,29 @@
                             <label for="">Jam Selesai<span class="text-danger"> *</span></label>
                             <input type="time" name="jam_selesai" class="form-control" value="{{isset($editedData) ? $editedData->jam_selesai : ''}}">
                         </div>
-                        <a href="{{route('apps.jadwal-seminar')}}" class="btn btn-secondary">Kembali</a>
+                        <div class="mb-3">
+                            <label for="">Dosen Pengganti Penguji 1</label>
+                            <select name="pengganti1" class="form-control select2 dosen-select" onchange="updateOptions()">
+                                <option value="">Pilih Dosen Penguji Pengganti</option>
+                                @foreach ($pengujiPengganti as $item)
+                                    <option value="{{ $item->id }}" {{isset($editedData) ? !is_null($editedData->tugas_akhir->bimbing_uji()->where('jenis',  'pengganti')->where('urut', 1)->first()) && $editedData->tugas_akhir->bimbing_uji()->where('jenis',  'pengganti')->where('urut', 1)->first()->dosen_id == $item->id ? "selected" : '' : ('')}} {{isset($editedData) ? !is_null($editedData->tugas_akhir->bimbing_uji()->where('jenis',  'pengganti')->where('urut', 2)->first()) && $editedData->tugas_akhir->bimbing_uji()->where('jenis',  'pengganti')->where('urut', 2)->first()->dosen_id == $item->id ? "disabled" : '' : ('')}}>
+                                        {{ $item->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="">Dosen Pengganti Penguji 2</label>
+                            <select name="pengganti2" class="form-control select2 dosen-select" onchange="updateOptions()">
+                                <option value="">Pilih Dosen Penguji Pengganti</option>
+                                @foreach ($pengujiPengganti as $item)
+                                    <option value="{{ $item->id }}" {{isset($editedData) ? !is_null($editedData->tugas_akhir->bimbing_uji()->where('jenis',  'pengganti')->where('urut', 2)->first()) && $editedData->tugas_akhir->bimbing_uji()->where('jenis',  'pengganti')->where('urut', 2)->first()->dosen_id == $item->id ? "selected" : '' : ('')}} {{isset($editedData) ? !is_null($editedData->tugas_akhir->bimbing_uji()->where('jenis',  'pengganti')->where('urut', 1)->first()) && $editedData->tugas_akhir->bimbing_uji()->where('jenis',  'pengganti')->where('urut', 1)->first()->dosen_id == $item->id ? "disabled" : '' : ('')}}>
+                                        {{ $item->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <a href="{{route('apps.jadwal-sidang')}}" class="btn btn-secondary">Kembali</a>
                         <button class="btn btn-primary" type="submit">Simpan</button>
                     </form>
                 </div>
