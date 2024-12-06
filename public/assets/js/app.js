@@ -48,7 +48,7 @@
 
 
 $('.select2').select2({
-    placeholder: 'Select an option'
+    // placeholder: 'Select an option'
 });
 
 $('.select2-selection__rendered').attr('style', '')

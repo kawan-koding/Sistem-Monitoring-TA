@@ -274,7 +274,7 @@ Route::prefix('apps')->middleware('auth')->group(function () {
        Route::post('{sidang}/daftar-sidang',[JadwalSidangController::class,'register'])->name('apps.jadwal-sidang.register'); 
        Route::post('{jadwalSidang}/update',[JadwalSidangController::class,'update'])->name('apps.jadwal-sidang.update'); 
        Route::get('{jadwalSidang}/edit',[JadwalSidangController::class,'edit'])->name('apps.jadwal-sidang.edit'); 
-       Route::get('{jadwalSidang}/validasi-berkas',[JadwalSidangController::class,'validasiBerkas'])->name('apps.jadwal-sidang.validasi-berkas');
+       Route::post('{jadwalSidang}/validasi-berkas',[JadwalSidangController::class,'validasiBerkas'])->name('apps.jadwal-sidang.validasi-berkas');
        Route::post('{sidang}/nilai', [JadwalSidangController::class, 'nilai'])->name('apps.jadwal-sidang.nilai');
        Route::post('{sidang}/revisi', [JadwalSidangController::class, 'revisi'])->name('apps.jadwal-sidang.revisi');
        Route::post('{sidang}/update-status', [JadwalSidangController::class, 'updateStatus'])->name('apps.jadwal-sidang.update-status');
