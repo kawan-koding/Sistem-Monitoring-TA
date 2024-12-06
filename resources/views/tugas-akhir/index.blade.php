@@ -47,7 +47,33 @@
   </div>
 
   <div class="d-flex justify-content-center mt-5">
-    {{ $query->links() }}
+      @if ($query->hasPages())
+      <nav>
+          <ul class="pagination justify-content-center">
+              @if ($query->onFirstPage())
+                  <li class="page-item disabled"><span class="page-link"> < </span></li>
+              @else
+                  <li class="page-item"><a class="page-link" href="{{ $query->previousPageUrl() }}"> < </a></li>
+              @endif
+              @foreach ($query->getUrlRange(1, $query->lastPage()) as $page => $url)
+                  @if ($page == 1 || $page == $query->lastPage() || abs($page - $query->currentPage()) <= 1)
+                      @if ($page == $query->currentPage())
+                          <li class="page-item active"><span class="page-link">{{ $page }}</span></li>
+                      @else
+                          <li class="page-item"><a class="page-link" href="{{ $url }}">{{ $page }}</a></li>
+                      @endif
+                  @elseif ($loop->iteration == 2 || $loop->iteration == ($query->lastPage() - 1))
+                      <li class="page-item disabled"><span class="page-link">...</span></li>
+                  @endif
+              @endforeach
+              @if ($query->hasMorePages())
+                  <li class="page-item"><a class="page-link" href="{{ $query->nextPageUrl() }}"> > </a></li>
+              @else
+                  <li class="page-item disabled"><span class="page-link"> > </span></li>
+              @endif
+          </ul>
+      </nav>
+  @endif
   </div>
 </section>
 

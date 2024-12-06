@@ -29,6 +29,7 @@
                         <i class="fa fa-file-excel me-2"></i> Export <i class="mdi mdi-chevron-down"></i>
                     </button>
                     <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1">
+                        <a class="dropdown-item" target="_blank" href="{{ route('apps.jadwal-sidang.export', ['type' => 'belum_daftar'])}}">SK Sidang</a>
                         <a class="dropdown-item" target="_blank" href="{{ route('apps.jadwal-sidang.export', ['type' => 'sk_sidang'])}}">SK Sidang</a>
                         {{-- <a class="dropdown-item" target="_blank" href="{{ route('apps.jadwal-seminar.export', ['type' => 'telah_seminar'])}}">Telah Diseminarkan</a>
                         <a class="dropdown-item" target="_blank" href="{{ route('apps.jadwal-seminar.export', ['type' => 'sudah_pemberkasan'])}}">Sudah Pemberkasan Seminar</a>

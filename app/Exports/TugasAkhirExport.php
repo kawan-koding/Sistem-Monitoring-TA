@@ -6,15 +6,21 @@ use App\Models\PeriodeTa;
 use App\Models\TugasAkhir;
 use App\Exports\TugasAkhirClass;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redirect;
 use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 
 class TugasAkhirExport implements WithMultipleSheets
 {
     protected $prodiId;
+    protected $periode;
 
     public function __construct($prodiId)
     {
         $this->prodiId = $prodiId;
+        $this->periode = PeriodeTa::where('program_studi_id', $this->prodiId)->where('is_active', true)->first();
+        if (!$this->periode) {
+            Redirect::back()->with('error', 'Tidak ada periode aktif di Prodi ini')->send();
+        }
     }
     public function sheets(): array
     {
