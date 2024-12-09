@@ -50,10 +50,16 @@ class JadwalSeminarController extends Controller
                 });
             } else {
                 if($request->has('status_pemberkasan') && !empty($request->status_pemberkasan)) {
-                    $query = $query->whereHas('tugas_akhir', function ($q) use($request) {
-                        $q->whereNull('status_sidang');
-                        $q->where('status_pemberkasan', $request->status_pemberkasan);
-                    });
+                    if($request->status_pemberkasan == 'sudah_lengkap') {
+                        $query = $query->whereHas('tugas_akhir', function ($q) use($request) {
+                            $q->whereNotNull('status_sidang');
+                            $q->orWhereNull('status_sidang')->whereNotNull('status_seminar')->where('status_pemberkasan', 'sudah_lengkap');
+                        });
+                    } else {
+                        $query = $query->whereHas('tugas_akhir', function ($q) use($request) {
+                            $q->whereNull('status_sidang')->where('status_pemberkasan', $request->status_pemberkasan);
+                        });
+                    }
                 } else {
                     $query = $query->where('status', 'belum_terjadwal');
                 }

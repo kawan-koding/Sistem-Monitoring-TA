@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Administrator\JadwalSidang;
 
+use App\Exports\SemproExport;
 use Exception;
 use Carbon\Carbon;
 use App\Models\Revisi;
@@ -19,6 +20,7 @@ use Illuminate\Support\Facades\DB;
 use App\Exports\SKSidangAkhirExport;
 use App\Http\Controllers\Controller;
 use App\Models\Dosen;
+use App\Models\ProgramStudi;
 use Illuminate\Support\Facades\File;
 
 class JadwalSidangController extends Controller
@@ -26,14 +28,14 @@ class JadwalSidangController extends Controller
     public function index(Request $request, $jenis = 'pembimbing')
     {
         $query = [];
-        $periode = PeriodeTa::where('is_active', 1)->first();
+        $periode = $request->has('filter2') && !empty($request->filter2 && $request->filter2 != 'semua') ? $request->filter2 : PeriodeTa::where('is_active', 1)->first()->id;
         $query = Sidang::with(['tugas_akhir']);
         if(getInfoLogin()->hasRole('Mahasiswa')) {
             $myId = getInfoLogin()->userable;
             $mahasiswa = Mahasiswa::where('id', $myId->id)->first();
             if($mahasiswa) {
                 $query->whereHas('tugas_akhir', function ($q) use($periode, $mahasiswa) {
-                    $q->where('periode_ta_id', $periode->id)->where('mahasiswa_id', $mahasiswa->id);
+                    $q->where('periode_ta_id', $periode)->where('mahasiswa_id', $mahasiswa->id);
                 });
                 $query = $query->get();
             }
@@ -42,7 +44,7 @@ class JadwalSidangController extends Controller
         if(getInfoLogin()->hasRole('Dosen')) {
             $user = getInfoLogin()->userable;
             $query = BimbingUji::where('dosen_id', $user->id)->where('jenis', $jenis)->whereHas('tugas_akhir', function($q) use ($periode) {
-                $q->where('periode_ta_id', $periode->id)->whereHas('sidang', function ($q) {
+                $q->where('periode_ta_id', $periode)->whereHas('sidang', function ($q) {
                     $q->whereIn('status', ['sudah_daftar', 'sudah_terjadwal', 'sudah_sidang']);
                 });
             })->get();
@@ -54,14 +56,14 @@ class JadwalSidangController extends Controller
             }
 
             if($request->has('status') && !empty($request->status)) {
-                if($request->status == 'sudah_sidang' || $request->status == 'sudah_terjadwal') {
+                if($request->status == 'sudah_sidang') {
                     $query = $query->where('status', $request->status)->whereHas('tugas_akhir', function ($q) use($request) {
                         $q->where('status_pemberkasan', 'belum_lengkap');
                     });
                 } else {
                     $query = $query->where('status', $request->status)->whereHas('tugas_akhir', function ($q) use($request) {
                         $q->whereNull('status_sidang');
-                        $q->where('status_pemberkasan', 'sudah_lengkap');
+                        // $q->where('status_pemberkasan', 'sudah_lengkap');
                     });
                 }
             } else {
@@ -74,6 +76,15 @@ class JadwalSidangController extends Controller
                     $query = $query->where('status', 'sudah_daftar');
                 }
             }
+
+            if($request->has('filter1') && !empty($request->filter1) && $request->filter1 != 'semua') {
+                $query = $query->whereHas('tugas_akhir', function ($q) use($request) {
+                    $q->whereHas('mahasiswa', function ($q) use($request) {
+                        $q->where('program_studi_id', $request->filter1);
+                    });
+                });
+            }
+
             $query = $query->get();
             
             // dd($query);
@@ -104,7 +115,14 @@ class JadwalSidangController extends Controller
             ],
             'data' => $query,
             'status' => $request->has('status') ? $request->status : null,
+            'status_pemberkasan' => $request->has('status_pemberkasan') ? $request->status_pemberkasan : null,
             'document_sidang' => $docSidang,
+            'periodes' => $request->has('filter1') && $request->filter1 != 'semua' ? PeriodeTa::where('program_studi_id', $request->filter1)->get() : PeriodeTa::whereIsActive(true)->get(),
+            'programStudies' => ProgramStudi::all(),
+            'periode' => $periode,
+            'filter1' => $request->has('filter1') ? $request->filter1 : null,
+            'filter2' => $request->has('filter2') ? $request->filter2 : null,
+            'prodi' => ProgramStudi::all(),
         ];
         
         return view('administrator.jadwal-sidang.index', $data);
@@ -548,6 +566,7 @@ class JadwalSidangController extends Controller
         try {
             $sidang->tugas_akhir->update([
                 'status_sidang' => $request->status,
+                'status_pemberkasan' => 'belum_lengkap',
             ]);
 
             return redirect()->back()->with(['success' => 'Berhasil mengubah status']);

@@ -234,8 +234,8 @@
                                 @if (getInfoLogin()->hasRole('Admin'))
                                     <td class="text-align-center justify-content-center">
                                         <p style="white-space: nowrap"
-                                            class="font-size-12 {{ $item->tugas_akhir->status_pemberkasan == 'sudah_lengkap' ? 'badge badge-soft-success text-success' : 'badge badge-soft-danger text-danger' }}">
-                                            {{ $item->tugas_akhir->status_pemberkasan == 'sudah_lengkap' ? 'Berkas sudah lengkap' : 'Berkas belum lengkap' }}
+                                            class="font-size-12 {{ $item->tugas_akhir->status_pemberkasan == 'sudah_lengkap' || !is_null($item->tugas_akhir->status_sidang) ? 'badge badge-soft-success text-success' : 'badge badge-soft-danger text-danger' }}">
+                                            {{ $item->tugas_akhir->status_pemberkasan == 'sudah_lengkap' || !is_null($item->tugas_akhir->status_sidang) ? 'Berkas sudah lengkap' : 'Berkas belum lengkap' }}
                                         </p>
                                     </td>
                                 @endif
@@ -276,7 +276,7 @@
                             </tr>
                         @empty
                             <tr class="text-center">
-                                <td colspan="7">No data available in table</td>
+                                <td colspan="8">No data available in table</td>
                             </tr>
                         @endforelse
                     </tbody>
