@@ -24,7 +24,7 @@
             <div class="card text-center border-{{ 
                 isset($dataMahasiswa['tugasAkhir']) ? 
                 ($dataMahasiswa['tugasAkhir']->status == 'acc' ? 'accept' : 
-                ($dataMahasiswa['tugasAkhir']->status == 'draft' ? 'draft' : 'reject')) 
+                (in_array($dataMahasiswa['tugasAkhir']->status, ['draft', 'pengajuan ulang']) ? 'draft' : 'reject')) 
                 : 'draft' 
             }}">
                 <div class="card-body">
@@ -32,27 +32,28 @@
                     <i class="bx bx-{{ 
                         isset($dataMahasiswa['tugasAkhir']) ? 
                         ($dataMahasiswa['tugasAkhir']->status == 'acc' ? 'check-circle' : 
-                        ($dataMahasiswa['tugasAkhir']->status == 'draft' ? 'timer' : 'x-circle')) 
+                        (in_array($dataMahasiswa['tugasAkhir']->status, ['draft', 'pengajuan ulang']) ? 'timer' : 'x-circle')) 
                         : 'timer' 
                     }} text-{{ 
                         isset($dataMahasiswa['tugasAkhir']) ? 
                         ($dataMahasiswa['tugasAkhir']->status == 'acc' ? 'success' : 
-                        ($dataMahasiswa['tugasAkhir']->status == 'draft' ? 'dark' : 'danger')) 
+                        (in_array($dataMahasiswa['tugasAkhir']->status, ['draft', 'pengajuan ulang']) ? 'dark' : 'danger')) 
                         : 'dark' 
                     }}" style="font-size: 50px"></i>
                     <h5 class="mb-0 text-{{
                         isset($dataMahasiswa['tugasAkhir']) ? 
                         ($dataMahasiswa['tugasAkhir']->status == 'acc' ? 'success' : 
-                        ($dataMahasiswa['tugasAkhir']->status == 'draft' ? 'dark' : 
+                        (in_array($dataMahasiswa['tugasAkhir']->status, ['draft', 'pengajuan ulang']) ? 'dark' : 
                         ($dataMahasiswa['tugasAkhir']->status == 'reject' ? 'danger' : 'danger'))) 
                         : 'dark' 
                     }}">
                         {{
                             isset($dataMahasiswa['tugasAkhir']) ? 
                             ($dataMahasiswa['tugasAkhir']->status == 'acc' ? 'Disetujui' : 
-                            ($dataMahasiswa['tugasAkhir']->status == 'draft' ? 'Menunggu' : 
+                            (in_array($dataMahasiswa['tugasAkhir']->status, ['draft', 'pengajuan ulang']) ? 'Menunggu' : 
                             ($dataMahasiswa['tugasAkhir']->status == 'reject' ? 'Ditolak' : 
-                            ($dataMahasiswa['tugasAkhir']->status == 'cancel' ? 'Tidak Dilanjutkan' : 'Menunggu')))) 
+                            ($dataMahasiswa['tugasAkhir']->status == 'revisi' ? 'Revisi' : 
+                            ($dataMahasiswa['tugasAkhir']->status == 'cancel' ? 'Tidak Dilanjutkan' : 'Menunggu'))))) 
                             : 'Belum Diajukan' 
                         }}
                     </h5>

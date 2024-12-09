@@ -588,7 +588,7 @@ class JadwalSidangController extends Controller
                 $title = 'SK SIDANG';
                 break;
     
-            case 'belum_terjadwal':
+            case 'belum_daftar':
                 $export = new SemproExport($status);
                 $title = 'Belum Terjadwal Sempro';
                 break;
