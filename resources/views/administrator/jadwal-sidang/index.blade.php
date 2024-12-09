@@ -111,7 +111,7 @@
                                         <select name="filter2" class="form-control" onchange="this.form.submit()">
                                             <option value="semua" {{ $filter2 == 'semua' ? 'selected' : '' }}>Semua Periode</option>
                                             @foreach ($periodes as $item)
-                                                <option value="{{ $item->id }}" {{ ($filter2 ?? $periode) == $item->id ? 'selected' : '' }}>{{ $item->nama }} - {{ 'Prodi' . ' ' . $item->programStudi->display }}</option>
+                                                <option value="{{ $item->id }}" {{ isset($filter2) && $filter2 == $item->id ? 'selected' : '' }}>{{ $item->nama }} - {{ 'Prodi' . ' ' . $item->programStudi->display }}</option>
                                             @endforeach
                                         </select>
                                     </div>

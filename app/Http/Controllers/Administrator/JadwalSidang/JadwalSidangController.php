@@ -28,14 +28,14 @@ class JadwalSidangController extends Controller
     public function index(Request $request, $jenis = 'pembimbing')
     {
         $query = [];
-        $periode = $request->has('filter2') && !empty($request->filter2 && $request->filter2 != 'semua') ? $request->filter2 : PeriodeTa::where('is_active', 1)->first()->id;
+        $periode = $request->has('filter2') && !empty($request->filter2 && $request->filter2 != 'semua') ? [$request->filter2] : PeriodeTa::where('is_active', 1)->get()->pluck('id')->toArray();
         $query = Sidang::with(['tugas_akhir']);
         if(getInfoLogin()->hasRole('Mahasiswa')) {
             $myId = getInfoLogin()->userable;
             $mahasiswa = Mahasiswa::where('id', $myId->id)->first();
             if($mahasiswa) {
                 $query->whereHas('tugas_akhir', function ($q) use($periode, $mahasiswa) {
-                    $q->where('periode_ta_id', $periode)->where('mahasiswa_id', $mahasiswa->id);
+                    $q->whereIn('periode_ta_id', $periode)->where('mahasiswa_id', $mahasiswa->id);
                 });
                 $query = $query->get();
             }
