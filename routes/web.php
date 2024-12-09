@@ -278,6 +278,9 @@ Route::prefix('apps')->middleware('auth')->group(function () {
        Route::post('{sidang}/nilai', [JadwalSidangController::class, 'nilai'])->name('apps.jadwal-sidang.nilai');
        Route::post('{sidang}/revisi', [JadwalSidangController::class, 'revisi'])->name('apps.jadwal-sidang.revisi');
        Route::post('{sidang}/update-status', [JadwalSidangController::class, 'updateStatus'])->name('apps.jadwal-sidang.update-status');
+       Route::get('{sidang}/revisi', [JadwalSidangController::class, 'cetakRevisi'])->name('apps.jadwal-sidang.revisi');
+       Route::get('{sidang}/nilai', [JadwalSidangController::class, 'cetakNilai'])->name('apps.jadwal-sidang.nilai');
+       Route::get('{sidang}/rekapitulasi', [JadwalSidangController::class, 'cetakRekap'])->name('apps.jadwal-sidang.rekapitulasi');
     });
 
     Route::prefix('profile-dosen')->group( function() {

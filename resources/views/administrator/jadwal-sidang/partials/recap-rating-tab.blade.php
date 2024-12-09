@@ -5,9 +5,11 @@
                 <h5 class="m-0">Cetak Rekapitulasi Nilai</h5>
                 <p class="text-muted small m-0">Lakukan cetak rekapitulasi nilai.</p>
             </div>
+            @if(getInfoLogin()->hasRole('Mahasiswa'))
             <div class="col-4 text-end">
-                <a href="{{ route('apps.cetak.rekapitulasi', $data->id) }}" target="_blank" class="btn btn-outline-dark btn-sm"><i class="bx bx-printer"></i> Cetak Rekapitulasi Nilai</a>
+                <a href="{{ route('apps.jadwal-sidang.rekapitulasi', $data->id) }}" target="_blank" class="btn btn-outline-dark btn-sm"><i class="bx bx-printer"></i> Cetak Rekapitulasi Nilai</a>
             </div>
+            @endif
         </div>
 
     </div>

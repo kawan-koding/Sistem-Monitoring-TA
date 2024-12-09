@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -10,25 +11,34 @@
             @page {
                 size: A4;
             }
+
             body {
                 margin: 0 2cm !important;
                 padding: 0;
-                font-size: 12pt;
+                font-size: 11pt;
             }
+
             .no-print {
                 display: none;
             }
+
             .page-break {
                 page-break-after: always;
             }
         }
+
+        .page-break {
+            page-break-after: always;
+        }
+
         body {
-            font-family: 'Times New Roman', Times, serif,;
+            font-family: 'Times New Roman', Times, serif, ;
             margin: 0 2cm;
             padding: 0;
-            overflow-x: hidden; /* Menghindari scrollbar horizontal */
+            overflow-x: hidden;
+            /* Menghindari scrollbar horizontal */
         }
-        
+
         .header-logo img {
             height: 1cm;
             width: 1cm;
@@ -85,11 +95,14 @@
             margin-top: 30px;
         }
 
-        .content-2  table {
+        .content-2 table {
             width: 100%;
             border-collapse: collapse;
         }
-        .content-2 table, .content-2 th, .content-2 td {
+
+        .content-2 table,
+        .content-2 th,
+        .content-2 td {
             border: 1px solid black;
         }
 
@@ -98,8 +111,8 @@
         }
 
         .criteria-container {
-            display: flex;
-            justify-content: space-between;
+            /* display: flex;
+            justify-content: space-between; */
             margin-top: 20px;
         }
 
@@ -130,6 +143,7 @@
             .content {
                 margin-top: 40px;
             }
+
             .header-title {
                 font-size: 5px;
             }
@@ -138,127 +152,130 @@
                 font-size: 6px;
             }
 
-            table, .content, .content-2, .criteria-container {
-                font-size: 0.8em; /* Mengurangi ukuran font di tabel */
+            table,
+            .content,
+            .content-2,
+            .criteria-container {
+                font-size: 0.8em;
+                /* Mengurangi ukuran font di tabel */
             }
 
             .tag-name {
                 margin: 50px 0 0 0;
             }
         }
-        
     </style>
 </head>
+
 <body>
     @foreach ($nilai as $key => $item)
-        
-    <table>
-        <tbody>
-            <tr>
-                <td width="15%" class="header-logo">
-                    <img src="{{ asset('storage/images/settings/' . getSetting('app_logo')) }}" alt="Poliwangi Logo">
-                </td>
-                <td width="85%" class="header-title">
-                    KEMENTERIAN RISET, TEKNOLOGI DAN PENDIDIKAN TINGGI <br>
-                    POLITEKNIK NEGERI BANYUWANGI
-                </td>
-            </tr>
-        </tbody>
-    </table>
-
-    <div class="document-info">
         <table>
             <tbody>
                 <tr>
-                    <td>Kode Dokumen</td>
-                    <td>:</td>
-                    <td>FR–PRS-040</td>
-                </tr>
-                <tr>
-                    <td>Revisi</td>
-                    <td>:</td>
-                    <td>3</td>
+                    <td width="15%" class="header-logo">
+                        <img src="{{ public_path('storage/images/settings/' . getSetting('app_logo')) }}"
+                            alt="Poliwangi Logo">
+                    </td>
+                    <td width="85%" class="header-title">
+                        KEMENTERIAN RISET, TEKNOLOGI DAN PENDIDIKAN TINGGI <br>
+                        POLITEKNIK NEGERI BANYUWANGI
+                    </td>
                 </tr>
             </tbody>
         </table>
-    </div>
 
-    <div class="content">
-        <div class="title">
-            <h5 style="font-weight: 800; text-align: center">LEMBAR PENILAIAN SEMINAR PROPOSAL</h5>
-             @if ($loop->first)
-                <button id="print" class="no-print">Cetak</button>
-            @endif
+        <div class="document-info">
             <table>
-            <tr>
-                <td width="30%">Nama Mahasiswa</td>
-                <td>:</td>
-                <td>{{ $jadwal->tugas_akhir->mahasiswa->nama_mhs }}</td>
-            </tr>
-            <tr>
-                <td>NIM</td>
-                <td>:</td>
-                <td>{{ $jadwal->tugas_akhir->mahasiswa->nim }}</td>
-            </tr>
-            <tr>
-                <td>Judul TA</td>
-                <td>:</td>
-                <td>{{ $jadwal->tugas_akhir->judul }}</td>
-            </tr>
-            <tr>
-                <td>Waktu Pengerjaan TA</td>
-                <td>:</td>
-                <td>-</td>
-            </tr>
-            <tr>
-                <td>Nama Pembimbing</td>
-                <td>:</td>
-            </tr>
-        </table>
-        <ol style="margin: 0px -20px">
-            @foreach ($bimbingUji as $dsn)
-                <li style="margin: 5px 0">{{ $dsn->dosen->name }}</li>
-            @endforeach
-        </ol>
-        </div>
-    </div>
-
-    <div class="content-2">
-        <table>
-            <thead>
-                <tr>
-                    <th>NO</th>
-                    <th>AKTIVITAS YANG DINILAI</th>
-                    <th>NILAI ANGKA</th>
-                    <th>NILAI HURUF</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($item['nilai'] as $index => $nilai)
+                <tbody>
                     <tr>
-                        <td align="center">{{ $index + 1 }}</td>
-                        <td>{{ $nilai['kategori_nilai'] }}</td>
-                        <td align="center">{{ $nilai['nilai'] }}</td>
-                        <td align="center">{{ $nilai['nilai_huruf'] }}</td>
+                        <td>Kode Dokumen</td>
+                        <td>:</td>
+                        <td>FR–PRS-040</td>
                     </tr>
-                @endforeach
-                <tr>
-                    <td colspan="2" align="center"><strong>JUMLAH</strong></td>
-                    <td align="center"></td>
-                    <td align="center"></td>
-                </tr>
-                <tr>
-                    <td colspan="2" align="center"><strong>RATA - RATA</strong></td>
-                    <td align="center">{{ $item['totalNilaiAngka'] }}</td>
-                    <td align="center">{{ $item['totalNilaiHuruf'] }}</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+                    <tr>
+                        <td>Revisi</td>
+                        <td>:</td>
+                        <td>3</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
-    <div class="criteria">
-        <div class="criteria-container">
-            <div class="criteria-left">
+        <div class="content">
+            <div class="title">
+                <h5 style="font-weight: 800; text-align: center">LEMBAR PENILAIAN SEMINAR PROPOSAL</h5>
+                {{-- @if ($loop->first)
+                <button id="print" class="no-print">Cetak</button>
+            @endif --}}
+                <table>
+                    <tr>
+                        <td width="30%">Nama Mahasiswa</td>
+                        <td width="2%">:</td>
+                        <td>{{ $jadwal->tugas_akhir->mahasiswa->nama_mhs }}</td>
+                    </tr>
+                    <tr>
+                        <td>NIM</td>
+                        <td>:</td>
+                        <td>{{ $jadwal->tugas_akhir->mahasiswa->nim }}</td>
+                    </tr>
+                    <tr>
+                        <td>Judul TA</td>
+                        <td>:</td>
+                        <td>{{ $jadwal->tugas_akhir->judul }}</td>
+                    </tr>
+                    <tr>
+                        <td>Waktu Pengerjaan TA</td>
+                        <td>:</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>Nama Pembimbing</td>
+                        <td>:</td>
+                    </tr>
+                </table>
+                <ol style="margin: 0px -20px">
+                    @foreach ($bimbingUji as $dsn)
+                        <li style="margin: 5px 0">{{ $dsn->dosen->name }}</li>
+                    @endforeach
+                </ol>
+            </div>
+        </div>
+
+        <div class="content-2">
+            <table>
+                <thead>
+                    <tr>
+                        <th>NO</th>
+                        <th>AKTIVITAS YANG DINILAI</th>
+                        <th>NILAI ANGKA</th>
+                        <th>NILAI HURUF</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($item['nilai'] as $index => $nilai)
+                        <tr>
+                            <td align="center">{{ $index + 1 }}</td>
+                            <td>{{ $nilai['kategori_nilai'] }}</td>
+                            <td align="center">{{ $nilai['nilai'] }}</td>
+                            <td align="center">{{ $nilai['nilai_huruf'] }}</td>
+                        </tr>
+                    @endforeach
+                    <tr>
+                        <td colspan="2" align="center"><strong>JUMLAH</strong></td>
+                        <td align="center"></td>
+                        <td align="center"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" align="center"><strong>RATA - RATA</strong></td>
+                        <td align="center">{{ $item['totalNilaiAngka'] }}</td>
+                        <td align="center">{{ $item['totalNilaiHuruf'] }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <table width="100%" class="criteria-container">
+            <td class="criteria-left">
                 <p style="font-weight: 800;margin: 0"><i>Kriteria Penilaian:</i></p>
                 <table>
                     <tr>
@@ -286,30 +303,33 @@
                         <td>: Huruf Mutu (D)</td>
                     </tr>
                     <tr>
-                        <td>< 40</td>
+                        <td>
+                            < 40</td>
                         <td>: Huruf Mutu (E)</td>
                     </tr>
                 </table>
-            </div>
-            <div class="criteria-right">
-                <p>Dosen {{ $item['peran']}},</p>
+            </td>
+            <td class="criteria-right">
+                <p>Dosen {{ $item['peran'] }},</p>
                 <div class="footer-signature">
-                    <p class="tag-name">({{ $item['dosen']->name}})</p>
+                    <p class="tag-name">({{ $item['dosen']->name }})</p>
                     <p style="margin: 5px 0;">NIP/NIK/NIPPPK. {{ $item['dosen']->nip }}</p>
                 </div>
-            </div>
-        </div>
-    </div>
-    <hr class="no-print">
-    @if (!$loop->last)
-        <div class="page-break"></div>
-    @endif
+            </td>
+        </table>
+        {{-- </div>
+        </div> --}}
+        {{-- <hr class="no-print"> --}}
+        @if (!$loop->last)
+            <div class="page-break"></div>
+        @endif
     @endforeach
 
-    <script>
+    {{-- <script>
         document.getElementById('print').addEventListener('click', function() {
             window.print();
         });
-    </script>
+    </script> --}}
 </body>
+
 </html>
