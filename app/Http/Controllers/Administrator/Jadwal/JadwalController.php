@@ -234,13 +234,14 @@ class JadwalController extends Controller
             return $order[$item['peran']] ?? 99;
         })->values()->toArray();
         $bu = $jadwal->tugas_akhir->bimbing_uji()->where('jenis','pembimbing')->orderBy('urut', 'asc')->get();
+        $kategoriNilai = KategoriNilai::all();
         $data = [
             'title' => 'Lembar Penilaian',
             'nilai' => $query,
             'jadwal' => $jdwl,
             'bimbingUji' => $bu,
+            'kategoriNilai' => $kategoriNilai
         ];
-
         $pdf = Pdf::loadView('administrator.template.lembar-penilaian', $data);
         $pdf->setPaper('A4', 'portrait');
         return $pdf->stream();

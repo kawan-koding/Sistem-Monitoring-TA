@@ -252,14 +252,25 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($item['nilai'] as $index => $nilai)
-                        <tr>
-                            <td align="center">{{ $index + 1 }}</td>
-                            <td>{{ $nilai['kategori_nilai'] }}</td>
-                            <td align="center">{{ $nilai['nilai'] }}</td>
-                            <td align="center">{{ $nilai['nilai_huruf'] }}</td>
-                        </tr>
-                    @endforeach
+                    @if (!empty($item['nilai']) && count($item['nilai']) > 0)
+                        @foreach ($item['nilai'] as $index => $nilai)
+                            <tr>
+                                <td align="center">{{ $index + 1 }}</td>
+                                <td>{{ $nilai['kategori_nilai'] }}</td>
+                                <td align="center">{{ $nilai['nilai'] }}</td>
+                                <td align="center">{{ $nilai['nilai_huruf'] }}</td>
+                            </tr>
+                        @endforeach
+                    @else
+                        @foreach ($kategoriNilai as $index => $kategori)
+                            <tr>
+                                <td align="center">{{ $index + 1 }}</td>
+                                <td>{{ $kategori->nama }}</td>
+                                <td align="center">0</td>
+                                <td align="center">0</td>
+                            </tr>
+                        @endforeach
+                    @endif
                     <tr>
                         <td colspan="2" align="center"><strong>JUMLAH</strong></td>
                         <td align="center"></td>
