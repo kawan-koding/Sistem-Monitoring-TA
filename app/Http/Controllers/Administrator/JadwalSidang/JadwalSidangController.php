@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Administrator\JadwalSidang;
 
 use Exception;
 use Carbon\Carbon;
+use App\Models\Dosen;
 use App\Models\Revisi;
 use App\Models\Sidang;
 use App\Models\Ruangan;
@@ -15,11 +16,12 @@ use App\Models\Pemberkasan;
 use App\Models\JenisDokumen;
 use Illuminate\Http\Request;
 use App\Models\KategoriNilai;
+use App\Exports\SemuaDataTaExport;
 use Illuminate\Support\Facades\DB;
 use App\Exports\SKSidangAkhirExport;
 use App\Http\Controllers\Controller;
-use App\Models\Dosen;
 use Illuminate\Support\Facades\File;
+use Maatwebsite\Excel\Facades\Excel;
 
 class JadwalSidangController extends Controller
 {
@@ -558,32 +560,34 @@ class JadwalSidangController extends Controller
 
     public function export(Request $request)
     {
-        $status = $request->input('type');
+        $status = $request->input('data');
         $title = '';
         $export = null;
-
-        
         switch ($status) {
             case 'sk_sidang':
                 $export = new SKSidangAkhirExport();
                 $title = 'SK SIDANG';
                 break;
-    
             case 'belum_daftar':
-                $export = new SemproExport($status);
-                $title = 'Belum Terjadwal Sempro';
+                $export = new SemuaDataTaExport($status);
+                $title = 'Belum Daftar Sidang';
                 break;
-    
-            case 'telah_seminar':
-                $export = new SemproExport($status);
-                $title = 'Telah Diseminarkan';
+            case 'sudah_terjadwal':
+                $export = new SemuaDataTaExport($status);
+                $title = 'Sudah Terjadwal Sidang';
                 break;
-    
-            case 'sudah_pemberkasan':
-                $export = new SemproExport($status);
+            case 'sudah_sidang':
+                $export = new SemuaDataTaExport($status);
+                $title = 'Sudah Selesai Sidang';
+                break;
+            case 'sudah_daftar':
+                $export = new SemuaDataTaExport($status);
+                $title = 'Sudah Daftar Sidang';
+                break;
+            case 'sudah_pemberkasan_sidang':
+                $export = new SemuaDataTaExport($status);
                 $title = 'Sudah Pemberkasan Seminar';
                 break;
-    
             default:
                 return redirect()->back()->with('error', 'Jenis export tidak valid.');
         }
@@ -593,6 +597,6 @@ class JadwalSidangController extends Controller
             return redirect()->back()->with('error', 'Data Tidak Ditemukan.');
         }
 
-        return Export::download($export, "{$title}.xlsx");
+        return Excel::download($export, "{$title}.xlsx");
     }
 }

@@ -13,10 +13,10 @@ use App\Models\Pemberkasan;
 use App\Models\JenisDokumen;
 use App\Models\ProgramStudi;
 use Illuminate\Http\Request;
-use App\Exports\SemproExport;
 use App\Models\JadwalSeminar;
 use App\Models\KategoriNilai;
 use App\Exports\STSemproExport;
+use App\Exports\SemuaDataTaExport;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
 use Maatwebsite\Excel\Facades\Excel;
@@ -443,17 +443,17 @@ class JadwalSeminarController extends Controller
                 break;
     
             case 'belum_terjadwal':
-                $export = new SemproExport($status);
+                $export = new SemuaDataTaExport($status);
                 $title = 'Belum Terjadwal Sempro';
                 break;
     
             case 'telah_seminar':
-                $export = new SemproExport($status);
+                $export = new SemuaDataTaExport($status);
                 $title = 'Telah Diseminarkan';
                 break;
     
             case 'sudah_pemberkasan':
-                $export = new SemproExport($status);
+                $export = new SemuaDataTaExport($status);
                 $title = 'Sudah Pemberkasan Seminar';
                 break;
     

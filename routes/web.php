@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Request;
 use App\Http\Controllers\OAuthController;
 use App\Http\Controllers\TopikController;
 use App\Http\Controllers\Auth\AuthController;
@@ -15,8 +16,8 @@ use App\Http\Controllers\DaftarBimbinganDosenController;
 use App\Http\Controllers\PengajuanTaMahasiswaController;
 use App\Http\Controllers\JadwalSeminarMahasiswaController;
 use App\Http\Controllers\Administrator\Role\RoleController;
-use App\Http\Controllers\Administrator\User\UserController;
 
+use App\Http\Controllers\Administrator\User\UserController;
 use App\Http\Controllers\Administrator\Dosen\DosenController;
 use App\Http\Controllers\Administrator\Jadwal\JadwalController;
 use App\Http\Controllers\Administrator\JenisTA\JenisTAController;
@@ -247,6 +248,7 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::post('{jadwal}/nilai',[JadwalController::class, 'nilai'])->name('apps.jadwal.nilai');
         Route::post('{jadwal}/update-status',[JadwalController::class, 'updateStatus'])->name('apps.jadwal.update-status');
     });
+
     Route::prefix('cetak')->group( function(){
         Route::get('{jadwal}/revisi',[JadwalController::class, 'cetakRevisi'])->name('apps.cetak.revisi');
         Route::get('{jadwal}/nilai',[JadwalController::class, 'cetakNilai'])->name('apps.cetak.nilai');
@@ -266,11 +268,10 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::get('{jenisDokumen}/destroy', [JenisDokumenController::class, 'destroy'])->name('apps.jenis-dokumen.delete')->middleware('can:delete-jenis-dokumen');
     });
 
-    Route::prefix('jadwal-sidang')->middleware('can:read-daftar-sidang')->group( function() {
+    Route::prefix('jadwal-sidang')->middleware('can:read-daftar-sidang')->group( function() { 
        Route::get('{jenis?}',[JadwalSidangController::class,'index'])->name('apps.jadwal-sidang'); 
-       Route::get('export',[JadwalSidangController::class,'export'])->name('apps.jadwal-sidang.export'); 
        Route::get('{sidang}/detail',[JadwalSidangController::class,'show'])->name('apps.jadwal-sidang.detail'); 
-    //    Route::get('{sidang}/detail-sidang',[JadwalSidangController::class,'show'])->name('apps.jadwal-sidang.detail-sidang'); 
+       //    Route::get('{sidang}/detail-sidang',[JadwalSidangController::class,'show'])->name('apps.jadwal-sidang.detail-sidang'); 
        Route::post('{sidang}/daftar-sidang',[JadwalSidangController::class,'register'])->name('apps.jadwal-sidang.register'); 
        Route::post('{jadwalSidang}/update',[JadwalSidangController::class,'update'])->name('apps.jadwal-sidang.update'); 
        Route::get('{jadwalSidang}/edit',[JadwalSidangController::class,'edit'])->name('apps.jadwal-sidang.edit'); 
@@ -279,7 +280,8 @@ Route::prefix('apps')->middleware('auth')->group(function () {
        Route::post('{sidang}/revisi', [JadwalSidangController::class, 'revisi'])->name('apps.jadwal-sidang.revisi');
        Route::post('{sidang}/update-status', [JadwalSidangController::class, 'updateStatus'])->name('apps.jadwal-sidang.update-status');
     });
-
+    Route::get('export-jadwal-sidang', [JadwalSidangController::class,'export'])->name('apps.jadwal-sidang.export'); 
+    
     Route::prefix('profile-dosen')->group( function() {
        Route::get('',[ProfileDosenController::class,'index'])->name('apps.profile-dosen'); 
     });
