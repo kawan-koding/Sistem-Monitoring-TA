@@ -23,6 +23,11 @@
                 page-break-after: always;
             }
         }
+
+        .page-break {
+            page-break-after: always;
+        }
+
         body {
             font-family: 'Times New Roman', Times, serif,;
             margin: 0 2cm;
@@ -166,12 +171,13 @@
     </style>
 </head>
 <body>
+    @php $no = 1; @endphp
     @foreach ($rvs as $key => $data)
     <table>
         <tbody>
             <tr>
                 <td width="15%" class="header-logo">
-                    <img src="{{ asset('storage/images/settings/' . getSetting('app_logo')) }}" alt="Poliwangi Logo">
+                    <img src="{{ public_path('storage/images/settings/' . getSetting('app_logo')) }}" alt="Poliwangi Logo">
                 </td>
                 <td width="85%" class="header-title">
                     KEMENTERIAN RISET, TEKNOLOGI DAN PENDIDIKAN TINGGI <br>
@@ -204,23 +210,23 @@
                 PROGRAM STUDI TEKNOLOGI REKAYASA PERANGKAT LUNAK <br>
                 POLITEKNIK NEGERI BANYUWANGI
             </h5>
-            @if ($loop->first)
+            {{-- @if ($loop->first)
                 <button id="print" class="no-print">Cetak</button>
-            @endif
+            @endif --}}
             <table>
                 <tr>
                     <td width="30%">Nama</td>
-                    <td>:</td>
-                    <td>{{ $data['revisi']->bimbingUji->tugas_akhir->mahasiswa->nama_mhs }}</td>
+                    <td width="4%" style="text-align: center">:</td>
+                    <td>{{ $jadwal->tugas_akhir->mahasiswa->nama_mhs }}</td>
                 </tr>
                 <tr>
                     <td>NIM/KELAS</td>
-                    <td>:</td>
-                    <td>{{ $data['revisi']->bimbingUji->tugas_akhir->mahasiswa->nim }}/{{ $data['revisi']->bimbingUji->tugas_akhir->mahasiswa->kelas }}</td>
+                    <td width="4%" style="text-align: center">:</td>
+                    <td>{{ $jadwal->tugas_akhir->mahasiswa->nim }}/{{ $jadwal->tugas_akhir->mahasiswa->kelas }}</td>
                 </tr>
                 <tr>
                     <td>Nama Pembimbing</td>
-                    <td>:</td>
+                    <td width="4%" style="text-align: center">:</td>
                     <td>
                         @foreach ($bimbingUji as $index => $item)
                             {{ $index + 1 }}. {{ $item->dosen->name }}<br>
@@ -229,8 +235,8 @@
                 </tr>
                 <tr>
                     <td>Judul TA</td>
-                    <td>:</td>
-                    <td>{{ $data['revisi']->bimbingUji->tugas_akhir->judul }}</td>
+                    <td width="4%" style="text-align: center">:</td>
+                    <td>{{ $jadwal->tugas_akhir->judul }}</td>
                 </tr>
             </table>
         </div>
@@ -249,7 +255,7 @@
                 <tbody class="custom-body">
                     <tr>
                         <td align="center">1</td>
-                        <td>{!! $data['revisi']->catatan !!}</td>
+                        <td style="height: 320px">{!! isset($data['revisi']) ? $data['revisi']->catatan : '' !!}</td>
                         <td></td>
                     </tr>
                 </tbody>
@@ -259,7 +265,7 @@
     <div class="ttd-container">
         <div class="ttd">
             <p style="margin: 5px 0;">Banyuwangi, {{ \Carbon\Carbon::parse($jadwal->tanggal)->locale('id')->translatedFormat('d F Y') }}</p>
-            <p style="margin: 5px 0;">Dosen Penguji {{ toRoman($key + 1)}},</p>
+            <p style="margin: 5px 0;">Dosen Penguji {{ toRoman($no++)}},</p>
             <div class="footer-signature">
                 <p class="tag-name">({{ $data['dosen']->name }})</p>
                 <p style="margin: 5px 0;">NIP/NIK/NIPPPK. {{ $data['dosen']->nip }}</p>
@@ -267,18 +273,18 @@
         </div>
     </div>
 
-    <hr class="no-print">
+    {{-- <hr class="no-print"> --}}
 
     @if (!$loop->last)
         <div class="page-break"></div>
     @endif
     @endforeach
 
-    <script>
+    {{-- <script>
         document.getElementById('print').addEventListener('click', function() {
             window.print();
         });
 
-    </script>
+    </script> --}}
 </body>
 </html>

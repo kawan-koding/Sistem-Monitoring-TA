@@ -96,8 +96,8 @@
         }
 
         .criteria-container {
-            display: flex;
-            justify-content: space-between;
+            /* display: flex;
+            justify-content: space-between; */
             margin-top: 20px;
         }
 
@@ -168,7 +168,7 @@
         <tbody>
             <tr>
                 <td width="15%" class="header-logo">
-                    <img src="{{ asset('storage/images/settings/' . getSetting('app_logo')) }}" alt="Poliwangi Logo">
+                    <img src="{{ public_path('storage/images/settings/' . getSetting('app_logo')) }}" alt="Poliwangi Logo">
                 </td>
                 <td width="85%" class="header-title">
                     KEMENTERIAN RISET, TEKNOLOGI DAN PENDIDIKAN TINGGI <br>
@@ -198,11 +198,11 @@
     <div class="content">
         <div class="title">
                 <h5 style="font-weight: 800; text-align: center">REKAPITULASI NILAI AKHIR SEMINAR PROPOSAL</h5>
-            <button id="print" class="no-print">Cetak</button>
+            {{-- <button id="print" class="no-print">Cetak</button> --}}
             <table>
             <tr>
                 <td width="30%">Nama Mahasiswa</td>
-                <td>:</td>
+                <td width="2%">:</td>
                 <td>{{ $jadwal->tugas_akhir->mahasiswa->nama_mhs }}</td>
             </tr>
             <tr>
@@ -269,32 +269,38 @@
         </table>
     </div>
 
-    <div class="criteria">
+    <table class="criteria-container" width="105%" style="margin-left: -5px;">
+        <td class="criteria-left">
+            <p style="margin: 5px 0;">Mengetahui,</p>
+            <p style="margin: 5px 0;">Ketua Program Studi</p>
+            <p style="margin: 5px 0;">Teknologi Rekayasa Perangkat Lunak,</p>
+            <div class="footer-signature">
+                <p class="tag-name">({{ $kaprodi->name }})</p>
+                <p style="margin: 5px 0;">NIP/NIK/NIPPPK. {{ $kaprodi->nip }}</p>
+            </div>
+        </td>
+        <td class="criteria-right" style="white-space: nowrap">
+            <p style="margin: 5px 0;">Banyuwangi, {{ \Carbon\Carbon::parse($jadwal->tanggal)->locale('id')->translatedFormat('d F Y') }}</p>
+            <p style="margin: 8px 0;">Dosen Pembimbing,</p>
+            <div class="footer-signature">
+                <p class="tag-name-2">({{ $pemb1->dosen->name }})</p>
+                <p style="margin: 5px 0;">NIP/NIK/NIPPPK. {{ $pemb1->dosen->nip }}</p>
+            </div>
+        </td>
+    </table>
+    {{-- <div class="criteria">
         <div class="criteria-container">
             <div class="criteria-left">
-                <p style="margin: 5px 0;">Mengetahui,</p>
-                <p style="margin: 5px 0;">Ketua Program Studi</p>
-                <p style="margin: 5px 0;">Teknologi Rekayasa Perangkat Lunak,</p>
-                <div class="footer-signature">
-                    <p class="tag-name">({{ $kaprodi->name }})</p>
-                    <p style="margin: 5px 0;">NIP/NIK/NIPPPK. {{ $kaprodi->nip }}</p>
-                </div>
             </div>
             <div class="criteria-right">
-                <p style="margin: 5px 0;">Banyuwangi, {{ \Carbon\Carbon::parse($jadwal->tanggal)->locale('id')->translatedFormat('d F Y') }}</p>
-                <p style="margin: 5px 0;">Dosen Pembimbing,</p>
-                <div class="footer-signature">
-                    <p class="tag-name-2">({{ $pemb1->dosen->name }})</p>
-                    <p style="margin: 5px 0;">NIP/NIK/NIPPPK. {{ $pemb1->dosen->nip }}</p>
-                </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 
-    <script>
+    {{-- <script>
         document.getElementById('print').addEventListener('click', function() {
             window.print();
         });
-    </script>
+    </script> --}}
 </body>
 </html>

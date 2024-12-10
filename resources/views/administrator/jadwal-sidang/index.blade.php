@@ -82,53 +82,81 @@
             @endif
 
             @if (getInfoLogin()->hasRole('Admin'))
-                <div class="col-md-8 col-sm-12">
+                {{-- <div class="col-md-8 col-sm-12"> --}}
                     <form action="">
                         @if(!is_null($status))
                         <input type="hidden" name="status" value="{{ $status }}">
                         @endif
-                        <label for="">Filter Tanggal</label>
-                        <div class="inner mb-3 row">
-                            <div class="col-md-8 col-sm-6">
-                                <div class="position-relative">
-                                    <div class="input-group">
-                                        <input type="date" name="tanggal" class="inner form-control" placeholder="cari berdasarkan tanggal">
-                                        <div class="input-group-prepend">
-                                            <button type="submit" class="btn btn-primary input-group-text inner">Filter</button>
-                                            <a href="{{ route('apps.jadwal-seminar') }}" class="btn btn-secondary input-group-text inner">Reset</a>
+                        @if(!is_null($status_pemberkasan))
+                        <input type="hidden" name="status_pemberkasan" value="{{ $status_pemberkasan }}">
+                        @endif
+                        <div class="row">
+                            <div class="col-md-6 col-sm-12">
+                                <label for="">Filter Tanggal</label>
+                                <div class="inner mb-3 row">
+                                    <div class="col-md-8 col-sm-6">
+                                        <div class="position-relative">
+                                            <div class="input-group">
+                                                <input type="date" name="tanggal" class="inner form-control" placeholder="cari berdasarkan tanggal">
+                                                <div class="input-group-prepend">
+                                                    <button type="submit" class="btn btn-primary input-group-text inner">Filter</button>
+                                                    <a href="{{ route('apps.jadwal-seminar') }}" class="btn btn-secondary input-group-text inner">Reset</a>
+                                                </div>
+                                            </div>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <label for="">Filter berdasarkan Prodi / Periode</label>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <select name="filter1" class="form-control" onchange="this.form.submit()">
+                                            <option value="semua" {{ $filter1 == 'semua' ? 'selected' : '' }}>Semua Program Studi</option>
+                                            @foreach ($programStudies as $item)
+                                                <option value="{{ $item->id }}"{{ $filter1 == $item->id ? 'selected' : '' }}>{{ $item->display }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-6">
+                                        <select name="filter2" class="form-control" onchange="this.form.submit()">
+                                            <option value="semua" {{ $filter2 == 'semua' ? 'selected' : '' }}>Semua Periode</option>
+                                            @foreach ($periodes as $item)
+                                                <option value="{{ $item->id }}" {{ isset($filter2) && $filter2 == $item->id ? 'selected' : '' }}>{{ $item->nama }} - {{ 'Prodi' . ' ' . $item->programStudi->display }}</option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </form>
-                </div>
+                {{-- </div> --}}
 
                 @can('read-daftar-sidang')
                 <ul class="nav nav-tabs nav-tabs-custom nav-justified mt-1 mb-2" role="tablist">
                     <li class="nav-item">
-                        <a class="nav-link @if (url()->full() == route('apps.jadwal-sidang')) active @endif"
+                        <a class="nav-link @if (url()->full() == route('apps.jadwal-sidang') || \Request::is('apps/jadwal-sidang') && \Request::has('tanggal') && !\Request::has('status')) active @endif"
                             href="{{ route('apps.jadwal-sidang') }}">
                             <span class="d-block d-sm-none"><i class="bx bx-timer"></i></span>
                             <span class="d-none d-sm-block">Belum Terjadwal</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link @if (url()->full() == route('apps.jadwal-sidang', ['status' => 'sudah_terjadwal'])) active @endif"
+                        <a class="nav-link @if (url()->full() == route('apps.jadwal-sidang', ['status' => 'sudah_terjadwal']) || \Request::is('apps/jadwal-sidang') && \Request::has('status') && \Request::get('status') == 'sudah_terjadwal')) active @endif"
                             href="{{ route('apps.jadwal-sidang', ['status' => 'sudah_terjadwal']) }}">
                             <span class="d-block d-sm-none"><i class="bx bx-list-check"></i></span>
                             <span class="d-none d-sm-block">Sudah Terjadwal</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link @if (url()->full() == route('apps.jadwal-sidang', ['status' => 'sudah_sidang'])) active @endif"
+                        <a class="nav-link @if (url()->full() == route('apps.jadwal-sidang', ['status' => 'sudah_sidang']) || \Request::is('apps/jadwal-sidang') && \Request::has('status') && \Request::get('status') == 'sudah_sidang') active @endif"
                             href="{{ route('apps.jadwal-sidang', ['status' => 'sudah_sidang']) }}">
                             <span class="d-block d-sm-none"><i class="bx bx-check-circle"></i></span>
                             <span class="d-none d-sm-block">Telah Sidang</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link @if (url()->full() == route('apps.jadwal-sidang', ['status_pemberkasan' => 'sudah_lengkap'])) active @endif"
+                        <a class="nav-link @if (url()->full() == route('apps.jadwal-sidang', ['status_pemberkasan' => 'sudah_lengkap']) || \Request::is('apps/jadwal-sidang') && \Request::has('status_pemberkasan') && \Request::get('status_pemberkasan') == 'sudah_lengkap') active @endif"
                             href="{{ route('apps.jadwal-sidang', ['status_pemberkasan' => 'sudah_lengkap']) }}">
                             <span class="d-block d-sm-none"><i class="bx bx-check-circle"></i></span>
                             <span class="d-none d-sm-block">Sudah Pemberkasan</span>
@@ -194,8 +222,8 @@
                                         <p class="fw-bold small m-0">Pembimbing</p>
                                         <ol>
                                         @for ($i = 0; $i < 2; $i++)
-                                            @if ($item->tugas_akhir->bimbing_uji()->where('jenis', 'pembimbing')->count() > $i)
-                                                @foreach ($item->tugas_akhir->bimbing_uji as $pemb)
+                                            @if ($item->tugas_akhir->bimbing_uji()->where('jenis', 'pembimbing')->where('urut', $i + 1)->count() > 0)
+                                                @foreach ($item->tugas_akhir->bimbing_uji()->where('jenis', 'pembimbing')->get() as $pemb)
                                                     @if ($pemb->jenis == 'pembimbing' && $pemb->urut == 1 && $i == 0)
                                                         <li class="small">{{ $pemb->dosen->name ?? '-' }}</li>
                                                     @endif
@@ -211,8 +239,8 @@
                                         <p class="fw-bold small m-0">Penguji</p>
                                         <ol>
                                         @for ($i = 0; $i < 2; $i++)
-                                            @if ($item->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->count() > $i)    
-                                                @foreach ($item->tugas_akhir->bimbing_uji as $pemb)
+                                            @if ($item->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', $i + 1)->count() > 0)    
+                                                @foreach ($item->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->get() as $pemb)
                                                     @if ($pemb->jenis == 'penguji' && $pemb->urut == 1 && $i == 0)
                                                         <li class="small">{{ $pemb->dosen->name ?? '-' }}</li>
                                                     @endif
@@ -226,10 +254,11 @@
                                         @endfor
                                         </ol>
                                         <p class="fw-bold small m-0">Pengganti</p>
+                                        {{-- @dd($item->tugas_akhir->bimbing_uji()->where('jenis', 'pengganti')->get()) --}}
                                         <ol>
                                             @for($i = 0; $i < 2; $i++)
-                                                @if($item->tugas_akhir->bimbing_uji()->where('jenis', 'pengganti')->count() > $i)
-                                                    @foreach ($item->tugas_akhir->bimbing_uji as $peng)
+                                                @if($item->tugas_akhir->bimbing_uji()->where('jenis', 'pengganti')->where('urut', $i + 1)->count() > 0)
+                                                    @foreach ($item->tugas_akhir->bimbing_uji()->where('jenis', 'pengganti')->get() as $peng)
                                                         @if($peng->jenis == 'pengganti' && $peng->urut == 1 && $i == 0)
                                                             <li class="small">{{  $peng->dosen->name ?? '-' }}</li>
                                                         @endif
@@ -237,6 +266,8 @@
                                                             <li class="small">{{  $peng->dosen->name ?? '-' }}</li>
                                                         @endif
                                                     @endforeach
+                                                @else
+                                                    <li class="small">-</li>
                                                 @endif
                                             @endfor
                                         </ol>
@@ -273,7 +304,7 @@
                                 @endif
                                 @if (getInfoLogin()->hasRole('Admin'))
                                     <td class="text-align-center justify-content-center">
-                                        <p style="white-space: nowrap" class="font-size-12 small {{ !is_null($item->status_sidang) && $item->document_complete ? 'badge badge-soft-success text-success' : 'badge badge-soft-danger text-danger' }}">{{ !is_null($item->status_sidang) && $item->document_complete ? 'Berkas sudah lengkap' : 'Berkas belum lengkap' }}</p>
+                                        <p style="white-space: nowrap" class="font-size-12 small {{ !is_null($item->tugas_akhir->status_sidang) && $item->tugas_akhir->status_pemberkasan == 'sudah_lengkap' ? 'badge badge-soft-success text-success' : 'badge badge-soft-danger text-danger' }}">{{ !is_null($item->tugas_akhir->status_sidang) && $item->tugas_akhir->status_pemberkasan == 'sudah_lengkap' ? 'Berkas sudah lengkap' : 'Berkas belum lengkap' }}</p>
                                     </td>
                                 @endif
                                 <td class="mb-3 text-center">

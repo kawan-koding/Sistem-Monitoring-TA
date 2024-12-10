@@ -26,10 +26,10 @@ class JadwalSeminarController extends Controller
     public function index(Request $request)
     {
         $query = [];
-        $periode = $request->has('filter2') && !empty($request->filter2 && $request->filter2 != 'semua') ? $request->filter2 : PeriodeTa::where('is_active', 1)->first()->id;
+        $periode = $request->has('filter2') && !empty($request->filter2 && $request->filter2 != 'semua') ? [$request->filter2] : PeriodeTa::where('is_active', 1)->get()->pluck('id')->toArray();
         if(getInfoLogin()->hasRole('Admin')) {
             $query = JadwalSeminar::whereHas('tugas_akhir', function ($q) use($periode) { 
-                $q->where('status', 'acc')->where('periode_ta_id', $periode); 
+                $q->where('status', 'acc')->whereIn('periode_ta_id', $periode); 
             });
 
             if($request->has('tanggal') && !empty($request->tanggal)) {
@@ -50,10 +50,16 @@ class JadwalSeminarController extends Controller
                 });
             } else {
                 if($request->has('status_pemberkasan') && !empty($request->status_pemberkasan)) {
-                    $query = $query->whereHas('tugas_akhir', function ($q) use($request) {
-                        $q->whereNull('status_sidang');
-                        $q->where('status_pemberkasan', $request->status_pemberkasan);
-                    });
+                    if($request->status_pemberkasan == 'sudah_lengkap') {
+                        $query = $query->whereHas('tugas_akhir', function ($q) use($request) {
+                            $q->whereNotNull('status_sidang');
+                            $q->orWhereNull('status_sidang')->whereNotNull('status_seminar')->where('status_pemberkasan', 'sudah_lengkap');
+                        });
+                    } else {
+                        $query = $query->whereHas('tugas_akhir', function ($q) use($request) {
+                            $q->whereNull('status_sidang')->where('status_pemberkasan', $request->status_pemberkasan);
+                        });
+                    }
                 } else {
                     $query = $query->where('status', 'belum_terjadwal');
                 }
@@ -85,7 +91,7 @@ class JadwalSeminarController extends Controller
             $mahasiswa = Mahasiswa::where('id', $myId->id)->first();
             if($mahasiswa) {
                 $query = JadwalSeminar::whereHas('tugas_akhir', function ($q) use($periode, $mahasiswa) {
-                    $q->where('periode_ta_id', $periode)->where('mahasiswa_id', $mahasiswa->id);
+                    $q->whereIn('periode_ta_id', $periode)->where('mahasiswa_id', $mahasiswa->id);
                 })->get();
             }
         }

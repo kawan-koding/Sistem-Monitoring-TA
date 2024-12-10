@@ -28,24 +28,32 @@
                 </div>
             @endif
             <div class="d-flex flex-wrap align-items-center gap-2">
-                <a href="{{ getSetting('app_seminar_registration_template') }}" target="_blank" class="btn btn-success mb-2"><i
-                        class="far fa-file-alt"></i> Template Pendaftaran Seminar</a>
+                <a href="{{ getSetting('app_seminar_registration_template') }}" target="_blank"
+                    class="btn btn-success mb-2"><i class="far fa-file-alt"></i> Template Pendaftaran Seminar</a>
                 <a href="{{ getSetting('app_seminar_filing_template') }}" target="_blank" class="btn btn-secondary mb-2"><i
                         class="far fa-file-alt"></i> Template Pemberkasan Seminar</a>
-                @if(session('switchRoles') == 'Admin')   
-                <div class="btn-group" role="group">
-                    <button id="btnGroupVerticalDrop1" type="button" class="btn btn-primary dropdown-toggle mb-2" style="max-width: 150px;" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fa fa-file-excel me-2"></i> Export <i class="mdi mdi-chevron-down"></i>
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1">
-                        <a class="dropdown-item" target="_blank" href="{{ route('apps.jadwal-seminar.export', ['type' => 'belum_terjadwal'])}}">Belum Terjadwal</a>
-                        <a class="dropdown-item" target="_blank" href="{{ route('apps.jadwal-seminar.export', ['type' => 'telah_seminar'])}}">Telah Diseminarkan</a>
-                        <a class="dropdown-item" target="_blank" href="{{ route('apps.jadwal-seminar.export', ['type' => 'sudah_pemberkasan'])}}">Sudah Pemberkasan Seminar</a>
-                        <a class="dropdown-item" target="_blank" href="{{ route('apps.jadwal-seminar.export', ['type' => 'st_sempro'])}}">ST Sempro</a>
+                @if (session('switchRoles') == 'Admin')
+                    <div class="btn-group" role="group">
+                        <button id="btnGroupVerticalDrop1" type="button" class="btn btn-primary dropdown-toggle mb-2"
+                            style="max-width: 150px;" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-file-excel me-2"></i> Export <i class="mdi mdi-chevron-down"></i>
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1">
+                            <a class="dropdown-item" target="_blank"
+                                href="{{ route('apps.jadwal-seminar.export', ['type' => 'belum_terjadwal']) }}">Belum
+                                Terjadwal</a>
+                            <a class="dropdown-item" target="_blank"
+                                href="{{ route('apps.jadwal-seminar.export', ['type' => 'telah_seminar']) }}">Telah
+                                Diseminarkan</a>
+                            <a class="dropdown-item" target="_blank"
+                                href="{{ route('apps.jadwal-seminar.export', ['type' => 'sudah_pemberkasan']) }}">Sudah
+                                Pemberkasan Seminar</a>
+                            <a class="dropdown-item" target="_blank"
+                                href="{{ route('apps.jadwal-seminar.export', ['type' => 'st_sempro']) }}">ST Sempro</a>
+                        </div>
                     </div>
-                </div>
+                @endif
             </div>
-            @endif
             <hr>
             @if (getInfoLogin()->hasRole('Admin'))
                 <form action="">
@@ -79,17 +87,24 @@
                             <div class="row">
                                 <div class="col-6">
                                     <select name="filter1" class="form-control" onchange="this.form.submit()">
-                                        <option value="semua" {{ $filter1 == 'semua' ? 'selected' : '' }}>Semua Program Studi</option>
+                                        <option value="semua" {{ $filter1 == 'semua' ? 'selected' : '' }}>Semua Program
+                                            Studi</option>
                                         @foreach ($programStudies as $item)
-                                            <option value="{{ $item->id }}"{{ $filter1 == $item->id ? 'selected' : '' }}>{{ $item->display }}</option>
+                                            <option
+                                                value="{{ $item->id }}"{{ $filter1 == $item->id ? 'selected' : '' }}>
+                                                {{ $item->display }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <div class="col-6">
                                     <select name="filter2" class="form-control" onchange="this.form.submit()">
-                                        <option value="semua" {{ $filter2 == 'semua' ? 'selected' : '' }}>Semua Periode</option>
+                                        <option value="semua" {{ $filter2 == 'semua' ? 'selected' : '' }}>Semua Periode
+                                        </option>
                                         @foreach ($periodes as $item)
-                                            <option value="{{ $item->id }}" {{ ($filter2 ?? $periode) == $item->id ? 'selected' : '' }}>{{ $item->nama }} - {{ 'Prodi' . ' ' . $item->programStudi->display }}</option>
+                                            <option value="{{ $item->id }}"
+                                                {{ isset($filter2) && $filter2 == $item->id ? 'selected' : '' }}>
+                                                {{ $item->nama }} - {{ 'Prodi' . ' ' . $item->programStudi->display }}
+                                            </option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -234,8 +249,8 @@
                                 @if (getInfoLogin()->hasRole('Admin'))
                                     <td class="text-align-center justify-content-center">
                                         <p style="white-space: nowrap"
-                                            class="font-size-12 {{ $item->tugas_akhir->status_pemberkasan == 'sudah_lengkap' ? 'badge badge-soft-success text-success' : 'badge badge-soft-danger text-danger' }}">
-                                            {{ $item->tugas_akhir->status_pemberkasan == 'sudah_lengkap' ? 'Berkas sudah lengkap' : 'Berkas belum lengkap' }}
+                                            class="font-size-12 {{ $item->tugas_akhir->status_pemberkasan == 'sudah_lengkap' || !is_null($item->tugas_akhir->status_sidang) ? 'badge badge-soft-success text-success' : 'badge badge-soft-danger text-danger' }}">
+                                            {{ $item->tugas_akhir->status_pemberkasan == 'sudah_lengkap' || !is_null($item->tugas_akhir->status_sidang) ? 'Berkas sudah lengkap' : 'Berkas belum lengkap' }}
                                         </p>
                                     </td>
                                 @endif
@@ -276,7 +291,7 @@
                             </tr>
                         @empty
                             <tr class="text-center">
-                                <td colspan="7">No data available in table</td>
+                                <td colspan="8">No data available in table</td>
                             </tr>
                         @endforelse
                     </tbody>

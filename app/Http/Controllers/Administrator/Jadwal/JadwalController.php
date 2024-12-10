@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use App\Models\JadwalSeminar;
 use App\Models\KategoriNilai;
 use App\Http\Controllers\Controller;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 
 class JadwalController extends Controller
@@ -160,18 +161,24 @@ class JadwalController extends Controller
         $jdwl = JadwalSeminar::with(['tugas_akhir.bimbing_uji.revisi.bimbingUji.dosen','tugas_akhir.bimbing_uji.revisi.bimbingUji.tugas_akhir.mahasiswa'])->findOrFail($jadwal->id);
         $allRevisis = $jdwl->tugas_akhir->bimbing_uji->filter(function($bimbingUji) {
             return $bimbingUji->jenis === 'penguji';
-        })->flatMap(function ($bimbingUji) {
+        })->map(function ($bimbingUji) {
+            // dd($bimbingUji);
             if ($bimbingUji->revisi->isEmpty()) {
-                return [];
+                return [
+                    'revisi' => null,
+                    'dosen' => $bimbingUji->dosen,
+                ];
+                // return $bimbingUji->map(function($item) {
+                // });
             }
             return $bimbingUji->revisi->filter(function ($revisi) {
-                return $revisi->type == 'Seminar';
+                return $revisi->type == 'Sidang';
             })->map(function ($revisi) use ($bimbingUji) {
                 return [
                     'revisi' => $revisi,
                     'dosen' => $bimbingUji->dosen,
                 ];
-            });
+            })->first();
         })->toArray();
         $bu = $jadwal->tugas_akhir->bimbing_uji()->where('jenis','pembimbing')->orderBy('urut', 'asc')->get();
         $data = [
@@ -181,7 +188,11 @@ class JadwalController extends Controller
             'bimbingUji' => $bu,
         ];
 
-        return view('administrator.template.revisi', $data);
+        // dd($allRevisis);
+        $pdf = Pdf::loadView('administrator.template.revisi', $data);
+        $pdf->setPaper('A4', 'portrait');
+        return $pdf->stream();
+        // return view('administrator.template.revisi', $data);
     }
     
     public function cetakNilai(JadwalSeminar $jadwal)
@@ -230,7 +241,10 @@ class JadwalController extends Controller
             'bimbingUji' => $bu,
         ];
 
-        return view('administrator.template.lembar-penilaian', $data);
+        $pdf = Pdf::loadView('administrator.template.lembar-penilaian', $data);
+        $pdf->setPaper('A4', 'portrait');
+        return $pdf->stream();
+        // return view('administrator.template.lembar-penilaian', $data);
     }
     
     public function cetakRekap(JadwalSeminar $jadwal)
@@ -303,7 +317,10 @@ class JadwalController extends Controller
             'kaprodi' => $dosen,
         ];
 
-        return view('administrator.template.rekapitulasi', $data);
+        $pdf = Pdf::loadView('administrator.template.rekapitulasi', $data);
+        $pdf->setPaper('A4', 'portrait');
+        return $pdf->stream();
+        // return view('administrator.template.rekapitulasi', $data);
 
     }
 
