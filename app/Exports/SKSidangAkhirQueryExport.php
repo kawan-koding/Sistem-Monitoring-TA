@@ -45,20 +45,75 @@ class SKSidangAkhirQueryExport implements FromCollection, WithHeadings, WithMapp
                 $bimbingUjiData = $tugasAkhir->bimbing_uji->mapWithKeys( function($item) {
                     return [ $item->jenis . $item->urut => $item->dosen->name ?? '-' ];
                 });
+                $nilai = $tugasAkhir->bimbing_uji->map(function ($bimbingUji) {
+                  $nilaiSidang = $bimbingUji->penilaian->filter(function ($nilai) {
+                      return $nilai->type == 'Sidang';
+                  });
+                  dd($nilaiSidang);
+                });
+                // $nilai = $tugasAkhir->bimbing_uji->map(function ($bimbingUji) {
+                //     $nilaiSeminar = $bimbingUji->penilaian->filter(function ($nilai) {
+                //         return $nilai->type == 'Sidang';
+                //     });
+                //     $totalNilaiAngka = $nilaiSeminar->avg('nilai');
+                //     $totalNilaiHuruf = grade($totalNilaiAngka); 
+                //     $peran = '';
+                //     if ($bimbingUji->jenis == 'pembimbing') {
+                //         $peran = 'Pembimbing ' . toRoman($bimbingUji->urut);
+                //     } elseif ($bimbingUji->jenis == 'penguji') {
+                //         $peran = 'Penguji ' . toRoman($bimbingUji->urut);
+                //     }
+                //     return [
+                //         'peran' => $peran,
+                //         'dosen' => $bimbingUji->dosen,
+                //         'nilai' => number_format($totalNilaiAngka, 2),
+                //     ];        
+                // })->toArray();
+                
+                // $weights = [
+                //     'Pembimbing I' => 0.30,
+                //     'Pembimbing II' => 0.30,
+                //     'Penguji I' => 0.20,
+                //     'Penguji II' => 0.20,
+                // ];
+
+                // $rekap = [];
+                // $totalNilai = 0;
+                // $totalNilaiTertimbang = 0;
+
+                // foreach ($nilai as $item) {
+                //     $peran = $item['peran'];
+                //     if (isset($weights[$peran])) {
+                //         $weightedValue = $weights[$peran] * $item['nilai'];
+                //         $rekap[] = [
+                //             'penilai' => $peran,
+                //             'nilai' => number_format($item['nilai'], 2),
+                //             'persentase' => ($weights[$peran] * 100) . '% X ' . number_format($item['nilai'], 2) . ' = ' . number_format($weightedValue, 2),
+                //         ];
+
+                //         $totalNilai += $item['nilai'];
+                //         $totalNilaiTertimbang += $weightedValue;
+                //     }
+                // }
+                // $totalNilaiHuruf = grade($totalNilai / count($rekap));
+                
                 $tugasAkhirData->push([
                     'mahasiswa' => $mhs,
                     'tugasAkhir' => $tugasAkhir,
-                    'bimbingUji' => $bimbingUjiData
+                    'bimbingUji' => $bimbingUjiData,
+                    // 'sidang' => $tugasAkhir->sidang,
+                    // 'nilai' => $nilai,
                 ]);
             } else {
                 $tugasAkhirData->push([
                     'mahasiswa' => $mhs,
                     'tugasAkhir' => $tugasAkhir,
-                    'bimbingUji' => []
+                    'bimbingUji' => [],
+                    'sidang' => $tugasAkhir->sidang,
+                    'nilai' => [],
                 ]);
             }
         }
-        
         return $tugasAkhirData;
     }
 
@@ -77,13 +132,13 @@ class SKSidangAkhirQueryExport implements FromCollection, WithHeadings, WithMapp
             $mahasiswa['nama_mhs'] ?? '-',
             "'" .  $mahasiswa['nim'] ?? '-',
             $pembimbing1,
-            'Tepat Waktu',
+            '-',
             $pembimbing2,
-            'Tidak Tepat Waktu',
+            '-',
             $penguji1,
             $penguji2,
             $tugasAkhir->judul ?? '-',
-            'YUDISIUM',
+            '-',
             'TANGGAL SIDANG',
             'NILAI HURUF',
             'NILAI ANGKA',

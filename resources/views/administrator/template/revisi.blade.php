@@ -157,8 +157,6 @@
                 font-size: 0.8em;
             }
 
-
-
             .tag-name {
                 margin: 50px 0 0 0;
             }
@@ -244,25 +242,23 @@
 
     <div class="content-2">
         <table>
-            <tbody>
             <thead>
-                    <tr>
-                        <th width="10%">NO</th>
-                        <th width="70%">URAIAN PERBAIKAN</th>
-                        <th width="20%">VALIDASI <br>(PARAF)</th>
-                    </tr>
-                </thead>
-                <tbody class="custom-body">
-                    <tr>
-                        <td align="center">1</td>
-                        <td style="height: 320px">{!! isset($data['revisi']) ? $data['revisi']->catatan : '' !!}</td>
-                        <td></td>
-                    </tr>
-                </tbody>
+                <tr>
+                    <th width="10%">NO</th>
+                    <th width="70%">URAIAN PERBAIKAN</th>
+                    <th width="20%">VALIDASI <br>(PARAF)</th>
+                </tr>
+            </thead>
+            <tbody class="custom-body">
+                <tr>
+                    <td align="center">1</td>
+                    <td style="height: 320px">{!! isset($data['revisi']) ? $data['revisi']->catatan : '' !!}</td>
+                    <td></td>
+                </tr>
             </tbody>
         </table>
     </div>
-    <div class="ttd-container">
+    <div class="ttd-container" style="margin-left: 150px">
         <div class="ttd">
             <p style="margin: 5px 0;">Banyuwangi, {{ \Carbon\Carbon::parse($jadwal->tanggal)->locale('id')->translatedFormat('d F Y') }}</p>
             <p style="margin: 5px 0;">Dosen Penguji {{ toRoman($no++)}},</p>
