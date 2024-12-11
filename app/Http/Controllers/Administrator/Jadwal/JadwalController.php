@@ -162,17 +162,14 @@ class JadwalController extends Controller
         $allRevisis = $jdwl->tugas_akhir->bimbing_uji->filter(function($bimbingUji) {
             return $bimbingUji->jenis === 'penguji';
         })->map(function ($bimbingUji) {
-            // dd($bimbingUji);
             if ($bimbingUji->revisi->isEmpty()) {
                 return [
                     'revisi' => null,
                     'dosen' => $bimbingUji->dosen,
                 ];
-                // return $bimbingUji->map(function($item) {
-                // });
             }
             return $bimbingUji->revisi->filter(function ($revisi) {
-                return $revisi->type == 'Sidang';
+                return $revisi->type == 'Seminar';
             })->map(function ($revisi) use ($bimbingUji) {
                 return [
                     'revisi' => $revisi,
@@ -188,11 +185,9 @@ class JadwalController extends Controller
             'bimbingUji' => $bu,
         ];
 
-        // dd($allRevisis);
         $pdf = Pdf::loadView('administrator.template.revisi', $data);
         $pdf->setPaper('A4', 'portrait');
         return $pdf->stream();
-        // return view('administrator.template.revisi', $data);
     }
     
     public function cetakNilai(JadwalSeminar $jadwal)

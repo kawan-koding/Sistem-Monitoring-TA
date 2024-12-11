@@ -57,7 +57,7 @@
                                     <th>Judul</th>
                                     <th>Ruangan</th>
                                     <th>Status</th>
-                                    <th width="20%">Aksi</th>
+                                    <th>Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>

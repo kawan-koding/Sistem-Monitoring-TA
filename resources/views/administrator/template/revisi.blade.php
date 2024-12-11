@@ -263,8 +263,8 @@
             <p style="margin: 5px 0;">Banyuwangi, {{ \Carbon\Carbon::parse($jadwal->tanggal)->locale('id')->translatedFormat('d F Y') }}</p>
             <p style="margin: 5px 0;">Dosen Penguji {{ toRoman($no++)}},</p>
             <div class="footer-signature">
-                <p class="tag-name">({{ $data['dosen']->name }})</p>
-                <p style="margin: 5px 0;">NIP/NIK/NIPPPK. {{ $data['dosen']->nip }}</p>
+                <p class="tag-name">({{ $data['dosen']->name ?? '' }})</p>
+                <p style="margin: 5px 0;">NIP/NIK/NIPPPK. {{ $data['dosen']->nip ?? '' }}</p>
             </div>
         </div>
     </div>
