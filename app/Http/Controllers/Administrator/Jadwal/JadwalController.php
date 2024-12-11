@@ -8,16 +8,17 @@ use App\Models\Revisi;
 use App\Models\Penilaian;
 use App\Models\PeriodeTa;
 use App\Models\BimbingUji;
+use App\Models\ProgramStudi;
 use Illuminate\Http\Request;
 use App\Models\JadwalSeminar;
 use App\Models\KategoriNilai;
-use App\Http\Controllers\Controller;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 
 class JadwalController extends Controller
 {
-    public function index($jenis = 'pembimbing')
+    public function index(Request $request, $jenis = 'pembimbing')
     {
         $user = getInfoLogin()->userable;
         $periode = PeriodeTa::where('is_active', 1)->first();
@@ -25,7 +26,15 @@ class JadwalController extends Controller
         if(getInfoLogin()->hasRole('Dosen')) {
             $query = BimbingUji::where('dosen_id', $user->id)->where('jenis', $jenis)->whereHas('tugas_akhir', function($q) use ($periode) {
                 $q->where('periode_ta_id', $periode->id);
-            })->get();
+            });
+
+            if ($request->has('program_studi') && !empty($request->program_studi) && $request->program_studi !== 'semua') {
+                $query->whereHas('tugas_akhir.mahasiswa', function($query) use ($request) {
+                    $query->whereProgramStudiId($request->program_studi);
+                });
+            }
+
+            $query = $query->get();
         }
         $data = [
             'title' => 'Jadwal',
@@ -39,6 +48,7 @@ class JadwalController extends Controller
                     'is_active' => true
                 ]
             ],
+            'prodi' => ProgramStudi::all(),
             'data' => $query,
         ];
         return view('administrator.jadwal.index', $data);
