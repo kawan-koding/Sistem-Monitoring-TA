@@ -231,7 +231,7 @@ class JadwalSeminarController extends Controller
         ]);
         try {
             // dd($request->tanggal);
-            $periode = PeriodeTa::where('is_active', 1)->first();
+            $periode = PeriodeTa::where('is_active', 1)->where('program_studi_id', $jadwalSeminar->tugas_akhir->mahasiswa->program_studi_id)->first();
             if(!is_null($periode) && Carbon::createFromFormat('Y-m-d',$request->tanggal)->greaterThan(Carbon::parse($periode->akhir_seminar))){
                 return redirect()->back()->with(['error' => 'Jadwal seminar melebihi batas periode']);
             }
