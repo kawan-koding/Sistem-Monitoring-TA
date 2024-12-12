@@ -22,6 +22,7 @@ class TugasAkhirExport implements WithMultipleSheets
             Redirect::back()->with('error', 'Tidak ada periode aktif di Prodi ini')->send();
         }
     }
+    
     public function sheets(): array
     {
         $periode = PeriodeTa::whereIsActive(true)->whereProgramStudiId($this->prodiId)->first();

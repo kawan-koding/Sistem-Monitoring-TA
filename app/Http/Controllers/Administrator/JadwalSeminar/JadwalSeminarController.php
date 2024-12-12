@@ -13,10 +13,10 @@ use App\Models\Pemberkasan;
 use App\Models\JenisDokumen;
 use App\Models\ProgramStudi;
 use Illuminate\Http\Request;
-use App\Exports\SemproExport;
 use App\Models\JadwalSeminar;
 use App\Models\KategoriNilai;
 use App\Exports\STSemproExport;
+use App\Exports\SemuaDataTaExport;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
 use Maatwebsite\Excel\Facades\Excel;
@@ -26,10 +26,10 @@ class JadwalSeminarController extends Controller
     public function index(Request $request)
     {
         $query = [];
-        $periode = $request->has('filter2') && !empty($request->filter2 && $request->filter2 != 'semua') ? $request->filter2 : PeriodeTa::where('is_active', 1)->first()->id;
+        $periode = $request->has('filter2') && !empty($request->filter2 && $request->filter2 != 'semua') ? [$request->filter2] : PeriodeTa::where('is_active', 1)->get()->pluck('id')->toArray();
         if(getInfoLogin()->hasRole('Admin')) {
             $query = JadwalSeminar::whereHas('tugas_akhir', function ($q) use($periode) { 
-                $q->where('status', 'acc')->where('periode_ta_id', $periode); 
+                $q->where('status', 'acc')->whereIn('periode_ta_id', $periode); 
             });
 
             if($request->has('tanggal') && !empty($request->tanggal)) {
@@ -91,7 +91,7 @@ class JadwalSeminarController extends Controller
             $mahasiswa = Mahasiswa::where('id', $myId->id)->first();
             if($mahasiswa) {
                 $query = JadwalSeminar::whereHas('tugas_akhir', function ($q) use($periode, $mahasiswa) {
-                    $q->where('periode_ta_id', $periode)->where('mahasiswa_id', $mahasiswa->id);
+                    $q->whereIn('periode_ta_id', $periode)->where('mahasiswa_id', $mahasiswa->id);
                 })->get();
             }
         }
@@ -449,17 +449,17 @@ class JadwalSeminarController extends Controller
                 break;
     
             case 'belum_terjadwal':
-                $export = new SemproExport($status);
+                $export = new SemuaDataTaExport($status);
                 $title = 'Belum Terjadwal Sempro';
                 break;
     
             case 'telah_seminar':
-                $export = new SemproExport($status);
+                $export = new SemuaDataTaExport($status);
                 $title = 'Telah Diseminarkan';
                 break;
     
             case 'sudah_pemberkasan':
-                $export = new SemproExport($status);
+                $export = new SemuaDataTaExport($status);
                 $title = 'Sudah Pemberkasan Seminar';
                 break;
     

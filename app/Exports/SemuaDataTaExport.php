@@ -4,10 +4,10 @@ namespace App\Exports;
 
 use App\Models\PeriodeTa;
 use App\Models\TugasAkhir;
-use App\Exports\SemproQueryExport;
+use App\Exports\SemuaDataTaQueryExport;
 use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 
-class SemproExport implements WithMultipleSheets
+class SemuaDataTaExport implements WithMultipleSheets
 {
     protected $status;
 
@@ -20,7 +20,7 @@ class SemproExport implements WithMultipleSheets
         $sheets = [];
         $activePeriods = PeriodeTa::whereIsActive(true)->with('programStudi')->get();
         foreach ($activePeriods as $periode) {
-            $sheets[] = new SemproQueryExport(
+            $sheets[] = new SemuaDataTaQueryExport(
                 $periode->id,
                 $periode->program_studi_id,
                 $periode->programStudi->display,

@@ -13,7 +13,7 @@
                     class="nav-link d-block border-start border-primary text-primary px-4 py-2 fw-bold"
                     style="border-width: 3px!important">Revisi</a>
                 <a href="javascript:void(0)" data-toggle="tab" data-target="#ratingTab" class="nav-link d-block px-3 py-2">Penilaian</a>
-                @if($data->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->first()->jenis == 'pembimbing' && $data->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->first()->urut == 1)
+                @if($data->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->first()->jenis == 'pembimbing' && $data->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->first()->urut == 1 || getInfoLogin()->hasRole('Mahasiswa'))
                 <a href="javascript:void(0)" data-toggle="tab" data-target="#ratingRecapTab"
                     class="nav-link d-block px-3 py-2">Rekapitulasi Nilai</a>
                 @endif

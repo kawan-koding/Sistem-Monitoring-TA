@@ -16,7 +16,7 @@ aria-labelledby="myModalLabel" aria-hidden="true">
                 <div class="mb-3">
                     <label for="">Jenis Dokumen <span class="text-danger">*</span></label>
                     <select name="jenis" id="jenis" class="form-control">
-                        <option value="" selected disabled hidden>Pilih Jurusan</option>
+                        <option value="" selected disabled hidden>Pilih Jenis Dokumen</option>
                         <option value="pra_seminar">Pra Seminar</option>
                         <option value="seminar">Seminar</option>
                         <option value="pra_sidang">Pra Sidang</option>

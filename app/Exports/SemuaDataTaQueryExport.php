@@ -11,7 +11,7 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class SemproQueryExport implements FromCollection, WithHeadings, WithMapping, WithStyles, WithTitle
+class SemuaDataTaQueryExport implements FromCollection, WithHeadings, WithMapping, WithStyles, WithTitle
 {
     protected $periodeId;
     protected $prodiId;
@@ -36,29 +36,34 @@ class SemproQueryExport implements FromCollection, WithHeadings, WithMapping, Wi
 
     public function collection()
     {
-        if($this->status == 'sudah_pemberkasan') {
-            $ta = TugasAkhir::with(['mahasiswa', 'jadwal_seminar', 'bimbing_uji'])->wherePeriodeTaId($this->periodeId)->whereStatus('acc')->whereNull('status_sidang')->whereStatusPemberkasan('sudah_lengkap')->get();
-        } else {
-            $ta = TugasAkhir::with(['mahasiswa', 'jadwal_seminar', 'bimbing_uji'])->wherePeriodeTaId($this->periodeId)->whereStatus('acc')->whereHas('jadwal_seminar', function($q) { 
-                    $q->whereStatus($this->status);
-                })->get();
-        }
+        $query = TugasAkhir::with(['mahasiswa', 'jadwal_seminar', 'bimbing_uji','sidang'])->wherePeriodeTaId($this->periodeId)->whereStatus('acc');
 
-        $ta = $ta->map(function ($tugasAkhir, $index) {
+        if($this->status == 'sudah_pemberkasan') {
+            $query->whereNull('status_sidang')->whereStatusPemberkasan('sudah_lengkap');
+        } elseif(in_array($this->status, ['belum_terjadwal','telah_seminar','sudah_pemberkasan'])) {
+            $query->whereHas('jadwal_seminar', function($q) { 
+                $q->whereStatus($this->status);
+            });
+        } elseif(in_array($this->status, ['belum_daftar','sudah_sidang','sudah_terjadwal','sudah_daftar'])) {
+            $query->whereHas('sidang', function($q) { 
+                $q->whereStatus($this->status);
+            });
+        } elseif($this->status == 'sudah_pemberkasan_sidang') {
+            $query->whereStatusSidang($this->status);
+        }
+        $query = $query->get();
+        $query = $query->map(function ($tugasAkhir, $index) {
             $bimbingUjiData = $tugasAkhir->bimbing_uji->mapWithKeys(function ($item) {
                 return [$item->jenis . $item->urut => $item->dosen->name ?? '-'];
             });
             $tugasAkhir->bimbing_uji_data = $bimbingUjiData;
             $tugasAkhir->kelas = $tugasAkhir->mahasiswa->kelas;
-
             return $tugasAkhir;
         });
-
-        $ta = $ta->sortBy(function ($tugasAkhir) {
+        $query = $query->sortBy(function ($tugasAkhir) {
             return $tugasAkhir->kelas;
         });
-
-        return $ta;
+        return $query;
     }
 
     public function headings(): array
@@ -86,8 +91,8 @@ class SemproQueryExport implements FromCollection, WithHeadings, WithMapping, Wi
             $tugasAkhir->judul ?? '-',
             isset($tugasAkhir->bimbing_uji_data['pembimbing1']) ? $tugasAkhir->bimbing_uji_data['pembimbing1'] : '-',
             isset($tugasAkhir->bimbing_uji_data['pembimbing2']) ? $tugasAkhir->bimbing_uji_data['pembimbing2'] : '-',
-            isset($tugasAkhir->bimbing_uji_data['penguji1']) ? $tugasAkhir->bimbing_uji_data['penguji1'] : '-',
-            isset($tugasAkhir->bimbing_uji_data['penguji2']) ? $tugasAkhir->bimbing_uji_data['penguji2'] : '-',
+            isset($tugasAkhir->bimbing_uji_data['pengganti1']) ? $tugasAkhir->bimbing_uji_data['pengganti1'] : (isset($tugasAkhir->bimbing_uji_data['penguji1']) ? $tugasAkhir->bimbing_uji_data['penguji1']  : '-'),
+            isset($tugasAkhir->bimbing_uji_data['pengganti2']) ? $tugasAkhir->bimbing_uji_data['pengganti2'] : (isset($tugasAkhir->bimbing_uji_data['penguji2']) ? $tugasAkhir->bimbing_uji_data['penguji2'] : '-'),
         ];
     }
 

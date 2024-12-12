@@ -49,21 +49,41 @@
                             </a>
                         </li>
                     </ul>
+
+                    <div class="mb-3 d-flex gap-2 flex-column justify-content-end flex-md-row" >
+                        <form action="">
+                            <select name="program_studi" id="program_studi" class="form-control" style="min-width: 300px; width: 100%" onchange="this.form.submit()">
+                                <option selected disabled hidden>Filter Program Studi</option>
+                                <option value="semua" {{ request('program_studi') == 'semua' ? 'selected' : '' }}>Semua Program Studi</option>
+                                @foreach($prodi as $p)
+                                    <option value="{{ $p->id }}" {{ request('program_studi') == $p->id ? 'selected' : '' }}>{{ $p->display }}</option>
+                                @endforeach
+                            </select>
+                        </form>
+                    </div>
+                    <hr>
+                    
                     <div class="table-responsive">
                         <table class="table table-striped" id="datatable">
                             <thead>
                                 <tr>
                                     <th width="2%">No</th>
+                                    <th>Mahasiswa</th>
                                     <th>Judul</th>
                                     <th>Ruangan</th>
                                     <th>Status</th>
-                                    <th width="20%">Aksi</th>
+                                    <th>Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($data as $item)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
+                                        <td>
+                                            <p class="m-0"><span class="badge badge-soft-primary">{{ !is_null($item->tugas_akhir->mahasiswa->programStudi) ? $item->tugas_akhir->mahasiswa->programStudi->display : '' }}</span></p>
+                                            <p class="m-0"><strong>{{ $item->tugas_akhir->mahasiswa->nama_mhs }} - {{ $item->tugas_akhir->mahasiswa->kelas }}</strong></p>
+                                            <p class="m-0 p-0 text-muted small">NIM : {{$item->tugas_akhir->mahasiswa->nim}}</p>
+                                        </td>
                                         <td>
                                             @if (!is_null($item->tugas_akhir->jadwal_seminar()->orderBy('id', 'desc')->first()) && $item->tugas_akhir->jadwal_seminar()->orderBy('id', 'desc')->first()->status == 'belum_terjadwal')
                                                 <span class="badge rounded-pill badge-soft-primary">Belum Terjadwal</span>
@@ -74,12 +94,8 @@
                                                     <span class="badge rounded-pill badge-soft-primary">Telah Seminar</span>
                                                 @endif
                                             @endif
-                                            <h5 class="font-size-14 mb-0">
-                                                {{ $item->tugas_akhir->judul }}
-                                            </h5>
-                                            <p class="mt-0 text-muted small">{{ $item->tugas_akhir->topik->nama_topik }} -
-                                                {{ $item->tugas_akhir->jenis_ta->nama_jenis }}</p>
-                                            <p>{{ $item->tugas_akhir->mahasiswa->nama_mhs }}</p>
+                                            <p class="m-0"><strong>{{ $item->tugas_akhir->judul }}</strong></p>
+                                            <p class="m-0 text-muted small">{{ $item->tugas_akhir->topik->nama_topik }} - {{ $item->tugas_akhir->jenis_ta->nama_jenis}}</p>
                                         </td>
                                         <td>
                                             <strong>{{ is_null($item->tugas_akhir->jadwal_seminar()->orderBy('id', 'desc')->first()) || is_null($item->tugas_akhir->jadwal_seminar()->orderBy('id', 'desc')->first()->ruangan) ? '-' : $item->tugas_akhir->jadwal_seminar()->orderBy('id', 'desc')->first()->ruangan->nama_ruangan }}</strong>
