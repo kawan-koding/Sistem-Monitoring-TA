@@ -32,8 +32,8 @@
             {{-- <a href="#" target="_blank" class="btn btn-success mb-2"><i class="far fa-file-alt"></i> Template Pendaftaran Sidang</a>
             <a href="#" target="_blank" class="btn btn-secondary mb-2"><i class="far fa-file-alt"></i> Template Pemberkasan Sidang</a> --}}
             <div class="d-flex flex-wrap align-items-center gap-2">
-                <a href="{{ getSetting('app_seminar_registration_template') }}" target="_blank" class="btn btn-success mb-2"><i class="far fa-file-alt"></i> Template Pendaftaran Sidang</a>
-                <a href="{{ getSetting('app_seminar_filing_template') }}" target="_blank" class="btn btn-secondary mb-2"><i class="far fa-file-alt"></i> Template Pemberkasan Sidang</a>
+                <a href="{{ getSetting('app_sidang_registration_template') }}" target="_blank" class="btn btn-success mb-2"><i class="far fa-file-alt"></i> Template Pendaftaran Sidang</a>
+                <a href="{{ getSetting('app_sidang_filing_template') }}" target="_blank" class="btn btn-secondary mb-2"><i class="far fa-file-alt"></i> Template Pemberkasan Sidang</a>
                 @if(session('switchRoles') == 'Admin')   
                 <div class="btn-group" role="group">
                     <button id="btnGroupVerticalDrop1" type="button" class="btn btn-primary dropdown-toggle mb-2" style="max-width: 150px;" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -100,7 +100,7 @@
                                                 <input type="date" name="tanggal" class="inner form-control" placeholder="cari berdasarkan tanggal">
                                                 <div class="input-group-prepend">
                                                     <button type="submit" class="btn btn-primary input-group-text inner">Filter</button>
-                                                    <a href="{{ route('apps.jadwal-seminar') }}" class="btn btn-secondary input-group-text inner">Reset</a>
+                                                    <a href="{{ route('apps.jadwal-sidang') }}" class="btn btn-secondary input-group-text inner">Reset</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -309,8 +309,8 @@
                                 @endif
                                 <td class="mb-3 text-center">
                                     @if(getInfoLogin()->hasRole('Dosen'))
-                                        <a href="{{ route('apps.jadwal-sidang.detail', $item->tugas_akhir->sidang->id) }}" class="btn btn-sm btn-outline-primary my-1" title="Detail Sidang"><i class="bx bx-show" ></i></a>
-                                        @if ($item->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->where('jenis', 'pembimbing')->where('urut', 1)->count() > 0 && $item->tugas_akhir->sidang->status == 'sudah_sidang')
+                                        <a href="{{ route('apps.jadwal-sidang.detail', $item->tugas_akhir->sidang->id) }}" class="btn btn-sm btn-outline-primary my-1" title="Detail Sidang"><i class="bx bx-clipboard" ></i></a>
+                                        @if ($item->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->where('jenis', 'pembimbing')->where('urut', 1)->count() > 0 && $item->tugas_akhir->sidang->status == 'sudah_sidang' && $item->tugas_akhir->status_sidang != 'reject')
                                             <button class="btn btn-outline-warning btn-sm mb-1" type="button" data-bs-toggle="modal" data-bs-target="#myModal{{$item->id}}">Setujui?</button>
                                             @include('administrator.jadwal-sidang.partials.modal')
                                         @endif
@@ -318,13 +318,15 @@
                                     @if (getInfoLogin()->hasRole('Mahasiswa'))
                                         <a href="{{ route('apps.jadwal-sidang.detail', $item->id) }}" class="btn btn-sm btn-outline-primary my-1" title="Detail Sidang"><i class="bx bx-show" ></i></a>
                                         @if($item->status == 'belum_daftar')
-                                            <button onclick="daftarSidang('{{ $item->id }}', '{{ route('apps.jadwal-seminar.unggah-berkas', $item->id) }}')" class="btn btn-sm btn-outline-dark"><i class="bx bx-file"></i>
+                                            <button onclick="daftarSidang('{{ $item->id }}', '{{ route('apps.jadwal-sidang.register', $item->id) }}')" class="btn btn-sm btn-outline-dark"><i class="bx bx-file"></i>
                                                 Daftar
                                             </button>
                                             @else 
-                                            <a href="javascript:void(0);" onclick="unggahFile('{{ $item->id }}', '{{ route('apps.jadwal-seminar.unggah-berkas', $item->id) }}')" class="btn btn-sm btn-outline-dark"><i class="bx bx-file"></i>
-                                                Unggah
-                                            </a>
+                                                @if($item->tugas_akhir->status_sidang != 'reject')    
+                                                <a href="javascript:void(0);" onclick="daftarSidang('{{ $item->id }}', '{{ route('apps.jadwal-sidang.register', $item->id) }}')" class="btn btn-sm btn-outline-dark"><i class="bx bx-file"></i>
+                                                    Unggah
+                                                </a>
+                                                @endif
                                         @endif
                                     @endif
                                     @if(getInfoLogin()->hasRole('Admin'))
@@ -354,9 +356,9 @@
 @endsection
 @section('js')
 <script>
-    function uploadFileSeminar(id, url) {
-        $('#id_jadwal_seminar').val(id);
-        $('#url_unggah_berkas').val(url);
+    function uploadFileSidang(id, url) {
+        $('#id_jadwal_sidang').val(id);
+        $('#url_unggah_berkas').val(url);~
         $('#myModalUpload').find('form').trigger('reset');
         $('#myModalUpload').find('form').attr("action", url);
         $('#myModalUpload').modal('show');

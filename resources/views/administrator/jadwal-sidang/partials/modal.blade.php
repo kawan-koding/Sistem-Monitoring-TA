@@ -111,7 +111,7 @@
                     @endif
                 </div>
                 <div class="modal-body">
-                    @if ($item->status == 'sudah_daftar')
+                    @if ($item->status == 'belum_daftar')
                         @foreach ($document_sidang->where('jenis', 'pra_sidang') as $key => $doc)
                             @php
                                 $document = $doc

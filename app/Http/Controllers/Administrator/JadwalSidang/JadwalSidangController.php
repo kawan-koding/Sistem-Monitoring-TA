@@ -238,7 +238,7 @@ class JadwalSidangController extends Controller
         ]);
         try {
             // dd($request->tanggal);
-            $periode = PeriodeTa::where('is_active', 1)->first();
+            $periode = PeriodeTa::where('is_active', 1)->where('program_studi_id', $jadwalSidang->tugas_akhir->mahasiswa->program_studi_id)->first();
             if(!is_null($periode) && Carbon::createFromFormat('Y-m-d',$request->tanggal)->greaterThan(Carbon::parse($periode->akhir_sidang))){
                 return redirect()->back()->with(['error' => 'Jadwal sidang melebihi batas periode']);
             }
@@ -568,9 +568,17 @@ class JadwalSidangController extends Controller
 
         try {
             $sidang->tugas_akhir->update([
-                'status_sidang' => $request->status,
+                'status_sidang' => $request->status == 'reject' ? null : $request->status,
                 'status_pemberkasan' => 'belum_lengkap',
             ]);
+
+            if($request->status == 'reject') {
+                Sidang::create([
+                    'tugas_akhir_id' => $sidang->tugas_akhir_id,
+                    'status' => 'sudah_daftar'
+                ]);
+                $sidang->delete();
+            }
 
             return redirect()->back()->with(['success' => 'Berhasil mengubah status']);
         } catch(Exception $e) {

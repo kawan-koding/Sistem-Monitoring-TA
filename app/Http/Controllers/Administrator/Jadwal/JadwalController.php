@@ -338,8 +338,16 @@ class JadwalController extends Controller
 
         try {
             $jadwal->tugas_akhir->update([
-                'status_seminar' => $request->status,
+                'status_seminar' => $request->status == 'reject' ? null : $request->status, 
             ]);
+
+            if($request->status == 'reject') {
+                JadwalSeminar::create([
+                    'tugas_akhir_id' => $jadwal->tugas_akhir_id,
+                    'status' => 'belum_terjadwal'
+                ]);
+                $jadwal->delete();
+            }
 
             return redirect()->back()->with(['success' => 'Berhasil mengubah status']);
         } catch(Exception $e) {

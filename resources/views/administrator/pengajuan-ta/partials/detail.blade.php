@@ -157,7 +157,7 @@
                     <div id="collapseSidang" class="accordion-collapse collapse" aria-labelledby="headingSidang" data-bs-parent="#accordionExample">
                         <div class="accordion-body">
                             <div class="d-flex flex-wrap">
-                                @foreach ($doc->where('jenis', 'pra_sidang', 'sidang')->sortBy(['nama', 'asc']) as $item)
+                                @foreach ($doc->whereIn('jenis', ['pra_sidang', 'sidang'])->sortBy(['nama', 'asc']) as $item)
                                     <div class="col-md-3 col-sm-6 col-12 border p-3 text-center">
                                         <strong>{{ ucwords(strtolower($item->nama)) }}</strong>
                                         @if ($item->pemberkasan()->where('tugas_akhir_id', $dataTA->id)->exists())

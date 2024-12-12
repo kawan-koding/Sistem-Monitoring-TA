@@ -279,12 +279,14 @@
                                         <a href="{{ route('apps.jadwal-seminar.detail', $item->id) }}"
                                             class="btn btn-sm btn-outline-primary my-1"><i class="bx bx-show"
                                                 title="Detail"></i></a>
-                                        <a href="javascript:void(0);"
-                                            onclick="uploadFileSeminar('{{ $item->id }}', '{{ route('apps.jadwal-seminar.unggah-berkas', $item->id) }}')"
-                                            class="btn btn-sm btn-outline-dark">
-                                            <i class="bx bx-file"></i>
-                                            Unggah
-                                        </a>
+                                        @if($item->tugas_akhir->status_seminar != 'reject')
+                                            <a href="javascript:void(0);"
+                                                onclick="uploadFileSeminar('{{ $item->id }}', '{{ route('apps.jadwal-seminar.unggah-berkas', $item->id) }}')"
+                                                class="btn btn-sm btn-outline-dark">
+                                                <i class="bx bx-file"></i>
+                                                Unggah
+                                            </a>
+                                        @endif
                                     @endif
                                     @include('administrator.jadwal-seminar.partials.modal')
                                 </td>

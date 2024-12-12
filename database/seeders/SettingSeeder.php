@@ -104,6 +104,18 @@ class SettingSeeder extends Seeder
                 'name' => 'Template Pemberkasan Seminar',
                 'value' => 'https://drive.google.com/drive/folders/1DSsvQRO7GfK6uEPTqX68iYnNTYxBgM-U?usp=sharing'
             ],
+            [
+                'type' => 'general',
+                'key' => 'app_sidang_registration_template',
+                'name' => 'Template Pendaftaran Sidang',
+                'value' => 'https://drive.google.com/drive/folders/1GvXfsHJS-rEBQqhczPJPYbbqcuUl-cj4?usp=sharing'
+            ],
+            [
+                'type' => 'general',
+                'key' => 'app_sidang_filing_template',
+                'name' => 'Template Pemberkasan Sidang',
+                'value' => 'https://drive.google.com/drive/folders/1RSiIW8jY6q46TGlcYP4Ee14kNteghjPH?usp=sharing'
+            ],
             ]);
     }
 }
