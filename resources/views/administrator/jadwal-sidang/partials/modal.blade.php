@@ -111,7 +111,8 @@
                     @endif
                 </div>
                 <div class="modal-body">
-                    @if ($item->status == 'belum_daftar')
+                    @if ($item->status == 'belum_daftar' || $item->status == 'sudah_daftar' || $item->status == 'sudah_terjadwal')
+                    <div class="row">
                         @foreach ($document_sidang->where('jenis', 'pra_sidang') as $key => $doc)
                             @php
                                 $document = $doc
@@ -137,7 +138,9 @@
                                 </div>
                             </div>
                         @endforeach
+                    </div>
                     @else
+                    <div class="row">
                         @foreach ($document_sidang->where('jenis', 'sidang') as $key => $doc)
                             @php
                                 $document = $doc
@@ -163,6 +166,7 @@
                                 </div>
                             </div>
                         @endforeach
+                    </div>
                     @endif
                 </div>
                 @if($item->status == 'sudah_terjadwal' || $item->status == 'sudah_sidang')

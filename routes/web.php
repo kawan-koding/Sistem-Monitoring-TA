@@ -271,8 +271,8 @@ Route::prefix('apps')->middleware('auth')->group(function () {
     Route::prefix('jadwal-sidang')->middleware('can:read-daftar-sidang')->group( function() { 
        Route::get('{jenis?}',[JadwalSidangController::class,'index'])->name('apps.jadwal-sidang'); 
        Route::get('{sidang}/detail',[JadwalSidangController::class,'show'])->name('apps.jadwal-sidang.detail'); 
-       //    Route::get('{sidang}/detail-sidang',[JadwalSidangController::class,'show'])->name('apps.jadwal-sidang.detail-sidang'); 
        Route::post('{sidang}/daftar-sidang',[JadwalSidangController::class,'register'])->name('apps.jadwal-sidang.register'); 
+       Route::post('{sidang}/unggah-berkas',[JadwalSidangController::class,'uploadfile'])->name('apps.jadwal-sidang.unggah-berkas'); 
        Route::post('{jadwalSidang}/update',[JadwalSidangController::class,'update'])->name('apps.jadwal-sidang.update'); 
        Route::get('{jadwalSidang}/edit',[JadwalSidangController::class,'edit'])->name('apps.jadwal-sidang.edit'); 
        Route::post('{jadwalSidang}/validasi-berkas',[JadwalSidangController::class,'validasiBerkas'])->name('apps.jadwal-sidang.validasi-berkas');

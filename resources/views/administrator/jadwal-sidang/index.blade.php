@@ -171,10 +171,10 @@
                     <thead>
                         <tr>
                             <th width="2%">No.</th>
-                            <th width="40%">Judul</th>
                             @if (getInfoLogin()->hasRole('Admin'))
                             <th>Mahasiswa</th>
                             @endif
+                            <th width="40%">Judul</th>
                             @if(getInfoLogin()->hasRole('Admin') || getInfoLogin()->hasRole('Mahasiswa'))
                             <th width="20%">Dosen</th>
                             @endif
@@ -190,6 +190,13 @@
                         @forelse ($data as $item)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
+                                @if (getInfoLogin()->hasRole('Admin'))
+                                    <td width="15%">
+                                        <span class="badge badge-soft-primary">{{ !is_null($item->tugas_akhir->mahasiswa->programStudi) ? $item->tugas_akhir->mahasiswa->programStudi->display : '' }}</span>
+                                        <p class="font-size-14 m-0">{{ $item->tugas_akhir->mahasiswa->nama_mhs }}</p>
+                                        <p class="small text-muted">NIM : {{ $item->tugas_akhir->mahasiswa->nim }}</p>
+                                    </td>
+                                @endif
                                 <td>
                                     @if(getInfoLogin()->hasRole('Admin') || getInfoLogin()->hasRole('Mahasiswa'))
                                         @if ($item->status == 'sudah_sidang')
@@ -210,13 +217,11 @@
                                     <h5 class="font-size-14 m-0">{{ $item->tugas_akhir->judul }}</h5>
                                     <p class="m-0 text-muted small">{{ $item->tugas_akhir->topik->nama_topik }} -
                                         {{ $item->tugas_akhir->jenis_ta->nama_jenis }}</p>
+                                    <span class="badge small mb-1 badge-soft-secondary">{{ isset($item->tugas_akhir) ? ($item->tugas_akhir->tipe == 'I' ? 'Individu' : 'Kelompok') : '' }}</span>
                                     @if(getInfoLogin()->hasRole('Dosen'))
                                         <p class="mt-2">{{ $item->tugas_akhir->mahasiswa->nama_mhs }}</p>
                                     @endif
                                 </td>
-                                @if (getInfoLogin()->hasRole('Admin'))
-                                    <td><p class="small">{{ $item->tugas_akhir->mahasiswa->nama_mhs }}</p></td>
-                                @endif
                                 @if(getInfoLogin()->hasRole('Admin') || getInfoLogin()->hasRole('Mahasiswa'))
                                     <td>
                                         <p class="fw-bold small m-0">Pembimbing</p>
@@ -316,14 +321,16 @@
                                         @endif
                                     @endif
                                     @if (getInfoLogin()->hasRole('Mahasiswa'))
-                                        <a href="{{ route('apps.jadwal-sidang.detail', $item->id) }}" class="btn btn-sm btn-outline-primary my-1" title="Detail Sidang"><i class="bx bx-show" ></i></a>
+                                        @if($item->status == 'sudah_sidang')
+                                            <a href="{{ route('apps.jadwal-sidang.detail', $item->id) }}" class="btn btn-sm btn-outline-primary my-1" title="Detail Sidang"><i class="bx bx-show" ></i></a>
+                                        @endif
                                         @if($item->status == 'belum_daftar')
                                             <button onclick="daftarSidang('{{ $item->id }}', '{{ route('apps.jadwal-sidang.register', $item->id) }}')" class="btn btn-sm btn-outline-dark"><i class="bx bx-file"></i>
                                                 Daftar
                                             </button>
                                             @else 
                                                 @if($item->tugas_akhir->status_sidang != 'reject')    
-                                                <a href="javascript:void(0);" onclick="daftarSidang('{{ $item->id }}', '{{ route('apps.jadwal-sidang.register', $item->id) }}')" class="btn btn-sm btn-outline-dark"><i class="bx bx-file"></i>
+                                                <a href="javascript:void(0);" onclick="unggahFile('{{ $item->id }}', '{{ route('apps.jadwal-sidang.unggah-berkas', $item->id) }}')" class="btn btn-sm btn-outline-dark"><i class="bx bx-file"></i>
                                                     Unggah
                                                 </a>
                                                 @endif

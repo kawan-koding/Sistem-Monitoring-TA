@@ -1,4 +1,4 @@
-@if ($data->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->first()->jenis == 'pembimbing' || getInfoLogin()->hasRole('Mahasiswa'))
+@if (getInfoLogin()->hasRole('Dosen') && $data->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->first()->jenis == 'pembimbing' || getInfoLogin()->hasRole('Mahasiswa'))
     <div class="row align-items-center">
         <div class="col-md-8 col-12">
             <h5 class="fw-bold mb-0">Lembar Revisi</h5>
