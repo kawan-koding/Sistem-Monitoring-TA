@@ -38,7 +38,7 @@
                                 <label for="file{{ $doc->id }}">
                                     <input type="file" id="file{{ $doc->id }}"
                                         onchange="changeFile('#document{{ $doc->id }}')"
-                                        name="document_{{ $doc->id }}" class="d-none" accept=".pdf">
+                                        name="document_{{ $doc->id }}" class="d-none" accept="{{ $doc->tipe_dokumen == 'pdf' ? '.pdf' : 'image/*' }}">
                                     @if ($document)
                                         <div class="file-btn btn btn-outline-primary btn-sm">Perbarui</div>
                                     @else
@@ -75,7 +75,7 @@
                                 <label for="file{{ $doc->id }}">
                                     <input type="file" id="file{{ $doc->id }}"
                                         onchange="changeFile('#document{{ $doc->id }}')"
-                                        name="document_{{ $doc->id }}" class="d-none" accept=".pdf">
+                                        name="document_{{ $doc->id }}" class="d-none" accept="{{ $doc->tipe_dokumen == 'pdf' ? '.pdf' : 'image/*' }}">
                                     @if ($document)
                                         <div class="file-btn btn btn-outline-primary btn-sm">Perbarui</div>
                                     @else
