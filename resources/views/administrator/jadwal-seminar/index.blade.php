@@ -277,7 +277,7 @@
                                         <a href="{{ route('apps.jadwal-seminar.detail', $item->id) }}"
                                             class="btn btn-sm btn-outline-primary my-1"><i class="bx bx-show"
                                                 title="Detail"></i></a>
-                                        @if($item->tugas_akhir->status_seminar != 'reject')
+                                        @if($item->tugas_akhir->status_seminar != 'reject' && $item->tugas_akhir->status_pemberkasan != 'sudah_lengkap' || $item->tugas_akhir->status_seminar != 'reject' && is_null($item->tugas_akhir->status_sidang))
                                             <a href="javascript:void(0);"
                                                 onclick="uploadFileSeminar('{{ $item->id }}', '{{ route('apps.jadwal-seminar.unggah-berkas', $item->id) }}')"
                                                 class="btn btn-sm btn-outline-dark">
