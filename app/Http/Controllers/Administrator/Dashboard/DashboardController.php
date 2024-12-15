@@ -113,7 +113,7 @@ class DashboardController extends Controller
         $periode = PeriodeTa::where('is_active', 1)->get();
         $kuota = KuotaDosen::whereIn('periode_ta_id', $periode->pluck('id'))->where('dosen_id', $user->id)->get();
         $totalKuota = $kuota->sum('pembimbing_1');
-        $bimbingUji = BimbingUji::whereHas('tugasAkhir', function ($query) use ($periode) {
+        $bimbingUji = BimbingUji::whereHas('tugas_akhir', function ($query) use ($periode) {
             $query->whereNotIn('status',['reject', 'cancel'])->whereIn('periode_ta_id', $periode->pluck('id'));
         })->where('dosen_id', $user->id)->where('jenis', 'pembimbing')->where('urut', 1)->count();
         // $bimbingUji = BimbingUji::whereIn('tugas_akhir_id', function ($query) use ($periode) {
