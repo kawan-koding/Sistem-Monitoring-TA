@@ -4,11 +4,11 @@ function daftarSidang(id, url) {
     $('#modalDaftarSidang').modal('show')   
 }
 
-// function unggahFile(id, url) {
-//     $('#daftarSidangAction').attr("action", `${BASE_URL}/apps/jadwal-sidang/${id}/unggah-berkas`);
-//     $('#daftarSidangLabel').html('Unggah Berkas Pasca Sidang')
-//     $('#modalDaftarSidang').modal('show')
-// }
+function unggahFile(id, url) {
+    $('#daftarSidangAction').attr("action", `${BASE_URL}/apps/jadwal-sidang/${id}/unggah-berkas`);
+    $('#daftarSidangLabel').html('Unggah Berkas Pasca Sidang')
+    $('#modalDaftarSidang').modal('show')
+}
 
 function validasiFile(id, url) {
     $('#validasiFileAction').attr("action", `${BASE_URL}/apps/jadwal-sidang/${id}/validasi-berkas`);

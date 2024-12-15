@@ -272,6 +272,11 @@ class JadwalSidangController extends Controller
                         'urut' => 1
                     ]);
                 }
+            } else {
+                $cek = BimbingUji::where('tugas_akhir_id', $jadwalSidang->tugas_akhir_id)->where('jenis', 'pengganti')->where('urut', 1);
+                if($cek->count() > 0) {
+                    $cek->delete();
+                }
             }
 
             if($request->has('pengganti2') && !empty($request->pengganti2)) {
@@ -285,6 +290,11 @@ class JadwalSidangController extends Controller
                         'jenis' => 'pengganti',
                         'urut' => 2
                     ]);
+                }
+            } else {
+                $cek = BimbingUji::where('tugas_akhir_id', $jadwalSidang->tugas_akhir_id)->where('jenis', 'pengganti')->where('urut', 2);
+                if($cek->count() > 0) {
+                    $cek->delete();
                 }
             }
 
@@ -378,7 +388,7 @@ class JadwalSidangController extends Controller
     {
         try {
             DB::beginTransaction();
-            $periode = PeriodeTa::where('is_active', true)->first();
+            $periode = PeriodeTa::where('is_active', true)->where('program_studi_id', $sidang->tugas_akhir->mahasiswa->program_studi_id)->first();
             if(!is_null($periode) && !Carbon::parse($periode->akhir_sidang)->addDays(1)->isFuture()){
                 return redirect()->back()->with('error', 'Pendaftaran sidang melebihi batas periode');
             }
@@ -458,6 +468,95 @@ class JadwalSidangController extends Controller
             }
 
             $sidang->update(['status' => 'sudah_daftar']);
+            DB::commit();
+            return redirect()->back()->with(['success' => 'Dokumen berhasil ditambahkan']);
+        } catch(Exception $e) {
+            return redirect()->back()->with(['error' => $e->getMessage()]);
+        }
+    }
+
+    public function uploadFile(Sidang $sidang, Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            $periode = PeriodeTa::where('is_active', true)->first();
+            if(!is_null($periode) && !Carbon::parse($periode->akhir_sidang)->addDays(1)->isFuture()){
+                return redirect()->back()->with('error', 'Pendaftaran sidang melebihi batas periode');
+            }
+            if(!is_null($periode) && Carbon::parse($periode->mulai_sidang)->addDays(1)->isFuture()){
+                return redirect()->back()->with('error', 'Pendaftaran Sidang Akhir belum aktif');
+            }
+            $documentTypes = JenisDokumen::all();
+            $validates = [];
+            $messages = [];
+            $inserts = [];
+            foreach($documentTypes as $item) {
+                if($sidang->status == 'belum_terjadwal') {
+                    if($item->jenis == 'pra_sidang') {
+                        $validates['document_'. $item->id] = $item->tipe_dokumen == 'pdf' ? '|mimes:pdf|max:'. $item->max_ukuran : 'mimes:png,jpg,jpeg,webp|max:'. $item->max_ukuran;
+                        $messages['document_'. $item->id .'.mimes'] = 'Dokumen '. strtolower($item->nama) .' harus dalam format '. ($item->tipe_dokumen == 'pdf' ? 'PDF' : 'PNG, JPEG, JPG, WEBP');
+                        $messages['document_'. $item->id .'.max'] = 'Dokumen '. strtolower($item->nama) .' tidak boleh lebih dari '. $item->max_ukuran .' KB';
+                    }
+                } else {
+                    if($item->jenis == 'sidang') {
+                        $validates['document_'. $item->id] = $item->tipe_dokumen == 'pdf' ? '|mimes:pdf|max:'. $item->max_ukuran : 'mimes:png,jpg,jpeg,webp|max:'. $item->max_ukuran;
+                        $messages['document_'. $item->id .'.mimes'] = 'Dokumen '. strtolower($item->nama) .' harus dalam format '. ($item->tipe_dokumen == 'pdf' ? 'PDF' : 'PNG, JPEG, JPG, WEBP');
+                        $messages['document_'. $item->id .'.max'] = 'Dokumen '. strtolower($item->nama) .' tidak boleh lebih dari '. $item->max_ukuran .' KB';
+                    }
+                }
+            }
+            
+            $request->validate($validates, $messages);
+
+            foreach($documentTypes as $item) {
+                if($sidang->status == 'belum_daftar') {
+                    if($item->jenis == 'pra_sidang' && $request->hasFile('document_'. $item->id)) {
+                        $file = $request->file('document_'. $item->id);
+                        $filename = 'document_'. rand(0, 999999999) .'_'. rand(0, 999999999) .'.'. $file->getClientOriginalExtension();
+                        $file->move(public_path('storage/files/pemberkasan'), $filename);
+    
+                        $document = $item->pemberkasan()->where('tugas_akhir_id', $sidang->tugas_akhir->id)->first();
+                        if($document) {
+                            File::delete(public_path('storage/files/pemberkasan/'. $document->filename));
+                            $document->update([
+                                'filename' => $filename
+                            ]);
+                        } else {
+                            $inserts[] = [
+                                'tugas_akhir_id' => $sidang->tugas_akhir->id,
+                                'jenis_dokumen_id' => $item->id,
+                                'filename' => $filename,
+                                'updated_at' => now(),
+                                'created_at' => now()
+                            ];
+                        }
+                    }
+                } else {
+                    if($item->jenis == 'sidang' && $request->hasFile('document_'. $item->id)) {
+                        $file = $request->file('document_'. $item->id);
+                        $filename = 'document_'. rand(0, 999999999) .'_'. rand(0, 999999999) .'.'. $file->getClientOriginalExtension();
+                        $file->move(public_path('storage/files/pemberkasan'), $filename);
+                        $document = $item->pemberkasan()->where('tugas_akhir_id', $sidang->tugas_akhir->id)->first();
+                        if($document) {
+                            File::delete(public_path('storage/files/pemberkasan/'. $document->filename));
+                            $document->update([
+                                'filename' => $filename
+                            ]);
+                        } else {
+                            $inserts[] = [
+                                'tugas_akhir_id' => $sidang->tugas_akhir->id,
+                                'jenis_dokumen_id' => $item->id,
+                                'filename' => $filename,
+                                'updated_at' => now(),
+                                'created_at' => now()
+                            ];
+                        }
+                    }
+                }
+            }
+            if(count($inserts) > 0) {
+                Pemberkasan::insert($inserts);
+            }
             DB::commit();
             return redirect()->back()->with(['success' => 'Dokumen berhasil ditambahkan']);
         } catch(Exception $e) {
