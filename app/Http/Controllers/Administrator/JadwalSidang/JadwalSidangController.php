@@ -344,7 +344,6 @@ class JadwalSidangController extends Controller
         $recapPenguji2 = $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 2)->first()->penilaian()->where('type', 'Sidang')->sum('nilai');
         $recapPenguji2 = $recapPenguji2 > 0 ? $recapPenguji2 / $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 2)->first()->penilaian()->where('type', 'Sidang')->count() : 0;
         
-        
         $data = [
             'title' => 'Jadwal Sidang',
             'breadcrumbs' => [

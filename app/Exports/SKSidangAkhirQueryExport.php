@@ -46,11 +46,13 @@ class SKSidangAkhirQueryExport implements FromCollection, WithHeadings, WithMapp
                     return [ $item->jenis . $item->urut => $item->dosen->name ?? '-' ];
                 });
                 $nilai = $tugasAkhir->bimbing_uji->map(function ($bimbingUji) {
-                  $nilaiSidang = $bimbingUji->penilaian->filter(function ($nilai) {
-                      return $nilai->type == 'Sidang';
-                  });
-                  dd($nilaiSidang);
+                    $nilaiSidang = $bimbingUji->penilaian->filter(function ($nilai) {
+                        return $nilai->type == 'Sidang';
+                    });
+                    dd($nilaiSidang);
+                    $totalNilaiAngka = $nilaiSidang->avg('nilai');
                 });
+
                 // $nilai = $tugasAkhir->bimbing_uji->map(function ($bimbingUji) {
                 //     $nilaiSeminar = $bimbingUji->penilaian->filter(function ($nilai) {
                 //         return $nilai->type == 'Sidang';

@@ -105,6 +105,7 @@
                                         <p class="m-0 p-0 text-muted small">NIM : {{$item->tugas_akhir->mahasiswa->nim}}</p>
                                     </td>
                                     <td>
+                                        <p class="m-0"><span class="badge rounded-pill bg-primary-subtle text-primary small mb-1">{{ strtoupper($item->jenis) ?? '-'}} {{ $item->urut ?? '-'  }}</span></p>
                                         <p class="m-0"><strong>{{ $item->tugas_akhir->judul }}</strong></p>
                                         <p class="m-0 text-muted small">{{ $item->tugas_akhir->topik->nama_topik }} - {{ $item->tugas_akhir->jenis_ta->nama_jenis}}</p>
                                     </td>

@@ -113,7 +113,7 @@
                                 </div>
                                 <div class="text-center">
                                     @if($document)
-                                        <a href="{{ asset('storage/files/pemberkasan/' . $document->filename) }}" class="btn btn-secondary btn-sm">Lihat Berkas</a>
+                                        <a href="{{ asset('storage/files/pemberkasan/' . $document->filename) }}" target="_blank" class="btn btn-secondary btn-sm">Lihat Berkas</a>
                                     @else
                                         <i class="text-danger">*</i>) Belum ada berkas
                                     @endif
@@ -135,7 +135,7 @@
                                 </div>
                                 <div class="text-center">
                                     @if($document)
-                                        <a href="{{ asset('storage/files/pemberkasan/' . $document->filename) }}" class="btn btn-secondary btn-sm">Lihat Berkas</a>
+                                        <a href="{{ asset('storage/files/pemberkasan/' . $document->filename) }}"  target="_blank" class="btn btn-secondary btn-sm">Lihat Berkas</a>
                                     @else
                                         <i class="text-danger">*</i>) Belum ada berkas
                                     @endif
