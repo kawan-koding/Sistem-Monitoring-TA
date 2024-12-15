@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Lembar Penilaian Seminar Proposal</title>
+    <title>Rekapitulasi Nilai {{ $tipe ?? '' }}</title>
     <style>
         @media print {
             @page {
@@ -197,7 +197,7 @@
 
     <div class="content">
         <div class="title">
-                <h5 style="font-weight: 800; text-align: center">REKAPITULASI NILAI AKHIR SEMINAR PROPOSAL</h5>
+                <h5 style="font-weight: 800; text-align: center">REKAPITULASI NILAI AKHIR {{ $tipe }}</h5>
             <table>
             <tr>
                 <td width="30%">Nama Mahasiswa</td>

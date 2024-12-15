@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{{ $title ?? 'Lembar Revisi'}}</title>
+    <title>{{ $title ?? ''}}</title>
     <style>
         @media print {
             @page {
@@ -204,13 +204,10 @@
 
     <div class="content">
         <div class="title">
-            <h5 style="font-weight: 800; text-align: center">FORMULIR REVISI PENGUJI SEMINAR PROPOSAL <br>
+            <h5 style="font-weight: 800; text-align: center">FORMULIR REVISI PENGUJI {{ $data['judul']}} <br>
                 PROGRAM STUDI TEKNOLOGI REKAYASA PERANGKAT LUNAK <br>
                 POLITEKNIK NEGERI BANYUWANGI
             </h5>
-            {{-- @if ($loop->first)
-                <button id="print" class="no-print">Cetak</button>
-            @endif --}}
             <table>
                 <tr>
                     <td width="30%">Nama</td>

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Lembar Penilaian Seminar Proposal</title>
+    <title>Lembar Penilaian {{ $judul ?? '-' }}</title>
     <style>
         @media print {
             @page {
@@ -203,7 +203,7 @@
 
         <div class="content">
             <div class="title">
-                <h5 style="font-weight: 800; text-align: center">LEMBAR PENILAIAN SEMINAR PROPOSAL</h5>
+                <h5 style="font-weight: 800; text-align: center">LEMBAR PENILAIAN  {{ $item['tipe'] }}</h5>
                 {{-- @if ($loop->first)
                 <button id="print" class="no-print">Cetak</button>
             @endif --}}

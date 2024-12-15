@@ -86,15 +86,7 @@
                 <div class="card-body"> 
                     <h5 class="card-title">Jadwal</h5>
                     <hr>
-                    <div class="text-center">
-                        {{-- <p class="mb-2">Seminar Proposal</p>
-                        <p class="m-0"><strong>Rabu, 31 Januari 2025</strong></p>
-                        <p><strong>10.00 - 12.00</strong></p>
-                        <p class="mt-2 mb-0">
-                            Ruangan : Lab Basis Data
-                        </p> --}}
-                        <h5>Segera Hadir...</h5>
-                    </div>
+                    <h5 class="text-center">Segera Hadir...</h5>
                 </div> 
             </div>
         </div>
@@ -104,7 +96,7 @@
                     <h4 class="card-title">Tawaran Topik</h4>
                     <hr>
                     <ul class="inbox-wid list-unstyled">
-                        @foreach ($dataMahasiswa['topik'] as $item)
+                        @forelse ($dataMahasiswa['topik'] as $item)
                         <li class="inbox-list-item">
                             <a>
                                 <div class="d-flex align-items-start">
@@ -116,7 +108,11 @@
                                 </div>
                             </a>
                         </li>
-                        @endforeach
+                        @empty
+                        <li>
+                            <h5 class="text-center">Belum ada tawaran topik</h5>
+                        </li>
+                        @endforelse
                     </ul>
                     @if($dataMahasiswa['topik']->count() > 2)
                     <div class="text-center">

@@ -740,13 +740,14 @@ class JadwalSidangController extends Controller
             })->map(function ($revisi) use ($bimbingUji) {
                 return [
                     'revisi' => $revisi,
+                    'judul' => 'SIDANG AKHIR',
                     'dosen' => $bimbingUji->dosen,
                 ];
             });
         })->toArray();
         $bu = $sidang->tugas_akhir->bimbing_uji()->where('jenis','pembimbing')->orderBy('urut', 'asc')->get();
         $data = [
-            'title' => 'Lembar Revisi',
+            'title' => 'Lembar Revisi Sidang Akhir',
             'jadwal' => $jdwl,
             'rvs' => $allRevisis,
             'bimbingUji' => $bu,
@@ -774,6 +775,7 @@ class JadwalSidangController extends Controller
                 $peran = 'Penguji ' . toRoman($bimbingUji->urut);
             }
             return [
+                'tipe' => 'SIDANG AKHIR',
                 'peran' => $peran,
                 'dosen' => $bimbingUji->dosen,
                 'nilai' => $nilaiSeminar->map(function ($nilai) {
@@ -799,6 +801,7 @@ class JadwalSidangController extends Controller
         $bu = $sidang->tugas_akhir->bimbing_uji()->where('jenis','pembimbing')->orderBy('urut', 'asc')->get();
         $data = [
             'title' => 'Lembar Penilaian',
+            'judul' => 'Sidang Akhir',
             'nilai' => $query,
             'jadwal' => $jdwl,
             'bimbingUji' => $bu,
@@ -870,6 +873,7 @@ class JadwalSidangController extends Controller
         })->first();
         $data = [
             'title' => 'Rekapitulasi Nilai',
+            'tipe' => 'SIDANG AKHIR',
             'rekap' => $rekap,
             'jumlah' => number_format($totalNilai, 2),
             'nilai_huruf' => $totalNilaiHuruf,

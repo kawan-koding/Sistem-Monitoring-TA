@@ -175,6 +175,7 @@ class JadwalController extends Controller
             if ($bimbingUji->revisi->isEmpty()) {
                 return [
                     'revisi' => null,
+                    'judul' => 'SEMINAR PROPOSAL',
                     'dosen' => $bimbingUji->dosen,
                 ];
             }
@@ -183,13 +184,14 @@ class JadwalController extends Controller
             })->map(function ($revisi) use ($bimbingUji) {
                 return [
                     'revisi' => $revisi,
+                    'judul' => 'SEMINAR PROPOSAL',
                     'dosen' => $bimbingUji->dosen,
                 ];
             })->first();
         })->toArray();
         $bu = $jadwal->tugas_akhir->bimbing_uji()->where('jenis','pembimbing')->orderBy('urut', 'asc')->get();
         $data = [
-            'title' => 'Lembar Revisi',
+            'title' => 'Lembar Revisi Seminar Proposal',
             'jadwal' => $jdwl,
             'rvs' => $allRevisis,
             'bimbingUji' => $bu,
@@ -216,6 +218,7 @@ class JadwalController extends Controller
                 $peran = 'Penguji ' . toRoman($bimbingUji->urut);
             }
             return [
+                'tipe' => 'SEMINAR PROPOSAL',
                 'peran' => $peran,
                 'dosen' => $bimbingUji->dosen,
                 'nilai' => $nilaiSeminar->map(function ($nilai) {
@@ -242,6 +245,7 @@ class JadwalController extends Controller
         $kategoriNilai = KategoriNilai::all();
         $data = [
             'title' => 'Lembar Penilaian',
+            'judul' => 'Seminar Proposal',
             'nilai' => $query,
             'jadwal' => $jdwl,
             'bimbingUji' => $bu,
@@ -313,6 +317,7 @@ class JadwalController extends Controller
         })->first();
         $data = [
             'title' => 'Rekapitulasi Nilai',
+            'tipe' => 'SEMINAR PROPOSAL',
             'rekap' => $rekap,
             'jumlah' => number_format($totalNilai, 2),
             'nilai_huruf' => $totalNilaiHuruf,

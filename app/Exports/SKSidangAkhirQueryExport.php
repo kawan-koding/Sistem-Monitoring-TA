@@ -27,7 +27,6 @@ class SKSidangAkhirQueryExport implements FromCollection, WithHeadings, WithMapp
         $this->prodiName = $prodiName;
         $this->periodeName = $periodeName;
     }
-
     
     public function beforeSheet(BeforeSheet $event)
     {
@@ -36,7 +35,6 @@ class SKSidangAkhirQueryExport implements FromCollection, WithHeadings, WithMapp
 
     public function collection()
     {
-
         $mahasiswa = Mahasiswa::whereProgramStudiId($this->prodiId)->wherePeriodeTaId($this->periodeId)->orderBy('nim')->get();
         $tugasAkhirData = collect();
         foreach($mahasiswa as $mhs) {
@@ -49,8 +47,8 @@ class SKSidangAkhirQueryExport implements FromCollection, WithHeadings, WithMapp
                     $nilaiSidang = $bimbingUji->penilaian->filter(function ($nilai) {
                         return $nilai->type == 'Sidang';
                     });
-                    dd($nilaiSidang);
                     $totalNilaiAngka = $nilaiSidang->avg('nilai');
+                    dd($tugasAkhir);
                 });
 
                 // $nilai = $tugasAkhir->bimbing_uji->map(function ($bimbingUji) {
