@@ -264,12 +264,12 @@
                                             <a href="{{ route('apps.jadwal-seminar.show', $item) }}"
                                                 class="btn btn-sm btn-outline-warning mb-3" title="Detail"><i
                                                     class="bx bx-show"></i></a>
-                                            @if ($item->tugas_akhir->status_pemberkasan != 'sudah_lengkap' && is_null($item->tugas_akhir->status_sidang))
-                                                <a href="javascript:void(0)"
-                                                    onclick="validasiFile('{{ $item->id }}', '{{ route('apps.jadwal-seminar.validate', $item->id) }}')"
-                                                    class="btn btn-sm btn-outline-success mb-3" title="Validasi Berkas"><i
-                                                        class="bx bx-pencil"></i></a>
-                                            @endif
+                                        @endif
+                                        @if ($item->tugas_akhir->status_pemberkasan != 'sudah_lengkap' && is_null($item->tugas_akhir->status_sidang))
+                                            <a href="javascript:void(0)"
+                                                onclick="validasiFile('{{ $item->id }}', '{{ route('apps.jadwal-seminar.validate', $item->id) }}')"
+                                                class="btn btn-sm btn-outline-success mb-3" title="Validasi Berkas"><i
+                                                    class="bx bx-pencil"></i></a>
                                         @endif
                                     @endif
 
