@@ -15,6 +15,7 @@ use App\Models\JenisDokumen;
 use App\Models\ProgramStudi;
 use Illuminate\Http\Request;
 use App\Exports\TugasAkhirExport;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -32,6 +33,10 @@ class DaftarTAController extends Controller
             $dataTa->whereIn('periode_ta_id', $periode->pluck('id'));
         }
 
+        if (session('switchRoles') == 'Admin') {
+            $dataTa->whereNotIn('status', ['reject', 'cancel']);
+        }
+        
         if (session('switchRoles') == 'Kaprodi') {
             $user = getInfoLogin()->userable;
             $prodi = $user->programStudi->id;
@@ -42,6 +47,10 @@ class DaftarTAController extends Controller
             } else {
                 $dataTa->where('status', 'acc');
             }
+        }
+
+        if ($request->has('filter') && !empty($request->filter) && $request->filter != 'semua') {
+            $dataTa = $dataTa->where('tipe', $request->filter);
         }
 
         if ($request->has('program_studi') && !empty($request->program_studi) && $request->program_studi !== 'semua') {
@@ -77,6 +86,7 @@ class DaftarTAController extends Controller
             ],
             'data' => $dataTa,
             'prodi' => ProgramStudi::all(),
+            'filter' => $request->has('filter') ? $request->filter : 'semua',
             'periode' => $periode,
             'periodes' => $request->has('filter1') && $request->filter1 != 'semua' ? PeriodeTa::where('program_studi_id', $request->filter1)->get() : PeriodeTa::whereIsActive(true)->get(),
 
@@ -244,6 +254,7 @@ class DaftarTAController extends Controller
         ]);
         
         try {
+            DB::beginTransaction();
             $kuota = KuotaDosen::where('dosen_id', $request->pembimbing_1)->where('periode_ta_id', $tugasAkhir->periode_ta_id)->first();
             $validasiData = [
                 ['tipe' => 'pembimbing', 'urut' => 1, 'dosen_id' => $request->pembimbing_1, 'kuota' => $kuota->pembimbing_1],
@@ -280,8 +291,8 @@ class DaftarTAController extends Controller
                 $topik = $request->topik_id;
             }
 
-            $request->merge(['jenis_ta_id' => $jenis, 'topik_id' => $topik]);
-            $tugasAkhir->update($request->only(['jenis_ta_id', 'topik_id', 'judul', 'tipe', 'dokumen_pemb_1', 'dokumen_ringkasan']));
+            $request->merge(['jenis_ta_id' => $jenis, 'topik_id' => $topik, 'is_completed' => true]);
+            $tugasAkhir->update($request->only(['jenis_ta_id', 'topik_id', 'judul', 'tipe', 'dokumen_pemb_1', 'dokumen_ringkasan', 'is_completed']));
             $data = [
                 ['jenis' => 'pembimbing', 'urut' => 1, 'dosen_id' => $request->pembimbing_1],
                 ['jenis' => 'pembimbing', 'urut' => 2, 'dosen_id' => $request->pembimbing_2],
@@ -312,7 +323,7 @@ class DaftarTAController extends Controller
 
             $request->validate($validates, $messages);
 
-            foreach ($docPengajuan as $item) {;
+            foreach ($docPengajuan as $item) {
                 if ($request->hasFile('dokumen_' . $item->id)) {
                     $file = $request->file('dokumen_' . $item->id);
                     $filename = 'document_' . rand(0, 999999999) . '_' . rand(0, 999999999) . '.' . $file->getClientOriginalExtension();
@@ -332,7 +343,7 @@ class DaftarTAController extends Controller
                     }
                 }
             }
-
+            DB::commit();
             return redirect()->route('apps.daftar-ta')->with('success', 'Data berhasil diperbarui');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
@@ -361,7 +372,6 @@ class DaftarTAController extends Controller
     {
         $prodiId = $request->query('prodi');
         $prodi = ProgramStudi::find($prodiId);
-        
         if (!$prodi) {
             return redirect()->back()->with('error', 'Program studi tidak ditemukan.');
         }

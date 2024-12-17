@@ -23,6 +23,7 @@ function updateOptions() {
                 option.disabled = true;
                 option.setAttribute('data-hidden', 'true');
             } else {
+                option.disabled = false;
                 option.removeAttribute('data-hidden');
             }
         });

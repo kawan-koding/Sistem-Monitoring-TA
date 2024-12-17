@@ -112,14 +112,14 @@
             </ul>
 
             @forelse ($jadwal as $key => $item)
-                <div class="row p-1 mt-3 g-0 mb-3 align-items-center" style="max-width: 650px;">
+                <div class="row p-1 mt-3 g-0 mb-3 align-items-center" style="max-width: 750px;">
                     <div class="col-md-2">
-                        <img id="modal-image-{{ $key }}" src="{{ asset('storage/files/pemberkasan/poster.jpg') }}" alt="Poster" class="img-fluid" style="width: 120px; height: 150px; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#imagePreviewModal-{{ $key }}">
+                        <img id="modal-image-{{ $key }}" src="{{ asset('storage/files/pemberkasan/' . $item->poster) }}" alt="Poster" class="img-fluid" style="width: 120px; height: 150px; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#imagePreviewModal-{{ $key }}">
                         <div class="modal fade" id="imagePreviewModal-{{ $key }}" tabindex="-1" aria-labelledby="imagePreviewLabel" aria-hidden="true" style="backdrop-filter: blur(5px); background-color: rgba(0, 0, 0, 0.5);">
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-body p-0">
-                                        <img id="preview-image-{{ $key }}" src="{{ asset('storage/files/pemberkasan/poster.jpg') }}" alt="Preview Poster" class="img-fluid preview-image">
+                                        <img id="preview-image-{{ $key }}" src="{{ asset('storage/files/pemberkasan/'. $item->poster) }}" alt="Preview Poster" class="img-fluid preview-image">
                                     </div>
                                 </div>
                             </div>
@@ -127,20 +127,20 @@
                     </div>
                     <div class="col-md-10">
                         <div class="ps-3">
-                            <p class="m-0">11.00 - 11.00 WIB</p>
-                            <h6 class="m-0"><b>Sistem Informasi Manajemen Persuratan</b></h6>
+                            <p class="m-0">{{ $item->jam }} WIB</p>
+                            <h6 class="m-0"><b>{{ $item->judul_ta }}</b></h6>
                             <p class="m-0">
-                                <span class="badge me-2" style="background-color: #dfdfdf; color:var(--primary-color); letter-spacing: 1px">Individu</span> |
-                                <span class="ms-2">Rancang Bangun - Penelitian</span>
+                                <span class="badge me-2" style="background-color: #dfdfdf; color:var(--primary-color); letter-spacing: 1px">{{ $item->tipe }}</span> |
+                                <span class="ms-2">{{ $item->topik }}</span>
                             </p>
-                            <p class="m-0 fw-bold" style="font-size: 16px">Rikiansyah Aris Kurniawan</p>
+                            <p class="m-0 fw-bold" style="font-size: 16px">{{ $item->nama }}</p>
                             <p class="text-muted small m-0" style="font-size: 14px">
-                                Pembimbing: <span class="me-2">Dianni Yusuf, S.Kom., M.Kom</span> /
-                                <span class="ms-2">Lutfi Hakim, S.Pd., M.T</span>
+                                Pembimbing: <span class="me-2">{{ $item->pembimbing_1 }}</span> /
+                                <span class="ms-2">{{ $item->pembimbing_2 }}</span>
                             </p>
                             <p class="text-muted small m-0" style="font-size: 14px">
-                                Penguji: <span class="me-2">Dianni Yusuf, S.Kom., M.Kom</span> /
-                                <span class="ms-2">Lutfi Hakim, S.Pd., M.T</span>
+                                Penguji: <span class="me-2">{{ $item->penguji_1 }}</span> /
+                                <span class="ms-2">{{ $item->penguji_2 }}</span>
                             </p>
                         </div>
                     </div>

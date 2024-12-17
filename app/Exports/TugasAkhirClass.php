@@ -49,7 +49,6 @@ class TugasAkhirClass implements FromCollection, WithHeadings, WithMapping, With
                         $item->jenis . $item->urut => $item->dosen->name ?? '-',
                     ];
                 });
-
                 $tugasAkhirData->push([
                     'mahasiswa' => $mhs,
                     'tugasAkhir' => $tugasAkhir,
@@ -73,6 +72,7 @@ class TugasAkhirClass implements FromCollection, WithHeadings, WithMapping, With
     
     public function map($row): array
     {
+        dd($row);
         $mahasiswa = $row['mahasiswa'] ?? new \stdClass();
         $bimbingUji = $row['bimbingUji'] ?? new \stdClass();
         $tugasAkhir = $row['tugasAkhir'] ?? new \stdClass();
