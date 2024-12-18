@@ -82,7 +82,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6 col-sm-12">
+                        <div class="col-md-6 col-sm-12">p
                             <label for="">Filter berdasarkan Prodi / Periode</label>
                             <div class="row">
                                 <div class="col-6">
@@ -90,9 +90,7 @@
                                         <option value="semua" {{ $filter1 == 'semua' ? 'selected' : '' }}>Semua Program
                                             Studi</option>
                                         @foreach ($programStudies as $item)
-                                            <option
-                                                value="{{ $item->id }}"{{ $filter1 == $item->id ? 'selected' : '' }}>
-                                                {{ $item->display }}</option>
+                                            <option value="{{ $item->id }}"{{ $filter1 == $item->id ? 'selected' : '' }}>{{ $item->display }}</option>
                                         @endforeach
                                     </select>
                                 </div>

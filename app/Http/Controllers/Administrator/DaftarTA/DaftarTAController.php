@@ -269,7 +269,7 @@ class DaftarTAController extends Controller
                     ->where('urut', $validasi['urut'])
                     ->where('dosen_id', $validasi['dosen_id'])
                     ->whereHas('tugas_akhir', function ($q) use ($tugasAkhir) {
-                        $q->where('periode_ta_id', $tugasAkhir->periode_ta_id);
+                        $q->where('periode_ta_id', $tugasAkhir->periode_ta_id)->where('id', '!=', $tugasAkhir->id);
                     })
                     ->count();
                 if ($bimbingUji >= $validasi['kuota']) {
