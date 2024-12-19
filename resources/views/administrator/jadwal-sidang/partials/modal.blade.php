@@ -1,13 +1,13 @@
 <!-- sample modal content -->
-<div id="modalDaftarSidang" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="daftarSidangLabel"
+<div id="modalDaftarSidang{{ $item->id }}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="daftarSidangLabel"
     aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title mt-0" id="daftarSidangLabel"></h5>
+                <h5 class="modal-title mt-0" id="daftarSidangLabel{{ $item->id }}"></h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="" id="daftarSidangAction" method="post" enctype="multipart/form-data">
+            <form action="" id="daftarSidangAction{{ $item->id }}" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
                     @if ($item->status == 'belum_daftar')
@@ -95,11 +95,11 @@
     </div>
 </div>
 
-<div id="modalValidasiFile" class="modal fade" tabindex="-1" role="dialog"
+<div id="modalValidasiFile{{ $item->id }}" class="modal fade" tabindex="-1" role="dialog"
     aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form action="" id="validasiFileAction" method="post" enctype="multipart/form-data">
+            <form action="" id="validasiFileAction{{ $item->id }}" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-header">
                     @if($item->status == 'sudah_daftar')
@@ -111,7 +111,7 @@
                     @endif
                 </div>
                 <div class="modal-body">
-                    @if ($item->status == 'belum_daftar' || $item->status == 'sudah_daftar' || $item->status == 'sudah_terjadwal')
+                    @if ($item->status == 'belum_daftar' || $item->status == 'sudah_daftar')
                     <div class="row">
                         @foreach ($document_sidang->where('jenis', 'pra_sidang') as $key => $doc)
                             @php
@@ -144,9 +144,9 @@
                         @foreach ($document_sidang->where('jenis', 'sidang') as $key => $doc)
                             @php
                                 $document = $doc
-                                    ->pemberkasan()
-                                    ->where('tugas_akhir_id', $item->tugas_akhir->id)
-                                    ->first();
+                                ->pemberkasan()
+                                ->where('tugas_akhir_id', $item->tugas_akhir->id)
+                                ->first();
                             @endphp
                             <div class="col-md-4 col-sm-6 col-12 border p-3" style="position: relative">
                                 <div class="d-block text-center fw-bold" style="height: calc(100% - 115px);">

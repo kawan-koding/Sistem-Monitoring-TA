@@ -46,11 +46,19 @@ class JadwalSidangController extends Controller
 
         if(getInfoLogin()->hasRole('Dosen')) {
             $user = getInfoLogin()->userable;
-            $query = BimbingUji::where('dosen_id', $user->id)->where('jenis', $jenis)->whereHas('tugas_akhir', function($q) use ($periode) {
-                $q->where('periode_ta_id', $periode)->whereHas('sidang', function ($q) {
-                    $q->whereIn('status', ['sudah_daftar', 'sudah_terjadwal', 'sudah_sidang']);
-                });
-            })->get();
+            if($jenis == 'penguji') {
+                $query = BimbingUji::where('dosen_id', $user->id)->whereIn('jenis', ['penguji', 'pengganti'])->whereHas('tugas_akhir', function($q) use ($periode) {
+                    $q->where('periode_ta_id', $periode)->whereHas('sidang', function ($q) {
+                        $q->whereIn('status', ['sudah_daftar', 'sudah_terjadwal', 'sudah_sidang']);
+                    });
+                })->get();
+            } else {
+                $query = BimbingUji::where('dosen_id', $user->id)->where('jenis', $jenis)->whereHas('tugas_akhir', function($q) use ($periode) {
+                    $q->where('periode_ta_id', $periode)->whereHas('sidang', function ($q) {
+                        $q->whereIn('status', ['sudah_daftar', 'sudah_terjadwal', 'sudah_sidang']);
+                    });
+                })->get();
+            }
         }
 
         if(getInfoLogin()->hasRole('Admin')) {

@@ -1,7 +1,7 @@
-<div class="modal fade" id="myModalUpload" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="myModalUploadFileSeminar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form action="" id="myUploadFileSeminar" method="post" enctype="multipart/form-data">
+            <form action="" id="myUploadFileSeminar{{ $item->id }}" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-header">
                     <h5 class="modal-title mt-0" id="myModalLabelUploadFile">Unggah Berkas Seminar
@@ -84,10 +84,10 @@
     </div>
 </div>
 
-<div id="modalValidasiFile" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="validasiFileLabel" aria-hidden="true">
+<div id="modalValidasiFile{{ $item->id }}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="validasiFileLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <form action="" id="validasiFileAction" method="post">
+            <form action="" id="validasiFileAction{{ $item->id }}" method="post">
                 @csrf
                 <div class="modal-header">
                     <h5 class="modal-title mt-0"> Validasi Berkas Seminar Proposal</h5>
