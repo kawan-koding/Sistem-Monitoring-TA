@@ -16,7 +16,7 @@ class PembagianDosenController extends Controller
     {
         $dosen = Dosen::where('id', getInfoLogin()->userable_id)->first();
         $prodi = $dosen->programStudi->nama;
-        $periode = PeriodeTa::where('is_active', true)->first();
+        $periode = PeriodeTa::where('is_active', true)->where('program_studi_id', $dosen->programStudi->id)->first();
         $query = [];
         if($prodi) {
             $query =  TugasAkhir::with(['mahasiswa','bimbing_uji','periode_ta','topik','jenis_ta'])->whereHas('mahasiswa', function($query) use ($prodi) {
@@ -28,7 +28,11 @@ class PembagianDosenController extends Controller
             if($request->has('is_completed')) {
                 $query = $query->where('is_completed', $request->is_completed);
             } else {
-                $query = $query->where('is_completed', 1);
+                $query = $query->where('is_completed', true);
+            }
+            
+            if ($request->has('filter') && !empty($request->filter) && $request->filter != 'semua') {
+                $query = $query->where('tipe', $request->filter);
             }
 
             $query = $query->get();
@@ -53,6 +57,7 @@ class PembagianDosenController extends Controller
                 ],
             ],
             'data' => $query,
+            'filter' => $request->has('filter') ? $request->filter : 'semua',
         ];
 
         return view('administrator.pembagian-dosen.index', $data);
@@ -147,85 +152,129 @@ class PembagianDosenController extends Controller
 
          try {
             DB::beginTransaction();
+            // $periode = PeriodeTa::where('is_active', 1)->where('program_studi_id', $tugasAkhir->mahasiswa->program_studi_id)->first();
+            // $dat1 = $request->pemb_1;
+            // $dat2 = $request->pembimbing_2;
+            // $dat3 = $request->penguji_1;
+            // $dat4 = $request->penguji_2;
+            // $data = [$dat1, $dat2, $dat3, $dat4];
+            // if (count($data) !== count(array_unique($data))) {
+            //     return redirect()->back()->with('error', 'Tidak boleh ada dosen yang sama!');
+            // }
+            // $pemb_2 = BimbingUji::with(['tugas_akhir', 'dosen'])->where('jenis', 'pembimbing')->where('urut', 2)->where('tugas_akhir_id', $tugasAkhir->id)->first();
+            // $kuota = KuotaDosen::where('dosen_id', $dat2)->where('periode_ta_id', $periode->id)->first();
+            // $bimbingUji2 = BimbingUji::with(['tugas_akhir', 'dosen'])->where('jenis', 'pembimbing')->where('urut', 2)->where('dosen_id', $dat2)->whereHas('tugas_akhir', function ($q) use($periode){
+            //     $q->where('periode_ta_id', $periode->id)->whereNotIn('status',['reject', 'cancel'])->where('id', '!=', $tugasAkhir->id);;
+            // })->count();
+            // if(($pemb_2->dosen_id ?? null) != $dat2){
+            //     if($bimbingUji2 >= $kuota->pembimbing_2){
+            //         return redirect()->back()->with('error', 'Kuota dosen pembimbing 2 yang di pilih telah mencapai batas');
+            //     }
+            //     if(isset($pemb_2->id)){
+            //         BimbingUji::with(['tugas_akhir', 'dosen'])->where('jenis', 'pembimbing')->where('urut', 2)->where('tugas_akhir_id', $tugasAkhir->id)->update([
+            //             'dosen_id' => $dat2,
+            //         ]);
+            //     }else{
+            //         BimbingUji::create([
+            //             'jenis' => 'pembimbing',
+            //             'urut' => 2,
+            //             'tugas_akhir_id' => $tugasAkhir->id,
+            //             'dosen_id' => $dat2,
+            //         ]);
+            //     }
+            // }
+
+            // $peng_1 = BimbingUji::with(['tugas_akhir', 'dosen'])->where('jenis', 'penguji')->where('urut', 1)->where('tugas_akhir_id', $tugasAkhir->id)->first();
+            // $kuota = KuotaDosen::where('dosen_id', $dat3)->where('periode_ta_id', $periode->id)->first();
+            // $bimbingUji3 = BimbingUji::with(['tugas_akhir', 'dosen'])->where('jenis', 'penguji')->where('urut', 1)->where('dosen_id', $dat3)->whereHas('tugas_akhir', function ($q) use($periode){
+            //     $q->where('periode_ta_id', $periode->id)->whereNotIn('status',['reject', 'cancel'])->where('id', '!=', $tugasAkhir->id);;
+            // })->count();
+            // if(($peng_1->dosen_id ?? null) !== $dat3){
+            //     if($bimbingUji3 >= $kuota->penguji_1){
+            //         return redirect()->back()->with('error', 'Kuota dosen Penguji 1 yang di pilih telah mencapai batas');
+            //     }
+            //     if(isset($peng_1->id)){
+            //         BimbingUji::with(['tugas_akhir', 'dosen'])->where('jenis', 'penguji')->where('urut', 1)->where('tugas_akhir_id', $tugasAkhir->id)->update([
+            //             'dosen_id' => $dat3,
+            //         ]);
+            //     }else{
+            //         BimbingUji::create([
+            //             'jenis' => 'penguji',
+            //             'urut' => 1,
+            //             'tugas_akhir_id' => $tugasAkhir->id,
+            //             'dosen_id' => $dat3,
+            //         ]);
+            //     }
+            // }
+
+            // $peng_2 = BimbingUji::with(['tugas_akhir', 'dosen'])->where('jenis', 'penguji')->where('urut', 2)->where('tugas_akhir_id', $tugasAkhir->id)->first();
+            // $kuota = KuotaDosen::where('dosen_id', $dat4)->where('periode_ta_id', $periode->id)->first();
+            // $bimbingUji4 = BimbingUji::with(['tugas_akhir', 'dosen'])->where('jenis', 'penguji')->where('urut', 2)->where('dosen_id', $dat4)->whereHas('tugas_akhir', function ($q) use($periode){
+            //     $q->where('periode_ta_id', $periode->id)->whereNotIn('status',['reject', 'cancel'])->where('id', '!=', $tugasAkhir->id);;
+            // })->count();
+            // if(($peng_2->dosen_id ?? null) !== $dat4){
+            //     if($bimbingUji4 >= $kuota->penguji_2){
+            //         return redirect()->back()->with('error', 'Kuota dosen Penguji 2 yang di pilih telah mencapai batas');
+            //     }
+            //     if(isset($peng_2->id)){
+            //         BimbingUji::with(['tugas_akhir', 'dosen'])->where('jenis', 'penguji')->where('urut', 2)->where('tugas_akhir_id', $tugasAkhir->id)->update([
+            //             'dosen_id' => $dat4,
+            //         ]);
+            //     }else{
+            //         BimbingUji::create([
+            //             'jenis' => 'penguji',
+            //             'urut' => 2,
+            //             'tugas_akhir_id' => $tugasAkhir->id,
+            //             'dosen_id' => $dat4,
+            //         ]);
+            //     }
+            // }
+            // $tugasAkhir->update(['is_completed' => true]);
+
+
             $periode = PeriodeTa::where('is_active', 1)->where('program_studi_id', $tugasAkhir->mahasiswa->program_studi_id)->first();
-            $dat1 = $request->pemb_1;
-            $dat2 = $request->pembimbing_2;
-            $dat3 = $request->penguji_1;
-            $dat4 = $request->penguji_2;
-            $data = [$dat1, $dat2, $dat3, $dat4];
+            $pembimbing_1 = $tugasAkhir->bimbing_uji()->where('urut', 1)->where('jenis', 'pembimbing')->first()->dosen_id;
+            $data = [
+                'pembimbing_2' => $request->pembimbing_2,
+                'penguji_1' => $request->penguji_1,
+                'penguji_2' => $request->penguji_2,
+            ];
+        
+            if (in_array($pembimbing_1, $data)) {
+                return redirect()->back()->with('error', 'Pembimbing 1 tidak boleh dipilih lagi.');
+            }
+        
             if (count($data) !== count(array_unique($data))) {
-                return redirect()->back()->with('error', 'Tidak boleh ada dosen yang sama!');
+                return redirect()->back()->with('error', 'Tidak boleh ada dosen yang sama.');
             }
-            $pemb_2 = BimbingUji::with(['tugas_akhir', 'dosen'])->where('jenis', 'pembimbing')->where('urut', 2)->where('tugas_akhir_id', $tugasAkhir->id)->first();
-            $kuota = KuotaDosen::where('dosen_id', $dat2)->where('periode_ta_id', $periode->id)->first();
-            $bimbingUji2 = BimbingUji::with(['tugas_akhir', 'dosen'])->where('jenis', 'pembimbing')->where('urut', 2)->where('dosen_id', $dat2)->whereHas('tugas_akhir', function ($q) use($periode){
-                $q->where('periode_ta_id', $periode->id)->whereNotIn('status',['reject', 'cancel']);
-            })->count();
-            if(($pemb_2->dosen_id ?? null) != $dat2){
-                if($bimbingUji2 >= $kuota->pembimbing_2){
-                    return redirect()->back()->with('error', 'Kuota dosen pembimbing 2 yang di pilih telah mencapai batas');
+        
+            foreach ($data as $key => $dosen_id) {
+                $jenis = strpos($key, 'pembimbing') !== false ? 'pembimbing' : 'penguji';
+                $urut = $key === 'pembimbing_2' ? 2 : ($key === 'penguji_1' ? 1 : 2);
+        
+                $kuota = KuotaDosen::where('dosen_id', $dosen_id)->where('periode_ta_id', $periode->id)->first();
+        
+                $bimbingUjiCount = BimbingUji::where('jenis', $jenis)->where('urut', $urut)->where('dosen_id', $dosen_id)
+                    ->whereHas('tugas_akhir', function ($q) use ($periode, $tugasAkhir) {
+                        $q->where('periode_ta_id', $periode->id)->whereNotIn('status', ['reject', 'cancel'])->where('id', '!=', $tugasAkhir->id);
+                })->count();
+        
+                if ($bimbingUjiCount >= $kuota->{$key}) {
+                    return redirect()->back()->with('error', "Kuota dosen $key yang dipilih telah mencapai batas.");
                 }
-                if(isset($pemb_2->id)){
-                    BimbingUji::with(['tugas_akhir', 'dosen'])->where('jenis', 'pembimbing')->where('urut', 2)->where('tugas_akhir_id', $tugasAkhir->id)->update([
-                        'dosen_id' => $dat2,
-                    ]);
-                }else{
-                    BimbingUji::create([
-                        'jenis' => 'pembimbing',
-                        'urut' => 2,
+                
+                BimbingUji::updateOrCreate(
+                    [
+                        'jenis' => $jenis,
+                        'urut' => $urut,
                         'tugas_akhir_id' => $tugasAkhir->id,
-                        'dosen_id' => $dat2,
-                    ]);
-                }
+                    ],
+                    ['dosen_id' => $dosen_id]
+                );
             }
-
-            $peng_1 = BimbingUji::with(['tugas_akhir', 'dosen'])->where('jenis', 'penguji')->where('urut', 1)->where('tugas_akhir_id', $tugasAkhir->id)->first();
-            $kuota = KuotaDosen::where('dosen_id', $dat3)->where('periode_ta_id', $periode->id)->first();
-            $bimbingUji3 = BimbingUji::with(['tugas_akhir', 'dosen'])->where('jenis', 'penguji')->where('urut', 1)->where('dosen_id', $dat3)->whereHas('tugas_akhir', function ($q) use($periode){
-                $q->where('periode_ta_id', $periode->id)->whereNotIn('status',['reject', 'cancel']);
-            })->count();
-            if(($peng_1->dosen_id ?? null) !== $dat3){
-                if($bimbingUji3 >= $kuota->penguji_1){
-                    return redirect()->back()->with('error', 'Kuota dosen Penguji 1 yang di pilih telah mencapai batas');
-                }
-                if(isset($peng_1->id)){
-                    BimbingUji::with(['tugas_akhir', 'dosen'])->where('jenis', 'penguji')->where('urut', 1)->where('tugas_akhir_id', $tugasAkhir->id)->update([
-                        'dosen_id' => $dat3,
-                    ]);
-                }else{
-                    BimbingUji::create([
-                        'jenis' => 'penguji',
-                        'urut' => 1,
-                        'tugas_akhir_id' => $tugasAkhir->id,
-                        'dosen_id' => $dat3,
-                    ]);
-                }
-            }
-
-            $peng_2 = BimbingUji::with(['tugas_akhir', 'dosen'])->where('jenis', 'penguji')->where('urut', 2)->where('tugas_akhir_id', $tugasAkhir->id)->first();
-            $kuota = KuotaDosen::where('dosen_id', $dat4)->where('periode_ta_id', $periode->id)->first();
-            $bimbingUji4 = BimbingUji::with(['tugas_akhir', 'dosen'])->where('jenis', 'penguji')->where('urut', 2)->where('dosen_id', $dat4)->whereHas('tugas_akhir', function ($q) use($periode){
-                $q->where('periode_ta_id', $periode->id)->whereNotIn('status',['reject', 'cancel']);
-            })->count();
-            if(($peng_2->dosen_id ?? null) !== $dat4){
-                if($bimbingUji4 >= $kuota->penguji_2){
-                    return redirect()->back()->with('error', 'Kuota dosen Penguji 2 yang di pilih telah mencapai batas');
-                }
-                if(isset($peng_2->id)){
-                    BimbingUji::with(['tugas_akhir', 'dosen'])->where('jenis', 'penguji')->where('urut', 2)->where('tugas_akhir_id', $tugasAkhir->id)->update([
-                        'dosen_id' => $dat4,
-                    ]);
-                }else{
-                    BimbingUji::create([
-                        'jenis' => 'penguji',
-                        'urut' => 2,
-                        'tugas_akhir_id' => $tugasAkhir->id,
-                        'dosen_id' => $dat4,
-                    ]);
-                }
-            }
+        
             $tugasAkhir->update(['is_completed' => true]);
-
+        
             DB::commit();
             return redirect()->route('apps.pembagian-dosen')->with('success', 'Berhasil menyimpan data');
         } catch(\Exception $e){

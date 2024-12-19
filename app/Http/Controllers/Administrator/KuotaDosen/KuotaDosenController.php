@@ -23,9 +23,9 @@ class KuotaDosenController extends Controller
         }
         
         if(session('switchRoles') == 'Kaprodi') {
-            $periode = PeriodeTa::where('is_active', true)->get();
             $user = getInfoLogin()->userable;
             $prodi = $user->programStudi;
+            $periode = PeriodeTa::where('is_active', true)->where('program_studi_id', $prodi->id)->first();
             $query = KuotaDosen::where('periode_ta_id', $periode->id)->with(['dosen'])->where('program_studi_id', $prodi->id)->get();
         }
 

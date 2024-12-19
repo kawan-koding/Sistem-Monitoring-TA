@@ -35,11 +35,18 @@
                                     <option value="{{ $p->id }}" {{ request('periode') == $p->id ? 'selected' : '' }}>{{ $p->nama }} - {{ 'Prodi' . ' ' . $p->programStudi->display }}</option>
                                 @endforeach
                             </select>
+                            <select name="filter" id="" class="form-control" onchange="this.form.submit()">
+                                <option selected disabled hidden>Filter Jenis Penyelesaian</option>
+                                <option value="semua" {{ request('filter') == 'semua'  ? 'selected' : '' }}>Semua</option>
+                                <option value="I" {{ $filter == 'I' ? 'selected' : '' }}>Individu</option>
+                                <option value="K" {{ $filter == 'K' ? 'selected' : '' }}>Kelompok</option>
+                            </select>
                         </div>
                     </form>
                 </div>
-                <hr>
                 @endif
+                <hr>
+                
 
                 @if(session('success'))
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -75,6 +82,7 @@
                                 <th width="40%">Judul</th>
                                 <th width="20%">Dosen</th>
                                 <th width="10%">Periode</th>
+                                <th width="10%">Status</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -88,7 +96,7 @@
                                         <p class="m-0 p-0 text-muted small">NIM : {{$item->mahasiswa->nim}}</p>
                                     </td>
                                     <td>
-                                        <span class="badge {{ isset($item->status) ? ($item->status == 'acc' ? 'badge-soft-success' : (in_array($item->status, ['draft', 'pengajuan ulang']) ? 'bg-dark-subtle text-body' : ($item->status == 'revisi' ? 'badge-soft-warning' : 'badge-soft-danger'))) : ''}} small mb-1"> {{ ucfirst($item->status ?? '-')}} </span>
+                                        <span class="badge badge-soft-primary small mb-1 fw-bold">{{ $item->tipe == 'I' ? 'Individu' : 'Kelompok' }}</span>
                                         <p class="m-0 small"><strong>{{ $item->judul }}</strong></p>
                                         <p class="m-0 text-muted font-size-15 small">{{ $item->topik->nama_topik }} - {{ $item->jenis_ta->nama_jenis}}</p>
                                     </td>
@@ -107,6 +115,9 @@
                                         </ol>
                                     </td>
                                     <td><p class="small">{{ $item->periode_ta->nama }}</p></td>
+                                    <td>
+                                        <span class="badge {{ isset($item->status) ? ($item->status == 'acc' ? 'badge-soft-success' : (in_array($item->status, ['draft', 'pengajuan ulang']) ? 'bg-dark-subtle text-body' : ($item->status == 'revisi' ? 'badge-soft-warning' : 'badge-soft-danger'))) : ''}} small mb-1"> {{ ucfirst($item->status ?? '-')}} </span>
+                                    </td>
                                     <td>
                                         @can('update-daftar-ta')
                                         <a href="{{ route('apps.daftar-ta.edit', $item)}}" class="btn btn-sm btn-outline-primary mb-1" title="Edit"><i class="bx bx-edit-alt"></i></a>

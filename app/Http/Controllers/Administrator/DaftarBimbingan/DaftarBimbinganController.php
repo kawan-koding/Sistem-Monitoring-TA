@@ -28,7 +28,7 @@ class DaftarBimbinganController extends Controller
         }
 
         if ($request->status == 'mahasiswa_uji') {
-            $query->where('jenis', 'penguji');
+            $query->whereIn('jenis', ['penguji','pengganti']);
         } else {
             $query->where('jenis', 'pembimbing');
         }

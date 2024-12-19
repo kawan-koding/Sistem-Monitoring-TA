@@ -45,6 +45,11 @@
             </div>
             <hr>
             <table class="ms-3" cellpadding="4">
+                <tr>
+                    <th>Nama Mahasiswa</th>
+                    <td>:</td>
+                    <td>{{isset($data->mahasiswa->nama_mhs) ? $data->mahasiswa->nama_mhs : '-'}}</td>
+                </tr>
                 @forelse ($pembimbing as $key => $item)
                     <tr>
                         <th>Pembimbing {{ $key + 1 }}</th>

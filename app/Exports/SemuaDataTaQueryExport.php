@@ -48,7 +48,7 @@ class SemuaDataTaQueryExport implements FromCollection, WithHeadings, WithMappin
             $query->whereHas('sidang', function($q) { 
                 $q->whereStatus($this->status);
             });
-        } elseif($this->status == 'sudah_pemberkasan_sidang') {
+        } elseif($this->status == 'sudah_pemberkasan_sidang') { 
             $query->whereStatusSidang($this->status);
         }
         $query = $query->get();

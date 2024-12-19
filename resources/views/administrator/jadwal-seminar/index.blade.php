@@ -82,7 +82,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6 col-sm-12">
+                        <div class="col-md-6 col-sm-12">p
                             <label for="">Filter berdasarkan Prodi / Periode</label>
                             <div class="row">
                                 <div class="col-6">
@@ -90,9 +90,7 @@
                                         <option value="semua" {{ $filter1 == 'semua' ? 'selected' : '' }}>Semua Program
                                             Studi</option>
                                         @foreach ($programStudies as $item)
-                                            <option
-                                                value="{{ $item->id }}"{{ $filter1 == $item->id ? 'selected' : '' }}>
-                                                {{ $item->display }}</option>
+                                            <option value="{{ $item->id }}"{{ $filter1 == $item->id ? 'selected' : '' }}>{{ $item->display }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -257,18 +255,18 @@
                                         @if ($item->status != 'telah_seminar')
                                             @can('update-jadwal-seminar')
                                                 <a href="{{ route('apps.jadwal-seminar.edit', ['jadwalSeminar' => $item->id]) }}"
-                                                    class="btn btn-sm btn-primary"><i class="bx bx-calendar-event"></i></a>
+                                                    class="btn btn-sm btn-primary mb-2"><i class="bx bx-calendar-event"></i></a>
                                             @endcan
                                         @endif
                                         @if ($item->status == 'telah_seminar')
                                             <a href="{{ route('apps.jadwal-seminar.show', $item) }}"
-                                                class="btn btn-sm btn-outline-warning mb-3" title="Detail"><i
+                                                class="btn btn-sm btn-outline-warning mb-2" title="Detail"><i
                                                     class="bx bx-show"></i></a>
                                         @endif
                                         @if ($item->tugas_akhir->status_pemberkasan != 'sudah_lengkap' && is_null($item->tugas_akhir->status_sidang))
                                             <a href="javascript:void(0)"
                                                 onclick="validasiFile('{{ $item->id }}', '{{ route('apps.jadwal-seminar.validate', $item->id) }}')"
-                                                class="btn btn-sm btn-outline-success mb-3" title="Validasi Berkas"><i
+                                                class="btn btn-sm btn-outline-success mb-2" title="Validasi Berkas"><i
                                                     class="bx bx-pencil"></i></a>
                                         @endif
                                     @endif

@@ -21,11 +21,11 @@ class JadwalController extends Controller
     public function index(Request $request, $jenis = 'pembimbing')
     {
         $user = getInfoLogin()->userable;
-        $periode = PeriodeTa::where('is_active', 1)->first();
+        $periode = PeriodeTa::whereIsActive(true)->get();
         $query = [];
         if(getInfoLogin()->hasRole('Dosen')) {
             $query = BimbingUji::where('dosen_id', $user->id)->where('jenis', $jenis)->whereHas('tugas_akhir', function($q) use ($periode) {
-                $q->where('periode_ta_id', $periode->id);
+                $q->whereIn('periode_ta_id', $periode->pluck('id'));
             });
 
             if ($request->has('program_studi') && !empty($request->program_studi) && $request->program_studi !== 'semua') {
