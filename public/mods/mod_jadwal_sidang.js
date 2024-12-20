@@ -1,7 +1,7 @@
 function daftarSidang(id, url) {
-    $('#daftarSidangAction').attr("action", `${BASE_URL}/apps/jadwal-sidang/${id}/daftar-sidang`);
-    $('#daftarSidangLabel').html('Unggah Berkas Pendaftaran')
-    $('#modalDaftarSidang').modal('show')   
+    $('#daftarSidangAction'+ id).attr("action", `${BASE_URL}/apps/jadwal-sidang/${id}/daftar-sidang`);
+    $('#daftarSidangLabel'+ id).html('Unggah Berkas Pendaftaran')
+    $('#modalDaftarSidang'+ id).modal('show')   
 }
 
 function unggahFile(id, url) {
@@ -11,8 +11,8 @@ function unggahFile(id, url) {
 }
 
 function validasiFile(id, url) {
-    $('#validasiFileAction').attr("action", `${BASE_URL}/apps/jadwal-sidang/${id}/validasi-berkas`);
-    $('#modalValidasiFile').modal('show')
+    $('#validasiFileAction'+ id).attr("action", `${BASE_URL}/apps/jadwal-sidang/${id}/validasi-berkas`);
+    $('#modalValidasiFile'+ id).modal('show')
 }
 
 function updateOptions() {
