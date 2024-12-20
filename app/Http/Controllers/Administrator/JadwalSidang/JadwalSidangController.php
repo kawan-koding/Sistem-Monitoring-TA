@@ -712,7 +712,7 @@ class JadwalSidangController extends Controller
                 break;
             case 'sudah_pemberkasan_sidang':
                 $export = new SemuaDataTaExport($status);
-                $title = 'Sudah Pemberkasan Seminar';
+                $title = 'Sudah Pemberkasan Sidang';
                 break;
             default:
                 return redirect()->back()->with('error', 'Jenis export tidak valid.');

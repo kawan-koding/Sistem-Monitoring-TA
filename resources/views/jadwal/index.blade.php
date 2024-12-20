@@ -4,7 +4,7 @@
   <div class="container d-flex flex-column align-items-center position-relative" data-aos="zoom-out">
       <h2 class="text-white text-center">{{ getSetting('app_name') }}</h2>
       <div class="d-flex justify-content-center" style="width: 100%; max-width: 500px">
-        <form class="search-bar {{ request('search') ? 'has-value' : '' }}" action="{{ route('guest.rekomendasi-topik')}}" method="GET">
+        {{-- <form class="search-bar {{ request('search') ? 'has-value' : '' }}" action="{{ route('guest.rekomendasi-topik')}}" method="GET">
           <input type="text" placeholder="Cari Judul..." value="{{ request('search') }}" name="search">
           @if(request('search'))
               <a href="{{ route('guest.rekomendasi-topik') }}" title="Reset" class="btn btn-link text-dark" style="padding: 0;">
@@ -12,7 +12,8 @@
               </a>
           @endif
           <button type="submit" title="Cari"><i class="bx bx-search"></i></button>
-        </form>
+        </form> --}}
+        <h5>Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur, necessitatibus.</h5>
       </div>
   </div>
 </section>
@@ -24,7 +25,7 @@
       <p class="text-muted"><span>Temukan topik yang sesuai dengan bidang keahlian kamu</span></p>
     </div>
     <div class="info" id="info">
-      @forelse ($tawaran as $item)
+      {{-- @forelse ($tawaran as $item)
       <div class="info-item d-flex">
         <div class="row w-100">
           <div class="col-lg-12">
@@ -47,37 +48,11 @@
       </div>
       @empty
       <p class="text-center " style="color: #aeaeae">Tidak ada tawaran</p>
-      @endforelse
+      @endforelse --}}
     </div>
   </div>
   <div class="d-flex justify-content-center mt-5">
-    @if ($tawaran->hasPages())
-      <nav>
-          <ul class="pagination justify-content-center">
-              @if ($tawaran->onFirstPage())
-                  <li class="page-item disabled"><span class="page-link"> < </span></li>
-              @else
-                  <li class="page-item"><a class="page-link" href="{{ $tawaran->previousPageUrl() }}"> < </a></li>
-              @endif
-              @foreach ($tawaran->getUrlRange(1, $tawaran->lastPage()) as $page => $url)
-                  @if ($page == 1 || $page == $tawaran->lastPage() || abs($page - $tawaran->currentPage()) <= 1)
-                      @if ($page == $tawaran->currentPage())
-                          <li class="page-item active"><span class="page-link">{{ $page }}</span></li>
-                      @else
-                          <li class="page-item"><a class="page-link" href="{{ $url }}">{{ $page }}</a></li>
-                      @endif
-                  @elseif ($loop->iteration == 2 || $loop->iteration == ($tawaran->lastPage() - 1))
-                      <li class="page-item disabled"><span class="page-link">...</span></li>
-                  @endif
-              @endforeach
-              @if ($tawaran->hasMorePages())
-                  <li class="page-item"><a class="page-link" href="{{ $tawaran->nextPageUrl() }}"> > </a></li>
-              @else
-                  <li class="page-item disabled"><span class="page-link"> > </span></li>
-              @endif
-          </ul>
-      </nav>
-  @endif
+    {{ $tawaran->links() }}
   </div>
 </section>
 

@@ -33,13 +33,13 @@ class SemuaDataTaQueryExport implements FromCollection, WithHeadings, WithMappin
     {
         $this->no = 1;
     }
-
+ 
     public function collection()
     {
         $query = TugasAkhir::with(['mahasiswa', 'jadwal_seminar', 'bimbing_uji','sidang'])->wherePeriodeTaId($this->periodeId)->whereStatus('acc');
 
         if($this->status == 'sudah_pemberkasan') {
-            $query->whereNull('status_sidang')->whereStatusPemberkasan('sudah_lengkap');
+            $query->whereNotNull('status_sidang')->orWhere('status_pemberkasan', 'sudah_lengkap');
         } elseif(in_array($this->status, ['belum_terjadwal','telah_seminar','sudah_pemberkasan'])) {
             $query->whereHas('jadwal_seminar', function($q) { 
                 $q->whereStatus($this->status);
@@ -49,7 +49,8 @@ class SemuaDataTaQueryExport implements FromCollection, WithHeadings, WithMappin
                 $q->whereStatus($this->status);
             });
         } elseif($this->status == 'sudah_pemberkasan_sidang') { 
-            $query->whereStatusSidang($this->status);
+            // $query->whereStatusSidang($this->status);
+            $query->whereNotNull('status_sidang')->where('status_pemberkasan', 'sudah_lengkap');
         }
         $query = $query->get();
         $query = $query->map(function ($tugasAkhir, $index) {
