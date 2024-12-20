@@ -305,9 +305,9 @@
         function uploadFileSeminar(id, url) {
             $('#id_jadwal_seminar').val(id);
             $('#url_unggah_berkas').val(url);
-            $('#myModalUpload').find('form').trigger('reset');
-            $('#myModalUpload').find('form').attr("action", url);
-            $('#myModalUpload').modal('show');
+            $('#myModalUpload'+ id).find('form').trigger('reset');
+            $('#myModalUpload'+ id).find('form').attr("action", url);
+            $('#myModalUpload'+ id).modal('show');
         }
 
         function changeFile(target) {

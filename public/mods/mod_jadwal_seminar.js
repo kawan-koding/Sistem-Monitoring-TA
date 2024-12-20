@@ -1,4 +1,5 @@
-function uploadFileSeminar(id, url) {
+function uploadFileSeminar() {
+    alert(1)
     $('#myUploadFileSeminar'+ id).attr('action', `${BASE_URL}/apps/jadwal-seminar/${id}/unggah-berkas`);
     $('#myModalUploadFileSeminar'+ id).modal('show');
 }

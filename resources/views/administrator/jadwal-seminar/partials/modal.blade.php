@@ -1,4 +1,4 @@
-<div class="modal fade" id="myModalUploadFileSeminar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="myModalUpload{{ $item->id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <form action="" id="myUploadFileSeminar{{ $item->id }}" method="post" enctype="multipart/form-data">
@@ -41,7 +41,7 @@
                             </label>
                         </div>
                     @endforeach
-                    <h5 class="text-start mt-3">2. Berkas Seminar</h5>
+                    <h5 class="text-start mt-4">2. Berkas Seminar</h5>
                     @foreach ($document_seminar->where('jenis', 'seminar') as $key => $doc)
                         @php $document = $doc->pemberkasan()->where('tugas_akhir_id', $item->tugas_akhir->id)->first(); @endphp
                         <div class="d-flex align-items-center gap-2 mb-3 " id="document{{ $doc->id }}">
