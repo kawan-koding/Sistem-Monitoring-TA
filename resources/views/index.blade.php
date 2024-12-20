@@ -159,15 +159,15 @@
 
     <section id="mahasiswa" class="mahasiswa" style="padding: 60px 0 100px 0">
         <div class="container">
-            <h5 class="font-size-24 text-center m-0 fw-bold mb-1">Mahasiswa</h5>
+            <h5 class="font-size-24 text-center m-0 fw-bold mb-1">Daftar Mahasiswa</h5>
             <ul class="nav nav-pills w-100 mb-5">
                 <li class="flex-fill">
-                    <a class="nav-link {{ $tabs === 'seminar' ? 'active' : '' }} text-center fw-bold"  href="{{ url()->current() . '?' . http_build_query(array_merge(request()->query(), ['tabs' => 'seminar'])) }}" style="color: var(--primary-color)">
+                    <a class="nav-link {{ $tabs === 'seminar' ? 'active' : '' }} text-center fw-bold"  href="{{ url()->current() . '?tabs=seminar' }}" style="color: var(--primary-color)">
                         Sudah Seminar
                     </a>
                 </li>
                 <li class="flex-fill">
-                    <a class="nav-link {{ $tabs === 'sidang' ? 'active' : '' }} text-center fw-bold"  href="{{ url()->current() . '?' . http_build_query(array_merge(request()->query(), ['tabs' => 'sidang'])) }}" style="color: var(--primary-color)">
+                    <a class="nav-link {{ $tabs === 'sidang' ? 'active' : '' }} text-center fw-bold"  href="{{ url()->current() . '?tabs=sidang' }}" style="color: var(--primary-color)">
                         Sudah Sidang
                     </a>
                 </li>

@@ -10,7 +10,7 @@
                    <li><a class="nav-link scrollto {{ request()->routeIs('home') ? 'active' : ''}}" href="{{ route('home')}}">Beranda</a></li>
                     <li><a class="nav-link scrollto {{ request()->routeIs('guest.rekomendasi-topik') ? 'active' : ''}}" href="{{ route('guest.rekomendasi-topik')}}">Tawaran Topik</a></li>
                     <li><a class="nav-link scrollto {{ request()->routeIs('guest.judul-tugas-akhir') ? 'active' : ''}}" href="{{ route('guest.judul-tugas-akhir')}}">Tugas Akhir</a></li>
-                    <li><a class="nav-link scrollto" href="#jadwal">Jadwal</a></li>
+                    <li><a class="nav-link scrollto {{ request()->routeIs('guest.jadwal') ? 'active' : ''}}" href="{{ route('guest.jadwal')}}">Jadwal</a></li>
                 </ul>
                 <i class="bi bi-list mobile-nav-toggle d-none"></i>
             </nav>
@@ -18,7 +18,6 @@
         </div>
     </header>
     
-
     <main id="main">
         @yield('content')
     </main>
