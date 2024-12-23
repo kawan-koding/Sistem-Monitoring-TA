@@ -119,14 +119,12 @@ class HomeController extends Controller
                 })->pluck('filename')->first();
                 $tipe = $ta->tipe == 'I' ? 'Individu' : 'Kelompok';
                 $jenis = $ta->jenis_ta->nama_jenis ?? '-';
-                $topik = $ta->topik->nama_topik ?? '-';
-                
+                $topik = $ta->topik->nama_topik ?? '-'; 
                 $bimbingUji = $ta->bimbing_uji->mapWithKeys(function ($bimbing) {
                     return [
                         "{$bimbing->jenis}_{$bimbing->urut}" => $bimbing->dosen->name ?? '-',
                     ];
                 });
-
                 $item->judul_ta = $ta->judul ?? '-';
                 $item->tipe = $tipe ?? '-';
                 $item->poster = $posterSeminar ?? null;
@@ -138,7 +136,6 @@ class HomeController extends Controller
                 $item->penguji_2 = $bimbingUji['penguji_2'] ?? '-';
                 return $item;
             });
-
         } elseif($tabs === 'sidang') {
             $completes = Sidang::with(['tugas_akhir.mahasiswa'])->where('status','sudah_sidang')->whereHas('tugas_akhir',function($q) {
                 $q->where('status','acc');  
@@ -156,7 +153,6 @@ class HomeController extends Controller
                         "{$bimbing->jenis}_{$bimbing->urut}" => $bimbing->dosen->name ?? '-',
                     ];
                 });
-
                 $item->judul_ta = $ta->judul ?? '-';
                 $item->tipe = $tipe ?? '-';
                 $item->poster = $posterSidang ?? null;
@@ -249,8 +245,7 @@ class HomeController extends Controller
                 $jamSelesai = $item->jam_selesai ? date('H:i', strtotime($item->jam_selesai)) : '-:-';
                 $tipe = $ta->tipe == 'I' ? 'Individu' : 'Kelompok';
                 $jenis = $ta->jenis_ta->nama_jenis ?? '-';
-                $topik = $ta->topik->nama_topik ?? '-';
-                
+                $topik = $ta->topik->nama_topik ?? '-';                
                 $bimbingUji = $ta->bimbing_uji->mapWithKeys(function ($bimbing) {
                     return [
                         "{$bimbing->jenis}_{$bimbing->urut}" => $bimbing->dosen->name ?? '-',
@@ -308,7 +303,6 @@ class HomeController extends Controller
             $completes = JadwalSeminar::with(['tugas_akhir.mahasiswa'])->where('status','telah_seminar')->whereHas('tugas_akhir',function($q) {
                 $q->where('status','acc');  
             })->paginate(10)->appends(['tabs' => $tabs]);
-
             $completes->getCollection()->transform(function ($item) {
                 $ta = $item->tugas_akhir;
                 $posterSeminar = Pemberkasan::where('tugas_akhir_id', $ta->id)->whereHas('jenisDokumen', function ($query) {
@@ -317,13 +311,11 @@ class HomeController extends Controller
                 $tipe = $ta->tipe == 'I' ? 'Individu' : 'Kelompok';
                 $jenis = $ta->jenis_ta->nama_jenis ?? '-';
                 $topik = $ta->topik->nama_topik ?? '-';
-                
                 $bimbingUji = $ta->bimbing_uji->mapWithKeys(function ($bimbing) {
                     return [
                         "{$bimbing->jenis}_{$bimbing->urut}" => $bimbing->dosen->name ?? '-',
                     ];
                 });
-
                 $item->judul_ta = $ta->judul ?? '-';
                 $item->tipe = $tipe ?? '-';
                 $item->poster = $posterSeminar ?? null;
@@ -353,7 +345,6 @@ class HomeController extends Controller
                         "{$bimbing->jenis}_{$bimbing->urut}" => $bimbing->dosen->name ?? '-',
                     ];
                 });
-
                 $item->judul_ta = $ta->judul ?? '-';
                 $item->tipe = $tipe ?? '-';
                 $item->poster = $posterSidang ?? null;

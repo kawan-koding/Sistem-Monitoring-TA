@@ -176,8 +176,8 @@
                                             : 
                                             (isset($item->tugas_akhir->status) ? 
                                                 ($item->tugas_akhir->status == 'acc' ? 'badge-soft-info' : 
-                                                ($item->tugas_akhir->status == 'draft' ? 'badge-soft-dark' : 
                                                 ($item->tugas_akhir->status == 'reject' ? 'badge-soft-danger' : 
+                                                ($item->tugas_akhir->status == 'draft' ? 'badge-soft-dark' : 
                                                 ($item->tugas_akhir->status == 'revisi' ? 'badge-soft-danger' : 
                                                 ($item->tugas_akhir->status == 'cancel' ? 'badge-soft-danger' : 'badge-soft-secondary')))))
                                                 : 'badge-soft-secondary'
