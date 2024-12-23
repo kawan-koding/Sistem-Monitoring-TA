@@ -85,7 +85,7 @@
                         <div class="col-md-6 col-sm-12">
                             <label for="">Filter berdasarkan Prodi / Periode</label>
                             <div class="row">
-                                <div class="col-6">
+                                <div class="col-4">
                                     <select name="filter1" class="form-control" onchange="this.form.submit()">
                                         <option value="semua" {{ $filter1 == 'semua' ? 'selected' : '' }}>Semua Program
                                             Studi</option>
@@ -94,7 +94,7 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="col-6">
+                                <div class="col-4">
                                     <select name="filter2" class="form-control" onchange="this.form.submit()">
                                         <option value="semua" {{ $filter2 == 'semua' ? 'selected' : '' }}>Semua Periode
                                         </option>
@@ -106,7 +106,13 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                
+                                <div class="col-4">
+                                    <select name="type" class="form-control" onchange="this.form.submit()">
+                                        <option value="semua" {{ $type == 'semua' ? 'selected' : '' }}>Semua</option>
+                                        <option value="I" {{ $type == 'I' ? 'selected' : '' }}>Individu</option>
+                                        <option value="K" {{ $type == 'K' ? 'selected' : '' }}>Kelompok</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                     </div>

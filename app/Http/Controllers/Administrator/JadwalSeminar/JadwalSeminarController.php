@@ -44,6 +44,12 @@ class JadwalSeminarController extends Controller
                 });
             }
 
+            if($request->has('type') && !empty($request->type) && $request->type != 'semua') {
+                $query = $query->wherehas('tugas_akhir', function ($q) use ($request) {
+                    $q->whereTipe($request->type);
+                });
+            }
+
             if ($request->has('status') && !empty($request->status)) {
                 $query = $query->where('status', $request->status)->whereHas('tugas_akhir', function ($q) use ($request) {
                     $q->where('status_pemberkasan', 'belum_lengkap');
@@ -120,6 +126,7 @@ class JadwalSeminarController extends Controller
             'filter1' => $request->has('filter1') ? $request->filter1 : null,
             'filter2' => $request->has('filter2') ? $request->filter2 : null,
             'prodi' => ProgramStudi::all(),
+            'type' => $request->has('type') ? $request->type : null,
         ];
 
         return view('administrator.jadwal-seminar.index', $data);

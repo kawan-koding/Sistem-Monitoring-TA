@@ -110,7 +110,7 @@
                             <div class="col-md-6 col-sm-12">
                                 <label for="">Filter berdasarkan Prodi / Periode</label>
                                 <div class="row">
-                                    <div class="col-6">
+                                    <div class="col-4">
                                         <select name="filter1" class="form-control" onchange="this.form.submit()">
                                             <option value="semua" {{ $filter1 == 'semua' ? 'selected' : '' }}>Semua Program Studi</option>
                                             @foreach ($programStudies as $item)
@@ -118,12 +118,19 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                    <div class="col-6">
+                                    <div class="col-4">
                                         <select name="filter2" class="form-control" onchange="this.form.submit()">
                                             <option value="semua" {{ $filter2 == 'semua' ? 'selected' : '' }}>Semua Periode</option>
                                             @foreach ($periodes as $item)
                                                 <option value="{{ $item->id }}" {{ isset($filter2) && $filter2 == $item->id ? 'selected' : '' }}>{{ $item->nama }} - {{ 'Prodi' . ' ' . $item->programStudi->display }}</option>
                                             @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-4">
+                                        <select name="type" class="form-control" onchange="this.form.submit()">
+                                            <option value="semua" {{ $type == 'semua' ? 'selected' : '' }}>Semua</option>
+                                            <option value="I" {{ $type == 'I' ? 'selected' : '' }}>Individu</option>
+                                            <option value="K" {{ $type == 'K' ? 'selected' : '' }}>Kelompok</option>
                                         </select>
                                     </div>
                                 </div>
@@ -343,6 +350,11 @@
                                         @if($item->status == 'sudah_daftar' || $item->status == 'sudah_terjadwal')
                                             <a href="{{ route('apps.jadwal-sidang.edit', ['jadwalSidang' => $item->id]) }}"
                                             class="btn btn-sm btn-primary"><i class="bx bx-calendar-event"></i></a>
+                                        @endif
+                                        @if ($item->status == 'sudah_sidang')
+                                            <a href="{{ route('apps.jadwal-seminar.show', $item) }}"
+                                                class="btn btn-sm btn-outline-warning mb-2" title="Detail"><i
+                                                    class="bx bx-show"></i></a>
                                         @endif
                                     @endif
                                     @include('administrator.jadwal-sidang.partials.modal')
