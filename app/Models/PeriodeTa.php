@@ -17,4 +17,9 @@ class PeriodeTa extends Model
     {
         return $this->belongsTo(ProgramStudi::class);
     }
+
+    public function tugasAkhir()
+    {
+        return $this->hasMany(TugasAkhir::class);
+    }
 }

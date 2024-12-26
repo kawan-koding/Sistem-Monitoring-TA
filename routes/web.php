@@ -70,11 +70,17 @@ Route::get('oauth/refresh', [AuthController::class, 'refresh'])->name('oauth.ref
 Route::prefix('apps')->middleware('auth')->group(function () {
     Route::get('switching', [AuthController::class, 'switching'])->name('apps.switching');
     Route::get('switcher/{role}', [AuthController::class, 'switcher'])->name('apps.switcher');
-    Route::get('dashboard', [DashboardController::class, 'index'])->name('apps.dashboard');
     Route::get('profile', [ProfileController::class, 'index'])->name('apps.profile');
     Route::post('{user}/update', [ProfileController::class, 'update'])->name('apps.profile.update');
     Route::post('{user}/updatePassword', [ProfileController::class, 'updatePassword'])->name('apps.profile.update-password');
-
+    
+    Route::prefix('dashboard')->group(function() {
+        Route::get('', [DashboardController::class, 'index'])->name('apps.dashboard');
+        Route::get('get-graduated-data', [DashboardController::class, 'getGraduatedData'])->name('apps.dashboard.get-graduated-data');
+        Route::get('get-student-data', [DashboardController::class, 'getStudentData'])->name('apps.dashboard.get-student-data');
+        Route::get('get-schedule-data', [DashboardController::class, 'getScheduleData'])->name('apps.dashboard.get-schedule-data');
+    });
+    
     Route::prefix('users')->middleware('can:read-users')->group(function () {
         Route::get('', [UserController::class, 'index'])->name('apps.users');
         Route::post('store', [UserController::class, 'store'])->name('apps.users.store')->middleware('can:create-users');
