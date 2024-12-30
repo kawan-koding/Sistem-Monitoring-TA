@@ -62,6 +62,9 @@ class JadwalSidangController extends Controller
         }
 
         if(getInfoLogin()->hasRole('Admin')) {
+            $query = $query->whereHas('tugas_akhir', function ($q) use ($periode) {
+                $q->where('is_completed', 1)->whereIn('periode_ta_id', $periode);
+            });
             if($request->has('tanggal') && !empty($request->tanggal)) {
                 $query = $query->whereDate('tanggal', $request->tanggal);
             }
@@ -187,9 +190,8 @@ class JadwalSidangController extends Controller
                     } else {
                         $query->where('dosen_id', $dosenId);
                     }
-                    $query->where('jenis', 'pembimbing')->where('urut', 1);
                 });
-            })->where('status', 'sudah_terjadwal')->get(),
+            })->whereDate('tanggal', '>=', Carbon::today()->format('Y-m-d'))->whereNot('id', $jadwalSidang->id)->where('status', 'sudah_terjadwal')->get(),
             'jadwalPembimbing2' => Sidang::whereHas('tugas_akhir', function ($query) use ($jadwalSidang) {
                 $query->whereHas('bimbing_uji', function ($query) use ($jadwalSidang) {
                     $dosenId = $jadwalSidang->tugas_akhir->bimbing_uji()->where('jenis', 'pembimbing')->where('urut', 2)->first();
@@ -200,9 +202,8 @@ class JadwalSidangController extends Controller
                     } else {
                         $query->where('dosen_id', $dosenId);
                     }
-                    $query->where('jenis', 'pembimbing')->where('urut', 2);
                 });
-            })->where('status', 'sudah_terjadwal')->get(),
+            })->whereDate('tanggal', '>=', Carbon::today()->format('Y-m-d'))->whereNot('id', $jadwalSidang->id)->where('status', 'sudah_terjadwal')->get(),
             'jadwalPenguji1' => Sidang::whereHas('tugas_akhir', function ($query) use ($jadwalSidang) {
                 $query->whereHas('bimbing_uji', function ($query) use ($jadwalSidang) {
                     $dosenId = $jadwalSidang->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 1)->first();
@@ -213,9 +214,8 @@ class JadwalSidangController extends Controller
                     } else {
                         $query->where('dosen_id', $dosenId);
                     }
-                    $query->where('jenis', 'penguji')->where('urut', 1);
                 });
-            })->where('status', 'sudah_terjadwal')->get(),
+            })->whereDate('tanggal', '>=', Carbon::today()->format('Y-m-d'))->whereNot('id', $jadwalSidang->id)->where('status', 'sudah_terjadwal')->get(),
             'jadwalPenguji2' => Sidang::whereHas('tugas_akhir', function ($query) use ($jadwalSidang) {
                 $query->whereHas('bimbing_uji', function ($query) use ($jadwalSidang) {
                     $dosenId = $jadwalSidang->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 2)->first();
@@ -226,9 +226,8 @@ class JadwalSidangController extends Controller
                     } else {
                         $query->where('dosen_id', $dosenId);
                     }
-                    $query->where('jenis', 'penguji')->where('urut', 2);
                 });
-            })->where('status', 'sudah_terjadwal')->get(),
+            })->whereDate('tanggal', '>=', Carbon::today()->format('Y-m-d'))->whereNot('id', $jadwalSidang->id)->where('status', 'sudah_terjadwal')->get(),
             'mahasiswaTerdaftar' => Sidang::where('status', 'sudah_terjadwal')->whereIn('tanggal', $currentWeekDays)->orderBy('tanggal', 'asc')->get(),
             'pengujiPengganti'=> Dosen::all(),
         ];
@@ -264,7 +263,7 @@ class JadwalSidangController extends Controller
             $check = Sidang::whereRuanganId($request->ruangan)->whereDate('tanggal', $request->tanggal)->where('jam_mulai', '>=', $request->jam_mulai)->where('jam_selesai', '<=', $request->jam_selesai)->whereNot('id', $jadwalSidang->id)->first();
 
             if(!is_null($check)) {
-                return redirect()->back()->with(['error' => 'Jadwal ini sudah ada']);
+                return redirect()->back()->withInput($request->all())->with(['error' => 'Jadwal ini sudah ada']);
             }
 
             $jadwalSidang->update([

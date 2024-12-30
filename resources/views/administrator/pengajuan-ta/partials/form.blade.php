@@ -100,15 +100,13 @@
                                 <div class="mb-3">
                                     <label for="">{{ ucwords(strtolower(ucfirst($item->nama))) }} <span class="text-danger">*</span></label>
                                     <input type="file" name="dokumen_{{ $item->id }}" class="form-control filepond">
-                                    @if($item->nama == 'FORMULIR KESEDIAAN PEMBIMBING 1')
-                                        <p class="small text-danger m-0"><i>*pastikan bahwa dokumen yang ter-upload sudah mendapat persetujuan dosen pembimbing</i></p>
-                                    @endif
                                     @if(isset($editedData) && !is_null($item->pemberkasan()->where('tugas_akhir_id', $editedData->id)->first()))
-                                        <a href="{{ asset('storage/files/pemberkasan/'. $item->pemberkasan()->where('tugas_akhir_id', $editedData->id)->first()->filename) }}" target="_blank" class="nav-link small text-primary mt-1" ><i>Lihat {{ strtolower($item->nama) }}</i></a>
+                                    <a href="{{ asset('storage/files/pemberkasan/'. $item->pemberkasan()->where('tugas_akhir_id', $editedData->id)->first()->filename) }}" target="_blank" class="nav-link small text-primary mt-1" accept=".docx, .pdf"><i>Lihat {{ strtolower($item->nama) }}</i></a>
                                     @endif
                                 </div>
                             </div>
                             @endforeach
+                            <p class="small text-danger m-0"><i>*pastikan bahwa dokumen yang ter-upload sudah mendapat persetujuan dosen pembimbing</i></p>
                         </div>
                         <hr>
                         <div class="text-end">

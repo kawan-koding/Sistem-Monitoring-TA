@@ -5,9 +5,9 @@ function daftarSidang(id, url) {
 }
 
 function unggahFile(id, url) {
-    $('#daftarSidangAction').attr("action", `${BASE_URL}/apps/jadwal-sidang/${id}/unggah-berkas`);
-    $('#daftarSidangLabel').html('Unggah Berkas Pasca Sidang')
-    $('#modalDaftarSidang').modal('show')
+    $('#daftarSidangAction'+ id).attr("action", `${BASE_URL}/apps/jadwal-sidang/${id}/unggah-berkas`);
+    $('#daftarSidangLabel'+ id).html('Unggah Berkas Pasca Sidang')
+    $('#modalDaftarSidang'+ id).modal('show')
 }
 
 function validasiFile(id, url) {

@@ -29,7 +29,7 @@ class JadwalSeminarController extends Controller
         $periode = $request->has('filter2') && !empty($request->filter2 && $request->filter2 != 'semua') ? [$request->filter2] : PeriodeTa::where('is_active', 1)->get()->pluck('id')->toArray();
         if (getInfoLogin()->hasRole('Admin')) {
             $query = JadwalSeminar::whereHas('tugas_akhir', function ($q) use ($periode) {
-                $q->where('status', 'acc')->whereIn('periode_ta_id', $periode);
+                $q->where('status', 'acc')->where('is_completed', 1)->whereIn('periode_ta_id', $periode);
             });
 
             if ($request->has('tanggal') && !empty($request->tanggal)) {
@@ -173,9 +173,8 @@ class JadwalSeminarController extends Controller
                     } else {
                         $query->where('dosen_id', $dosenId);
                     }
-                    $query->where('jenis', 'pembimbing')->where('urut', 1);
                 });
-            })->where('status', 'sudah_terjadwal')->get(),
+            })->whereDate('tanggal', '>=', Carbon::today()->format('Y-m-d'))->whereNot('id', $jadwalSeminar->id)->where('status', 'sudah_terjadwal')->get(),
             'jadwalPembimbing2' => JadwalSeminar::whereHas('tugas_akhir', function ($query) use ($jadwalSeminar) {
                 $query->whereHas('bimbing_uji', function ($query) use ($jadwalSeminar) {
                     $dosenId = $jadwalSeminar->tugas_akhir->bimbing_uji()->where('jenis', 'pembimbing')->where('urut', 2)->first();
@@ -186,9 +185,8 @@ class JadwalSeminarController extends Controller
                     } else {
                         $query->where('dosen_id', $dosenId);
                     }
-                    $query->where('jenis', 'pembimbing')->where('urut', 2);
                 });
-            })->where('status', 'sudah_terjadwal')->get(),
+            })->whereDate('tanggal', '>=', Carbon::today()->format('Y-m-d'))->whereNot('id', $jadwalSeminar->id)->where('status', 'sudah_terjadwal')->get(),
             'jadwalPenguji1' => JadwalSeminar::whereHas('tugas_akhir', function ($query) use ($jadwalSeminar) {
                 $query->whereHas('bimbing_uji', function ($query) use ($jadwalSeminar) {
                     $dosenId = $jadwalSeminar->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 1)->first();
@@ -199,9 +197,8 @@ class JadwalSeminarController extends Controller
                     } else {
                         $query->where('dosen_id', $dosenId);
                     }
-                    $query->where('jenis', 'penguji')->where('urut', 1);
                 });
-            })->where('status', 'sudah_terjadwal')->get(),
+            })->whereDate('tanggal', '>=', Carbon::today()->format('Y-m-d'))->whereNot('id', $jadwalSeminar->id)->where('status', 'sudah_terjadwal')->get(),
             'jadwalPenguji2' => JadwalSeminar::whereHas('tugas_akhir', function ($query) use ($jadwalSeminar) {
                 $query->whereHas('bimbing_uji', function ($query) use ($jadwalSeminar) {
                     $dosenId = $jadwalSeminar->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 2)->first();
@@ -212,9 +209,8 @@ class JadwalSeminarController extends Controller
                     } else {
                         $query->where('dosen_id', $dosenId);
                     }
-                    $query->where('jenis', 'penguji')->where('urut', 2);
                 });
-            })->where('status', 'sudah_terjadwal')->get(),
+            })->whereDate('tanggal', '>=', Carbon::today()->format('Y-m-d'))->whereNot('id', $jadwalSeminar->id)->where('status', 'sudah_terjadwal')->get(),
             'mahasiswaTerdaftar' => JadwalSeminar::where('status', 'sudah_terjadwal')->whereIn('tanggal', $currentWeekDays)->orderBy('tanggal', 'asc')->get(),
         ];
 
@@ -248,10 +244,14 @@ class JadwalSeminarController extends Controller
                 return redirect()->back()->with(['error' => 'Periode seminar belum aktif']);
             }
 
-            $check = JadwalSeminar::whereRuanganId($request->ruangan)->whereDate('tanggal', $request->tanggal)->where('jam_mulai', '>=', $request->jam_mulai)->where('jam_selesai', '<=', $request->jam_selesai)->first();
+            $check = JadwalSeminar::whereNot('id', $jadwalSeminar->id)->whereHas('tugas_akhir', function($q) use ($jadwalSeminar) {
+                $q->whereHas('bimbing_uji', function($q) use ($jadwalSeminar) {
+                    $q->whereIn('dosen_id', $jadwalSeminar->tugas_akhir->bimbing_uji()->pluck('dosen_id')->toArray());
+                });
+            })->whereDate('tanggal', $request->tanggal)->where('jam_mulai', '>=', $request->jam_mulai)->where('jam_selesai', '<=', $request->jam_selesai)->first();
 
             if (!is_null($check)) {
-                return redirect()->back()->with(['error' => 'Jadwal ini sudah ada']);
+                return redirect()->back()->withInput($request->all())->with(['error' => 'Ada jadwal pada waktu tersebut']);
             }
 
             $jadwalSeminar->update([

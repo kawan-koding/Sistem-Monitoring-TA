@@ -183,17 +183,6 @@ class PengajuanTAController extends Controller
             ]);
 
             $docPengajuan = JenisDokumen::where('jenis', 'pendaftaran')->get();
-            $validates = [];
-            $messages = [];
-            $inserts = [];
-
-            foreach ($docPengajuan as $item) {
-                $validates['document_' . $item->id] = $item->tipe_dokumen == 'pdf' ? '|mimes:pdf|max:' . $item->max_ukuran : 'mimes:png,jpg,jpeg,webp|max:' . $item->max_ukuran;
-                $messages['document_' . $item->id . '.mimes'] = 'Dokumen ' . strtolower($item->nama) . ' harus dalam format ' . ($item->tipe_dokumen == 'pdf' ? 'PDF' : 'PNG, JPEG, JPG, WEBP');
-                $messages['document_' . $item->id . '.max'] = 'Dokumen ' . strtolower($item->nama) . ' tidak boleh lebih dari ' . $item->max_ukuran . ' KB';
-            }
-
-            $request->validate($validates, $messages);
 
             foreach ($docPengajuan as $item) {
                 $file = $request->file('dokumen_' . $item->id);
@@ -211,8 +200,8 @@ class PengajuanTAController extends Controller
 
             Pemberkasan::insert($inserts);
 
-            DB::commit();
-            return redirect()->route('apps.pengajuan-ta')->with('success', 'Data berhasil ditambahkan');
+            // DB::commit();
+            // return redirect()->route('apps.pengajuan-ta')->with('success', 'Data berhasil ditambahkan');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
