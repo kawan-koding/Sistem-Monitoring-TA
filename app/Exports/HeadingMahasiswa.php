@@ -24,7 +24,7 @@ class HeadingMahasiswa implements FromCollection, WithHeadings, WithTitle
             'jenis_kelamin',
             'email',
             'telp',
-            'kode_prodi'
+            'kode_prodi',
         ];
     }
 

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Administrator\DaftarTA;
 
-use File;
 use App\Models\Dosen;
 use App\Models\Topik;
 use App\Models\JenisTa;
@@ -17,6 +16,7 @@ use Illuminate\Http\Request;
 use App\Exports\TugasAkhirExport;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\File;
 use Maatwebsite\Excel\Facades\Excel;
 
 class DaftarTAController extends Controller
@@ -358,13 +358,14 @@ class DaftarTAController extends Controller
     public function destroy(TugasAkhir $tugasAkhir)
     {
         try {
-            if($tugasAkhir->dokumen_pemb_1) {
-                File::delete(public_path('storage/files/tugas-akhir/'. $tugasAkhir->dokumen_pemb_1));
+            $files = Pemberkasan::where('tugas_akhir_id', $tugasAkhir->id)->get();
+            foreach ($files as $file) {
+                $filePath = public_path('storage/files/pemberkasan/' . $file->filename);
+                if (File::exists($filePath)) {
+                    File::delete($filePath);
+                }
             }
-
-            if($tugasAkhir->dokumen_ringkasan) {
-                File::delete(public_path('storage/files/tugas-akhir/'. $tugasAkhir->dokumen_ringkasan));
-            }
+            Pemberkasan::where('tugas_akhir_id', $tugasAkhir->id)->delete();
             $tugasAkhir->delete();
 
             return $this->successResponse('Berhasi menghapus data');

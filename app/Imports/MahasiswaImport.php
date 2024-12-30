@@ -38,7 +38,7 @@ class MahasiswaImport implements ToModel, WithHeadingRow, WithMultipleSheets
         $gender = isset($row['jenis_kelamin']) && strtoupper($row['jenis_kelamin']) === 'L' ? 'Laki-laki' : (isset($row['jenis_kelamin']) && strtoupper($row['jenis_kelamin']) === 'P' ? 'Perempuan' : 'Lainnya');
         $programStudi = isset($row['kode_prodi']) ? ProgramStudi::where('kode', strval($row['kode_prodi']))->first() : null;
         $programStudiId = $programStudi ? $programStudi->id : null;
-        $periodeTa = isset($row['periode_ta']) ? PeriodeTa::where('nama', $row['periode_ta'])->first() : null;
+        $periodeTa = PeriodeTa::where('program_studi_id', $programStudiId)->whereIsActive(true)->first();
         $periodeTaId = $periodeTa ? $periodeTa->id : null;
         $mahasiswa = isset($row['nim']) ? Mahasiswa::where('nim', $row['nim'])->first() : null;
         if ($mahasiswa) {
