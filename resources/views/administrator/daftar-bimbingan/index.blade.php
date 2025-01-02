@@ -2,7 +2,7 @@
 @section('content')
 
 <div class="row">
-    <div class="col-lg-6 col-md-6 col-sm-12">
+    <div class="col-lg-4 col-md-4 col-sm-12">
         <div class="card">
             <div class="card-body">
                 <div class="d-flex align-items-start">
@@ -23,7 +23,7 @@
             </div>
         </div>
     </div>
-    <div class="col-lg-6 col-md-6 col-sm-12">
+    <div class="col-lg-4 col-md-4 col-sm-12">
         <div class="card">
             <div class="card-body">
                 <div class="d-flex align-items-start">
@@ -36,7 +36,28 @@
                         <div class="font-size-16 mt-1 fw-bold">Sisa Kuota Pembimbing 1</div>
                         <p class="font-size-14 mt-1 text-muted m-0">
                             @foreach ($sisaKuota as $item)
-                                {{ $item['prodi'] ?? '-' }} : <span class="text-primary">{{ $item['sisa_kuota'] ?? 0}}</span> @if(!$loop->last) | @endif 
+                                {{ $item['prodi'] ?? '-' }} : <span class="text-primary">{{ $item['sisa_kuota_pemb_1'] ?? 0}}</span> @if(!$loop->last) | @endif 
+                            @endforeach
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 col-md-4 col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex align-items-start">
+                    <div class="avatar-sm font-size-24 me-3" style="height: 3.5rem; width: 3.5rem">
+                        <span class="avatar-title bg-soft-primary text-primary rounded">
+                            <i class="mdi mdi-account-outline"></i>
+                        </span>
+                    </div>
+                    <div class="flex-1">
+                        <div class="font-size-16 mt-1 fw-bold">Sisa Kuota Pembimbing 2</div>
+                        <p class="font-size-14 mt-1 text-muted m-0">
+                            @foreach ($sisaKuota as $item)
+                                {{ $item['prodi'] ?? '-' }} : <span class="text-primary">{{ $item['sisa_kuota_pemb_2'] ?? 0}}</span> @if(!$loop->last) | @endif 
                             @endforeach
                         </p>
                     </div>
@@ -70,16 +91,36 @@
                 </ul>
             @endcan
             <div class="card-body">
-                <div class="mb-3 d-flex gap-2 flex-column justify-content-end flex-md-row" >
-                    <form action="">
-                        <select name="program_studi" id="program_studi" class="form-control" style="min-width: 300px; width: 100%" onchange="this.form.submit()">
-                            <option selected disabled hidden>Filter Program Studi</option>
-                            <option value="semua" {{ request('program_studi') == 'semua' ? 'selected' : '' }}>Semua Program Studi</option>
-                            @foreach($prodi as $p)
-                                <option value="{{ $p->id }}" {{ request('program_studi') == $p->id ? 'selected' : '' }}>{{ $p->display }}</option>
-                            @endforeach
-                        </select>
+
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
+                    <form action="" method="GET">
+                        <input type="hidden" name="status" value="{{ request('status', 'mahasiswa_bimbing') }}">
+                        <div class="d-flex gap-2 flex-column flex-md-row">
+                            <select name="program_studi" id="program_studi" class="form-control" style="min-width: 300px; width: 100%" onchange="this.form.submit()">
+                                <option selected disabled hidden>Filter Program Studi</option>
+                                <option value="semua" {{ request('program_studi') == 'semua' ? 'selected' : '' }}>Semua Program Studi</option>
+                                @foreach($prodi as $p)
+                                    <option value="{{ $p->id }}" {{ request('program_studi') == $p->id ? 'selected' : '' }}>{{ $p->display }}</option>
+                                @endforeach
+                            </select>
+                            @if (request('status') == 'mahasiswa_uji')
+                                <select name="penguji" id="penguji" class="form-control" style="min-width: 300px; width: 100%" onchange="this.form.submit()">
+                                    <option selected disabled hidden>Filter Penguji</option>
+                                    <option value="semua" {{ request('penguji') == 'semua' ? 'selected' : '' }}>Semua</option>
+                                    <option value="1" {{ request('penguji') == '1' ? 'selected' : '' }}>Penguji 1</option>
+                                    <option value="2" {{ request('penguji') == '2' ? 'selected' : '' }}>Penguji 2</option>
+                                </select>
+                            @else
+                                <select name="pembimbing" id="pembimbing" class="form-control" style="min-width: 300px; width: 100%" onchange="this.form.submit()">
+                                    <option selected disabled hidden>Filter Pembimbing</option>
+                                    <option value="semua" {{ request('pembimbing') == 'semua' ? 'selected' : '' }}>Semua</option>
+                                    <option value="1" {{ request('pembimbing') == '1' ? 'selected' : '' }}>Pembimbing 1</option>
+                                    <option value="2" {{ request('pembimbing') == '2' ? 'selected' : '' }}>Pembimbing 2</option>
+                                </select>
+                            @endif
+                        </div>
                     </form>
+                    
                 </div>
                 <hr>
 

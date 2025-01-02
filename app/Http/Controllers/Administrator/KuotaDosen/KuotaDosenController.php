@@ -13,6 +13,7 @@ class KuotaDosenController extends Controller
 {
     public function index(Request $request)
     {
+        $query = [];
         if(session('switchRoles') == 'Admin') {
             $periode = PeriodeTa::where('is_active', true)->get();
             $query = KuotaDosen::whereIn('periode_ta_id', $periode->pluck('id'))->with(['dosen']);

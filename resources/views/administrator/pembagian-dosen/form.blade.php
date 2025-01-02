@@ -107,7 +107,7 @@
                             <select name="pembimbing_2" id="pembimbing_2" onchange="updateOptions()"
                                 class="form-control dosen-select select2">
                                 <option value="">Pilih Pembimbing</option>
-                                @foreach ($dosen as $item)
+                                @foreach ($dosen->where('sisa_pemb_2', '>', 0) as $item)
                                     <option value="{{ $item->id }}"
                                         {{ isset($bimbingUji2->dosen_id) && $bimbingUji2->dosen_id == $item->id ? 'selected' : '' }}>
                                         {{ $item->nama }} (Sisa: {{ $item->sisa_pemb_2 }})
@@ -121,7 +121,7 @@
                             <select name="penguji_1" id="penguji_1" onchange="updateOptions()"
                                 class="form-control dosen-select select2">
                                 <option value="">Pilih Penguji</option>
-                                @foreach ($dosen as $item)
+                                @foreach ($dosen->where('sisa_peng_1', '>', 0) as $item)
                                     <option value="{{ $item->id }}"
                                         {{ isset($bimbingUji3->dosen_id) && $bimbingUji3->dosen_id == $item->id ? 'selected' : '' }}>
                                         {{ $item->nama }} (Sisa: {{ $item->sisa_peng_1 }})
@@ -135,7 +135,7 @@
                             <select name="penguji_2" id="penguji_2" onchange="updateOptions()"
                                 class="form-control dosen-select select2">
                                 <option value="">Pilih Penguji</option>
-                                @foreach ($dosen as $item)
+                                @foreach ($dosen->where('sisa_peng_2', '>', 0) as $item)
                                     <option value="{{ $item->id }}"
                                         {{ isset($bimbingUji4->dosen_id) && $bimbingUji4->dosen_id == $item->id ? 'selected' : '' }}>
                                         {{ $item->nama }} (Sisa: {{ $item->sisa_peng_2 }})

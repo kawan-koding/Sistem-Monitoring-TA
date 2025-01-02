@@ -32,22 +32,47 @@ class DaftarBimbinganController extends Controller
         } else {
             $query->where('jenis', 'pembimbing');
         }
+
+        if ($request->status == 'mahasiswa_uji') {
+            $query->whereIn('jenis', ['penguji', 'pengganti']);
+            
+            if ($request->has('penguji') && $request->penguji !== 'semua') {
+                $query->where('urut', $request->penguji);
+            }
+        } else {
+            $query->where('jenis', 'pembimbing');
+            
+            if ($request->has('pembimbing') && $request->pembimbing !== 'semua') {
+                $query->where('urut', $request->pembimbing);
+            }
+        }
+        
         $query = $query->get();
         $kuota = KuotaDosen::whereIn('periode_ta_id', $periode->pluck('id'))->where('dosen_id', $user->id)->with('programStudi')->get();
-        $bimbing = BimbingUji::where('dosen_id', $user->id)->where('jenis', 'pembimbing')->where('urut', 1)->whereHas('tugas_akhir', function ($query) {
-            $query->whereNotIn('status', ['reject', 'cancel']);
-        })->with(['tugas_akhir.mahasiswa.programStudi'])->get()->groupBy('tugas_akhir.mahasiswa.program_studi_id')->map(function ($group) {
-            return $group->count();
-        });
-        // dd($bimbing);
+        $bimbing1 = BimbingUji::where('dosen_id', $user->id)->where('jenis', 'pembimbing')->where('urut', 1)->whereHas('tugas_akhir', function ($query) {
+                $query->whereNotIn('status', ['reject', 'cancel']);
+            })->with(['tugas_akhir.mahasiswa.programStudi'])->get()->groupBy('tugas_akhir.mahasiswa.program_studi_id')->map(function ($group) {
+                return $group->count();
+            });
         
-        $sisaKuota = $kuota->map(function ($item) use ($bimbing) {
+        $bimbing2 = BimbingUji::where('dosen_id', $user->id)->where('jenis', 'pembimbing')->where('urut', 2)->whereHas('tugas_akhir', function ($query) {
+                $query->whereNotIn('status', ['reject', 'cancel']);
+            })->with(['tugas_akhir.mahasiswa.programStudi'])->get()->groupBy('tugas_akhir.mahasiswa.program_studi_id')->map(function ($group) {
+                return $group->count();
+            });
+        
+        $sisaKuota = $kuota->map(function ($item) use ($bimbing1, $bimbing2) {
             $programStudiId = $item->program_studi_id;
-            $mahasiswaBimbing = $bimbing->get($programStudiId, 0);
+        
+            $mahasiswaBimbing1 = $bimbing1->get($programStudiId, 0);
+            $mahasiswaBimbing2 = $bimbing2->get($programStudiId, 0);
+        
             return [
                 'prodi' => $item->programStudi->display ?? 'Tidak Diketahui',
-                'total_kuota' => $item->pembimbing_1 ?? 0,
-                'sisa_kuota' => max($item->pembimbing_1 - $mahasiswaBimbing, 0),
+                'total_kuota_pemb_1' => $item->pembimbing_1 ?? 0,
+                'sisa_kuota_pemb_1' => max(($item->pembimbing_1 ?? 0) - $mahasiswaBimbing1, 0),
+                'total_kuota_pemb_2' => $item->pembimbing_2 ?? 0,
+                'sisa_kuota_pemb_2' => max(($item->pembimbing_2 ?? 0) - $mahasiswaBimbing2, 0),
             ];
         });
         
@@ -67,7 +92,8 @@ class DaftarBimbinganController extends Controller
             'data' => $query,
             'kuota' => $kuota,
             'sisaKuota' => $sisaKuota,
-            'bimbing' => $bimbing,
+            'bimbing1' => $bimbing1,
+            'bimbing2' => $bimbing2,
             'prodi' => ProgramStudi::all(),
         ];
         

@@ -18,7 +18,7 @@ class MahasiswaExport implements WithMultipleSheets
         $sheets = [];
         $sheets[] = new HeadingMahasiswa();
         $sheets[] = new ProgramStudiExport();
-        $sheets[] = new PeriodeExport();
+        // $sheets[] = new PeriodeExport();
         return $sheets;
     }
     
