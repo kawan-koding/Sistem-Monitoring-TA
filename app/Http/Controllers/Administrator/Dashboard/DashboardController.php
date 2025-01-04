@@ -23,6 +23,10 @@ class DashboardController extends Controller
             $dataRole = $this->adminRole();
         }
 
+        if (session('switchRoles') == 'Mahasiswa') {
+            $dataRole = $this->mahasiswaRole();
+        }
+
         $data = [
             'title' => 'Dashboard',
         ];
@@ -127,6 +131,16 @@ class DashboardController extends Controller
             'mhsBelumSidangCount' => TugasAkhir::where('status', 'acc')->whereNull('status_sidang')->count(),
             'mhsSudahSidangCount' => TugasAkhir::where('status', 'acc')->whereNotNull('status_sidang')->count(),
             'mods' => 'dashboard_admin'
+        ];
+
+        return $data;
+    }
+
+    private function mahasiswaRole(): array
+    {
+        $tugasAkhir = TugasAkhir::where('mahasiswa_id', getInfoLogin()->userable->id)->first();
+        $data = [
+            'tugasAkhir' => $tugasAkhir,
         ];
 
         return $data;

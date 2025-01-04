@@ -172,7 +172,7 @@
             <div class="date-area-scroll" data-role="resizable-item">
                 @for ($year = 2024; $year <= 2025; $year++)
                     @for ($month = 1; $month <= 12; $month++)
-                        @for ($i = 1; $i <= 30; $i++)
+                        @for ($i = 1; $i <= date('t', mktime(0, 0, 0, $month, 1, $year)); $i++)
                             <div class="date-item {{ date('d-m-Y', mktime(0, 0, 0, $month, $i, $year)) == date('d-m-Y') ? 'active' : '' }}"
                                 data-value="{{ date('Y-m-d', mktime(0, 0, 0, $month, $i, $year)) }}">
                                 <h3 class="m-0">{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}</h3>

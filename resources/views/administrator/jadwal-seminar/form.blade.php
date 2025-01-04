@@ -57,12 +57,183 @@
                     </form>
                 </div>
             </div>
+            <div class="card">
+                <div class="card-body">
+                    <h4>Jadwal Dosen Terdaftar</h4>
+                    <hr class="mb-3">
+                    <div class="accordion" id="accordion">
+                        @foreach ($jadwalSeminar->tugas_akhir->bimbing_uji as $item)
+                            @if ($item->jenis == 'pembimbing' && $item->urut == 1)
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                            data-bs-target="#collapsePembimbing{{ $item->urut }}" aria-expanded="true"
+                                            aria-controls="collapsePembimbing{{ $item->urut }}">
+                                            {{ $item->dosen->name }}
+                                        </button>
+                                    </h2>
+                                    <div id="collapsePembimbing{{ $item->urut }}" class="accordion-collapse collapse show"
+                                        data-bs-parent="#accordion">
+                                        <div class="accordion-body">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Tanggal</th>
+                                                        <th>Jam Mulai</th>
+                                                        <th>Jam Sesai</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @if ($jadwalPembimbing1->count() > 0)
+                                                        @foreach ($jadwalPembimbing1 as $p1)
+                                                            <tr>
+                                                                <td>{{ $p1->tanggal }}</td>
+                                                                <td>{{ $p1->jam_mulai }}</td>
+                                                                <td>{{ $p1->jam_selesai }}</td>
+                                                            </tr>
+                                                        @endforeach
+                                                    @else
+                                                        <tr class="text-center">
+                                                            <td colspan="3">Tidak ada data</td>
+                                                        </tr>
+                                                    @endif
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+                            @if ($item->jenis == 'pembimbing' && $item->urut == 2)
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                            data-bs-target="#collapsePembimbing{{  $item->urut }}" aria-expanded="false"
+                                            aria-controls="collapsePembimbing{{  $item->urut }}">
+                                            {{ $item->dosen->name }}
+                                        </button>
+                                    </h2>
+                                    <div id="collapsePembimbing{{  $item->urut }}" class="accordion-collapse collapse"
+                                        data-bs-parent="#accordion">
+                                        <div class="accordion-body">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Tanggal</th>
+                                                        <th>Jam Mulai</th>
+                                                        <th>Jam Sesai</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @if ($jadwalPembimbing2->count() > 0)
+                                                        @foreach ($jadwalPembimbing2 as $p2)
+                                                            <tr>
+                                                                <td>{{ $p2->tanggal }}</td>
+                                                                <td>{{ $p2->jam_mulai }}</td>
+                                                                <td>{{ $p2->jam_selesai }}</td>
+                                                            </tr>
+                                                        @endforeach
+                                                    @else
+                                                        <tr class="text-center">
+                                                            <td colspan="3">Tidak ada data</td>
+                                                        </tr>
+                                                    @endif
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+                            @if ($item->jenis == 'penguji' && $item->urut == 1)
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                            data-bs-target="#collapsePenguji1{{ $item->urut }}" aria-expanded="false"
+                                            aria-controls="collapsePenguji1{{ $item->urut }}">
+                                            {{ $item->dosen->name }}
+                                        </button>
+                                    </h2>
+                                    <div id="collapsePenguji1{{ $item->urut }}" class="accordion-collapse collapse"
+                                        data-bs-parent="#accordion">
+                                        <div class="accordion-body">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Tanggal</th>
+                                                        <th>Jam Mulai</th>
+                                                        <th>Jam Sesai</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @if ($jadwalPenguji1->count() > 0)
+                                                        @foreach ($jadwalPenguji1 as $p1)
+                                                            <tr>
+                                                                <td>{{ $p1->tanggal }}</td>
+                                                                <td>{{ $p1->jam_mulai }}</td>
+                                                                <td>{{ $p1->jam_selesai }}</td>
+                                                            </tr>
+                                                        @endforeach
+                                                    @else
+                                                        <tr class="text-center">
+                                                            <td colspan="3">Tidak ada data</td>
+                                                        </tr>
+                                                    @endif
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+                            @if ($item->jenis == 'penguji' && $item->urut == 2)
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                            data-bs-target="#collapsePenguji1{{ $item->urut }}" aria-expanded="false"
+                                            aria-controls="collapsePenguji1{{ $item->urut }}">
+                                            {{ $item->dosen->name }}
+                                        </button>
+                                    </h2>
+                                    <div id="collapsePenguji1{{ $item->urut }}" class="accordion-collapse collapse"
+                                        data-bs-parent="#accordion">
+                                        <div class="accordion-body">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Tanggal</th>
+                                                        <th>Jam Mulai</th>
+                                                        <th>Jam Sesai</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @if ($jadwalPenguji2->count() > 0)
+                                                        @foreach ($jadwalPenguji2 as $p2)
+                                                            <tr>
+                                                                <td>{{ $p2->tanggal }}</td>
+                                                                <td>{{ $p2->jam_mulai }}</td>
+                                                                <td>{{ $p2->jam_selesai }}</td>
+                                                            </tr>
+                                                        @endforeach
+                                                    @else
+                                                        <tr class="text-center">
+                                                            <td colspan="3">Tidak ada data</td>
+                                                        </tr>
+                                                    @endif
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+                        @endforeach
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="col-md-6 col-sm-12">
             <div class="card">
                 <div class="card-body">
-                    <h4>Jadwal Mahasiswa Terdaftar</h4>
-                    <hr class="mb-0">
+                    <h4 class="m-0">Jadwal Mahasiswa Terdaftar</h4>
+                    <span class="small text-muted">Jadwal untuk satu minggu kedepan</span>
+                    <hr class="mb-0 mt-1">
                     <table class="table table-responsive">
                         <thead style="color: steelblue">
                             <th>Nama Mahasiswa</th>
@@ -72,191 +243,32 @@
                             <th>Waktu</th>
                         </thead>
                         <tbody>
-                            @foreach($mahasiswaTerdaftar as $item)
-                            <tr>
-                                <td>{{ $item->tugas_akhir->mahasiswa->nama_mhs }}</td>
-                                <td>{{ $item->tugas_akhir->tipe == 'K' ? 'Kelompok' : 'Individu' }}</td>
-                                <td>{{ $item->ruangan->nama_ruangan }}</td>
-                                <td>{{ \Carbon\Carbon::parse($item->tanggal)->locale('id')->translatedFormat('l, d F Y') }}</td>
-                                <td>{{ \Carbon\Carbon::parse($item->jam_mulai)->locale('id')->translatedFormat('H:i') }} - {{ \Carbon\Carbon::parse($item->jam_selesai)->locale('id')->translatedFormat('H:i') }}</td>
-                            </tr>
-                            @endforeach
+                            @if($mahasiswaTerdaftar->count() > 0)
+                                @foreach($mahasiswaTerdaftar as $item)
+                                <tr>
+                                    <td>{{ $item->tugas_akhir->mahasiswa->nama_mhs }}</td>
+                                    <td>{{ $item->tugas_akhir->tipe == 'K' ? 'Kelompok' : 'Individu' }}</td>
+                                    <td>{{ $item->ruangan->nama_ruangan }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($item->tanggal)->locale('id')->translatedFormat('l, d F Y') }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($item->jam_mulai)->locale('id')->translatedFormat('H:i') }} - {{ \Carbon\Carbon::parse($item->jam_selesai)->locale('id')->translatedFormat('H:i') }}</td>
+                                </tr>
+                                @endforeach
+                            @else
+                                <tr class="text-center">
+                                    <td colspan="5">
+                                        <div class="col-md-4 col-sm-7 col-10 mx-auto">
+                                            <img src="{{ asset('assets/images/no-data.png') }}" alt="" width="100%">
+                                        </div>
+                                        <p>Belum ada jadwal dalam satu minggu kedepan</p>
+                                    </td>
+                                </tr>
+                            @endif
                         </tbody>
                     </table>
                 </div>
             </div>
-            {{-- <div class="col-lg-6 col-md-6 col-sm-12"> --}}
-                <div class="card">
-                    <div class="card-body">
-                        <h4>Jadwal Dosen Terdaftar</h4>
-                        <hr class="mb-3">
-                        <div class="accordion" id="accordion">
-                            @foreach ($jadwalSeminar->tugas_akhir->bimbing_uji as $item)
-                                @if ($item->jenis == 'pembimbing' && $item->urut == 1)
-                                    <div class="accordion-item">
-                                        <h2 class="accordion-header">
-                                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                                data-bs-target="#collapsePembimbing{{ $item->urut }}" aria-expanded="true"
-                                                aria-controls="collapsePembimbing{{ $item->urut }}">
-                                                {{ $item->dosen->name }}
-                                            </button>
-                                        </h2>
-                                        <div id="collapsePembimbing{{ $item->urut }}" class="accordion-collapse collapse show"
-                                            data-bs-parent="#accordion">
-                                            <div class="accordion-body">
-                                                <table class="table table-bordered">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Tanggal</th>
-                                                            <th>Jam Mulai</th>
-                                                            <th>Jam Sesai</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        @if ($jadwalPembimbing1->count() > 0)
-                                                            @foreach ($jadwalPembimbing1 as $p1)
-                                                                <tr>
-                                                                    <td>{{ $p1->tanggal }}</td>
-                                                                    <td>{{ $p1->jam_mulai }}</td>
-                                                                    <td>{{ $p1->jam_selesai }}</td>
-                                                                </tr>
-                                                            @endforeach
-                                                        @else
-                                                            <tr class="text-center">
-                                                                <td colspan="3">Tidak ada data</td>
-                                                            </tr>
-                                                        @endif
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endif
-                                @if ($item->jenis == 'pembimbing' && $item->urut == 2)
-                                    <div class="accordion-item">
-                                        <h2 class="accordion-header">
-                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                                data-bs-target="#collapsePembimbing{{  $item->urut }}" aria-expanded="false"
-                                                aria-controls="collapsePembimbing{{  $item->urut }}">
-                                                {{ $item->dosen->name }}
-                                            </button>
-                                        </h2>
-                                        <div id="collapsePembimbing{{  $item->urut }}" class="accordion-collapse collapse"
-                                            data-bs-parent="#accordion">
-                                            <div class="accordion-body">
-                                                <table class="table table-bordered">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Tanggal</th>
-                                                            <th>Jam Mulai</th>
-                                                            <th>Jam Sesai</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        @if ($jadwalPembimbing2->count() > 0)
-                                                            @foreach ($jadwalPembimbing2 as $p2)
-                                                                <tr>
-                                                                    <td>{{ $p2->tanggal }}</td>
-                                                                    <td>{{ $p2->jam_mulai }}</td>
-                                                                    <td>{{ $p2->jam_selesai }}</td>
-                                                                </tr>
-                                                            @endforeach
-                                                        @else
-                                                            <tr class="text-center">
-                                                                <td colspan="3">Tidak ada data</td>
-                                                            </tr>
-                                                        @endif
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endif
-                                @if ($item->jenis == 'penguji' && $item->urut == 1)
-                                    <div class="accordion-item">
-                                        <h2 class="accordion-header">
-                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                                data-bs-target="#collapsePenguji1{{ $item->urut }}" aria-expanded="false"
-                                                aria-controls="collapsePenguji1{{ $item->urut }}">
-                                                {{ $item->dosen->name }}
-                                            </button>
-                                        </h2>
-                                        <div id="collapsePenguji1{{ $item->urut }}" class="accordion-collapse collapse"
-                                            data-bs-parent="#accordion">
-                                            <div class="accordion-body">
-                                                <table class="table table-bordered">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Tanggal</th>
-                                                            <th>Jam Mulai</th>
-                                                            <th>Jam Sesai</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        @if ($jadwalPenguji1->count() > 0)
-                                                            @foreach ($jadwalPenguji1 as $p1)
-                                                                <tr>
-                                                                    <td>{{ $p1->tanggal }}</td>
-                                                                    <td>{{ $p1->jam_mulai }}</td>
-                                                                    <td>{{ $p1->jam_selesai }}</td>
-                                                                </tr>
-                                                            @endforeach
-                                                        @else
-                                                            <tr class="text-center">
-                                                                <td colspan="3">Tidak ada data</td>
-                                                            </tr>
-                                                        @endif
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endif
-                                @if ($item->jenis == 'penguji' && $item->urut == 2)
-                                    <div class="accordion-item">
-                                        <h2 class="accordion-header">
-                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                                data-bs-target="#collapsePenguji1{{ $item->urut }}" aria-expanded="false"
-                                                aria-controls="collapsePenguji1{{ $item->urut }}">
-                                                {{ $item->dosen->name }}
-                                            </button>
-                                        </h2>
-                                        <div id="collapsePenguji1{{ $item->urut }}" class="accordion-collapse collapse"
-                                            data-bs-parent="#accordion">
-                                            <div class="accordion-body">
-                                                <table class="table table-bordered">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Tanggal</th>
-                                                            <th>Jam Mulai</th>
-                                                            <th>Jam Sesai</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        @if ($jadwalPenguji2->count() > 0)
-                                                            @foreach ($jadwalPenguji2 as $p2)
-                                                                <tr>
-                                                                    <td>{{ $p2->tanggal }}</td>
-                                                                    <td>{{ $p2->jam_mulai }}</td>
-                                                                    <td>{{ $p2->jam_selesai }}</td>
-                                                                </tr>
-                                                            @endforeach
-                                                        @else
-                                                            <tr class="text-center">
-                                                                <td colspan="3">Tidak ada data</td>
-                                                            </tr>
-                                                        @endif
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endif
-                            @endforeach
-                        </div>
-                    </div>
-                </div>
-            {{-- </div> --}}
         </div>  
+        {{-- <div class="col-lg-6 col-md-6 col-sm-12">
+        </div> --}}
     </div>
 @endsection
