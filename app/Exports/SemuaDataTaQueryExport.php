@@ -2,6 +2,7 @@
 
 namespace App\Exports;
 
+use Carbon\Carbon;
 use App\Models\TugasAkhir;
 use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Events\BeforeSheet;
@@ -40,7 +41,7 @@ class SemuaDataTaQueryExport implements FromCollection, WithHeadings, WithMappin
 
         if($this->status == 'sudah_pemberkasan') {
             $query->whereNotNull('status_sidang')->orWhere('status_pemberkasan', 'sudah_lengkap');
-        } elseif(in_array($this->status, ['belum_terjadwal','telah_seminar','sudah_pemberkasan'])) {
+        } elseif(in_array($this->status, ['belum_terjadwal','telah_seminar','sudah_pemberkasan','sudah_terjadwal'])) {
             $query->whereHas('jadwal_seminar', function($q) { 
                 $q->whereStatus($this->status);
             });
@@ -54,7 +55,12 @@ class SemuaDataTaQueryExport implements FromCollection, WithHeadings, WithMappin
         $query = $query->get();
         $query = $query->map(function ($tugasAkhir, $index) {
             $bimbingUjiData = $tugasAkhir->bimbing_uji->mapWithKeys(function ($item) {
-                return [$item->jenis . $item->urut => $item->dosen->name ?? '-'];
+                return [
+                    $item->jenis . $item->urut => [
+                        'name' => $item->dosen->name ?? '-',
+                        'nip' => $item->dosen->nip ?? '-',
+                    ],
+                ];
             });
             $tugasAkhir->bimbing_uji_data = $bimbingUjiData;
             $tugasAkhir->kelas = $tugasAkhir->mahasiswa->kelas;
@@ -74,25 +80,47 @@ class SemuaDataTaQueryExport implements FromCollection, WithHeadings, WithMappin
             'NIM',
             'Nama',
             'Judul',
+            'Tipe TA',
             'Pembimbing 1',
             'Pembimbing 2',
             'Penguji 1',
             'Penguji 2',
+            'Tanggal Seminar',
+            'Waktu',
+            'Tempat',
         ];
     }
 
     public function map($tugasAkhir): array
     {
+        $tipe = $tugasAkhir->tipe === 'I' ? 'Individu' : ($tugasAkhir->tipe === 'K' ? 'Kelompok' : '-');
+
+        $formatDosen = function ($bimbingUji, $key) {
+            if (isset($bimbingUji[$key])) {
+                $name = $bimbingUji[$key]['name'] ?? '-';
+                $nip = $bimbingUji[$key]['nip'] ?? '-';
+                return "{$name}\nNIP/NIPPPK: {$nip}";
+            }
+            return '-';
+        };
+        
+        Carbon::setLocale('id');
+        $tanggal = Carbon::parse($tugasAkhir->jadwal_seminar->tanggal)->translatedFormat('l, d F Y');
+        $waktu = Carbon::parse($tugasAkhir->jadwal_seminar->jam_mulai)->format('H:i') . ' - ' . Carbon::parse($tugasAkhir->jadwal_seminar->jam_selesai)->format('H:i');
         return [
             $this->no++,
             $tugasAkhir->kelas ?? '-',
-            "'" . $tugasAkhir->mahasiswa->nim ?? '-',
+            "'" . ($tugasAkhir->mahasiswa->nim ?? '-'),
             $tugasAkhir->mahasiswa->nama_mhs ?? '-',
             $tugasAkhir->judul ?? '-',
-            isset($tugasAkhir->bimbing_uji_data['pembimbing1']) ? $tugasAkhir->bimbing_uji_data['pembimbing1'] : '-',
-            isset($tugasAkhir->bimbing_uji_data['pembimbing2']) ? $tugasAkhir->bimbing_uji_data['pembimbing2'] : '-',
-            isset($tugasAkhir->bimbing_uji_data['pengganti1']) ? $tugasAkhir->bimbing_uji_data['pengganti1'] : (isset($tugasAkhir->bimbing_uji_data['penguji1']) ? $tugasAkhir->bimbing_uji_data['penguji1']  : '-'),
-            isset($tugasAkhir->bimbing_uji_data['pengganti2']) ? $tugasAkhir->bimbing_uji_data['pengganti2'] : (isset($tugasAkhir->bimbing_uji_data['penguji2']) ? $tugasAkhir->bimbing_uji_data['penguji2'] : '-'),
+            $tipe,
+            $formatDosen($tugasAkhir->bimbing_uji_data, 'pembimbing1'),
+            $formatDosen($tugasAkhir->bimbing_uji_data, 'pembimbing2'),
+            $formatDosen($tugasAkhir->bimbing_uji_data, 'pengganti1') !== '-' ? $formatDosen($tugasAkhir->bimbing_uji_data, 'pengganti1') : $formatDosen($tugasAkhir->bimbing_uji_data, 'penguji1'),
+            $formatDosen($tugasAkhir->bimbing_uji_data, 'pengganti2') !== '-' ? $formatDosen($tugasAkhir->bimbing_uji_data, 'pengganti2') : $formatDosen($tugasAkhir->bimbing_uji_data, 'penguji2'),
+            $tanggal,
+            $waktu,
+            $tugasAkhir->jadwal_seminar->ruangan->nama_ruangan ?? '-',
         ];
     }
 
@@ -112,7 +140,12 @@ class SemuaDataTaQueryExport implements FromCollection, WithHeadings, WithMappin
         $sheet->getColumnDimension('G')->setWidth(30);
         $sheet->getColumnDimension('H')->setWidth(30);
         $sheet->getColumnDimension('I')->setWidth(30);
+        $sheet->getColumnDimension('J')->setWidth(30);
 
+        $sheet->getColumnDimension('K')->setWidth(30);
+        $sheet->getColumnDimension('L')->setWidth(30);
+        $sheet->getColumnDimension('M')->setWidth(30);
+        $sheet->getStyle('G:J')->getAlignment()->setWrapText(true);
         return [
             1    => [
                 'font' => ['bold' => true, 'color' => ['argb' => '000000']],

@@ -438,6 +438,11 @@ class JadwalSeminarController extends Controller
                 $title = 'Belum Terjadwal Sempro';
                 break;
 
+            case 'sudah_terjadwal':
+                $export = new SemuaDataTaExport($status);
+                $title = 'Sudah Terjadwal Sempro';
+                break;
+
             case 'telah_seminar':
                 $export = new SemuaDataTaExport($status);
                 $title = 'Telah Diseminarkan';

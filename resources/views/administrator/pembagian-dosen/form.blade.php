@@ -104,6 +104,49 @@
                         </div>
                         <div class="mb-3">
                             <label for="">Pembimbing 2 <span class="text-danger">*</span></label>
+                            <select name="pembimbing_2" id="pembimbing_2" onchange="updateOptions()" class="form-control dosen-select select2">
+                                <option value="">Pilih Pembimbing</option>
+                                @foreach ($dosen->filter(function ($item) use ($bimbingUji2) {
+                                    return $item->sisa_pemb_2 > 0 || (isset($bimbingUji2->dosen_id) && $bimbingUji2->dosen_id == $item->id);
+                                }) as $item)
+                                    <option value="{{ $item->id }}" {{ isset($bimbingUji2->dosen_id) && $bimbingUji2->dosen_id == $item->id ? 'selected' : '' }}>
+                                        {{ $item->nama }} (Sisa: {{ $item->sisa_pemb_2 }})
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="">Penguji 1 <span class="text-danger">*</span></label>
+                            <select name="penguji_1" id="penguji_1" onchange="updateOptions()" class="form-control dosen-select select2">
+                                <option value="">Pilih Penguji</option>
+                                @foreach ($dosen->filter(function ($item) use ($bimbingUji3) {
+                                    return $item->sisa_peng_1 > 0 || (isset($bimbingUji3->dosen_id) && $bimbingUji3->dosen_id == $item->id);
+                                }) as $item)
+                                    <option value="{{ $item->id }}" {{ isset($bimbingUji3->dosen_id) && $bimbingUji3->dosen_id == $item->id ? 'selected' : '' }}>
+                                        {{ $item->nama }} (Sisa: {{ $item->sisa_peng_1 }})
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="">Penguji 2 <span class="text-danger">*</span></label>
+                            <select name="penguji_2" id="penguji_2" onchange="updateOptions()" class="form-control dosen-select select2">
+                                <option value="">Pilih Penguji</option>
+                                @foreach ($dosen->filter(function ($item) use ($bimbingUji4) {
+                                    return $item->sisa_peng_2 > 0 || (isset($bimbingUji4->dosen_id) && $bimbingUji4->dosen_id == $item->id);
+                                }) as $item)
+                                    <option value="{{ $item->id }}" {{ isset($bimbingUji4->dosen_id) && $bimbingUji4->dosen_id == $item->id ? 'selected' : '' }}>
+                                        {{ $item->nama }} (Sisa: {{ $item->sisa_peng_2 }})
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        
+                        
+                        {{-- <div class="mb-3">
+                            <label for="">Pembimbing 2 <span class="text-danger">*</span></label>
                             <select name="pembimbing_2" id="pembimbing_2" onchange="updateOptions()"
                                 class="form-control dosen-select select2">
                                 <option value="">Pilih Pembimbing</option>
@@ -142,7 +185,7 @@
                                     </option>
                                 @endforeach
                             </select>
-                        </div>
+                        </div> --}}
 
                         <hr>
                         <div class="text-end">

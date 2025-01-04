@@ -181,11 +181,6 @@ class DaftarTAController extends Controller
                 'sisa_peng_1' => max(0, ($kuota->penguji_1 ?? 0) - $totalPenguji1),
                 'sisa_peng_2' => max(0, ($kuota->penguji_2 ?? 0) - $totalPenguji2),
             ];
-        })->filter(function ($dosen) {
-            return $dosen->sisa_pemb_1 > 0;
-            return $dosen->sisa_pemb_2 > 0;
-            return $dosen->sisa_peng_1 > 0;
-            return $dosen->sisa_peng_2 > 0;
         });
 
         $docPengajuan = JenisDokumen::where('jenis','pendaftaran')->get();
@@ -268,6 +263,7 @@ class DaftarTAController extends Controller
                 ['tipe' => 'penguji', 'urut' => 2, 'dosen_id' => $request->penguji_2, 'kuota' => $kuota->penguji_2],
             ];
 
+
             foreach ($validasiData as $validasi) {
                 $bimbingUji = BimbingUji::with(['tugas_akhir', 'dosen'])
                     ->where('jenis', $validasi['tipe'])
@@ -277,8 +273,16 @@ class DaftarTAController extends Controller
                         $q->where('periode_ta_id', $tugasAkhir->periode_ta_id)->where('id', '!=', $tugasAkhir->id);
                     })
                     ->count();
-                if ($bimbingUji >= $validasi['kuota']) {
-                    return redirect()->back()->with('error', 'Kuota untuk dosen ' . $validasi['tipe'] . ' ' . $validasi['urut'] . ' telah penuh.');
+                // if ($bimbingUji >= $validasi['kuota']) {
+                //     return redirect()->back()->with('error', 'Kuota untuk dosen ' . $validasi['tipe'] . ' ' . $validasi['urut'] . ' telah penuh.');
+                // }
+                
+                $isExistingSelection = BimbingUji::where('tugas_akhir_id', $tugasAkhir->id)->where('jenis', $validasi['tipe'])->where('urut', $validasi['urut'])->where('dosen_id', $validasi['dosen_id'])->exists();
+                if (!$isExistingSelection && $bimbingUji >= $validasi['kuota']) {
+                    return redirect()->back()->with(
+                        'error',
+                        'Kuota untuk dosen ' . $validasi['tipe'] . ' ' . $validasi['urut'] . ' telah penuh.'
+                    );
                 }
             }
  
@@ -333,7 +337,7 @@ class DaftarTAController extends Controller
                     $file = $request->file('dokumen_' . $item->id);
                     $filename = 'document_' . rand(0, 999999999) . '_' . rand(0, 999999999) . '.' . $file->getClientOriginalExtension();
                     $file->move(public_path('storage/files/pemberkasan'), $filename);
-                    $pemberkasan = Pemberkasan::where('tugas_akhir_id', $pengajuanTA->id)->where('jenis_dokumen_id', $item->id)->first();
+                    $pemberkasan = Pemberkasan::where('tugas_akhir_id', $tugasAkhir->id)->where('jenis_dokumen_id', $item->id)->first();
                     if (!is_null($pemberkasan)) {
                         File::delete(public_path('Storage/files/pemberkasan/' . $pemberkasan->filename));
                         $pemberkasan->update([
@@ -341,7 +345,7 @@ class DaftarTAController extends Controller
                         ]);
                     } else {
                         Pemberkasan::create([
-                            'tugas_akhir_id' => $pengajuanTA->id,
+                            'tugas_akhir_id' => $tugasAkhir->id,
                             'jenis_dokumen_id' => $item->id,
                             'filename' => $filename,
                         ]);

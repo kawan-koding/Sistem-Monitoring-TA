@@ -42,11 +42,17 @@ class TugasAkhirClass implements FromCollection, WithHeadings, WithMapping, With
                 $bimbingUjiData = $tugasAkhir->bimbing_uji->mapWithKeys(function ($item) {
                     if ($item->jenis === 'pengganti') {
                         return [
-                            $item->jenis . $item->urut => $item->dosen->name ?? '-',
+                            $item->jenis . $item->urut => [
+                                'name' => $item->dosen->name ?? '-',
+                                'nip' => $item->dosen->nip ?? '-',
+                            ],
                         ];
                     }
                     return [
-                        $item->jenis . $item->urut => $item->dosen->name ?? '-',
+                        $item->jenis . $item->urut => [
+                            'name' => $item->dosen->name ?? '-',
+                            'nip' => $item->dosen->nip ?? '-',
+                        ],
                     ];
                 });
                 $tugasAkhirData->push([
@@ -72,16 +78,24 @@ class TugasAkhirClass implements FromCollection, WithHeadings, WithMapping, With
     
     public function map($row): array
     {
-        dd($row);
         $mahasiswa = $row['mahasiswa'] ?? new \stdClass();
         $bimbingUji = $row['bimbingUji'] ?? new \stdClass();
         $tugasAkhir = $row['tugasAkhir'] ?? new \stdClass();
 
-        $pembimbing1 = optional($bimbingUji)['pembimbing1'] ?? '-';
-        $pembimbing2 = optional($bimbingUji)['pembimbing2'] ?? '-';
-        
-        $penguji1 = optional($bimbingUji)['pengganti1'] ?? optional($bimbingUji)['penguji1'] ?? '-';
-        $penguji2 = optional($bimbingUji)['pengganti2'] ?? optional($bimbingUji)['penguji2'] ?? '-';
+        $formatDosen = function ($bimbingUji, $key) {
+            $name = $bimbingUji[$key]['name'] ?? '-';
+            $nip = $bimbingUji[$key]['nip'] ?? '-';
+            return "{$name}\nNIP/NIPPPK: {$nip}";
+        };
+        $pembimbing1 = isset($bimbingUji['pembimbing1']) ? $formatDosen($bimbingUji, 'pembimbing1') : '-';
+        $pembimbing2 = isset($bimbingUji['pembimbing2']) ? $formatDosen($bimbingUji, 'pembimbing2') : '-';
+        $penguji1 = isset($bimbingUji['pengganti1']) ? $formatDosen($bimbingUji, 'pengganti1') : (isset($bimbingUji['penguji1']) ? $formatDosen($bimbingUji, 'penguji1') : '-');
+        $penguji2 = isset($bimbingUji['pengganti2']) ? $formatDosen($bimbingUji, 'pengganti2') : (isset($bimbingUji['penguji2']) ? $formatDosen($bimbingUji, 'penguji2') : '-');
+
+        // $pembimbing1 = optional($bimbingUji)['pembimbing1'] ?? '-';
+        // $pembimbing2 = optional($bimbingUji)['pembimbing2'] ?? '-';
+        // $penguji1 = optional($bimbingUji)['pengganti1'] ?? optional($bimbingUji)['penguji1'] ?? '-';
+        // $penguji2 = optional($bimbingUji)['pengganti2'] ?? optional($bimbingUji)['penguji2'] ?? '-';
 
         return [
             $this->no++,
@@ -116,6 +130,7 @@ class TugasAkhirClass implements FromCollection, WithHeadings, WithMapping, With
         $sheet->getColumnDimension('H')->setWidth(25);
         $sheet->getColumnDimension('I')->setWidth(25);
     
+        $sheet->getStyle('F:I')->getAlignment()->setWrapText(true);
         return [
             1 => [
                 'font' => [

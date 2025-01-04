@@ -40,26 +40,30 @@
                         <div class="col-lg-6 col-md-6 col-sm-12">
                             <div class="mb-3">
                                 <label for="">Pembimbing 1 <span class="text-danger">*</span></label>
-                                <select name="pembimbing_1" id="pemb_1"  onchange="updateOptions()" class="form-control dosen-select select2">
+                                <select name="pembimbing_1" id="pemb_1" onchange="updateOptions()" class="form-control dosen-select select2">
                                     <option value="">Pilih Pembimbing</option>
-                                    @foreach($dosen->where('sisa_pemb_1', '>', 0) as $item)
-                                    <option value="{{ $item->id }}" {{ (isset($pemb1->dosen_id) && $pemb1->dosen_id == $item->id) ? 'selected' : '' }}>
-                                        {{ $item->nama }} (Sisa: {{ $item->sisa_pemb_1 }})
-                                    </option>
-                                @endforeach
+                                    @foreach ($dosen->filter(function ($item) use ($pemb1) {
+                                        return $item->sisa_pemb_1 > 0 || (isset($pemb1->dosen_id) && $pemb1->dosen_id == $item->id);
+                                    }) as $item)
+                                        <option value="{{ $item->id }}" {{ (isset($pemb1->dosen_id) && $pemb1->dosen_id == $item->id) ? 'selected' : '' }}>
+                                            {{ $item->nama }} (Sisa: {{ $item->sisa_pemb_1 }})
+                                        </option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12">
                             <div class="mb-3">
                                 <label for="">Pembimbing 2 <span class="text-danger">*</span></label>
-                                <select name="pembimbing_2" id="pemb_2"  onchange="updateOptions()" class="form-control dosen-select  select2">
+                                <select name="pembimbing_2" id="pemb_2" onchange="updateOptions()" class="form-control dosen-select select2">
                                     <option value="">Pilih Pembimbing</option>
-                                    @foreach($dosen->where('sisa_pemb_2', '>', 0) as $item)
-                                    <option value="{{ $item->id }}" {{ (isset($pemb2->dosen_id) && $pemb2->dosen_id == $item->id) ? 'selected' : '' }}>
-                                        {{ $item->nama }} (Sisa: {{ $item->sisa_pemb_2 }})
-                                    </option>
-                                @endforeach
+                                    @foreach ($dosen->filter(function ($item) use ($pemb2) {
+                                        return $item->sisa_pemb_2 > 0 || (isset($pemb2->dosen_id) && $pemb2->dosen_id == $item->id);
+                                    }) as $item)
+                                        <option value="{{ $item->id }}" {{ (isset($pemb2->dosen_id) && $pemb2->dosen_id == $item->id) ? 'selected' : '' }}>
+                                            {{ $item->nama }} (Sisa: {{ $item->sisa_pemb_2 }})
+                                        </option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
@@ -68,30 +72,35 @@
                         <div class="col-lg-6 col-md-6 col-sm-12">
                             <div class="mb-3">
                                 <label for="">Penguji 1 <span class="text-danger">*</span></label>
-                                <select name="penguji_1" id="peng_1"  onchange="updateOptions()" class="form-control dosen-select  select2">
+                                <select name="penguji_1" id="peng_1" onchange="updateOptions()" class="form-control dosen-select select2">
                                     <option value="">Pilih Penguji</option>
-                                    @foreach($dosen->where('sisa_peng_1', '>', 0) as $item)
-                                    <option value="{{ $item->id }}" {{ (isset($peng1->dosen_id) && $peng1->dosen_id == $item->id) ? 'selected' : '' }}>
-                                        {{ $item->nama }} (Sisa: {{ $item->sisa_peng_1 }})
-                                    </option>
-                                @endforeach
+                                    @foreach ($dosen->filter(function ($item) use ($peng1) {
+                                        return $item->sisa_peng_1 > 0 || (isset($peng1->dosen_id) && $peng1->dosen_id == $item->id);
+                                    }) as $item)
+                                        <option value="{{ $item->id }}" {{ (isset($peng1->dosen_id) && $peng1->dosen_id == $item->id) ? 'selected' : '' }}>
+                                            {{ $item->nama }} (Sisa: {{ $item->sisa_peng_1 }})
+                                        </option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12">
                             <div class="mb-3">
                                 <label for="">Penguji 2 <span class="text-danger">*</span></label>
-                                <select name="penguji_2" id="peng_2"  onchange="updateOptions()" class="form-control dosen-select  select2">
+                                <select name="penguji_2" id="peng_2" onchange="updateOptions()" class="form-control dosen-select select2">
                                     <option value="">Pilih Penguji</option>
-                                    @foreach($dosen->where('sisa_peng_2', '>', 0) as $item)
-                                    <option value="{{ $item->id }}" {{ (isset($peng2->dosen_id) && $peng2->dosen_id == $item->id) ? 'selected' : '' }}>
-                                        {{ $item->nama }} (Sisa: {{ $item->sisa_peng_2 }})
-                                    </option>
-                                @endforeach
+                                    @foreach ($dosen->filter(function ($item) use ($peng2) {
+                                        return $item->sisa_peng_2 > 0 || (isset($peng2->dosen_id) && $peng2->dosen_id == $item->id);
+                                    }) as $item)
+                                        <option value="{{ $item->id }}" {{ (isset($peng2->dosen_id) && $peng2->dosen_id == $item->id) ? 'selected' : '' }}>
+                                            {{ $item->nama }} (Sisa: {{ $item->sisa_peng_2 }})
+                                        </option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
                     </div>
+                    
                     <div class="row">
                         <div class="col-lg-4 col-md-4 col-sm-12">
                             <div class="mb-3">
