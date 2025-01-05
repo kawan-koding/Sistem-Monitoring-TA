@@ -1,7 +1,6 @@
 @extends('administrator.layout.main')
 
 @section('content')
-
     <div class="card">
         <div class="card-body">
             @if (session('success'))
@@ -35,18 +34,18 @@
                 <a href="{{ getSetting('app_sidang_registration_template') }}" target="_blank" class="btn btn-success mb-2"><i class="far fa-file-alt"></i> Template Pendaftaran Sidang</a>
                 <a href="{{ getSetting('app_sidang_filing_template') }}" target="_blank" class="btn btn-secondary mb-2"><i class="far fa-file-alt"></i> Template Pemberkasan Sidang</a>
                 @if(session('switchRoles') == 'Admin')   
-                <div class="btn-group" role="group">
-                    <button id="btnGroupVerticalDrop1" type="button" class="btn btn-primary dropdown-toggle mb-2" style="max-width: 150px;" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fa fa-file-excel me-2"></i> Export <i class="mdi mdi-chevron-down"></i>
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1">
-                        <a class="dropdown-item" target="_blank" href="{{ route('apps.jadwal-sidang.export', ['data' => 'belum_daftar']) }}">Belum Daftar Sidang</a>
-                        <a class="dropdown-item" target="_blank" href="{{ route('apps.jadwal-sidang.export', ['data' => 'sudah_terjadwal']) }}">Sudah Daftar Sidang</a>
-                        <a class="dropdown-item" target="_blank" href="{{ route('apps.jadwal-sidang.export', ['data' => 'sudah_sidang']) }}">Telah Sidang</a>
-                        <a class="dropdown-item" target="_blank" href="{{ route('apps.jadwal-sidang.export', ['data' => 'sudah_pemberkasan_sidang'])}}">Sudah Pemberkasan Sidang</a>
-                        <a class="dropdown-item" target="_blank" href="{{ route('apps.jadwal-sidang.export', ['data' => 'sk_sidang'])}}">SK Sidang</a>
+                    <div class="btn-group" role="group">
+                        <button id="btnGroupVerticalDrop1" type="button" class="btn btn-primary dropdown-toggle mb-2" style="max-width: 150px;" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-file-excel me-2"></i> Export <i class="mdi mdi-chevron-down"></i>
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1">
+                            <a class="dropdown-item" target="_blank" href="{{ route('apps.jadwal-sidang.export', ['data' => 'belum_daftar']) }}">Belum Daftar Sidang</a>
+                            <a class="dropdown-item" target="_blank" href="{{ route('apps.jadwal-sidang.export', ['data' => 'sudah_terjadwal']) }}">Sudah Daftar Sidang</a>
+                            <a class="dropdown-item" target="_blank" href="{{ route('apps.jadwal-sidang.export', ['data' => 'sudah_sidang']) }}">Telah Sidang</a>
+                            <a class="dropdown-item" target="_blank" href="{{ route('apps.jadwal-sidang.export', ['data' => 'sudah_pemberkasan_sidang'])}}">Sudah Pemberkasan Sidang</a>
+                            <a class="dropdown-item" target="_blank" href="{{ route('apps.jadwal-sidang.export', ['data' => 'sk_sidang'])}}">SK Sidang</a>
+                        </div>
                     </div>
-                </div>
                 @endif
             </div>
             <hr>
@@ -82,62 +81,60 @@
             @endif
 
             @if (getInfoLogin()->hasRole('Admin'))
-                {{-- <div class="col-md-8 col-sm-12"> --}}
-                    <form action="">
-                        @if(!is_null($status))
-                        <input type="hidden" name="status" value="{{ $status }}">
-                        @endif
-                        @if(!is_null($status_pemberkasan))
-                        <input type="hidden" name="status_pemberkasan" value="{{ $status_pemberkasan }}">
-                        @endif
-                        <div class="row">
-                            <div class="col-md-6 col-sm-12">
-                                <label for="">Filter Tanggal</label>
-                                <div class="inner mb-3 row">
-                                    <div class="col-md-8 col-sm-6">
-                                        <div class="position-relative">
-                                            <div class="input-group">
-                                                <input type="date" name="tanggal" class="inner form-control" placeholder="cari berdasarkan tanggal">
-                                                <div class="input-group-prepend">
-                                                    <button type="submit" class="btn btn-primary input-group-text inner">Filter</button>
-                                                    <a href="{{ route('apps.jadwal-sidang') }}" class="btn btn-secondary input-group-text inner">Reset</a>
-                                                </div>
+                <form action="">
+                    @if(!is_null($status))
+                    <input type="hidden" name="status" value="{{ $status }}">
+                    @endif
+                    @if(!is_null($status_pemberkasan))
+                    <input type="hidden" name="status_pemberkasan" value="{{ $status_pemberkasan }}">
+                    @endif
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12">
+                            <label for="">Filter Tanggal</label>
+                            <div class="inner mb-3 row">
+                                <div class="col-md-8 col-sm-6">
+                                    <div class="position-relative">
+                                        <div class="input-group">
+                                            <input type="date" name="tanggal" class="inner form-control" placeholder="cari berdasarkan tanggal">
+                                            <div class="input-group-prepend">
+                                                <button type="submit" class="btn btn-primary input-group-text inner">Filter</button>
+                                                <a href="{{ route('apps.jadwal-sidang') }}" class="btn btn-secondary input-group-text inner">Reset</a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6 col-sm-12">
-                                <label for="">Filter berdasarkan Prodi / Periode</label>
-                                <div class="row">
-                                    <div class="col-4">
-                                        <select name="filter1" class="form-control" onchange="this.form.submit()">
-                                            <option value="semua" {{ $filter1 == 'semua' ? 'selected' : '' }}>Semua Program Studi</option>
-                                            @foreach ($programStudies as $item)
-                                                <option value="{{ $item->id }}"{{ $filter1 == $item->id ? 'selected' : '' }}>{{ $item->display }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="col-4">
-                                        <select name="filter2" class="form-control" onchange="this.form.submit()">
-                                            <option value="semua" {{ $filter2 == 'semua' ? 'selected' : '' }}>Semua Periode</option>
-                                            @foreach ($periodes as $item)
-                                                <option value="{{ $item->id }}" {{ isset($filter2) && $filter2 == $item->id ? 'selected' : '' }}>{{ $item->nama }} - {{ 'Prodi' . ' ' . $item->programStudi->display }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="col-4">
-                                        <select name="type" class="form-control" onchange="this.form.submit()">
-                                            <option value="semua" {{ $type == 'semua' ? 'selected' : '' }}>Semua</option>
-                                            <option value="I" {{ $type == 'I' ? 'selected' : '' }}>Individu</option>
-                                            <option value="K" {{ $type == 'K' ? 'selected' : '' }}>Kelompok</option>
-                                        </select>
-                                    </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <label for="">Filter berdasarkan Prodi / Periode / Penyelesaian</label>
+                            <div class="row">
+                                <div class="col-4">
+                                    <select name="filter1" class="form-control" onchange="this.form.submit()">
+                                        <option value="semua" {{ $filter1 == 'semua' ? 'selected' : '' }}>Semua Program Studi</option>
+                                        @foreach ($programStudies as $item)
+                                            <option value="{{ $item->id }}"{{ $filter1 == $item->id ? 'selected' : '' }}>{{ $item->display }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-4">
+                                    <select name="filter2" class="form-control" onchange="this.form.submit()">
+                                        <option value="semua" {{ $filter2 == 'semua' ? 'selected' : '' }}>Semua Periode</option>
+                                        @foreach ($periodes as $item)
+                                            <option value="{{ $item->id }}" {{ isset($filter2) && $filter2 == $item->id ? 'selected' : '' }}>{{ $item->nama }} - {{ 'Prodi' . ' ' . $item->programStudi->display }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-4">
+                                    <select name="type" class="form-control" onchange="this.form.submit()">
+                                        <option value="semua" {{ $type == 'semua' ? 'selected' : '' }}>Semua</option>
+                                        <option value="I" {{ $type == 'I' ? 'selected' : '' }}>Individu</option>
+                                        <option value="K" {{ $type == 'K' ? 'selected' : '' }}>Kelompok</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
-                    </form>
-                {{-- </div> --}}
+                    </div>
+                </form>
 
                 @can('read-daftar-sidang')
                 <ul class="nav nav-tabs nav-tabs-custom nav-justified mt-1 mb-2" role="tablist">

@@ -86,7 +86,7 @@
                             </div>
                         </div>
                         <div class="col-md-6 col-sm-12">
-                            <label for="">Filter berdasarkan Prodi / Periode</label>
+                            <label for="">Filter berdasarkan Prodi / Periode / Penyelesaian</label>
                             <div class="row">
                                 <div class="col-4">
                                     <select name="filter1" class="form-control" onchange="this.form.submit()">
