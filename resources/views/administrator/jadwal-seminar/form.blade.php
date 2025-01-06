@@ -31,6 +31,10 @@
                     @endif
                     <form action="{{route('apps.jadwal-seminar.update', ['jadwalSeminar' => $jadwalSeminar->id])}}" method="post">
                         @csrf
+                      	<div class="mb-3">
+                            <label for="">Nama Mahasiswa<span class="text-danger"> *</span></label>
+                            <input type="text" name="name" class="form-control" value="{{ $jadwalSeminar->tugas_akhir->mahasiswa->nim}} - {{ $jadwalSeminar->tugas_akhir->mahasiswa->nama_mhs}}" readonly>
+                        </div>
                         <div class="mb-3">
                             <label for="">Ruangan<span class="text-danger"> *</span></label>
                             <select name="ruangan" class="form-control">
@@ -268,7 +272,5 @@
                 </div>
             </div>
         </div>  
-        {{-- <div class="col-lg-6 col-md-6 col-sm-12">
-        </div> --}}
     </div>
 @endsection

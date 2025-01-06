@@ -42,7 +42,7 @@
                             <a class="dropdown-item" target="_blank"
                                 href="{{ route('apps.jadwal-seminar.export', ['type' => 'belum_terjadwal']) }}">Belum
                                 Terjadwal</a>
-                            <a class="dropdown-item" target="_blank"
+                          	<a class="dropdown-item" target="_blank"
                                 href="{{ route('apps.jadwal-seminar.export', ['type' => 'sudah_terjadwal']) }}">Sudah
                                 Terjadwal</a>
                             <a class="dropdown-item" target="_blank"
@@ -86,7 +86,7 @@
                             </div>
                         </div>
                         <div class="col-md-6 col-sm-12">
-                            <label for="">Filter berdasarkan Prodi / Periode / Penyelesaian</label>
+                            <label for="">Filter berdasarkan Prodi / Periode</label>
                             <div class="row">
                                 <div class="col-4">
                                     <select name="filter1" class="form-control" onchange="this.form.submit()">
@@ -267,6 +267,9 @@
                                                 <a href="{{ route('apps.jadwal-seminar.edit', ['jadwalSeminar' => $item->id]) }}"
                                                     class="btn btn-sm btn-primary mb-2"><i class="bx bx-calendar-event"></i></a>
                                             @endcan
+                                        @endif
+                                        @if($item->status == "sudah_terjadwal")
+                                            <a href="javascript:void(0)" onclick="reset('{{ $item->id }}', '{{ route('apps.jadwal-seminar.reset', ['jadwalSeminar' => $item->id]) }}')" class="btn btn-sm btn-danger mb-2" title="Reset Jadwal Seminar"><i class="bx bx-reset"></i></a>
                                         @endif
                                         @if ($item->status == 'telah_seminar')
                                             <a href="{{ route('apps.jadwal-seminar.show', $item) }}"

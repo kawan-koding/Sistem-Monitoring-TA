@@ -174,7 +174,7 @@ class JadwalSeminarController extends Controller
                         $query->where('dosen_id', $dosenId);
                     }
                 });
-            })->whereDate('tanggal', '>=', Carbon::today()->format('Y-m-d'))->whereNot('id', $jadwalSeminar->id)->where('status', 'sudah_terjadwal')->get(),
+            })->whereDate('tanggal', '>=', Carbon::today()->format('Y-m-d'))->whereNot('id', $jadwalSeminar->id)->where('status', 'sudah_terjadwal')->orderBy('jam_mulai', 'asc')->orderBy('tanggal', 'asc')->get(),
             'jadwalPembimbing2' => JadwalSeminar::whereHas('tugas_akhir', function ($query) use ($jadwalSeminar) {
                 $query->whereHas('bimbing_uji', function ($query) use ($jadwalSeminar) {
                     $dosenId = $jadwalSeminar->tugas_akhir->bimbing_uji()->where('jenis', 'pembimbing')->where('urut', 2)->first();
@@ -198,7 +198,7 @@ class JadwalSeminarController extends Controller
                         $query->where('dosen_id', $dosenId);
                     }
                 });
-            })->whereDate('tanggal', '>=', Carbon::today()->format('Y-m-d'))->whereNot('id', $jadwalSeminar->id)->where('status', 'sudah_terjadwal')->get(),
+            })->whereDate('tanggal', '>=', Carbon::today()->format('Y-m-d'))->whereNot('id', $jadwalSeminar->id)->where('status', 'sudah_terjadwal')->orderBy('jam_mulai', 'asc')->orderBy('tanggal', 'asc')->get(),
             'jadwalPenguji2' => JadwalSeminar::whereHas('tugas_akhir', function ($query) use ($jadwalSeminar) {
                 $query->whereHas('bimbing_uji', function ($query) use ($jadwalSeminar) {
                     $dosenId = $jadwalSeminar->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 2)->first();
@@ -210,8 +210,8 @@ class JadwalSeminarController extends Controller
                         $query->where('dosen_id', $dosenId);
                     }
                 });
-            })->whereDate('tanggal', '>=', Carbon::today()->format('Y-m-d'))->whereNot('id', $jadwalSeminar->id)->where('status', 'sudah_terjadwal')->get(),
-            'mahasiswaTerdaftar' => JadwalSeminar::where('status', 'sudah_terjadwal')->whereIn('tanggal', $currentWeekDays)->orderBy('tanggal', 'asc')->get(),
+            })->whereDate('tanggal', '>=', Carbon::today()->format('Y-m-d'))->whereNot('id', $jadwalSeminar->id)->where('status', 'sudah_terjadwal')->orderBy('jam_mulai', 'asc')->orderBy('tanggal', 'asc')->get(),
+            'mahasiswaTerdaftar' => JadwalSeminar::where('status', 'sudah_terjadwal')->whereIn('tanggal', $currentWeekDays)->orderBy('jam_mulai', 'asc')->orderBy('tanggal', 'asc')->get(),
         ];
 
         // dd($data);
@@ -249,8 +249,6 @@ class JadwalSeminarController extends Controller
                     $q->whereIn('dosen_id', $jadwalSeminar->tugas_akhir->bimbing_uji()->pluck('dosen_id')->toArray());
                 });
             })->whereDate('tanggal', $request->tanggal)->where('jam_mulai', '<=', $request->jam_mulai)->where('jam_selesai', '>=', $request->jam_mulai)->first();
-            
-            // dd($check);
 
             $checkRuangan = JadwalSeminar::whereNot('id', $jadwalSeminar->id)->whereRuanganId($request->ruangan)->whereDate('tanggal', $request->tanggal)->where('jam_mulai', '>=', $request->jam_mulai)->where('jam_selesai', '<=', $request->jam_selesai)->first();
 
