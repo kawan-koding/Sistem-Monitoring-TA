@@ -191,7 +191,7 @@ class JadwalSidangController extends Controller
                         $query->where('dosen_id', $dosenId);
                     }
                 });
-            })->whereDate('tanggal', '>=', Carbon::today()->format('Y-m-d'))->whereNot('id', $jadwalSidang->id)->where('status', 'sudah_terjadwal')->get(),
+            })->whereDate('tanggal', '>=', Carbon::today()->format('Y-m-d'))->whereNot('id', $jadwalSidang->id)->where('status', 'sudah_terjadwal')->orderBy('jam_mulai', 'asc')->orderBy('tanggal', 'asc')->get(),
             'jadwalPembimbing2' => Sidang::whereHas('tugas_akhir', function ($query) use ($jadwalSidang) {
                 $query->whereHas('bimbing_uji', function ($query) use ($jadwalSidang) {
                     $dosenId = $jadwalSidang->tugas_akhir->bimbing_uji()->where('jenis', 'pembimbing')->where('urut', 2)->first();
@@ -203,7 +203,7 @@ class JadwalSidangController extends Controller
                         $query->where('dosen_id', $dosenId);
                     }
                 });
-            })->whereDate('tanggal', '>=', Carbon::today()->format('Y-m-d'))->whereNot('id', $jadwalSidang->id)->where('status', 'sudah_terjadwal')->get(),
+            })->whereDate('tanggal', '>=', Carbon::today()->format('Y-m-d'))->whereNot('id', $jadwalSidang->id)->where('status', 'sudah_terjadwal')->orderBy('jam_mulai', 'asc')->orderBy('tanggal', 'asc')->get(),
             'jadwalPenguji1' => Sidang::whereHas('tugas_akhir', function ($query) use ($jadwalSidang) {
                 $query->whereHas('bimbing_uji', function ($query) use ($jadwalSidang) {
                     $dosenId = $jadwalSidang->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 1)->first();
@@ -215,7 +215,7 @@ class JadwalSidangController extends Controller
                         $query->where('dosen_id', $dosenId);
                     }
                 });
-            })->whereDate('tanggal', '>=', Carbon::today()->format('Y-m-d'))->whereNot('id', $jadwalSidang->id)->where('status', 'sudah_terjadwal')->get(),
+            })->whereDate('tanggal', '>=', Carbon::today()->format('Y-m-d'))->whereNot('id', $jadwalSidang->id)->where('status', 'sudah_terjadwal')->orderBy('jam_mulai', 'asc')->orderBy('tanggal', 'asc')->get(),
             'jadwalPenguji2' => Sidang::whereHas('tugas_akhir', function ($query) use ($jadwalSidang) {
                 $query->whereHas('bimbing_uji', function ($query) use ($jadwalSidang) {
                     $dosenId = $jadwalSidang->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 2)->first();
@@ -227,8 +227,8 @@ class JadwalSidangController extends Controller
                         $query->where('dosen_id', $dosenId);
                     }
                 });
-            })->whereDate('tanggal', '>=', Carbon::today()->format('Y-m-d'))->whereNot('id', $jadwalSidang->id)->where('status', 'sudah_terjadwal')->get(),
-            'mahasiswaTerdaftar' => Sidang::where('status', 'sudah_terjadwal')->whereIn('tanggal', $currentWeekDays)->orderBy('tanggal', 'asc')->get(),
+            })->whereDate('tanggal', '>=', Carbon::today()->format('Y-m-d'))->whereNot('id', $jadwalSidang->id)->where('status', 'sudah_terjadwal')->orderBy('jam_mulai', 'asc')->orderBy('tanggal', 'asc')->get(),
+            'mahasiswaTerdaftar' => Sidang::where('status', 'sudah_terjadwal')->whereIn('tanggal', $currentWeekDays)->orderBy('jam_mulai', 'asc')->orderBy('tanggal', 'asc')->get(),
             'pengujiPengganti'=> Dosen::all(),
         ];
 
@@ -260,10 +260,20 @@ class JadwalSidangController extends Controller
                 return redirect()->back()->with(['error' => 'Periode sidang belum aktif']);
             }
 
-            $check = Sidang::whereRuanganId($request->ruangan)->whereDate('tanggal', $request->tanggal)->where('jam_mulai', '>=', $request->jam_mulai)->where('jam_selesai', '<=', $request->jam_selesai)->whereNot('id', $jadwalSidang->id)->first();
+            $check = Sidang::whereNot('id', $jadwalSidang->id)->whereHas('tugas_akhir', function($q) use ($jadwalSidang) {
+                $q->whereHas('bimbing_uji', function($q) use ($jadwalSidang) {
+                    $q->whereIn('dosen_id', $jadwalSidang->tugas_akhir->bimbing_uji->pluck('dosen_id')->toArray());
+                });
+            })->whereDate('tanggal', $request->tanggal)->where('jam_mulai', '<=', $request->jam_mulai)->where('jam_selesai', '>=', $request->jam_mulai)->first();
+
+            $checkRuangan = Sidang::whereNot('id', $jadwalSidang->id)->whereRuanganId($request->ruangan)->whereDate('tanggal', $request->tanggal)->where('jam_mulai', '>=', $request->jam_mulai)->where('jam_selesai', '<=', $request->jam_selesai)->first();
 
             if(!is_null($check)) {
                 return redirect()->back()->withInput($request->all())->with(['error' => 'Jadwal ini sudah ada']);
+            }
+            
+            if(!is_null($checkRuangan)) {
+                return redirect()->back()->withInput($request->all())->with(['error' => 'Ruangan sudah digunakan pada waktu tersebut']);
             }
 
             $jadwalSidang->update([
