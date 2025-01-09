@@ -361,6 +361,7 @@ class JadwalController extends Controller
                     'tugas_akhir_id' => $jadwal->tugas_akhir_id,
                     'status' => 'belum_terjadwal',
                 ]);
+                Penilaian::whereBimbingUjiId($jadwal->tugas_akhir->bimbing_uji->pluck('id'))->delete();
                 $jadwal->tugas_akhir->update(['status_seminar' => 'reject']);
                 $jadwal->delete();
 
