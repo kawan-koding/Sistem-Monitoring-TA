@@ -90,6 +90,7 @@ class JadwalController extends Controller
                 ]
             ],
             'data' => $jadwal,
+            'item' => $jadwal,
             'kategoriNilais' => KategoriNilai::all(),
             'nilais' => $jadwal->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->first()->penilaian()->where('type', 'Seminar')->get(),
             'recapPemb1' => $recapPemb1,

@@ -42,6 +42,9 @@
                             <a class="dropdown-item" target="_blank"
                                 href="{{ route('apps.jadwal-seminar.export', ['type' => 'belum_terjadwal']) }}">Belum
                                 Terjadwal</a>
+                          	<a class="dropdown-item" target="_blank"
+                                href="{{ route('apps.jadwal-seminar.export', ['type' => 'sudah_terjadwal']) }}">Sudah
+                                Terjadwal</a>
                             <a class="dropdown-item" target="_blank"
                                 href="{{ route('apps.jadwal-seminar.export', ['type' => 'telah_seminar']) }}">Telah
                                 Diseminarkan</a>

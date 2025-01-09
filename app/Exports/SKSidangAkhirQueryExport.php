@@ -39,7 +39,7 @@ class SKSidangAkhirQueryExport implements FromCollection, WithHeadings, WithMapp
         $tugasAkhirData = collect();
         foreach($mahasiswa as $mhs) {
             $tugasAkhir = TugasAkhir::with(['mahasiswa','bimbing_uji'])->whereMahasiswaId($mhs->id)->wherePeriodeTaId($this->periodeId)->whereIn('status', ['acc', 'draft','pengajuan ulang'])->first();
-            dd($tugasAkhir->mahasiswa);
+
             if($tugasAkhir) {
                 $bimbingUjiData = $tugasAkhir->bimbing_uji->mapWithKeys( function($item) {
                     return [ $item->jenis . $item->urut => $item->dosen->name ?? '-' ];

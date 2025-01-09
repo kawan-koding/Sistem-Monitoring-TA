@@ -200,8 +200,8 @@ class PengajuanTAController extends Controller
 
             Pemberkasan::insert($inserts);
 
-            // DB::commit();
-            // return redirect()->route('apps.pengajuan-ta')->with('success', 'Data berhasil ditambahkan');
+            DB::commit();
+            return redirect()->route('apps.pengajuan-ta')->with('success', 'Data berhasil ditambahkan');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }

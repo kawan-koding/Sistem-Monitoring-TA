@@ -92,7 +92,7 @@
             @endcan
             <div class="card-body">
 
-                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
+                <div class="d-flex flex-column flex-md-row  justify-content-end align-items-md-center gap-2">
                     <form action="" method="GET">
                         <input type="hidden" name="status" value="{{ request('status', 'mahasiswa_bimbing') }}">
                         <div class="d-flex gap-2 flex-column flex-md-row">

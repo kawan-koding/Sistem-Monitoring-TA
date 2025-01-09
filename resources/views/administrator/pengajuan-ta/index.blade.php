@@ -194,7 +194,7 @@
                                                 @endif
                                                 @if (getInfoLogin()->hasRole('Mahasiswa'))
                                                     @can('update-pengajuan-tugas-akhir')
-                                                        @if(!in_array($item->status, ['cancel', 'reject']))
+                                                        @if(!in_array($item->status, ['cancel', 'reject','acc']))
                                                             <a href="{{ route('apps.pengajuan-ta.edit', ['pengajuanTA' => $item->id]) }}" class="btn btn-sm btn-outline-primary my-1 mx-1" title="Edit"><i class="bx bx-edit-alt"></i></a>
                                                         @endif
                                                     @endcan

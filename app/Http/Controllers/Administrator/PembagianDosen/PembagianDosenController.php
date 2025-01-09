@@ -100,10 +100,6 @@ class PembagianDosenController extends Controller
                 'sisa_peng_1' => max(0, ($kuota->penguji_1 ?? 0) - $totalPenguji1),
                 'sisa_peng_2' => max(0, ($kuota->penguji_2 ?? 0) - $totalPenguji2),
             ];
-        })->filter(function ($dosen) {
-            return $dosen->sisa_pemb_2 > 0;
-            return $dosen->sisa_peng_1 > 0;
-            return $dosen->sisa_peng_2 > 0;
         });
                 
         $data = [
