@@ -34,7 +34,15 @@ class JadwalController extends Controller
                 });
             }
 
-            $query = $query->get();
+            $query = $query->get()->map(function($item) {
+              $item->tanggal = is_null($item->tugas_akhir->jadwal_seminar) ? null : $item->tugas_akhir->jadwal_seminar->tanggal;
+              $item->jam_mulai = is_null($item->tugas_akhir->jadwal_seminar) ? null : $item->tugas_akhir->jadwal_seminar->jam_mulai;
+              return $item;
+            })->sortBy(function ($item) {
+              return $item['jam_mulai'] ? Carbon::parse($item['jam_mulai']) : Carbon::parse('23:59');
+            })->sortBy(function ($item) {
+              return $item['tanggal'] ?? Carbon::parse('9999-12-31');
+            });
         }
         $data = [
             'title' => 'Jadwal',

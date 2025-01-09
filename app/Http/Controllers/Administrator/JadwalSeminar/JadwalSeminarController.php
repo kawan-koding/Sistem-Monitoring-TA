@@ -248,11 +248,9 @@ class JadwalSeminarController extends Controller
                 $q->whereHas('bimbing_uji', function($q) use ($jadwalSeminar) {
                     $q->whereIn('dosen_id', $jadwalSeminar->tugas_akhir->bimbing_uji()->pluck('dosen_id')->toArray());
                 });
-            })->whereDate('tanggal', $request->tanggal)->where('jam_mulai', '<=', $request->jam_mulai)->where('jam_selesai', '>=', $request->jam_mulai)->first();
-            
-            // dd($check);
+            })->whereDate('tanggal', $request->tanggal)->where('jam_mulai', '<', $request->jam_mulai)->where('jam_selesai', '>', $request->jam_mulai)->first();
 
-            $checkRuangan = JadwalSeminar::whereNot('id', $jadwalSeminar->id)->whereRuanganId($request->ruangan)->whereDate('tanggal', $request->tanggal)->where('jam_mulai', '>=', $request->jam_mulai)->where('jam_selesai', '<=', $request->jam_selesai)->first();
+            $checkRuangan = JadwalSeminar::whereNot('id', $jadwalSeminar->id)->whereRuanganId($request->ruangan)->whereDate('tanggal', $request->tanggal)->where('jam_mulai', '>', $request->jam_mulai)->where('jam_selesai', '<', $request->jam_selesai)->first();
 
             if (!is_null($check)) {
                 return redirect()->back()->withInput($request->all())->with(['error' => 'Ada jadwal pada waktu tersebut']);
@@ -465,5 +463,21 @@ class JadwalSeminarController extends Controller
         }
 
         return Excel::download($export, "{$title}.xlsx");
+    }
+
+    public function reset(Request $request, JadwalSeminar $jadwalSeminar)
+    {
+        try {$jadwalSeminar->update([
+                'ruangan_id' => null,
+                'tanggal' => null,
+                'jam_mulai' => null,
+                'jam_selesai' => null,
+                'status' => 'belum_terjadwal'
+            ]);
+
+            return redirect()->route('apps.jadwal-seminar')->with(['success' => 'Berhasil mereset jadwal seminar']);
+        } catch (Exception $e) {
+            return redirect()->back()->with(['error' => $e->getMessage()]);
+        }
     }
 }

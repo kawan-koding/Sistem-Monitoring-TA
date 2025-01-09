@@ -265,6 +265,9 @@
                                                     class="btn btn-sm btn-primary mb-2"><i class="bx bx-calendar-event"></i></a>
                                             @endcan
                                         @endif
+                                        @if($item->status == "sudah_terjadwal")
+                                            <a href="javascript:void(0)" onclick="reset('{{ $item->id }}', '{{ route('apps.jadwal-seminar.reset', ['jadwalSeminar' => $item->id]) }}')" class="btn btn-sm btn-danger mb-2" title="Reset Jadwal Seminar"><i class="bx bx-reset"></i></a>
+                                        @endif
                                         @if ($item->status == 'telah_seminar')
                                             <a href="{{ route('apps.jadwal-seminar.show', $item) }}"
                                                 class="btn btn-sm btn-outline-warning mb-2" title="Detail"><i
