@@ -365,7 +365,7 @@ class JadwalController extends Controller
                 $jadwal->tugas_akhir->update(['status_seminar' => 'reject']);
                 $jadwal->delete();
 
-                return redirect()->route('apps.jadwal')->with(['error' => 'Berhasil menolak jadwal seminar']);
+                return redirect()->route('apps.jadwal')->with(['success' => 'Berhasil menolak jadwal seminar']);
             }
 
             return redirect()->back()->with(['success' => 'Berhasil mengubah status']);
