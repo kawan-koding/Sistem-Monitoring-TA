@@ -57,7 +57,8 @@ Route::middleware('guest')->group(function() {
     Route::get('',[HomeController::class, 'index'])->name('home');
     Route::get('tawaran-topik',[HomeController::class, 'topik'])->name('guest.rekomendasi-topik');
     Route::get('tugas-akhir',[HomeController::class, 'tugasAkhir'])->name('guest.judul-tugas-akhir');
-    Route::get('jadwal',[HomeController::class, 'jadwal'])->name('guest.jadwal');
+    // Route::get('jadwal',[HomeController::class, 'jadwal'])->name('guest.jadwal');
+    Route::get('get-jadwal',[HomeController::class, 'getJadwal'])->name('guest.get-jadwal');
 });
 
 Route::get('login', [AuthController::class, 'index'])->name('login')->middleware('guest');

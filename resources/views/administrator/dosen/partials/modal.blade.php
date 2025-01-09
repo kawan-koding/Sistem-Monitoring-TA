@@ -56,6 +56,7 @@ aria-labelledby="myModalLabel" aria-hidden="true">
                 <div class="mb-3">
                     <label for="">TTD </label>
                     <input type="file" name="file" id="file" class="form-control filepond">
+                    <span class="text-danger small"><i>*) TTD harus berupa barcode</i></span>
                 </div>
             </div>
             <div class="modal-footer">

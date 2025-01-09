@@ -5,6 +5,7 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <link rel="shortcut icon" href="{{ asset('storage/images/settings/' . getSetting('app_favicon')) }}">
     <title> {{ $title ?? 'unknown'}} | {{ getSetting('app_name') }}</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Favicons -->
     <link href="{{ asset('storage/images/settings/' . getSetting('app_favicon')) }}" rel="apple-touch-icon">
     <!-- Google Fonts -->
@@ -19,7 +20,9 @@
     <link href="{{ asset('landing-assets/vendor/swiper/swiper-bundle.min.css')}}" rel="stylesheet">
     <!-- Variables CSS Files. Uncomment your preferred color scheme -->
     <link href="{{ asset('landing-assets/css/variables.css')}}" rel="stylesheet">
-     <!-- Icons Css -->
+    <!-- Sweet Alert-->
+    <link href="{{ asset('landing-assets/vendor/sweetalert/css/sweetalert2.min.css') }}" rel="stylesheet" type="text/css" />
+    <!-- Icons Css -->
     <link href="{{ asset('landing-assets/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
     {{-- <link href="{{ asset('landing-assets/css/dataTables.min.css')}}" rel="stylesheet"> --}}
     <!-- Datatblae -->
@@ -27,6 +30,10 @@
     <link href="{{ asset('landing-assets/vendor/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css') }}" rel="stylesheet" type="text/css" />
     <!-- Template Main CSS File -->
     <link href="{{ asset('landing-assets/css/main.css')}}" rel="stylesheet">
+    <script>
+        const BASE_URL = "{{ url('/') }}"
+        const ASSET_URL = "{{ asset('/') }}"
+    </script>
 </head>
 <body>
     <div class="preloader">
@@ -50,6 +57,8 @@
     <script src="{{ asset('landing-assets/vendor/isotope-layout/isotope.pkgd.min.js')}}"></script>
     <script src="{{ asset('landing-assets/vendor/swiper/swiper-bundle.min.js')}}"></script>
     <script src="{{ asset('landing-assets/vendor/php-email-form/validate.js')}}"></script>
+    <!-- Sweet Alerts js -->
+    <script src="{{ asset('landing-assets/vendor/sweetalert/js/sweetalert2.all.min.js') }}"></script>
     <!-- Apexcharts -->
     <script src="{{ asset('landing-assets/vendor/apexcharts/apexcharts.min.js')}}"></script>
     <script src="{{ asset('landing-assets/js/apexcharts.init.js')}}"></script>

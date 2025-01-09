@@ -3345,6 +3345,150 @@ section {
     }
 }
 
+.table-container {
+    min-height: 400px;
+    max-height: 75vh;
+    overflow-y: auto;
+}
+
+.table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: #f8f9fa; 
+    border-bottom: none;
+}
+
+.skeleton {
+  background: #ddd;
+  border-radius: 4px;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+.skeleton-img {
+  width: 100px;
+  height: 120px;
+}
+
+.skeleton-text {
+  height: 20px;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+.skeleton-row {
+  display: flex;
+  align-items: center;
+}
+
+.skeleton-row .skeleton {
+  margin: 5px;
+}
+
+@keyframes pulse {
+  0% {
+      background-color: #ddd;
+  }
+  50% {
+      background-color: #f0f0f0;
+  }
+  100% {
+      background-color: #ddd;
+  }
+}
+
+.table th, .table td {
+  vertical-align: middle;
+  color: #6c757d;
+
+}
+
+
+.badge-soft-primary {
+  color: #3b5de7;
+  background-color: rgba(59, 93, 231, 0.18);
+}
+
+.badge-soft-secondary {
+  color: #8687a7;
+  background-color: rgba(134, 135, 167, 0.18);
+}
+
+.badge-soft-success {
+  color: #45cb85;
+  background-color: rgba(69, 203, 133, 0.18);
+}
+
+.badge-soft-info {
+  color: #0caadc;
+  background-color: rgba(12, 170, 220, 0.18);
+}
+
+.badge-soft-warning {
+  color: #eeb902;
+  background-color: rgba(238, 185, 2, 0.18);
+}
+
+.badge-soft-danger {
+  color: #ff715b;
+  background-color: rgba(255, 113, 91, 0.18);
+}
+
+.badge-soft-pink {
+  color: #e83e8c;
+  background-color: rgba(232, 62, 140, 0.18);
+}
+
+.badge-soft-light {
+  color: #eff2f7;
+  background-color: rgba(239, 242, 247, 0.18);
+}
+
+.badge-soft-dark {
+  color: #1e2938;
+  background-color: rgba(30, 41, 56, 0.18);
+}
+
+.badge {
+  --bs-badge-padding-x: 0.4em;
+  --bs-badge-padding-y: 0.25em;
+  --bs-badge-font-size: 75%;
+  --bs-badge-font-weight: 500;
+  --bs-badge-color: #fff;
+  --bs-badge-border-radius: 0.25rem;
+  display: inline-block;
+  padding: var(--bs-badge-padding-y) var(--bs-badge-padding-x);
+  font-size: var(--bs-badge-font-size);
+  font-weight: var(--bs-badge-font-weight);
+  line-height: 1;
+  color: var(--bs-badge-color);
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: var(--bs-badge-border-radius);
+}
+.badge:empty {
+  display: none;
+}
+
+/* #loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.spinner-border {
+  width: 3rem;
+  height: 3rem;
+  border-width: 0.3em;
+} */
 
 
 /* .filter {
