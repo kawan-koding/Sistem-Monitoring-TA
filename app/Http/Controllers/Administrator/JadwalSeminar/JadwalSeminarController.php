@@ -266,6 +266,7 @@ class JadwalSeminarController extends Controller
                 'jam_selesai' => $request->jam_selesai,
                 'status' => 'sudah_terjadwal'
             ]);
+            $jadwalSeminar->tugas_akhir->update(['status_seminar' => null]);
             return redirect()->route('apps.jadwal-seminar')->with(['success' => 'Berhasil menyimpan data']);
         } catch (\Exception $e) {
             return redirect()->back()->with(['error' => $e->getMessage()]);
