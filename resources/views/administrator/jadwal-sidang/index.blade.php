@@ -24,12 +24,11 @@
                             <li>{{ $error }}</li>
                         @endforeach
                     </ul>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-                    </button>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             @endif
-            {{-- <a href="#" target="_blank" class="btn btn-success mb-2"><i class="far fa-file-alt"></i> Template Pendaftaran Sidang</a>
-            <a href="#" target="_blank" class="btn btn-secondary mb-2"><i class="far fa-file-alt"></i> Template Pemberkasan Sidang</a> --}}
+            {{-- <a href="#" target="_blank" class="btn btn-success mb-2"><i class="far fa-file-alt"></i> Template Pendaftaran Sidang </a>
+                 <a href="#" target="_blank" class="btn btn-secondary mb-2"><i class="far fa-file-alt"></i> Template Pemberkasan Sidang </a> --}}
             <div class="d-flex flex-wrap align-items-center gap-2">
                 <a href="{{ getSetting('app_sidang_registration_template') }}" target="_blank" class="btn btn-success mb-2"><i class="far fa-file-alt"></i> Template Pendaftaran Sidang</a>
                 <a href="{{ getSetting('app_sidang_filing_template') }}" target="_blank" class="btn btn-secondary mb-2"><i class="far fa-file-alt"></i> Template Pemberkasan Sidang</a>
@@ -366,53 +365,52 @@
                 </table>
             </div>
         </div>
-    </div>
-
-    
+    </div>   
 @endsection
+
 @section('js')
-<script>
-    function uploadFileSidang(id, url) {
-        $('#id_jadwal_sidang').val(id);
-        $('#url_unggah_berkas').val(url);~
-        $('#myModalUpload').find('form').trigger('reset');
-        $('#myModalUpload').find('form').attr("action", url);
-        $('#myModalUpload').modal('show');
-    }
+    <script>
+        function uploadFileSidang(id, url) {
+            $('#id_jadwal_sidang').val(id);
+            $('#url_unggah_berkas').val(url);~
+            $('#myModalUpload').find('form').trigger('reset');
+            $('#myModalUpload').find('form').attr("action", url);
+            $('#myModalUpload').modal('show');
+        }
 
-    function changeFile(target) {
-        var filename = $(target).find('[type="file"]').prop('files')[0].name;
-        $(target).find('.file-desc').html(filename);
-        $(target).find('.file-icon').attr('class', 'file-icon mdi mdi-alert-circle-outline text-warning');
-        $(target).find('.file-btn').html('Ganti');
-    }
+        function changeFile(target) {
+            var filename = $(target).find('[type="file"]').prop('files')[0].name;
+            $(target).find('.file-desc').html(filename);
+            $(target).find('.file-icon').attr('class', 'file-icon mdi mdi-alert-circle-outline text-warning');
+            $(target).find('.file-btn').html('Ganti');
+        }
 
-    $('.update-status').unbind().on('click', async function(e) {
-        e.preventDefault()
-        $(this).parent().find('.update-status').html('<i class="bx bx-loader bx-spin"></i>').attr('disabled', 'disabled');
-        const res = await fetch($(this).attr('href'), {
-            headers: {
-                'accept': 'application/json'
+        $('.update-status').unbind().on('click', async function(e) {
+            e.preventDefault()
+            $(this).parent().find('.update-status').html('<i class="bx bx-loader bx-spin"></i>').attr('disabled', 'disabled');
+            const res = await fetch($(this).attr('href'), {
+                headers: {
+                    'accept': 'application/json'
+                }
+            })
+            
+            $($(this).parent().find('.update-status')[0]).html('<i class="bx bx-check"></i>').removeAttr('disabled');
+            $($(this).parent().find('.update-status')[1]).html('<i class="bx bx-x"></i>').removeAttr('disabled');
+            if(res.status == 200) {
+                var data = await res.json()
+
+                if(data.status == 'approve') {
+                    $(this).parent().find('.icon-display').attr('class', 'file-icon bx bx-check-circle text-success icon-display')
+                }
+
+                if(data.status == 'reject') {
+                    $(this).parent().find('.icon-display').attr('class', 'file-icon mdi mdi-close-circle-outline text-danger icon-display')
+                }
+
+                $(this).parent().find('.update-status').remove()
+            } else {
+
             }
         })
-        
-        $($(this).parent().find('.update-status')[0]).html('<i class="bx bx-check"></i>').removeAttr('disabled');
-        $($(this).parent().find('.update-status')[1]).html('<i class="bx bx-x"></i>').removeAttr('disabled');
-        if(res.status == 200) {
-            var data = await res.json()
-
-            if(data.status == 'approve') {
-                $(this).parent().find('.icon-display').attr('class', 'file-icon bx bx-check-circle text-success icon-display')
-            }
-
-            if(data.status == 'reject') {
-                $(this).parent().find('.icon-display').attr('class', 'file-icon mdi mdi-close-circle-outline text-danger icon-display')
-            }
-
-            $(this).parent().find('.update-status').remove()
-        } else {
-
-        }
-    })
-</script>
+    </script>
 @endsection

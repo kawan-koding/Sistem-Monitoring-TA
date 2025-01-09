@@ -85,7 +85,7 @@
         @endif
     </section>
 
-    <section id="jadwal" class="jadwal" style="padding: 60px 0 100px 0">
+    {{-- <section id="jadwal" class="jadwal" style="padding: 60px 0 100px 0">
         <div class="container">
             <h5 class="font-size-24 text-center m-0 fw-bold mb-1">Jadwal Mahasiswa</h5>
             <ul class="nav nav-pills w-100 mb-2">
@@ -155,9 +155,89 @@
             </div>
             @endif
         </div>
+    </section> --}}
+    <section id="jadwal" class="jadwal" style="padding: 60px 0 100px 0">
+        <div class="container">
+            <h5 class="font-size-24 text-center m-0 fw-bold mb-1">Jadwal Mahasiswa</h5>
+            <ul class="nav nav-pills w-100 mb-2">
+                <li class="flex-fill">
+                    <a class="nav-link text-center fw-bold" data-tab="pra_seminar" href="javascript:void(0);" onclick="changeTab('pra_seminar', this)">Akan Seminar</a>
+                </li>
+                <li class="flex-fill">
+                    <a class="nav-link text-center fw-bold" data-tab="pra_sidang" href="javascript:void(0);" onclick="changeTab('pra_sidang', this)">Akan Sidang</a>
+                </li>
+            </ul>
+            <div class="d-flex justify-content-center align-items-center mt-3 mb-2">
+                <div class="search" style="max-width: 400px; width: 100%;">
+                    <form onsubmit="searchJadwal(event)" style="width: 100%;">
+                        <input class="form-control" type="text" name="search" id="search" placeholder="Cari..." />
+                    </form>
+                </div>
+            </div>
+            
+            <div id="jadwal-list" class="row"></div>
+        </div>
     </section>
+    
+            {{-- @if($jadwal->count() > 0)
+            <div class="table-container">
+                <table class="table zero-configuration" style="font-size: 14px!important">
+                    <thead>
+                        <th style="min-width: 80px; max-width: 100px;">Poster</th>
+                        <th>Nama</th>
+                        <th style="min-width: 250px">Judul</th>
+                        <th>Pembimbing</th>
+                        <th>Penguji</th>
+                        <th>Waktu dan Tempat</th>
+                    </thead>
+                    <tbody>
+                        @foreach ($jadwal as $key => $item)    
+                            <tr>
+                                <td >
+                                    <img id="modal-image-{{ $key }}" src="{{ $item->poster == null ? 'https://ui-avatars.com/api/?background=random&name='. urlencode($item->nama) : asset('storage/files/pemberkasan/' . $item->poster) }}" alt="Poster" class="img-fluid" style="max-width: 100px; max-height: 120px; cursor: pointer; object-fit: cover; border-radius: 5px; border: 1px solid #ccc;" data-bs-toggle="modal" data-bs-target="#imagePreviewModal-{{ $key }}">
+                                    <div class="modal fade" id="imagePreviewModal-{{ $key }}" tabindex="-1" aria-labelledby="imagePreviewLabel" aria-hidden="true" style="backdrop-filter: blur(5px); background-color: rgba(0, 0, 0, 0.5);">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-body p-0">
+                                                    <img id="preview-image-{{ $key }}" src="{{ $item->poster == null ? 'https://ui-avatars.com/api/?background=random&name='. urlencode($item->nama) : asset('storage/files/pemberkasan/' . $item->poster) }}" alt="Preview Poster" class="img-fluid preview-image" style="border-radius: 5px; border: 1px solid #ccc;">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>{{ $item->nama ?? '-' }}</td>
+                                <td>{{ $item->judul ?? '-' }}</td>
+                                <td style="white-space: nowrap">
+                                    <ol>
+                                        <li>{{ $item->pembimbing_1 ?? '-' }}</li>
+                                        <li>{{ $item->pembimbing_2 ?? '-' }}</li>
+                                    </ol>
+                                </td>
+                                <td style="white-space: nowrap">
+                                    <ol>
+                                        <li>{{ $item->penguji_1 ?? '-' }}</li>
+                                        <li>{{ $item->penguji_2 ?? '-' }}</li>
+                                    </ol>
+                                </td>
+                                <td>
+                                    <strong>{{ $item->ruangan->nama_ruangan ?? '-' }}</strong>
+                                    <p class="m-0">{{ $item->tanggal ?? '-' }}</p>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+            @else
+                <div class="d-flex align-items-center justify-content-center py-5">
+                    <div class="text-center py-5">
+                        <img src="{{ asset('assets/images/no-data.png') }}" height="350" alt="">
+                        <p class="text-muted m-0">Tidak ada jadwal yang ditemukan.</p>
+                    </div>
+                </div>
+            @endif --}}
 
-    <section id="mahasiswa" class="mahasiswa" style="padding: 60px 0 100px 0">
+    {{-- <section id="mahasiswa" class="mahasiswa" style="padding: 60px 0 100px 0">
         <div class="container">
             <h5 class="font-size-24 text-center m-0 fw-bold mb-1">Daftar Mahasiswa</h5>
             <ul class="nav nav-pills w-100 mb-5">
@@ -173,7 +253,7 @@
                 </li>
             </ul>
             
-            @foreach ($completed as $key => $item)
+            @forelse ($completed as $key => $item)
                 <div class="row p-1 mt-3 g-0 mb-3 align-items-center" style="max-width: 750px;">
                     <div class="col-md-2">
                         <img id="modal-image-{{ $key }}" src="{{ $item->poster == null ? 'https://ui-avatars.com/api/?background=random&name='. urlencode($item->nama) : asset('storage/files/pemberkasan/' . $item->poster) }}"
@@ -207,7 +287,14 @@
                         </div>
                     </div>
                 </div>
-            @endforeach
+            @empty
+                <div class="d-flex align-items-center justify-content-center py-5">
+                    <div class="text-center py-5">
+                        <img src="{{ asset('assets/images/no-data.png') }}" height="350" alt="">
+                        <p class="text-muted m-0">Tidak ada data yang ditemukan.</p>
+                    </div>
+                </div>
+            @endforelse
 
             @if($jadwal->count() > 4)
                 <div class="text-center mt-5">
@@ -215,5 +302,163 @@
                 </div>
             @endif
         </div>
-    </section>
+    </section> --}}
+@endsection
+
+@section('scripts')
+<script>
+    var activeTab = 'pra_seminar';
+
+    const searchJadwal = (event) => {
+        event.preventDefault();
+        const searchText = document.getElementById('search').value.toLowerCase();
+        const rows = document.querySelectorAll('#jadwal-list table tbody tr');
+        rows.forEach(row => {
+            const cells = row.getElementsByTagName('td');
+            let rowText = '';
+            for (let i = 0; i < cells.length; i++) {
+                rowText += cells[i].textContent.toLowerCase() + ' ';
+            }
+            if (rowText.includes(searchText)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    };
+    document.getElementById('search').addEventListener('input', searchJadwal);
+
+    const fetchJadwalData = async (tab) => {
+        activeTab = tab;
+        document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+
+        const tabElement = document.querySelector(`.nav-link[data-tab="${tab}"]`);
+        if (tabElement) {
+            tabElement.classList.add('active');
+        }
+        const data = await getJadwalData(tab);
+        renderJadwalTable(data);
+    };
+
+    const getJadwalData = async (activeTab) => {
+        try {
+            const res = await fetch(`${BASE_URL}/get-jadwal?active_tab=${activeTab}`);
+            if (!res.ok) {
+                throw new Error('Gagal mengambil data');
+            }
+            const data = await res.json();
+            return data;
+        } catch (error) {
+            return null;
+        }
+    };
+
+    const renderJadwalTable = (data = null) => {
+        var renderData = $('#jadwal-list');
+        var render = '';
+        if (data.data.length == 0) {
+            render += `
+                <div class="d-flex align-items-center justify-content-center py-5">
+                    <div class="text-center py-5">
+                        <img src="${ASSET_URL}assets/images/no-data.png" height="350" alt="">
+                        <p class="text-muted m-0">Tidak ada jadwal yang ditemukan.</p>
+                    </div>
+                </div>
+            `;
+        } else {
+            render += `
+                <div class="table-container">
+                <table class="table zero-configuration" style="font-size: 14px!important">
+                    <thead>
+                        <th style="width: 10%; white-space: nowrap;">Poster</th>
+                        <th style="width: 20%; white-space: nowrap;">Nama</th>
+                        <th style="width: 30%; white-space: nowrap;">Judul</th>
+                        <th style="width: 30%; white-space: nowrap;">Dosen</th>
+                        <th style="width: 10%;white-space: nowrap;">Waktu dan Tempat</th>
+                    </thead>
+                    <tbody>
+            `;
+
+            for (let i = 0; i < data.data.length; i++) {
+                var item = data.data[i];
+
+                render += `
+                    <tr>
+                        <td>
+                            <img id="modal-image-${i}" src="${item.poster ? item.poster : 'https://ui-avatars.com/api/?background=random&name=' + encodeURIComponent(item.nama)}" alt="Poster" class="img-fluid" style="max-width: 100px; max-height: 120px; cursor: pointer; object-fit: cover; border-radius: 5px; border: 1px solid #ccc;" data-bs-toggle="modal" data-bs-target="#imagePreviewModal-${i}">
+                            <div class="modal fade" id="imagePreviewModal-${i}" tabindex="-1" aria-labelledby="imagePreviewLabel" aria-hidden="true" style="backdrop-filter: blur(5px); background-color: rgba(0, 0, 0, 0.5);">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-body p-0">
+                                            <img id="preview-image-${i}" src="${item.poster ? item.poster : 'https://ui-avatars.com/api/?background=random&name=' + encodeURIComponent(item.nama)}" alt="Preview Poster" class="img-fluid preview-image" style="border-radius: 5px; border: 1px solid #ccc;">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="">
+                            <span class="badge badge-soft-primary" style="color: #6c757d">${item.tugas_akhir.mahasiswa.program_studi.display}</span>
+                            <span class="badge badge-soft-secondary" style="color: #3b5de7">${item.tugas_akhir.tipe == "I" ? "Individu" : "Kelompok"}</span>
+                            <p class="m-0 p-0">${item.tugas_akhir.mahasiswa.nama_mhs}</p>
+                            <p class="m-0 p-0">${item.tugas_akhir.mahasiswa.nim}</p>
+                            </td>
+                        <td class="">${item.judul_ta ?? '-'}</td>
+                        <td>
+                            <p class="fw-bold  m-0">Pembimbing</p>
+                            <ol class="m-0">
+                                <li class="">${item.pembimbing_1 ?? '-'}</li>
+                                <li class="">${item.pembimbing_2 ?? '-'}</li>
+                            </ol>
+                            <p class="fw-bold  m-0">Pembimbing</p>
+                            <ol class="m-0">
+                                <li class="">${item.penguji_1 ?? '-'}</li>
+                                <li class="">${item.penguji_2 ?? '-'}</li>
+                            </ol>
+                        </td>
+                        <td>
+                            <strong class="m-0">${item.tempat ?? '-'}</strong>
+                            <p class="m-0">${item.tanggal ?? '-'}</p>
+                            <p class="m-0">${item.jam ?? '-'}</p>
+                        </td>
+                    </tr>
+                `;
+            }
+            
+            render += `
+                    </tbody>
+                </table>
+                </div>
+            `;
+        }
+
+        renderData.html(render);
+    };
+
+    const changeTab = async (activeTab, tabElement) => {
+        Swal.fire({
+            title: 'Loading...',
+            html: 'Memuat data...',
+            timer: 2000,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+        const tabs = document.querySelectorAll('.nav-link');
+        tabs.forEach(tab => tab.classList.remove('active'));
+        tabElement.classList.add('active');
+        const data = await fetchJadwalData(activeTab);
+        Swal.close();   
+        renderJadwalTable(data);
+    };
+
+    window.onload = async () => {
+        const data = await fetchJadwalData('pra_seminar');
+        renderJadwalTable(data);
+        const tabElement = document.querySelector(`.nav-link[data-tab="pra_seminar"]`);
+        if (tabElement) {
+            await changeTab(tabElement, 'pra_seminar');
+        }
+    };
+
+</script>
 @endsection
