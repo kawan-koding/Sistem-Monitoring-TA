@@ -15,6 +15,7 @@ use App\Models\KategoriNilai;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 
 class JadwalController extends Controller
 {
@@ -358,7 +359,7 @@ class JadwalController extends Controller
             if($request->status == 'reject') {
                 JadwalSeminar::create([
                     'tugas_akhir_id' => $jadwal->tugas_akhir_id,
-                    'status' => 'belum_terjadwal'
+                    'status' => 'belum_terjadwal',
                 ]);
                 $jadwal->delete();
             }

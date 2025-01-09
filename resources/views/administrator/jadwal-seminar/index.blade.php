@@ -111,7 +111,7 @@
                                 </div>
                                 <div class="col-4">
                                     <select name="type" class="form-control" onchange="this.form.submit()">
-                                        <option value="semua" {{ $type == 'semua' ? 'selected' : '' }}>Semua</option>
+                                        <option value="semua" {{ $type == 'semua' ? 'selected' : '' }}>Semua Jenis Penyelesaian</option>
                                         <option value="I" {{ $type == 'I' ? 'selected' : '' }}>Individu</option>
                                         <option value="K" {{ $type == 'K' ? 'selected' : '' }}>Kelompok</option>
                                     </select>
