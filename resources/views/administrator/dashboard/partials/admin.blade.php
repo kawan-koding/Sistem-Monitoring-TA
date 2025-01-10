@@ -1,4 +1,4 @@
-<style>
+{{-- <style>
     .card {
         position: relative;
         overflow: hidden;
@@ -58,7 +58,7 @@
     #schedule-content::-webkit-scrollbar-thumb:hover {
         background: #a0a0a0;
     }
-</style>
+</style> --}}
 
 <div class="row">
     <div class="col-md-4 col-sm-6 col-12">
@@ -164,7 +164,7 @@
         </div>
     </div>
 </div>
-
+{{-- 
 <div class="card shadow-sm mb-3">
     <div class="d-flex border-bottom">
         <div class="px-4 d-flex align-items-center border"><i class="fa fa-chevron-left"></i></div>
@@ -189,12 +189,6 @@
     <div class="card-body">
         <div class="col-md-5 col-sm-10 col-12 mb-3 mx-auto mt-2 mb-4">
             <div class="row">
-                {{-- <div class="col-md-4 col-sm-5 col-5">
-                    <select name="jenis" class="form-control">
-                        <option value="seminar">Seminar Proposal</option>
-                        <option value="seminar">Sidang Akhir</option>
-                    </select>
-                </div> --}}
                 <div class="col-12 d-flex gap-3">
                     <div class="input-group">
                         <input type="text" class="form-control" placeholder="Search..." autocomplete="off" data-role="schedule-search">
@@ -213,4 +207,4 @@
         </div>
     </div>
 </div>
-
+ --}}

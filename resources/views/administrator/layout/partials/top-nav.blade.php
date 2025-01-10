@@ -30,13 +30,11 @@
                                     <a class="dropdown-item text-danger" href="{{route('logout')}}"><i class="bx bx-power-off font-size-16 align-middle me-1 text-danger"></i> Logout</a>
                             </div>
                         </div>
-                        
-
                     </div>
                     <div>
                         <!-- LOGO -->
                         <div class="navbar-brand-box">
-                            <a href="index.html" class="logo logo-dark">
+                            <a href="#" class="logo logo-dark">
                                 <span class="logo-sm">
                                     <img src="{{asset('storage/images/settings/'. getSetting('app_logo'))}}" alt="" height="40">
                                 </span>
@@ -45,7 +43,7 @@
                                 </span>
                             </a>
 
-                            <a href="index.html" class="logo logo-light">
+                            <a href="#" class="logo logo-light">
                                 <span class="logo-sm">
                                     <img src="{{asset('storage/images/settings/'. getSetting('app_logo'))}}" alt="" height="40">
                                 </span>

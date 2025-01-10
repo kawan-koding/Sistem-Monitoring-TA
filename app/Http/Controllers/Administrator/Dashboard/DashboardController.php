@@ -2,16 +2,19 @@
 
 namespace App\Http\Controllers\Administrator\Dashboard;
 
-use App\Http\Controllers\Controller;
 use App\Models\Dosen;
-use App\Models\JadwalSeminar;
+use App\Models\Sidang;
 use App\Models\Mahasiswa;
 use App\Models\PeriodeTa;
-use App\Models\ProgramStudi;
-use App\Models\Sidang;
+use App\Models\BimbingUji;
+use App\Models\KuotaDosen;
 use App\Models\TugasAkhir;
+use App\Models\ProgramStudi;
 use Illuminate\Http\Request;
+use App\Models\JadwalSeminar;
+use App\Models\RekomendasiTopik;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 
 class DashboardController extends Controller
 {
@@ -25,6 +28,14 @@ class DashboardController extends Controller
 
         if (session('switchRoles') == 'Mahasiswa') {
             $dataRole = $this->mahasiswaRole();
+        }
+
+        if (session('switchRoles') == 'Dosen') {
+            $dataRole = $this->dosenRole();
+        }
+
+        if (session('switchRoles') == 'Kaprodi') {
+            $dataRole = $this->kaprodiRole();
         }
 
         $data = [
@@ -84,7 +95,7 @@ class DashboardController extends Controller
     {
         // get periode active
         $periode = PeriodeTa::whereIsActive(true)->get();
-
+        
         // set default type
         $type = $request->has('type') ? $request->type : 'seminar';
         $date = $request->has('date') ? $request->date : date('Y-m-d');
@@ -92,13 +103,36 @@ class DashboardController extends Controller
         // type is semiar, get data seminar
         $dataSeminar = JadwalSeminar::whereDate('tanggal', $date)->whereHas('tugas_akhir', function($q) use ($periode) {
             $q->whereIn('periode_ta_id', $periode->pluck('id')->toArray());
-        })->where('status', 'sudah_terjadwal')->with(['tugas_akhir', 'tugas_akhir.mahasiswa', 'tugas_akhir.mahasiswa.user', 'tugas_akhir.mahasiswa.programStudi', 'tugas_akhir.bimbing_uji', 'tugas_akhir.bimbing_uji.dosen', 'ruangan'])->get();
+        })->where('status', 'sudah_terjadwal')->with(['tugas_akhir', 'tugas_akhir.mahasiswa', 'tugas_akhir.mahasiswa.user', 'tugas_akhir.mahasiswa.programStudi', 'tugas_akhir.bimbing_uji', 'tugas_akhir.bimbing_uji.dosen', 'ruangan']);
         // if ($type == 'seminar') {
         // } else {
         // }
         $dataSidang = Sidang::whereDate('tanggal', $date)-> whereHas('tugas_akhir', function($q) use ($periode) {
             $q->whereIn('periode_ta_id', $periode->pluck('id')->toArray());
-        })->where('status', 'sudah_terjadwal')->with(['tugas_akhir', 'tugas_akhir.mahasiswa', 'tugas_akhir.mahasiswa.user', 'tugas_akhir.mahasiswa.programStudi', 'tugas_akhir.bimbing_uji', 'tugas_akhir.bimbing_uji.dosen', 'ruangan'])->get();
+        })->where('status', 'sudah_terjadwal')->with(['tugas_akhir', 'tugas_akhir.mahasiswa', 'tugas_akhir.mahasiswa.user', 'tugas_akhir.mahasiswa.programStudi', 'tugas_akhir.bimbing_uji', 'tugas_akhir.bimbing_uji.dosen', 'ruangan']);
+
+        if (session('switchRoles') == 'Dosen') {
+            $dataSeminar->whereHas('tugas_akhir.bimbing_uji', function ($q) {
+                $q->where('dosen_id', getinfologin()->userable->id);
+            });
+    
+            $dataSidang->whereHas('tugas_akhir.bimbing_uji', function ($q) {
+                $q->where('dosen_id', getinfologin()->userable->id);
+            });
+        }
+
+        if (session('switchRoles') == 'Kaprodi') {
+            $dataSeminar->whereHas('tugas_akhir.mahasiswa', function ($q) {
+                $q->where('program_studi_id', getInfoLogin()->userable->program_studi_id);
+            });
+    
+            $dataSidang->whereHas('tugas_akhir.mahasiswa', function ($q) {
+                $q->where('program_studi_id', getInfoLogin()->userable->program_studi_id);
+            });
+        }
+
+        $dataSeminar = $dataSeminar->get();
+        $dataSidang = $dataSidang->get();
 
         // set type seminar
         $dataSeminar = $dataSeminar->map(function ($item) {
@@ -130,7 +164,7 @@ class DashboardController extends Controller
             'mhsSudahSeminarCount' => TugasAkhir::where('status', 'acc')->whereNotNull('status_seminar')->count(),
             'mhsBelumSidangCount' => TugasAkhir::where('status', 'acc')->whereNull('status_sidang')->count(),
             'mhsSudahSidangCount' => TugasAkhir::where('status', 'acc')->whereNotNull('status_sidang')->count(),
-            'mods' => 'dashboard_admin'
+            'mods' => ['dashboard_admin', 'dashboard'],
         ];
 
         return $data;
@@ -148,10 +182,55 @@ class DashboardController extends Controller
 
     private function dosenRole(): array
     {
+        $user = getInfoLogin()->userable;
+        $bimbing = BimbingUji::where('dosen_id', $user->id)->where('jenis', 'pembimbing');
+        $uji = BimbingUji::where('dosen_id', $user->id)->where('jenis', 'penguji');
+        $periode = PeriodeTa::where('is_active', 1)->get();
+        $kuota = KuotaDosen::whereIn('periode_ta_id', $periode->pluck('id'))->where('dosen_id', $user->id)->get();
+        $totalKuota = $kuota->sum('pembimbing_1');
+        $bimbingUji = BimbingUji::whereHas('tugas_akhir', function ($query) use ($periode) {
+            $query->whereNotIn('status',['reject', 'cancel'])->whereIn('periode_ta_id', $periode->pluck('id'));
+        })->where('dosen_id', $user->id)->where('jenis', 'pembimbing')->where('urut', 1)->count();
+        $sisaKuota = $totalKuota - $bimbingUji;
         $data = [
-            'mods' => 'dashboard_dosen',
+            'mods' => 'dashboard',
+            'bimbing' => $bimbing,
+            'uji' => $uji,
+            'kuota' => $kuota,
+            'sisaKuota' => $sisaKuota,
         ];
 
         return $data;
+    }
+
+    private function kaprodiRole(): array
+    {
+        $user = getInfoLogin()->userable;
+        $prodi = $user->programStudi->id;
+        $belumAcc = RekomendasiTopik::where('status','Menunggu')->where('program_studi_id', $prodi)->get();
+        $sudahAcc = RekomendasiTopik::where('status','Disetujui')->where('program_studi_id', $prodi)->get();
+        $taDraft = TugasAkhir::whereIn('status',['draft','pengajuan ulang'])->whereHas('mahasiswa', function($query) use ($prodi) {
+            $query->where('program_studi_id', $prodi);
+        })->get();
+        $taAcc = TugasAkhir::where('status','acc')->whereHas('mahasiswa', function($query) use ($prodi) {
+            $query->where('program_studi_id', $prodi);
+        })->get();
+        
+        $data = [
+            'mods' => 'dashboard',
+            'belumAcc' => $belumAcc,
+            'sudahAcc' => $sudahAcc,
+            'taDraft' => $taDraft,
+            'taAcc' => $taAcc
+        ];
+
+        return $data;
+    }
+
+
+    public function exportJadwal()
+    {
+
+        return Excel::download(new JadwalExport(), "Jadwal.xlsx");
     }
 }

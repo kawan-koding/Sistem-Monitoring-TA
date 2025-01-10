@@ -97,7 +97,7 @@ class DashboardController extends Controller
         $taAcc = TugasAkhir::where('status','acc')->whereHas('mahasiswa', function($query) use ($prodi) {
             $query->where('program_studi_id', $prodi);
         })->get();
-        return [
+        return [ 
             'belumAcc' => $belumAcc,
             'sudahAcc' => $sudahAcc,
             'taDraft' => $taDraft,

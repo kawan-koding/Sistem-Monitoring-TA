@@ -82,6 +82,7 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::get('get-graduated-data', [DashboardController::class, 'getGraduatedData'])->name('apps.dashboard.get-graduated-data');
         Route::get('get-student-data', [DashboardController::class, 'getStudentData'])->name('apps.dashboard.get-student-data');
         Route::get('get-schedule-data', [DashboardController::class, 'getScheduleData'])->name('apps.dashboard.get-schedule-data');
+        Route::get('export-jadwal', [DashboardController::class, 'exportJadwal'])->name('apps.dashboard.export-jadwal');
     });
     
     Route::prefix('users')->middleware('can:read-users')->group(function () {
