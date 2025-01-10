@@ -166,18 +166,12 @@
                 <li class="flex-fill">
                     <a class="nav-link text-center fw-bold" data-tab="pra_sidang" href="javascript:void(0);" onclick="changeTab('pra_sidang', this)">Akan Sidang</a>
                 </li>
-            </ul>
-            <div class="d-flex justify-content-center align-items-center mt-3 mb-2">
-                <div class="search" style="max-width: 400px; width: 100%;">
-                    <form onsubmit="searchJadwal(event)" style="width: 100%;">
-                        <input class="form-control" type="text" name="search" id="search" placeholder="Cari..." />
-                    </form>
-                </div>
-            </div>
+            </ul> 
             
             <div id="jadwal-list" class="row"></div>
         </div>
     </section>
+
     
             {{-- @if($jadwal->count() > 0)
             <div class="table-container">
@@ -308,26 +302,6 @@
 @section('scripts')
 <script>
     var activeTab = 'pra_seminar';
-
-    const searchJadwal = (event) => {
-        event.preventDefault();
-        const searchText = document.getElementById('search').value.toLowerCase();
-        const rows = document.querySelectorAll('#jadwal-list table tbody tr');
-        rows.forEach(row => {
-            const cells = row.getElementsByTagName('td');
-            let rowText = '';
-            for (let i = 0; i < cells.length; i++) {
-                rowText += cells[i].textContent.toLowerCase() + ' ';
-            }
-            if (rowText.includes(searchText)) {
-                row.style.display = '';
-            } else {
-                row.style.display = 'none';
-            }
-        });
-    };
-    document.getElementById('search').addEventListener('input', searchJadwal);
-
     const fetchJadwalData = async (tab) => {
         activeTab = tab;
         document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
@@ -361,7 +335,7 @@
                 <div class="d-flex align-items-center justify-content-center py-5">
                     <div class="text-center py-5">
                         <img src="${ASSET_URL}assets/images/no-data.png" height="350" alt="">
-                        <p class="text-muted m-0">Tidak ada jadwal yang ditemukan.</p>
+                        <p class="text-muted m-0">Tidak ada jadwal hari ini yang ditemukan.</p>
                     </div>
                 </div>
             `;
@@ -385,12 +359,12 @@
                 render += `
                     <tr>
                         <td>
-                            <img id="modal-image-${i}" src="${item.poster ? item.poster : 'https://ui-avatars.com/api/?background=random&name=' + encodeURIComponent(item.nama)}" alt="Poster" class="img-fluid" style="max-width: 100px; max-height: 120px; cursor: pointer; object-fit: cover; border-radius: 5px; border: 1px solid #ccc;" data-bs-toggle="modal" data-bs-target="#imagePreviewModal-${i}">
+                            <img id="modal-image-${i}" src="${item.poster ? item.poster : 'https://ui-avatars.com/api/?background=random&name=' + encodeURIComponent(item.tugas_akhir.mahasiswa.nama_mhs)}" alt="Poster" class="img-fluid" style="max-width: 100px; max-height: 120px; cursor: pointer; object-fit: cover; border-radius: 5px; border: 1px solid #ccc;" data-bs-toggle="modal" data-bs-target="#imagePreviewModal-${i}">
                             <div class="modal fade" id="imagePreviewModal-${i}" tabindex="-1" aria-labelledby="imagePreviewLabel" aria-hidden="true" style="backdrop-filter: blur(5px); background-color: rgba(0, 0, 0, 0.5);">
                                 <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content">
                                         <div class="modal-body p-0">
-                                            <img id="preview-image-${i}" src="${item.poster ? item.poster : 'https://ui-avatars.com/api/?background=random&name=' + encodeURIComponent(item.nama)}" alt="Preview Poster" class="img-fluid preview-image" style="border-radius: 5px; border: 1px solid #ccc;">
+                                            <img id="preview-image-${i}" src="${item.poster ? item.poster : 'https://ui-avatars.com/api/?background=random&name=' + encodeURIComponent(item.tugas_akhir.mahasiswa.nama_mhs)}" alt="Preview Poster" class="img-fluid preview-image" style="border-radius: 5px; border: 1px solid #ccc;">
                                         </div>
                                     </div>
                                 </div>
@@ -402,21 +376,21 @@
                             <p class="m-0 p-0">${item.tugas_akhir.mahasiswa.nama_mhs}</p>
                             <p class="m-0 p-0">${item.tugas_akhir.mahasiswa.nim}</p>
                             </td>
-                        <td class="">${item.judul_ta ?? '-'}</td>
+                        <td class="">${item.tugas_akhir.judul ?? '-'}</td>
                         <td>
                             <p class="fw-bold  m-0">Pembimbing</p>
                             <ol class="m-0">
                                 <li class="">${item.pembimbing_1 ?? '-'}</li>
                                 <li class="">${item.pembimbing_2 ?? '-'}</li>
                             </ol>
-                            <p class="fw-bold  m-0">Pembimbing</p>
+                            <p class="fw-bold  m-0">Penguji</p>
                             <ol class="m-0">
                                 <li class="">${item.penguji_1 ?? '-'}</li>
                                 <li class="">${item.penguji_2 ?? '-'}</li>
                             </ol>
                         </td>
                         <td>
-                            <strong class="m-0">${item.tempat ?? '-'}</strong>
+                            <strong class="m-0">${item.ruangan?.nama_ruangan ?? '-'}</strong>
                             <p class="m-0">${item.tanggal ?? '-'}</p>
                             <p class="m-0">${item.jam ?? '-'}</p>
                         </td>

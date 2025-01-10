@@ -3359,43 +3359,6 @@ section {
     border-bottom: none;
 }
 
-.skeleton {
-  background: #ddd;
-  border-radius: 4px;
-  animation: pulse 1.5s infinite ease-in-out;
-}
-
-.skeleton-img {
-  width: 100px;
-  height: 120px;
-}
-
-.skeleton-text {
-  height: 20px;
-  margin-bottom: 10px;
-  width: 100%;
-}
-
-.skeleton-row {
-  display: flex;
-  align-items: center;
-}
-
-.skeleton-row .skeleton {
-  margin: 5px;
-}
-
-@keyframes pulse {
-  0% {
-      background-color: #ddd;
-  }
-  50% {
-      background-color: #f0f0f0;
-  }
-  100% {
-      background-color: #ddd;
-  }
-}
 
 .table th, .table td {
   vertical-align: middle;

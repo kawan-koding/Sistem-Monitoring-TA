@@ -19,17 +19,14 @@ class HomeController extends Controller
     public function index(Request $request)
     {
         $tawaran = RekomendasiTopik::where('status', 'Disetujui')->whereHas('ambilTawaran', function ($q) {
-                $q->where('status', 'Disetujui');
-            }, '<', DB::raw('kuota'))->take(5)->get();
+            $q->where('status', 'Disetujui');
+        }, '<', DB::raw('kuota'))->take(5)->get();
         $tugasAkhir = TugasAkhir::with(['topik','mahasiswa','jenis_ta','bimbing_uji'])->where('status','acc')->take(5)->get();
-     
-        $response = $this->getJadwal($request); 
-        $jadwal = $response->getData()->data ?? [];
+    
         $data = [
             'title' => 'Beranda',
             'tawaran' => $tawaran,
-            'tugasAkhir' => $tugasAkhir,
-            'jadwal' => $jadwal
+            'tugasAkhir' => $tugasAkhir
         ];
     
         return view('index', $data);
@@ -68,246 +65,173 @@ class HomeController extends Controller
 
     public function jadwal(Request $request)
     {
-        $tanggalTabs = [];
-        $currentDate = Carbon::now();
-        while (count($tanggalTabs) < 5) {
-            if ($currentDate->isWeekday()) {
-                $tanggalTabs[] = $currentDate->format('d-m-Y');
-            }
-            $currentDate->addDay();
-        }
-        
-        $activeTab = $request->get('active_tab', 'pra_seminar');
-        $tanggal = $request->get('tanggal');
-        if (!$tanggal || !in_array($tanggal, $tanggalTabs)) {
-            $tanggal = $tanggalTabs[0];
-        }
-
-        $tanggalMulai = Carbon::createFromFormat('d-m-Y', $tanggal)->startOfDay();
-        $tanggalAkhir = Carbon::createFromFormat('d-m-Y', $tanggal)->endOfDay();
-        if ($activeTab === 'pra_seminar') {
-            $jadwal = JadwalSeminar::with(['tugas_akhir.mahasiswa'])->where('status','sudah_terjadwal')->whereHas('tugas_akhir',function($q) {
-                $q->where('status','acc');
-            })->whereBetween('tanggal', [$tanggalMulai, $tanggalAkhir])->whereRaw('DAYOFWEEK(tanggal) NOT IN (1, 7)')->paginate(1)->appends(['active_tab' => $activeTab, 'tanggal' => $tanggal]);
-            $jadwal->getCollection()->transform(function ($item) {
-                $ta = $item->tugas_akhir;
-                $posterSeminar = Pemberkasan::where('tugas_akhir_id', $ta->id)->whereHas('jenisDokumen', function ($query) {
-                    $query->whereNama('POSTER SEMINAR')->whereIn('jenis', ['seminar', 'pra_seminar']);
-                })->pluck('filename')->first();
-                $jamMulai = $item->jam_mulai ? date('H:i', strtotime($item->jam_mulai)) : '-:-';
-                $jamSelesai = $item->jam_selesai ? date('H:i', strtotime($item->jam_selesai)) : '-:-';
-                $tipe = $ta->tipe == 'I' ? 'Individu' : 'Kelompok';
-                $jenis = $ta->jenis_ta->nama_jenis ?? '-';
-                $topik = $ta->topik->nama_topik ?? '-';                
-                $bimbingUji = $ta->bimbing_uji->mapWithKeys(function ($bimbing) {
-                    return [
-                        "{$bimbing->jenis}_{$bimbing->urut}" => $bimbing->dosen->name ?? '-',
-                    ];
-                });
-                $item->judul_ta = $ta->judul ?? '-';
-                $item->tipe = $tipe ?? '-';
-                $item->poster = $posterSeminar ?? null;
-                $item->jam = "$jamMulai - $jamSelesai" ?? '-';
-                $item->topik = ($topik ?? '-') . ' - ' . ($jenis ?? '-');
-                $item->nama = $ta->mahasiswa->nama_mhs ?? '-';
-                $item->pembimbing_1 = $bimbingUji['pembimbing_1'] ?? '-';
-                $item->pembimbing_2 = $bimbingUji['pembimbing_2'] ?? '-';
-                $item->penguji_1 = $bimbingUji['penguji_1'] ?? '-';
-                $item->penguji_2 = $bimbingUji['penguji_2'] ?? '-';
-                return $item;
-            });
-        } elseif ($activeTab === 'pra_sidang') {
-            $jadwal = Sidang::with(['tugas_akhir.mahasiswa'])->whereStatus('sudah_terjadwal')->whereHas('tugas_akhir',function($q) {
-                $q->whereStatus('acc');
-            })->whereBetween('tanggal', [$tanggalMulai, $tanggalAkhir])->whereRaw('DAYOFWEEK(tanggal) NOT IN (1, 7)')->paginate(10)->appends(['active_tab' => $activeTab, 'tanggal' => $tanggal]);
-            $jadwal->getCollection()->transform(function ($item) {
-                $ta = $item->tugas_akhir;
-                $posterSidang = Pemberkasan::where('tugas_akhir_id', $ta->id)->whereHas('jenisDokumen', function ($query) {
-                    $query->whereNama('POSTER SIDANG')->whereIn('jenis', ['sidang', 'pra_sidang']);
-                })->pluck('filename')->first();
-                $jamMulai = $item->jam_mulai ? date('H:i', strtotime($item->jam_mulai)) : '-:-';
-                $jamSelesai = $item->jam_selesai ? date('H:i', strtotime($item->jam_selesai)) : '-:-';
-                $tipe = $ta->tipe == 'I' ? 'Individu' : 'Kelompok';
-                $jenis = $ta->jenis_ta->nama_jenis ?? '-';
-                $topik = $ta->topik->nama_topik ?? '-';
-                $bimbingUji = $ta->bimbing_uji->mapWithKeys(function ($bimbing) {
-                    return [
-                        "{$bimbing->jenis}_{$bimbing->urut}" => $bimbing->dosen->name ?? '-',
-                    ];
-                });
-                $item->judul_ta = $ta->judul ?? '-';
-                $item->tipe = $tipe ?? '-';
-                $item->poster = $posterSidang ?? null;
-                $item->jam = "$jamMulai - $jamSelesai" ?? '-';
-                $item->topik = ($topik ?? '-') . ' - ' . ($jenis ?? '-');
-                $item->nama = $ta->mahasiswa->nama_mhs ?? '-';
-                $item->pembimbing_1 = $bimbingUji['pembimbing_1'] ?? '-';
-                $item->pembimbing_2 = $bimbingUji['pembimbing_2'] ?? '-';
-                $item->penguji_1 = isset($bimbingUji['pengganti_1']) ? $bimbingUji['pengganti_1'] : ($bimbingUji['penguji_1'] ?? '-');
-                $item->penguji_2 = isset($bimbingUji['pengganti_2']) ? $bimbingUji['pengganti_2'] : ($bimbingUji['penguji_2'] ?? '-');
-                $item->pengganti_1 = $bimbingUji['pengganti_1'] ?? '-';
-                $item->pengganti_2 = $bimbingUji['pengganti_2'] ?? '-';                
-                return $item;
-            });
-        }
-
-        $tabs = $request->get('tabs', 'seminar');
-        if($tabs === 'seminar') {
-            $completes = JadwalSeminar::with(['tugas_akhir.mahasiswa'])->where('status','telah_seminar')->whereHas('tugas_akhir',function($q) {
-                $q->where('status','acc');  
-            })->paginate(10)->appends(['tabs' => $tabs]);
-            $completes->getCollection()->transform(function ($item) {
-                $ta = $item->tugas_akhir;
-                $posterSeminar = Pemberkasan::where('tugas_akhir_id', $ta->id)->whereHas('jenisDokumen', function ($query) {
-                    $query->whereNama('POSTER SEMINAR')->whereIn('jenis', ['seminar', 'pra_seminar']);
-                })->pluck('filename')->first();
-                $tipe = $ta->tipe == 'I' ? 'Individu' : 'Kelompok';
-                $jenis = $ta->jenis_ta->nama_jenis ?? '-';
-                $topik = $ta->topik->nama_topik ?? '-';
-                $bimbingUji = $ta->bimbing_uji->mapWithKeys(function ($bimbing) {
-                    return [
-                        "{$bimbing->jenis}_{$bimbing->urut}" => $bimbing->dosen->name ?? '-',
-                    ];
-                });
-                $item->judul_ta = $ta->judul ?? '-';
-                $item->tipe = $tipe ?? '-';
-                $item->poster = $posterSeminar ?? null;
-                $item->topik = ($topik ?? '-') . ' - ' . ($jenis ?? '-');
-                $item->nama = $ta->mahasiswa->nama_mhs ?? '-';
-                $item->pembimbing_1 = $bimbingUji['pembimbing_1'] ?? '-';
-                $item->pembimbing_2 = $bimbingUji['pembimbing_2'] ?? '-';
-                $item->penguji_1 = $bimbingUji['penguji_1'] ?? '-';
-                $item->penguji_2 = $bimbingUji['penguji_2'] ?? '-';
-                return $item;
-            });
-
-        } elseif($tabs === 'sidang') {
-            $completes = Sidang::with(['tugas_akhir.mahasiswa'])->where('status','sudah_sidang')->whereHas('tugas_akhir',function($q) {
-                $q->where('status','acc');  
-            })->paginate(10)->appends(['tabs' => $tabs]);
-            $completes->getCollection()->transform(function ($item) {
-                $ta = $item->tugas_akhir;
-                $posterSidang = Pemberkasan::where('tugas_akhir_id', $ta->id)->whereHas('jenisDokumen', function ($query) {
-                    $query->whereNama('POSTER SIDANG')->whereIn('jenis', ['sidang', 'pra_sidang']);
-                })->pluck('filename')->first();
-                $tipe = $ta->tipe == 'I' ? 'Individu' : 'Kelompok';
-                $jenis = $ta->jenis_ta->nama_jenis ?? '-';
-                $topik = $ta->topik->nama_topik ?? '-';
-                $bimbingUji = $ta->bimbing_uji->mapWithKeys(function ($bimbing) {
-                    return [ 
-                        "{$bimbing->jenis}_{$bimbing->urut}" => $bimbing->dosen->name ?? '-',
-                    ];
-                });
-                $item->judul_ta = $ta->judul ?? '-';
-                $item->tipe = $tipe ?? '-';
-                $item->poster = $posterSidang ?? null;
-                $item->topik = ($topik ?? '-') . ' - ' . ($jenis ?? '-');
-                $item->nama = $ta->mahasiswa->nama_mhs ?? '-';
-                $item->pembimbing_1 = $bimbingUji['pembimbing_1'] ?? '-';
-                $item->pembimbing_2 = $bimbingUji['pembimbing_2'] ?? '-';
-                $item->penguji_1 = isset($bimbingUji['pengganti_1']) ? $bimbingUji['pengganti_1'] : ($bimbingUji['penguji_1'] ?? '-');
-                $item->penguji_2 = isset($bimbingUji['pengganti_2']) ? $bimbingUji['pengganti_2'] : ($bimbingUji['penguji_2'] ?? '-');
-                $item->pengganti_1 = $bimbingUji['pengganti_1'] ?? '-';
-                $item->pengganti_2 = $bimbingUji['pengganti_2'] ?? '-'; 
-                return $item;
-            });
-        }
-
         $data = [
             'title' => 'Jadwal',
-            'activeTab' => $activeTab,
-            'jadwal' => $jadwal,
-            'tanggalTabs' => $tanggalTabs,
-            'tanggal' => $tanggal,
-            'completed' => $completes,
-            'tabs' => $tabs
         ];
 
         return view('jadwal.index', $data);
     }
 
-
-    public function getJadwal(Request $request)
+    protected function processJadwal($jadwal, $type)
     {
-        $activeTab = $request->get('active_tab', 'pra_seminar');
-        if ($activeTab === 'pra_seminar') {
-            $jadwal = JadwalSeminar::with(['tugas_akhir.mahasiswa.programStudi'])->where('status','sudah_terjadwal')->whereHas('tugas_akhir',function($q) {
-                $q->where('status','acc');
-            })->whereDate('tanggal', '>=', Carbon::today())->orderBy('tanggal', 'asc')->orderBy('jam_mulai', 'asc')->get();
-            $jadwal = $jadwal->map(function ($item) {
-                $ta = $item->tugas_akhir;
-                $posterSeminar = Pemberkasan::where('tugas_akhir_id', $ta->id)->whereHas('jenisDokumen', function ($query) {
-                    $query->whereNama('POSTER SEMINAR')->whereIn('jenis', ['seminar', 'pra_seminar']);
-                })->pluck('filename')->first();
-                $jamMulai = $item->jam_mulai ? date('H:i', strtotime($item->jam_mulai)) : '-:-';
-                $jamSelesai = $item->jam_selesai ? date('H:i', strtotime($item->jam_selesai)) : '-:-';
-                $tipe = $ta->tipe == 'I' ? 'Individu' : 'Kelompok';
-                $jenis = $ta->jenis_ta->nama_jenis ?? '-';
-                $topik = $ta->topik->nama_topik ?? '-';
-                
-                $bimbingUji = $ta->bimbing_uji->mapWithKeys(function ($bimbing) {
-                    return [
-                        "{$bimbing->jenis}_{$bimbing->urut}" => $bimbing->dosen->name ?? '-',
-                    ];
-                });
-                $item->tanggal = $item->tanggal ? Carbon::parse($item->tanggal)->translatedFormat('d F Y') : '-';
-                $item->judul_ta = $ta->judul ?? '-';
-                $item->tipe = $tipe ?? '-';
-                $item->poster = $posterSeminar ? asset('storage/files/pemberkasan/' . $posterSeminar) : null;
-                $item->jam = "$jamMulai - $jamSelesai" ?? '-';
-                $item->topik = ($topik ?? '-') . ' - ' . ($jenis ?? '-');
-                $item->nama = $ta->mahasiswa->nama_mhs ?? '-';
-                $item->pembimbing_1 = $bimbingUji['pembimbing_1'] ?? '-';
-                $item->pembimbing_2 = $bimbingUji['pembimbing_2'] ?? '-';
+        return $jadwal->map(function ($item) use ($type) {
+            $ta = $item->tugas_akhir;
+            $poster = Pemberkasan::where('tugas_akhir_id', $ta->id)->whereHas('jenisDokumen', function ($query) use ($type) {
+                $query->whereNama('POSTER ' . strtoupper($type))->whereIn('jenis', [$type, 'pra_' . $type]);
+            })->pluck('filename')->first();
+
+            $jamMulai = $item->jam_mulai ? date('H:i', strtotime($item->jam_mulai)) : '-:-';
+            $jamSelesai = $item->jam_selesai ? date('H:i', strtotime($item->jam_selesai)) : '-:-';
+            $bimbingUji = $ta->bimbing_uji->mapWithKeys(function ($bimbing) {
+                return [
+                    "{$bimbing->jenis}_{$bimbing->urut}" => $bimbing->dosen->name ?? '-',
+                ];
+            });
+
+            $item->tanggal = $item->tanggal ? Carbon::parse($item->tanggal)->translatedFormat('d F Y') : '-';
+            $item->jam = "$jamMulai - $jamSelesai" ?? '-';
+            $item->poster = $poster ? asset('storage/files/pemberkasan/' . $poster) : null;
+            $item->pembimbing_1 = $bimbingUji['pembimbing_1'] ?? '-';
+            $item->pembimbing_2 = $bimbingUji['pembimbing_2'] ?? '-';
+            if($type === 'seminar') {
                 $item->penguji_1 = $bimbingUji['penguji_1'] ?? '-';
                 $item->penguji_2 = $bimbingUji['penguji_2'] ?? '-';
-                $item->tempat = $item->ruangan->nama_ruangan ?? '-';
-                return $item;
-            });
-            // dd($jadwal);            
-        } elseif ($activeTab === 'pra_sidang') {
-            $jadwal = Sidang::with(['tugas_akhir.mahasiswa'])->whereStatus('sudah_terjadwal')->whereHas('tugas_akhir',function($q) {
-                $q->whereStatus('acc');
-            })->whereDate('tanggal', '>=', Carbon::today())->orderBy('tanggal', 'asc')->orderBy('jam_mulai', 'asc')->get();
-            $jadwal = $jadwal->map(function ($item) {
-                $ta = $item->tugas_akhir;
-                $posterSidang = Pemberkasan::where('tugas_akhir_id', $ta->id)->whereHas('jenisDokumen', function ($query) {
-                    $query->whereNama('POSTER SIDANG')->whereIn('jenis', ['sidang', 'pra_sidang']);
-                })->pluck('filename')->first();
-                $jamMulai = $item->jam_mulai ? date('H:i', strtotime($item->jam_mulai)) : '-:-';
-                $jamSelesai = $item->jam_selesai ? date('H:i', strtotime($item->jam_selesai)) : '-:-';
-                $tipe = $ta->tipe == 'I' ? 'Individu' : 'Kelompok';
-                $jenis = $ta->jenis_ta->nama_jenis ?? '-';
-                $topik = $ta->topik->nama_topik ?? '-';
-                $bimbingUji = $ta->bimbing_uji->mapWithKeys(function ($bimbing) {
-                    return [
-                        "{$bimbing->jenis}_{$bimbing->urut}" => $bimbing->dosen->name ?? '-',
-                    ];
-                });
-                $item->tanggal = $item->tanggal ? Carbon::parse($item->tanggal)->translatedFormat('d F Y') : '-';
-                $item->judul_ta = $ta->judul ?? '-';
-                $item->tipe = $tipe ?? '-';
-                $item->poster = $posterSidang ? asset('storage/files/pemberkasan/' . $posterSidang) : null;
-                $item->jam = "$jamMulai - $jamSelesai" ?? '-';
-                $item->topik = ($topik ?? '-') . ' - ' . ($jenis ?? '-');
-                $item->nama = $ta->mahasiswa->nama_mhs ?? '-';
-                $item->pembimbing_1 = $bimbingUji['pembimbing_1'] ?? '-';
-                $item->pembimbing_2 = $bimbingUji['pembimbing_2'] ?? '-';
+            }
+            if ($type === 'sidang') {
                 $item->penguji_1 = isset($bimbingUji['pengganti_1']) ? $bimbingUji['pengganti_1'] : ($bimbingUji['penguji_1'] ?? '-');
                 $item->penguji_2 = isset($bimbingUji['pengganti_2']) ? $bimbingUji['pengganti_2'] : ($bimbingUji['penguji_2'] ?? '-');
-                $item->pengganti_1 = $bimbingUji['pengganti_1'] ?? '-';
-                $item->pengganti_2 = $bimbingUji['pengganti_2'] ?? '-';                
-                return $item;
-            });
+            }
+
+            return $item;
+        });
+    }
+
+    protected function fetchJadwal($type, $perHari)
+    {
+        $model = $type === 'seminar' ? JadwalSeminar::class : Sidang::class;
+        $jadwal = $model::with(['tugas_akhir.mahasiswa.programStudi', 'ruangan', 'tugas_akhir.bimbing_uji'])->where('status', $type === 'seminar' ? 'sudah_terjadwal' : 'sudah_daftar')->whereHas('tugas_akhir', function ($q) {
+            $q->where('status', 'acc');
+        });
+        if ($perHari) {
+            $jadwal->whereDate('tanggal', Carbon::today());
+        }
+        $jadwal = $jadwal->orderBy('tanggal', 'asc')->orderBy('jam_mulai', 'asc')->get();
+        return $this->processJadwal($jadwal, $type);
+    }
+
+
+    public function getAllJadwal(Request $request)
+    {
+        $activeTab = $request->get('active_tab', 'pra_seminar');
+
+        if ($activeTab === 'pra_seminar') {
+            $jadwal = $this->fetchJadwal('seminar', false);
+        } elseif ($activeTab === 'pra_sidang') {
+            $jadwal = $this->fetchJadwal('sidang', false);
         } else {
             return response()->json([
                 'message' => 'Tab tidak ditemukan',
                 'data' => []
             ], 400);
         }
+
         return response()->json([
             'message' => 'success',
             'data' => $jadwal
         ]);
     }
+
+    public function getJadwal(Request $request)
+    {
+        $activeTab = $request->get('active_tab', 'pra_seminar');
+
+        if ($activeTab === 'pra_seminar') {
+            $jadwal = $this->fetchJadwal('seminar', true);
+        } elseif ($activeTab === 'pra_sidang') {
+            $jadwal = $this->fetchJadwal('sidang', true);
+        } else {
+            return response()->json([
+                'message' => 'Tab tidak ditemukan',
+                'data' => []
+            ], 400);
+        }
+
+        return response()->json([
+            'message' => 'success',
+            'data' => $jadwal
+        ]);
+    }
+
+    // Daftar Mahasiswa
+    protected function processDaftarMahasiswa($data, $type)
+    {
+        return $data->map(function ($item) use ($type) {
+            $ta = $item->tugas_akhir;
+            $poster = Pemberkasan::where('tugas_akhir_id', $ta->id)->whereHas('jenisDokumen', function ($query) use ($type) {
+                $query->whereNama('POSTER ' . strtoupper($type))->whereIn('jenis', [$type, 'pra_' . $type]);
+            })->pluck('filename')->first();
+
+            $tipe = $ta->tipe == 'I' ? 'Individu' : 'Kelompok';
+            $jenis = $ta->jenis_ta->nama_jenis ?? '-';
+            $topik = $ta->topik->nama_topik ?? '-';
+            $bimbingUji = $ta->bimbing_uji->mapWithKeys(function ($bimbing) {
+                return [
+                    "{$bimbing->jenis}_{$bimbing->urut}" => $bimbing->dosen->name ?? '-',
+                ];
+            });
+
+            $item->judul_ta = $ta->judul ?? '-';
+            $item->tipe = $tipe;
+            $item->poster = $poster ? asset('storage/files/pemberkasan/' . $poster) : null;
+            $item->topik = ($topik ?? '-') . ' - ' . ($jenis ?? '-');
+            $item->nama = $ta->mahasiswa->nama_mhs ?? '-';
+            $item->pembimbing_1 = $bimbingUji['pembimbing_1'] ?? '-';
+            $item->pembimbing_2 = $bimbingUji['pembimbing_2'] ?? '-';
+
+            if ($type === 'seminar') {
+                $item->penguji_1 = $bimbingUji['penguji_1'] ?? '-';
+                $item->penguji_2 = $bimbingUji['penguji_2'] ?? '-';
+            }
+
+            if ($type === 'sidang') {
+                $item->penguji_1 = isset($bimbingUji['pengganti_1']) ? $bimbingUji['pengganti_1'] : ($bimbingUji['penguji_1'] ?? '-');
+                $item->penguji_2 = isset($bimbingUji['pengganti_2']) ? $bimbingUji['pengganti_2'] : ($bimbingUji['penguji_2'] ?? '-');
+            }
+
+            return $item;
+        });
+    }
+
+    protected function fetchDaftarMahasiswa($type)
+    {
+        $model = $type === 'seminar' ? JadwalSeminar::class : Sidang::class;
+        $data = $model::with(['tugas_akhir.mahasiswa', 'tugas_akhir.bimbing_uji'])->where('status', $type === 'seminar' ? 'telah_seminar' : 'sudah_sidang')->whereHas('tugas_akhir', function ($q) {
+            $q->where('status', 'acc');
+        })->orderBy('tanggal', 'asc')->orderBy('jam_mulai', 'asc')->get();
+
+        return $this->processDaftarMahasiswa($data, $type);
+    }
+
+    public function getDaftarMahasiswa(Request $request)
+    {
+        $tabs = $request->get('tabs', 'seminar');
+
+        if ($tabs === 'seminar') {
+            $data = $this->fetchDaftarMahasiswa('seminar');
+        } elseif ($tabs === 'sidang') {
+            $data = $this->fetchDaftarMahasiswa('sidang');
+        } else {
+            return response()->json([
+                'message' => 'Tab tidak ditemukan',
+                'data' => []
+            ], 400);
+        }
+
+        return response()->json([
+            'message' => 'success',
+            'data' => $data
+        ]);
+    }
+
+
 }

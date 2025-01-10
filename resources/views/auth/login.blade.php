@@ -50,12 +50,12 @@
                                     <label class="form-label" for="username">Username</label>
                                     <input type="text" name="username" class="form-control" id="username" placeholder="Enter username">
                                 </div>
-
-                                <div class="mb-3">
-                                    <label class="form-label" for="userpassword">Password</label>
-                                    <input type="password" name="password" class="form-control" id="userpassword"
-                                    placeholder="Enter password">
+                                <div class="form-group position-relative">
+                                    <label>Password </label>
+                                    <input class="form-control" name="password" id="passwordInput" type="password" placeholder="Enter Password"/>
+                                    <span id="togglePassword" class="profile-views bx bx-show-alt position-absolute" style="font-size: 16px; right: 10px; top: 50px; transform: translateY(-50%); cursor: pointer" ></span>
                                 </div>
+
                                 <div class="mt-3">
                                     <button class="btn btn-primary w-100 waves-effect waves-light" type="submit">Log
                                         In</button>
@@ -71,4 +71,16 @@
     </div>
 </div>
 
+@endsection
+
+@section('js')
+<script>
+    document.getElementById('togglePassword').addEventListener('click', function () {
+        const passwordInput = document.getElementById('passwordInput');
+        const isPassword = passwordInput.type === 'password';
+        passwordInput.type = isPassword ? 'text' : 'password';
+        this.classList.toggle('bx-show-alt');
+        this.classList.toggle('bx-hide');
+    });
+</script>
 @endsection

@@ -145,4 +145,13 @@ class DashboardController extends Controller
 
         return $data;
     }
+
+    private function dosenRole(): array
+    {
+        $data = [
+            'mods' => 'dashboard_dosen',
+        ];
+
+        return $data;
+    }
 }

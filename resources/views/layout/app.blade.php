@@ -7,10 +7,10 @@
             </a>
             <nav id="navbar" class="navbar">
                 <ul>
-                   <li><a class="nav-link scrollto" id="nav-beranda" href="#hero-fullscreen">Beranda</a></li>
-                    <li><a class="nav-link scrollto " href="#tawaran-topik">Tawaran Topik</a></li>
-                    <li><a class="nav-link scrollto " href="#judul-tugas-akhir">Tugas Akhir</a></li>
-                    <li><a class="nav-link scrollto" href="#jadwal">Jadwal</a></li>
+                  <li><a class="nav-link scrollto {{ request()->is('') ? 'active' : '' }}" href="{{ route('home') }}">Beranda</a></li>
+                  <li><a class="nav-link scrollto {{ request()->is('tawaran-topik') ? 'active' : '' }}" href="{{ route('guest.rekomendasi-topik') }}">Tawaran Topik</a></li>
+                  <li><a class="nav-link scrollto {{ request()->is('tugas-akhir') ? 'active' : '' }}" href="{{ route('guest.judul-tugas-akhir') }}">Tugas Akhir</a></li>
+                  <li><a class="nav-link scrollto {{ request()->is('jadwal') ? 'active' : '' }}" href="{{ route('guest.jadwal') }}">Jadwal</a></li>
                 </ul>
                 <i class="bi bi-list mobile-nav-toggle d-none"></i>
             </nav>
@@ -74,32 +74,4 @@
   </footer>
   <a href="#" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
     
-@endsection
-
-@section('scripts')
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-    const navBeranda = document.getElementById("nav-beranda");
-    const currentURL = window.location.href; // Ambil URL saat ini
-
-    if (
-        currentURL === `${window.location.origin}/` || // localhost:8000
-        currentURL.includes("#hero-fullscreen") // localhost:8000#hero-fullscreen
-    ) {
-        // Tambahkan kelas aktif jika di Beranda
-        navBeranda.classList.add("active");
-    } else {
-        // Hapus kelas aktif jika di halaman lain
-        navBeranda.classList.remove("active");
-    }
-
-    // Tambahkan event listener untuk kembali ke halaman utama jika di klik
-    navBeranda.addEventListener("click", (e) => {
-        if (currentURL !== `${window.location.origin}/`) {
-            window.location.href = "/"; // Navigasi ke halaman utama
-        }
-    });
-});
-
-  </script>
 @endsection
