@@ -3,7 +3,7 @@
 </style>
 
 <div class="row">
-    <div class="col-md-4 col-sm-4 col-12">
+    {{-- <div class="col-md-4 col-sm-4 col-12">
         <div class="card shadow-sm mb-4"
             style="border-left: 3px solid {{ $tugasAkhir->status == 'acc' ? '#1db45c' : ($tugasAkhir->status == 'draft' || $tugasAkhir->status == 'revisi' ? '#ebe831' : '#ff5b5b') }}">
             <div class="card-body p-3">
@@ -44,8 +44,8 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="col-md-4 col-sm-4 col-12">
+    </div> --}}
+     {{-- <div class="col-md-4 col-sm-4 col-12">
         <div class="card shadow-sm mb-4"
             style="border-left: 3px solid {{ !is_null($tugasAkhir->sidang) && $tugasAkhir->sidang->status == 'telah_sidang' ? '#1db45c' : (!is_null($tugasAkhir->sidang) && $tugasAkhir->sidang->status == 'sudah_terjadwal' ? '#ebe831' : ((!is_null($tugasAkhir->sidang) && $tugasAkhir->sidang->status == 'belum_daftar') || is_null($tugasAkhir->sidang) ? '#b4b4b4' : '#ff5b5b')) }}">
             <div class="card-body p-3">
@@ -65,7 +65,71 @@
                 </div>
             </div>
         </div>
+    </div> --}}
+    <div class="col-md-4 col-sm-4 col-12">
+        <div class="card shadow-sm mb-4"
+            style="border-left: 3px solid {{ is_null($tugasAkhir) ? '#b4b4b4' : ($tugasAkhir->status == 'acc' ? '#1db45c' : ($tugasAkhir->status == 'draft' || $tugasAkhir->status == 'revisi' ? '#ebe831' : '#ff5b5b')) }}">
+            <div class="card-body p-3">
+                <div class="d-flex align-items-center justify-content-between gap-3">
+                    <div style="width: 55px;height: 55px;font-size: 2rem"
+                        class="bg-soft-{{ is_null($tugasAkhir) ? 'secondary' : ($tugasAkhir->status == 'acc' ? 'success' : ($tugasAkhir->status == 'draft' || $tugasAkhir->status == 'revisi' ? 'warning' : 'danger')) }} rounded d-flex align-items-center justify-content-center text-{{ is_null($tugasAkhir) ? 'secondary' : ($tugasAkhir->status == 'acc' ? 'success' : ($tugasAkhir->status == 'draft' || $tugasAkhir->status == 'revisi' ? 'warning' : 'danger')) }}">
+                        <i
+                            class="{{ is_null($tugasAkhir) ? 'mdi mdi-alert-circle-outline' : ($tugasAkhir->status == 'acc' ? 'mdi mdi-file-document-box-check-outline' : ($tugasAkhir->status == 'draft' || $tugasAkhir->status == 'revisi' ? 'mdi mdi-calendar-clock' : 'mdi mdi-file-alert-outline')) }}"></i>
+                    </div>
+                    <div class="col">
+                        <span class="text-muted">Pengajuan TA</span>
+                        <h5
+                            class="m-0 my-1 fw-bold text-{{ is_null($tugasAkhir) ? 'secondary' : ($tugasAkhir->status == 'acc' ? 'success' : ($tugasAkhir->status == 'draft' || $tugasAkhir->status == 'revisi' ? 'warning' : 'danger')) }}">
+                            {{ is_null($tugasAkhir) ? 'Tidak Ada Data' : ($tugasAkhir->status == 'acc' ? 'Sudah Disetujui' : ($tugasAkhir->status == 'draft' || $tugasAkhir->status == 'revisi' ? 'Sedang Berlangsung' : 'Ditolak/Tidak Dilanjutkan')) }}
+                        </h5>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+    <div class="col-md-4 col-sm-4 col-12">
+        <div class="card shadow-sm mb-4"
+            style="border-left: 3px solid {{ is_null($tugasAkhir) || is_null($tugasAkhir->jadwal_seminar) ? '#b4b4b4' : ($tugasAkhir->jadwal_seminar->status == 'telah_seminar' ? '#1db45c' : ($tugasAkhir->jadwal_seminar->status == 'sudah_terjadwal' || $tugasAkhir->jadwal_seminar->status == 'belum_terjadwal' ? '#ebe831' : '#ff5b5b')) }}">
+            <div class="card-body p-3">
+                <div class="d-flex align-items-center justify-content-between gap-3">
+                    <div style="width: 55px;height: 55px;font-size: 2rem"
+                        class="bg-soft-{{ is_null($tugasAkhir) || is_null($tugasAkhir->jadwal_seminar) ? 'secondary' : ($tugasAkhir->jadwal_seminar->status == 'telah_seminar' ? 'success' : ($tugasAkhir->jadwal_seminar->status == 'sudah_terjadwal' || $tugasAkhir->jadwal_seminar->status == 'belum_terjadwal' ? 'warning' : 'danger')) }} rounded d-flex align-items-center justify-content-center text-{{ is_null($tugasAkhir) || is_null($tugasAkhir->jadwal_seminar) ? 'secondary' : ($tugasAkhir->jadwal_seminar->status == 'telah_seminar' ? 'success' : ($tugasAkhir->jadwal_seminar->status == 'sudah_terjadwal' || $tugasAkhir->jadwal_seminar->status == 'belum_terjadwal' ? 'warning' : 'danger')) }}">
+                        <i
+                            class="{{ is_null($tugasAkhir) || is_null($tugasAkhir->jadwal_seminar) ? 'mdi mdi-alert-circle-outline' : ($tugasAkhir->jadwal_seminar->status == 'telah_seminar' ? 'mdi mdi-account-check' : ($tugasAkhir->jadwal_seminar->status == 'sudah_terjadwal' || $tugasAkhir->jadwal_seminar->status == 'belum_terjadwal' ? 'mdi mdi-calendar-clock' : 'mdi mdi-file-alert-outline')) }}"></i>
+                    </div>
+                    <div class="col">
+                        <span class="text-muted">Seminar Proposal</span>
+                        <h5
+                            class="m-0 my-1 fw-bold text-{{ is_null($tugasAkhir) || is_null($tugasAkhir->jadwal_seminar) ? 'secondary' : ($tugasAkhir->jadwal_seminar->status == 'telah_seminar' ? 'success' : ($tugasAkhir->jadwal_seminar->status == 'sudah_terjadwal' || $tugasAkhir->jadwal_seminar->status == 'belum_terjadwal' ? 'warning' : 'danger')) }}">
+                            {{ is_null($tugasAkhir) || is_null($tugasAkhir->jadwal_seminar) ? 'Tidak Ada Data' : ($tugasAkhir->jadwal_seminar->status == 'telah_seminar' ? 'Sudah Disetujui' : ($tugasAkhir->jadwal_seminar->status == 'sudah_terjadwal' || $tugasAkhir->jadwal_seminar->status == 'belum_terjadwal' ? 'Sedang Berlangsung' : 'Ditolak/Tidak Dilanjutkan')) }}
+                        </h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-sm-4 col-12">
+        <div class="card shadow-sm mb-4"
+            style="border-left: 3px solid {{ isset($tugasAkhir->sidang) && $tugasAkhir->sidang->status == 'telah_sidang' ? '#1db45c' : (isset($tugasAkhir->sidang) && $tugasAkhir->sidang->status == 'sudah_terjadwal' ? '#ebe831' : (isset($tugasAkhir->sidang) && $tugasAkhir->sidang->status == 'belum_daftar' ? '#b4b4b4' : '#ff5b5b')) }}">
+            <div class="card-body p-3">
+                <div class="d-flex align-items-center justify-content-between gap-3">
+                    <div style="width: 55px;height: 55px;font-size: 2rem"
+                        class="bg-soft-{{ isset($tugasAkhir->sidang) && $tugasAkhir->sidang->status == 'telah_sidang' ? 'success' : (isset($tugasAkhir->sidang) && $tugasAkhir->sidang->status == 'sudah_terjadwal' ? 'warning' : (isset($tugasAkhir->sidang) && $tugasAkhir->sidang->status == 'belum_daftar' ? 'secondary' : 'danger')) }} rounded d-flex align-items-center justify-content-center text-{{ isset($tugasAkhir->sidang) && $tugasAkhir->sidang->status == 'telah_sidang' ? 'success' : (isset($tugasAkhir->sidang) && $tugasAkhir->sidang->status == 'sudah_terjadwal' ? 'warning' : (isset($tugasAkhir->sidang) && $tugasAkhir->sidang->status == 'belum_daftar' ? 'secondary' : 'danger')) }}">
+                        <i
+                            class="{{ isset($tugasAkhir->sidang) && $tugasAkhir->sidang->status == 'telah_sidang' ? 'mdi mdi-document-box-check-outline' : (isset($tugasAkhir->sidang) && $tugasAkhir->sidang->status == 'sudah_terjadwal' ? 'mdi mdi-calendar-clock' : (isset($tugasAkhir->sidang) && $tugasAkhir->sidang->status == 'belum_daftar' ? 'mdi mdi-account-alert' : 'mdi mdi-file-alert-outline')) }}"></i>
+                    </div>
+                    <div class="col">
+                        <span class="text-muted">Sidang Akhir</span>
+                        <h5
+                            class="m-0 my-1 fw-bold text-{{ isset($tugasAkhir->sidang) && $tugasAkhir->sidang->status == 'telah_sidang' ? 'success' : (isset($tugasAkhir->sidang) && $tugasAkhir->sidang->status == 'sudah_terjadwal' ? 'warning' : (isset($tugasAkhir->sidang) && $tugasAkhir->sidang->status == 'belum_daftar' ? 'secondary' : 'danger')) }}">
+                            {{ isset($tugasAkhir->sidang) ? ($tugasAkhir->sidang->status == 'telah_sidang' ? 'Sudah Disetujui' : ($tugasAkhir->sidang->status == 'sudah_terjadwal' ? 'Sedang Berlangsung' : ($tugasAkhir->sidang->status == 'belum_daftar' ? 'Belum Daftar' : 'Ditolak/Tidak Dilanjutkan'))) : 'Tidak Ada Data' }}
+                        </h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
 </div>
 
 <div class="row">

@@ -1,7 +1,6 @@
 @extends('administrator.layout.main')
 
 @section('content')
-
 <style>
      .card {
         position: relative;
@@ -107,7 +106,7 @@
     <div class="card-body">
         <div class="col-md-10 col-sm-12 col-12 mb-3 mx-auto mt-2 mb-4">
             <div class="row justify-content-between align-items-center">
-                @if(session('switchRoles') == 'Dosen')
+                {{-- @if(session('switchRoles') == 'Dosen')
                     <div class="col-md-6 col-sm-6">
                         <div class="input-group">
                             <input type="text" class="form-control" placeholder="Search..." autocomplete="off" data-role="schedule-search">
@@ -131,14 +130,14 @@
                             </div>
                         </div>
                     </div>
-                @else
+                @else --}}
                     <div class="col-md-8 col-sm-10 mx-auto">
                         <div class="input-group">
                             <input type="text" class="form-control" placeholder="Search..." autocomplete="off" data-role="schedule-search">
                             <span class="input-group-text"><i class="fa fa-search"></i></span>
                         </div>
                     </div>
-                @endif
+                {{-- @endif --}}
             </div>
         </div>
         

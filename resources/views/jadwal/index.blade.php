@@ -30,7 +30,7 @@
 </section>
 
 
-<section id="mahasiswa" class="mahasiswa" style="padding: 60px 0 100px 0">
+{{-- <section id="mahasiswa" class="mahasiswa" style="padding: 60px 0 100px 0">
   <div class="container">
       <h5 class="font-size-24 text-center m-0 fw-bold mb-1">Daftar Mahasiswa</h5>
       <ul class="nav nav-pills w-100 mb-5">
@@ -43,7 +43,7 @@
       </ul>
       <div id="mahasiswa-all-list" class="row"></div>
   </div>
-</section>
+</section> --}}
 @endsection
 
 @section('scripts')
@@ -207,10 +207,9 @@
             await changeTab(tabElement, 'pra_seminar');
         }
     };
-
 </script>
 
-<script>
+{{-- <script>
     var tabMahasiswa = 'seminar';
 
     const fetchMahasiswaData = async (tab) => {
@@ -313,6 +312,6 @@
             await changeData('seminar', mahasiswaTabElement);
         }
     };
-</script>
+</script> --}}
 
 @endsection

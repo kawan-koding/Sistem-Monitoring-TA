@@ -57,9 +57,8 @@
                                 </div>
 
                                 <div class="mt-3">
-                                    <button class="btn btn-primary w-100 waves-effect waves-light" type="submit">Log
-                                        In</button>
-                                    <a href="{{route("oauth.redirect")}}" class="btn btn-light w-100 waves-effect waves-light mt-3">Login With SSO</a>
+                                    <button class="btn btn-primary w-100 waves-effect waves-light" type="submit">Log In</button>
+                                    {{-- <a href="{{route("oauth.redirect")}}" class="btn btn-light w-100 waves-effect waves-light mt-3">Login With SSO</a> --}}
                                 </div>
                             </form>
                         </div>

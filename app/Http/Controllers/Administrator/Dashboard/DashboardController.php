@@ -175,6 +175,7 @@ class DashboardController extends Controller
         $tugasAkhir = TugasAkhir::where('mahasiswa_id', getInfoLogin()->userable->id)->first();
         $data = [
             'tugasAkhir' => $tugasAkhir,
+            'mods' => 'dashboard',
         ];
 
         return $data;

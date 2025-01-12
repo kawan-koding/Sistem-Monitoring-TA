@@ -93,6 +93,7 @@ class ProfileController extends Controller
                     'jenis_kelamin' => 'required',
                     'file' => 'nullable|mimes:png,jpg,jpeg',
                     'bidang_keahlian' => 'nullable',
+                    'foto_profile' => 'nullable|image|mimes:jpeg,png,jpg',
                 ],
                 [
                     'name.required' => 'Nama harus diisi',
@@ -101,6 +102,8 @@ class ProfileController extends Controller
                     'telp.required' => 'Telp harus diisi',
                     'jenis_kelamin.required' => 'Jenis Kelamin harus diisi',
                     'file.mimes' => 'File harus berupa png, jpg, atau jpeg',
+                    'foto_profile.image' => 'File harus berupa gambar',
+                    'foto_profile.mimes' => 'File harus berupa png, jpg, atau jpeg',
                 ]);
                 $user->name = $request->name;
                 $user->userable->name = $request->name;
