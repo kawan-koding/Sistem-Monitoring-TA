@@ -7,7 +7,7 @@
             </a>
             <nav id="navbar" class="navbar">
                 <ul>
-                  <li><a class="nav-link scrollto {{ request()->is('') ? 'active' : '' }}" href="{{ route('home') }}">Beranda</a></li>
+                  <li><a class="nav-link scrollto {{ request()->is('/') ? 'active' : '' }}" href="{{ route('home') }}">Beranda</a></li>
                   <li><a class="nav-link scrollto {{ request()->is('tawaran-topik') ? 'active' : '' }}" href="{{ route('guest.rekomendasi-topik') }}">Tawaran Topik</a></li>
                   <li><a class="nav-link scrollto {{ request()->is('tugas-akhir') ? 'active' : '' }}" href="{{ route('guest.judul-tugas-akhir') }}">Tugas Akhir</a></li>
                   <li><a class="nav-link scrollto {{ request()->is('jadwal') ? 'active' : '' }}" href="{{ route('guest.jadwal') }}">Jadwal</a></li>

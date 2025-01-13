@@ -12,16 +12,16 @@
         <h5 class="font-size-24 text-center m-0 fw-bold mb-1">Jadwal Mahasiswa</h5>
         <ul class="nav nav-pills w-100 mb-2">
             <li class="flex-fill">
-                <a class="nav-link text-center fw-bold" data-tab="pra_seminar" href="javascript:void(0);" onclick="changeTab('pra_seminar', this)">Akan Seminar</a>
+                <a class="nav-link nav-active text-center fw-bold" data-tab="pra_seminar" href="javascript:void(0);" onclick="changeTabJadwal('pra_seminar', this)">Akan Seminar</a>
             </li>
             <li class="flex-fill">
-                <a class="nav-link text-center fw-bold" data-tab="pra_sidang" href="javascript:void(0);" onclick="changeTab('pra_sidang', this)">Akan Sidang</a>
+                <a class="nav-link nav-active text-center fw-bold" data-tab="pra_sidang" href="javascript:void(0);" onclick="changeTabJadwal('pra_sidang', this)">Akan Sidang</a>
             </li>
         </ul> 
         <div class="d-flex justify-content-center align-items-center mb-3">
             <div class="search" style="max-width: 300px; width: 100%;">
                 <form onsubmit="searchJadwal(event)" style="width: 100%;">
-                    <input class="form-control" type="text" name="search" id="search" placeholder="Cari..." />
+                    <input class="form-control" type="text" name="search" id="search-jadwal" placeholder="Cari..." />
                 </form>
             </div>
         </div>
@@ -29,26 +29,12 @@
     </div>
 </section>
 
+@include('jadwal.daftar-mahasiswa')
 
-{{-- <section id="mahasiswa" class="mahasiswa" style="padding: 60px 0 100px 0">
-  <div class="container">
-      <h5 class="font-size-24 text-center m-0 fw-bold mb-1">Daftar Mahasiswa</h5>
-      <ul class="nav nav-pills w-100 mb-5">
-          <li class="flex-fill">
-              <a class="nav-link  text-center fw-bold" data-toggle="seminar" href="javascript:void(0);" onclick="changeData('seminar', this)" style="color: var(--primary-color)">Sudah Seminar</a>
-          </li>
-          <li class="flex-fill">
-              <a class="nav-link  text-center fw-bold" data-toggle="sidang"  href="javascript:void(0);" onclick="changeData('sidang', this)" style="color: var(--primary-color)">Sudah Sidang</a>
-          </li>
-      </ul>
-      <div id="mahasiswa-all-list" class="row"></div>
-  </div>
-</section> --}}
 @endsection
 
 @section('scripts')
 <script>
-
     var tabJadwal = 'pra_seminar';
 
     const searchJadwal = (event) => {
@@ -68,18 +54,13 @@
             }
         });
     };
-    document.getElementById('search').addEventListener('input', searchJadwal);
-
-    const searchDaftar = (event) => {
-        event.preventDefault();
-        cons searchText = document.getElementById('search').value.toLowerCase();    
-    }
+    document.getElementById('search-jadwal').addEventListener('input', searchJadwal);
 
     const fetchJadwalData = async (tab) => {
         tabJadwal = tab;
-        document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+        document.querySelectorAll('.nav-active').forEach(link => link.classList.remove('active'));
 
-        const tabElement = document.querySelector(`.nav-link[data-tab="${tab}"]`);
+        const tabElement = document.querySelector(`.nav-active[data-tab="${tab}"]`);
         if (tabElement) {
             tabElement.classList.add('active');
         }
@@ -126,50 +107,50 @@
                     <tbody>
             `;
 
-            for (let i = 0; i < data.data.length; i++) {
-                var item = data.data[i];
+                for (let i = 0; i < data.data.length; i++) {
+                    var item = data.data[i];
 
-                render += `
-                    <tr>
-                        <td>
-                            <img id="modal-image-${i}" src="${item.poster ? item.poster : 'https://ui-avatars.com/api/?background=random&name=' + encodeURIComponent(item.tugas_akhir.mahasiswa.nama_mhs)}" alt="Poster" class="img-fluid" style="max-width: 100px; max-height: 120px; cursor: pointer; object-fit: cover; border-radius: 5px; border: 1px solid #ccc;" data-bs-toggle="modal" data-bs-target="#imagePreviewModal-${i}">
-                            <div class="modal fade" id="imagePreviewModal-${i}" tabindex="-1" aria-labelledby="imagePreviewLabel" aria-hidden="true" style="backdrop-filter: blur(5px); background-color: rgba(0, 0, 0, 0.5);">
-                                <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content">
-                                        <div class="modal-body p-0">
-                                            <img id="preview-image-${i}" src="${item.poster ? item.poster : 'https://ui-avatars.com/api/?background=random&name=' + encodeURIComponent(item.tugas_akhir.mahasiswa.nama_mhs)}" alt="Preview Poster" class="img-fluid preview-image" style="border-radius: 5px; border: 1px solid #ccc;">
+                    render += `
+                        <tr>
+                            <td>
+                                <img id="modal-image-${i}" src="${item.poster ? item.poster : 'https://ui-avatars.com/api/?background=random&name=' + encodeURIComponent(item.tugas_akhir.mahasiswa.nama_mhs)}" alt="Poster" class="img-fluid" style="max-width: 100px; max-height: 120px; cursor: pointer; object-fit: cover; border-radius: 5px; border: 1px solid #ccc;" data-bs-toggle="modal" data-bs-target="#imagePreviewModal-${i}">
+                                <div class="modal fade" id="imagePreviewModal-${i}" tabindex="-1" aria-labelledby="imagePreviewLabel" aria-hidden="true" style="backdrop-filter: blur(5px); background-color: rgba(0, 0, 0, 0.5);">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-body p-0">
+                                                <img id="preview-image-${i}" src="${item.poster ? item.poster : 'https://ui-avatars.com/api/?background=random&name=' + encodeURIComponent(item.tugas_akhir.mahasiswa.nama_mhs)}" alt="Preview Poster" class="img-fluid preview-image" style="border-radius: 5px; border: 1px solid #ccc;">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </td>
-                        <td class="">
-                            <span class="badge badge-soft-primary" style="color: #6c757d">${item.tugas_akhir.mahasiswa.program_studi.display}</span>
-                            <span class="badge badge-soft-secondary" style="color: #3b5de7">${item.tugas_akhir.tipe == "I" ? "Individu" : "Kelompok"}</span>
-                            <p class="m-0 p-0">${item.tugas_akhir.mahasiswa.nama_mhs}</p>
-                            <p class="m-0 p-0">${item.tugas_akhir.mahasiswa.nim}</p>
                             </td>
-                        <td class="">${item.tugas_akhir.judul ?? '-'}</td>
-                        <td>
-                            <p class="fw-bold  m-0">Pembimbing</p>
-                            <ol class="m-0">
-                                <li class="">${item.pembimbing_1 ?? '-'}</li>
-                                <li class="">${item.pembimbing_2 ?? '-'}</li>
-                            </ol>
-                            <p class="fw-bold  m-0">Pembimbing</p>
-                            <ol class="m-0">
-                                <li class="">${item.penguji_1 ?? '-'}</li>
-                                <li class="">${item.penguji_2 ?? '-'}</li>
-                            </ol>
-                        </td>
-                        <td>
-                            <strong class="m-0">${item.ruangan?.nama_ruangan ?? '-'}</strong>
-                            <p class="m-0">${item.tanggal ?? '-'}</p>
-                            <p class="m-0">${item.jam ?? '-'}</p>
-                        </td>
-                    </tr>
-                `;
-            }
+                            <td class="">
+                                <span class="badge badge-soft-primary" style="color: #6c757d">${item.tugas_akhir.mahasiswa.program_studi.display}</span>
+                                <span class="badge badge-soft-secondary" style="color: #3b5de7">${item.tugas_akhir.tipe == "I" ? "Individu" : "Kelompok"}</span>
+                                <p class="m-0 p-0">${item.tugas_akhir.mahasiswa.nama_mhs}</p>
+                                <p class="m-0 p-0">${item.tugas_akhir.mahasiswa.nim}</p>
+                                </td>
+                            <td class="">${item.tugas_akhir.judul ?? '-'}</td>
+                            <td>
+                                <p class="fw-bold  m-0">Pembimbing</p>
+                                <ol class="m-0">
+                                    <li class="">${item.pembimbing_1 ?? '-'}</li>
+                                    <li class="">${item.pembimbing_2 ?? '-'}</li>
+                                </ol>
+                                <p class="fw-bold  m-0">Pembimbing</p>
+                                <ol class="m-0">
+                                    <li class="">${item.penguji_1 ?? '-'}</li>
+                                    <li class="">${item.penguji_2 ?? '-'}</li>
+                                </ol>
+                            </td>
+                            <td>
+                                <strong class="m-0">${item.ruangan?.nama_ruangan ?? '-'}</strong>
+                                <p class="m-0">${item.tanggal ?? '-'}</p>
+                                <p class="m-0">${item.jam ?? '-'}</p>
+                            </td>
+                        </tr>
+                    `;
+                }
             
             render += `
                     </tbody>
@@ -181,7 +162,7 @@
         renderData.html(render);
     };
 
-    const changeTab = async (tabJadwal, tabElement) => {
+    const changeTabJadwal = async (tabJadwal, tabElement) => {
         Swal.fire({
             title: 'Loading...',
             html: 'Memuat data...',
@@ -190,7 +171,7 @@
                 Swal.showLoading();
             }
         });
-        const tabs = document.querySelectorAll('.nav-link');
+        const tabs = document.querySelectorAll('.nav-active');
         tabs.forEach(tab => tab.classList.remove('active'));
         tabElement.classList.add('active');
         const data = await fetchJadwalData(tabJadwal);
@@ -200,118 +181,18 @@
 
 
     window.onload = async () => {
-        const data = await fetchJadwalData('pra_seminar');
-        renderJadwalTable(data);
-        const tabElement = document.querySelector(`.nav-link[data-tab="pra_seminar"]`);
-        if (tabElement) {
-            await changeTab(tabElement, 'pra_seminar');
-        }
+        await changeTabJadwal('pra_seminar', document.querySelector(`.nav-active[data-tab="pra_seminar"]`));
     };
+
+
+    // window.onload = async () => {
+    //     const data = await fetchJadwalData('pra_seminar');
+    //     renderJadwalTable(data);
+    //     const tabElement = document.querySelector(`.nav-active[data-tab="pra_seminar"]`);
+    //     if (tabElement) {
+    //         await changeTabJadwal(tabElement, 'pra_seminar');
+    //     }
+    // };
 </script>
-
-{{-- <script>
-    var tabMahasiswa = 'seminar';
-
-    const fetchMahasiswaData = async (tab) => {
-        tabMahasiswa = tab;
-        document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
-
-        const tabElement = document.querySelector(`.nav-link[data-toggle="${tab}"]`);
-        if (tabElement) {
-            tabElement.classList.add('active');
-        }
-        const data = await getMahasiswaData(tab);
-        renderMahasiswaTable(data);
-    };
-
-    const getMahasiswaData = async (tabMahasiswa) => {
-        try {
-            const res = await fetch(`${BASE_URL}/get-daftar-mahasiswa?active_tab=${tabMahasiswa}`);
-            if (!res.ok) {
-                throw new Error('Gagal mengambil data');
-            }
-            const data = await res.json();
-            return data;
-        } catch (error) {
-            return null;
-        }
-    };
-
-    const renderMahasiswaTable = (data = null) => {
-        var renderData = $('#mahasiswa-all-list');
-        var render = '';
-        if (data.data.length == 0) {
-            render += `
-                <div class="d-flex align-items-center justify-content-center py-5">
-                    <div class="text-center py-5">
-                        <img src="${ASSET_URL}assets/images/no-data.png" height="350" alt="No Data">
-                        <p class="text-muted m-0">Tidak ada mahasiswa yang ditemukan.</p>
-                    </div>
-                </div>
-            `;
-        } else {
-            render += `
-                <div class="table-container">
-                <table class="table zero-configuration" style="font-size: 14px!important">
-                    <thead>
-                        <th style="width: 20%; white-space: nowrap;">Nama</th>
-                        <th style="width: 40%; white-space: nowrap;">Program Studi</th>
-                        <th style="width: 40%; white-space: nowrap;">Judul</th>
-                    </thead>
-                    <tbody>
-            `;
-
-            for (let i = 0; i < data.data.length; i++) {
-                var item = data.data[i];
-                render += `
-                    <tr>
-                        <td>
-                            <p class="m-0">${item.mahasiswa.nama_mhs}</p>
-                            <p class="m-0">${item.mahasiswa.nim}</p>
-                        </td>
-                        <td>
-                            <p class="m-0">${item.mahasiswa.program_studi.display ?? '-'}</p>
-                        </td>
-                        <td>${item.judul ?? '-'}</td>
-                    </tr>
-                `;
-            }
-
-            render += `
-                    </tbody>
-                </table>
-                </div>
-            `;
-        }
-
-        renderData.html(render);
-    };
-
-    const changeData = async (tabMahasiswa, tabElement) => {
-        Swal.fire({
-            title: 'Loading...',
-            html: 'Memuat data...',
-            timer: 2000,
-            didOpen: () => {
-                Swal.showLoading();
-            }
-        });
-        const tabs = document.querySelectorAll('.nav-link');
-        tabs.forEach(tab => tab.classList.remove('active'));
-        tabElement.classList.add('active');
-        const data = await fetchMahasiswaData(tabMahasiswa);
-        Swal.close();   
-        renderMahasiswaTable(data);
-    };
-
-    window.onload = async () => {
-        const mahasiswaData = await fetchMahasiswaData('seminar');
-        renderMahasiswaTable(mahasiswaData);
-        const mahasiswaTabElement = document.querySelector(`.nav-link[data-toggle="seminar"]`);
-        if (mahasiswaTabElement) {
-            await changeData('seminar', mahasiswaTabElement);
-        }
-    };
-</script> --}}
 
 @endsection

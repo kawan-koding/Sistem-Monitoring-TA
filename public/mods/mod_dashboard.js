@@ -75,8 +75,7 @@ async function getScheduleData(data = null) {
                         <th>No.</th>
                         <th>Nama</th>
                         <th style="min-width: 250px">Judul</th>
-                        <th>Pembimbing</th>
-                        <th>Penguji</th>
+                        <th>Dosen</th>
                         <th>Waktu dan Tempat</th>
                     </thead>
                     <tbody>`;
@@ -101,13 +100,14 @@ async function getScheduleData(data = null) {
                             )}</span>
                             <p class="m-0 p-0">${
                                 item.tugas_akhir.mahasiswa.nim
-                            } - ${item.tugas_akhir.mahasiswa.nama_mhs}</p>
+                            } <br> ${item.tugas_akhir.mahasiswa.nama_mhs}</p>
                         </td>
                         <td>${item.tugas_akhir.judul}</td>
                         <td style="white-space: nowrap">
+                            <p class="small m-0 fw-bold">Pembimbing</p>
                             <ol>
-                                ${item.tugas_akhir.bimbing_uji
-                                    .filter(
+                            ${item.tugas_akhir.bimbing_uji
+                                .filter(
                                         (bimbing) =>
                                             bimbing.jenis == "pembimbing"
                                     )
@@ -117,8 +117,7 @@ async function getScheduleData(data = null) {
                                     )
                                     .join("")}
                             </ol>
-                        </td>
-                        <td style="white-space: nowrap">
+                            <p class="small m-0 fw-bold">Penguji</p>
                             <ol>
                                 ${item.tugas_akhir.bimbing_uji
                                     .filter(

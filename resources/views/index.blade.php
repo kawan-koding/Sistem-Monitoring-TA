@@ -161,10 +161,10 @@
             <h5 class="font-size-24 text-center m-0 fw-bold mb-1">Jadwal Mahasiswa</h5>
             <ul class="nav nav-pills w-100 mb-2">
                 <li class="flex-fill">
-                    <a class="nav-link text-center fw-bold" data-tab="pra_seminar" href="javascript:void(0);" onclick="changeTab('pra_seminar', this)">Akan Seminar</a>
+                    <a class="nav-link nav-active text-center fw-bold" data-tab="pra_seminar" href="javascript:void(0);" onclick="changeTab('pra_seminar', this)">Akan Seminar</a>
                 </li>
                 <li class="flex-fill">
-                    <a class="nav-link text-center fw-bold" data-tab="pra_sidang" href="javascript:void(0);" onclick="changeTab('pra_sidang', this)">Akan Sidang</a>
+                    <a class="nav-link nav-active text-center fw-bold" data-tab="pra_sidang" href="javascript:void(0);" onclick="changeTab('pra_sidang', this)">Akan Sidang</a>
                 </li>
             </ul> 
             
@@ -304,9 +304,9 @@
     var activeTab = 'pra_seminar';
     const fetchJadwalData = async (tab) => {
         activeTab = tab;
-        document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+        document.querySelectorAll('.nav-active').forEach(link => link.classList.remove('active'));
 
-        const tabElement = document.querySelector(`.nav-link[data-tab="${tab}"]`);
+        const tabElement = document.querySelector(`.nav-active[data-tab="${tab}"]`);
         if (tabElement) {
             tabElement.classList.add('active');
         }
@@ -417,7 +417,7 @@
                 Swal.showLoading();
             }
         });
-        const tabs = document.querySelectorAll('.nav-link');
+        const tabs = document.querySelectorAll('.nav-active');
         tabs.forEach(tab => tab.classList.remove('active'));
         tabElement.classList.add('active');
         const data = await fetchJadwalData(activeTab);
@@ -428,7 +428,7 @@
     window.onload = async () => {
         const data = await fetchJadwalData('pra_seminar');
         renderJadwalTable(data);
-        const tabElement = document.querySelector(`.nav-link[data-tab="pra_seminar"]`);
+        const tabElement = document.querySelector(`.nav-active[data-tab="pra_seminar"]`);
         if (tabElement) {
             await changeTab(tabElement, 'pra_seminar');
         }
