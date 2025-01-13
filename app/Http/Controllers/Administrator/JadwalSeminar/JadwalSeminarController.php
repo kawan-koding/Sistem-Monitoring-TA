@@ -248,10 +248,10 @@ class JadwalSeminarController extends Controller
                 $q->whereHas('bimbing_uji', function($q) use ($jadwalSeminar) {
                     $q->whereIn('dosen_id', $jadwalSeminar->tugas_akhir->bimbing_uji()->pluck('dosen_id')->toArray());
                 });
-            })->whereDate('tanggal', $request->tanggal)->where('jam_mulai', '<=', $request->jam_mulai)->where('jam_selesai', '>=', $request->jam_mulai)->first();
+            })->whereDate('tanggal', $request->tanggal)->whereStatus('sudah_terjadwal')->where('jam_mulai', '>=', $request->jam_mulai)->whereBetween('jam_mulai', [$request->jam_mulai, $request->jam_selesai])->first();
 
-            $checkRuangan = JadwalSeminar::whereNot('id', $jadwalSeminar->id)->whereRuanganId($request->ruangan)->whereDate('tanggal', $request->tanggal)->where('jam_mulai', '>', $request->jam_mulai)->where('jam_selesai', '<', $request->jam_selesai)->first();
-
+            $checkRuangan = JadwalSeminar::whereNot('id', $jadwalSeminar->id)->whereRuanganId($request->ruangan)->whereDate('tanggal', $request->tanggal)->whereStatus('sudah_terjadwal')->where('jam_mulai', '>=', $request->jam_mulai)->whereBetween('jam_mulai', [$request->jam_mulai, $request->jam_selesai])->first();
+            
             if (!is_null($check)) {
                 return redirect()->back()->withInput($request->all())->with(['error' => 'Ada jadwal pada waktu tersebut']);
             }

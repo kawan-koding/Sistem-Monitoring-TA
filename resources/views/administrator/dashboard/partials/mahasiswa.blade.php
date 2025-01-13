@@ -101,7 +101,7 @@
                         <span class="text-muted">Seminar Proposal</span>
                         <h5
                             class="m-0 my-1 fw-bold text-{{ is_null($tugasAkhir) || is_null($tugasAkhir->jadwal_seminar) ? 'secondary' : ($tugasAkhir->jadwal_seminar->status == 'telah_seminar' ? 'success' : ($tugasAkhir->jadwal_seminar->status == 'sudah_terjadwal' || $tugasAkhir->jadwal_seminar->status == 'belum_terjadwal' ? 'warning' : 'danger')) }}">
-                            {{ is_null($tugasAkhir) || is_null($tugasAkhir->jadwal_seminar) ? 'Tidak Ada Data' : ($tugasAkhir->jadwal_seminar->status == 'telah_seminar' ? 'Sudah Disetujui' : ($tugasAkhir->jadwal_seminar->status == 'sudah_terjadwal' || $tugasAkhir->jadwal_seminar->status == 'belum_terjadwal' ? 'Sedang Berlangsung' : 'Ditolak/Tidak Dilanjutkan')) }}
+                            {{ is_null($tugasAkhir) || is_null($tugasAkhir->jadwal_seminar) ? 'Tidak Ada Data' : ($tugasAkhir->jadwal_seminar->status == 'telah_seminar' && $tugasAkhir->status_seminar == 'revisi' ? 'Sudah Disetujui dengan Revisi' : ($tugasAkhir->jadwal_seminar->status == 'telah_seminar' ? 'Sudah Disetujui' : ($tugasAkhir->jadwal_seminar->status == 'sudah_terjadwal' || $tugasAkhir->jadwal_seminar->status == 'belum_terjadwal' ? 'Sedang Berlangsung' : 'Ditolak/Tidak Dilanjutkan'))) }}
                         </h5>
                     </div>
                 </div>
