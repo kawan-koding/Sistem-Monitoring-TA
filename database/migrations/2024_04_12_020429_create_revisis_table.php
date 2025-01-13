@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('bimbing_uji_id')->nullable()->references('id')->on('bimbing_ujis')->onDelete('cascade');
             $table->enum('type',['Seminar','Sidang']);
             $table->text('catatan')->nullable();
+            $table->boolean('is_valid')->default(false);
             $table->timestamps();
         });
     }
