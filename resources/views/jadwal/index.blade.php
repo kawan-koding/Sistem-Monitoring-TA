@@ -29,7 +29,7 @@
     </div>
 </section>
 
-@include('jadwal.daftar-mahasiswa')
+{{-- @include('jadwal.daftar-mahasiswa') --}}
 
 @endsection
 
@@ -39,7 +39,7 @@
 
     const searchJadwal = (event) => {
         event.preventDefault();
-        const searchText = document.getElementById('search').value.toLowerCase();
+        const searchText = document.getElementById('search-jadwal').value.toLowerCase();
         const rows = document.querySelectorAll('#jadwal-all-list table tbody tr');
         rows.forEach(row => {
             const cells = row.getElementsByTagName('td');

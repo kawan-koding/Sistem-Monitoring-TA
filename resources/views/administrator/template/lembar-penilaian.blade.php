@@ -164,6 +164,33 @@
                 margin: 50px 0 0 0;
             }
         }
+
+        .check-circle-icon {
+            position: relative;
+            left: 50px;
+            width: 50px;
+            height: 50px;
+            border: 3px solid #007bff; 
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .check-circle-icon::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 8px;
+            border: solid #007bff;
+            border-width: 0 0 6px 6px;
+            transform: rotate(-45deg);
+            top: 38%;
+            left: 42%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+        }
+
     </style>
 </head>
 
@@ -322,8 +349,11 @@
             </td>
             <td class="criteria-right">
                 <p>Dosen {{ $item['peran'] }},</p>
+                @if (!empty($item['nilai']) && count($item['nilai']) > 0)
+                <div class="check-circle-icon"></div>
+                @endif
                 <div class="footer-signature">
-                    <p class="tag-name">({{ $item['dosen']->name }})</p>
+                    <p class="{{ !empty($item['nilai']) && count($item['nilai']) > 0 ? '' : 'tag-name' }}">({{ $item['dosen']->name }})</p>
                     <p style="margin: 5px 0;">NIP/NIK/NIPPPK. {{ $item['dosen']->nip }}</p>
                 </div>
             </td>

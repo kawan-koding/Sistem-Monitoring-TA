@@ -190,14 +190,64 @@
                     </thead>
                     <tbody>
                         {{-- @dd($data[1]->tugas_akhir) --}}
-                        @forelse ($data as $item)
+                        @forelse ($data as $key => $item)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 @if (getInfoLogin()->hasRole('Admin'))
                                     <td width="15%">
+                                        @if (getInfoLogin()->hasRole('Admin'))
                                         <span class="badge badge-soft-primary">{{ !is_null($item->tugas_akhir->mahasiswa->programStudi) ? $item->tugas_akhir->mahasiswa->programStudi->display : '' }}</span>
-                                        <p class="font-size-14 m-0">{{ $item->tugas_akhir->mahasiswa->nama_mhs }}</p>
-                                        <p class="small text-muted">NIM : {{ $item->tugas_akhir->mahasiswa->nim }}</p>
+                                        <a href="#" class="m-0" data-bs-toggle="modal" data-bs-target="#mahasiswaModal{{ $key }}">
+                                            <p class="fw-bold m-0">{{ $item->tugas_akhir->mahasiswa->nama_mhs }}</p>
+                                        </a>
+                                        <div class="modal fade" id="mahasiswaModal{{ $key }}" tabindex="-1" aria-labelledby="mahasiswaModalLabel{{ $key }}" aria-hidden="true">
+                                            <div class="modal-dialog modal-lg modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="mahasiswaModalLabel{{ $key }}">Biodata Mahasiswa</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="row">
+                                                            <div class="col-md-4 text-center">
+                                                                <img src="{{ $item->tugas_akhir->mahasiswa->user->image == null ? 'https://ui-avatars.com/api/?background=random&name='. $item->tugas_akhir->mahasiswa->name : asset('storage/images/users/'. $item->tugas_akhir->mahasiswa->user->image) }}" alt="Foto Mahasiswa" class="img-fluid rounded">
+                                                            </div>
+                                                            <div class="col-md-8">
+                                                                <table class="table table-sm table-borderless">
+                                                                    <tr>
+                                                                        <th>Nama</th>
+                                                                        <td>{{ $item->tugas_akhir->mahasiswa->nama_mhs ?? '-' }}</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th>NIM</th>
+                                                                        <td>{{ $item->tugas_akhir->mahasiswa->nim ?? '-' }}</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th>Kelas</th>
+                                                                        <td>{{ $item->tugas_akhir->mahasiswa->kelas ?? '-' }}</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th>Prodi</th>
+                                                                        <td>{{ $item->tugas_akhir->mahasiswa->programStudi->display ?? '-' }}</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th>Telepon</th>
+                                                                        <td>{{ $item->tugas_akhir->mahasiswa->telp ?? '-' }}</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th>Email</th>
+                                                                        <td>{{ $item->tugas_akhir->mahasiswa->email ?? '-' }}</td>
+                                                                    </tr>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @else
+                                        <p class="fw-bold m-0">{{ $item->tugas_akhir->mahasiswa->nama_mhs }}</p>
+                                    @endif
                                     </td>
                                 @endif
                                 <td>

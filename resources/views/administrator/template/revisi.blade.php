@@ -168,6 +168,7 @@
 
         .check-circle-icon {
             position: relative;
+            left: 50px;
             width: 50px;
             height: 50px;
             border: 3px solid #007bff; 
@@ -181,43 +182,15 @@
         .check-circle-icon::after {
             content: '';
             position: absolute;
-            width: 38px;
-            height: 15px;
+            width: 20px;
+            height: 8px;
             border: solid #007bff;
-            border-width: 0 0 3px 3px;
+            border-width: 0 0 6px 6px;
             transform: rotate(-45deg);
-            top: 23%;
-            left: 65%;
+            top: 38%;
+            left: 42%;
             transform: translate(-50%, -50%) rotate(-45deg);
         }
-
-        .check-circle-icon-2 {
-            position: relative;
-            left: 30%;
-            top: 2%;
-            width: 30px;
-            height: 30px;
-            border: 2px solid #007bff; 
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-
-        .check-circle-icon-2::after {
-            content: '';
-            position: absolute;
-            width: 12px;
-            height: 4px;
-            border: solid #007bff;
-            border-width: 0 0 2px 2px;
-            transform: rotate(-45deg);
-            top: 44%;
-            left: 43%;
-            transform: translate(-50%, -50%) rotate(-45deg);
-        }
-
         
     </style>
 </head>
@@ -304,11 +277,7 @@
                 <tr>
                     <td align="center"></td>
                     <td style="height: 320px">{!! isset($data['revisi']) ? $data['revisi']->catatan : '' !!}</td>
-                    <td>
-                        @if($data['revisi']->is_valid == true)
-                            <div class="check-circle-icon-2"></div>
-                        @endif
-                    </td>
+                    <td></td>
                 </tr>
             </tbody>
         </table>

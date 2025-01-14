@@ -117,6 +117,32 @@
             margin: 118px 0 0 0;
         }
 
+        .check-circle-icon {
+            position: relative;
+            left: 50px;
+            width: 50px;
+            height: 50px;
+            border: 3px solid #007bff; 
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .check-circle-icon::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 8px;
+            border: solid #007bff;
+            border-width: 0 0 6px 6px;
+            transform: rotate(-45deg);
+            top: 38%;
+            left: 42%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+        }
+
         @media (max-width: 600px) {
             body {
                 font-size: 0.8em;
@@ -273,16 +299,19 @@
             <p style="margin: 5px 0;">Mengetahui,</p>
             <p style="margin: 5px 0;">Ketua Program Studi</p>
             <p style="margin: 5px 0;">{{ $kaprodi->programStudi->nama ?? ''}},</p>
+            <div class="check-circle-icon"></div>
             <div class="footer-signature">
-                <p class="tag-name">({{ $kaprodi->name ?? '' }})</p>
+                <p class="">({{ $kaprodi->name ?? '' }})</p>
                 <p style="margin: 5px 0;">NIP/NIK/NIPPPK. {{ $kaprodi->nip ?? ''}}</p>
             </div>
         </td>
         <td class="criteria-right" style="white-space: nowrap">
             <p style="margin: 5px 0;">Banyuwangi, {{ \Carbon\Carbon::parse($jadwal->tanggal)->locale('id')->translatedFormat('d F Y') }}</p>
-            <p style="margin: 8px 0;">Dosen Pembimbing,</p>
+            <p style="margin: 5px 0;">Dosen Pembimbing,</p>
+            <br><br>
+            <div class="check-circle-icon"></div>
             <div class="footer-signature">
-                <p class="tag-name-2">({{ $pemb1->dosen->name }})</p>
+                <p class="">({{ $pemb1->dosen->name }})</p>
                 <p style="margin: 5px 0;">NIP/NIK/NIPPPK. {{ $pemb1->dosen->nip }}</p>
             </div>
         </td>
