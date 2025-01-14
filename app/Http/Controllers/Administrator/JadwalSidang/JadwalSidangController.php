@@ -264,9 +264,9 @@ class JadwalSidangController extends Controller
                 $q->whereHas('bimbing_uji', function($q) use ($jadwalSidang) {
                     $q->whereIn('dosen_id', $jadwalSidang->tugas_akhir->bimbing_uji->pluck('dosen_id')->toArray());
                 });
-            })->whereDate('tanggal', $request->tanggal)->where('jam_mulai', '<=', $request->jam_mulai)->where('jam_selesai', '>=', $request->jam_mulai)->first();
+            })->whereDate('tanggal', $request->tanggal)->whereStatus('sudah_terjadwal')->where('jam_mulai', '>=', $request->jam_mulai)->whereBetween('jam_mulai', [$request->jam_mulai, $request->jam_selesai])->first();
 
-            $checkRuangan = Sidang::whereNot('id', $jadwalSidang->id)->whereRuanganId($request->ruangan)->whereDate('tanggal', $request->tanggal)->where('jam_mulai', '>=', $request->jam_mulai)->where('jam_selesai', '<=', $request->jam_selesai)->first();
+            $checkRuangan = Sidang::whereNot('id', $jadwalSidang->id)->whereRuanganId($request->ruangan)->whereDate('tanggal', $request->tanggal)->whereStatus('sudah_terjadwal')->where('jam_mulai', '>=', $request->jam_mulai)->whereBetween('jam_mulai', [$request->jam_mulai, $request->jam_selesai])->first();
 
             if(!is_null($check)) {
                 return redirect()->back()->withInput($request->all())->with(['error' => 'Jadwal ini sudah ada']);

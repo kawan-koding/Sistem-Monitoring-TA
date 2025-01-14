@@ -259,6 +259,7 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::post('{jadwal}/revisi',[JadwalController::class, 'revisi'])->name('apps.jadwal.revisi');
         Route::post('{jadwal}/nilai',[JadwalController::class, 'nilai'])->name('apps.jadwal.nilai');
         Route::post('{jadwal}/update-status',[JadwalController::class, 'updateStatus'])->name('apps.jadwal.update-status');
+        Route::get('{revisi}/revision-valid', [JadwalController::class, 'revisionValid'])->name('apps.jadwal.revision-valid');
     });
 
     Route::prefix('cetak')->group( function(){

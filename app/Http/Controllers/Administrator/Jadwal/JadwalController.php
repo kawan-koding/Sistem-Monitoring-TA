@@ -374,4 +374,14 @@ class JadwalController extends Controller
             return redirect()->back()->with(['error' => $e->getMessage()]);
         }
     }
+
+    public function revisionValid(Revisi $revisi)
+    {
+        try {
+            $revisi->update(['is_valid' => true]);
+            return redirect()->route('apps.jadwal')->with(['success' => 'Berhasil memperbarui status revisi']);
+        } catch(Exception $e) {
+            return redirect()->back()->with(['error' => $e->getMessage()]);
+        }
+    }
 }
