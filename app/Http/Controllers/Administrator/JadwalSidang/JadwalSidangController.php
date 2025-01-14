@@ -722,7 +722,7 @@ class JadwalSidangController extends Controller
                 $export = new SemuaDataTaExport($status);
                 $title = 'Belum Daftar Sidang';
                 break;
-            case 'sudah_terjadwal':
+            case 'sudah_terjadwal_sidang':
                 $export = new SemuaDataTaExport($status);
                 $title = 'Sudah Terjadwal Sidang';
                 break;

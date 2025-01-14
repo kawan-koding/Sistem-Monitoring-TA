@@ -8,13 +8,16 @@
             $revisi = $data->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->with('revisi')->get()->flatMap(function($bimbingUji) {
                 return $bimbingUji->revisi;
             });
+            
 
             $allValid = $revisi->every(function($rev) {
                 return $rev->is_valid == true && $rev->type == 'Seminar';
             });
+            
         @endphp
+        {{-- @dd($allValid) --}}
 
-        @if($allValid)
+        @if($allValid && $revisi->count() > 0)
             <a href="{{ route('apps.cetak.revisi', $data->id )}}" target="_blank" class="btn btn-outline-dark btn-sm"><i class="bx bx-printer"></i> Cetak Lembar Revisi</a>
         @endif
     </div>

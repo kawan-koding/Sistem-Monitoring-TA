@@ -45,9 +45,10 @@ class SemuaDataTaQueryExport implements FromCollection, WithHeadings, WithMappin
             $query->whereHas('jadwal_seminar', function($q) { 
                 $q->whereStatus($this->status);
             });
-        } elseif(in_array($this->status, ['belum_daftar','sudah_sidang','sudah_terjadwal','sudah_daftar'])) {
-            $query->whereHas('sidang', function($q) { 
-                $q->whereStatus($this->status);
+        } elseif(in_array($this->status, ['belum_daftar','sudah_sidang','sudah_terjadwal_sidang','sudah_daftar'])) {
+            $sts = $this->status === 'sudah_terjadwal_sidang' ? 'sudah_terjadwal' : $this->status;
+            $query->whereHas('sidang', function($q) use ($sts) { 
+                $q->whereStatus($sts);
             });
         } elseif($this->status == 'sudah_pemberkasan_sidang') { 
             $query->whereNotNull('status_sidang')->whereStatusPemberkasan('sudah_lengkap');
@@ -64,6 +65,16 @@ class SemuaDataTaQueryExport implements FromCollection, WithHeadings, WithMappin
             });
             $tugasAkhir->bimbing_uji_data = $bimbingUjiData;
             $tugasAkhir->kelas = $tugasAkhir->mahasiswa->kelas;
+            Carbon::setLocale('id');
+            if (in_array($this->status,['belum_terjadwal','telah_seminar','sudah_pemberkasan','sudah_terjadwal'])) {
+                $tugasAkhir->tanggal = !is_null($tugasAkhir->jadwal_seminar->tanggal) ? Carbon::parse($tugasAkhir->jadwal_seminar->tanggal)->translatedFormat('l, d F Y') : null;
+                $tugasAkhir->jam = !is_null($tugasAkhir->jadwal_seminar->jam_mulai) && !is_null($tugasAkhir->jadwal_seminar->jam_selesai) ? Carbon::parse($tugasAkhir->jadwal_seminar->jam_mulai)->format('H:i') . ' - ' . Carbon::parse($tugasAkhir->jadwal_seminar->jam_selesai)->format('H:i') : null;
+                $tugasAkhir->tempat = !is_null($tugasAkhir->jadwal_seminar->ruangan) ? $tugasAkhir->jadwal_seminar->ruangan->nama_ruangan : null;
+            } elseif (in_array($this->status,['belum_daftar','sudah_sidang','sudah_terjadwal_sidang','sudah_daftar'])) {
+                $tugasAkhir->tanggal = !is_null($tugasAkhir->sidang->tanggal) ? Carbon::parse($tugasAkhir->sidang->tanggal)->translatedFormat('l, d F Y') : null;
+                $tugasAkhir->jam = !is_null($tugasAkhir->sidang->jam_mulai) && !is_null($tugasAkhir->sidang->jam_selesai) ? Carbon::parse($tugasAkhir->sidang->jam_mulai)->format('H:i') . ' - ' . Carbon::parse($tugasAkhir->sidang->jam_selesai)->format('H:i') : null;
+                $tugasAkhir->tempat = !is_null($tugasAkhir->sidang->ruangan) ? $tugasAkhir->sidang->ruangan->nama_ruangan : null;
+            }
             return $tugasAkhir;
         });
         $query = $query->sortBy(function ($tugasAkhir) {
@@ -85,7 +96,7 @@ class SemuaDataTaQueryExport implements FromCollection, WithHeadings, WithMappin
             'Pembimbing 2',
             'Penguji 1',
             'Penguji 2',
-            'Tanggal Seminar',
+            'Tanggal',
             'Waktu',
             'Tempat',
         ];
@@ -94,7 +105,6 @@ class SemuaDataTaQueryExport implements FromCollection, WithHeadings, WithMappin
     public function map($tugasAkhir): array
     {
         $tipe = $tugasAkhir->tipe === 'I' ? 'Individu' : ($tugasAkhir->tipe === 'K' ? 'Kelompok' : '-');
-
         $formatDosen = function ($bimbingUji, $key) {
             if (isset($bimbingUji[$key])) {
                 $name = $bimbingUji[$key]['name'] ?? '-';
@@ -103,10 +113,7 @@ class SemuaDataTaQueryExport implements FromCollection, WithHeadings, WithMappin
             }
             return '-';
         };
-        
-        Carbon::setLocale('id');
-        $tanggal = Carbon::parse($tugasAkhir->jadwal_seminar->tanggal)->translatedFormat('l, d F Y');
-        $waktu = Carbon::parse($tugasAkhir->jadwal_seminar->jam_mulai)->format('H:i') . ' - ' . Carbon::parse($tugasAkhir->jadwal_seminar->jam_selesai)->format('H:i');
+    
         return [
             $this->no++,
             $tugasAkhir->kelas ?? '-',
@@ -118,9 +125,9 @@ class SemuaDataTaQueryExport implements FromCollection, WithHeadings, WithMappin
             $formatDosen($tugasAkhir->bimbing_uji_data, 'pembimbing2'),
             $formatDosen($tugasAkhir->bimbing_uji_data, 'pengganti1') !== '-' ? $formatDosen($tugasAkhir->bimbing_uji_data, 'pengganti1') : $formatDosen($tugasAkhir->bimbing_uji_data, 'penguji1'),
             $formatDosen($tugasAkhir->bimbing_uji_data, 'pengganti2') !== '-' ? $formatDosen($tugasAkhir->bimbing_uji_data, 'pengganti2') : $formatDosen($tugasAkhir->bimbing_uji_data, 'penguji2'),
-            $tanggal,
-            $waktu,
-            $tugasAkhir->jadwal_seminar->ruangan->nama_ruangan ?? '-',
+            $tugasAkhir->tanggal ?? '-',
+            $tugasAkhir->jam ?? '-',
+            $tugasAkhir->tempat ?? '-',
         ];
     }
 
@@ -141,7 +148,6 @@ class SemuaDataTaQueryExport implements FromCollection, WithHeadings, WithMappin
         $sheet->getColumnDimension('H')->setWidth(30);
         $sheet->getColumnDimension('I')->setWidth(30);
         $sheet->getColumnDimension('J')->setWidth(30);
-
         $sheet->getColumnDimension('K')->setWidth(30);
         $sheet->getColumnDimension('L')->setWidth(30);
         $sheet->getColumnDimension('M')->setWidth(30);

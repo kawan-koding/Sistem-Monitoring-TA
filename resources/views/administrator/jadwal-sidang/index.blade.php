@@ -39,7 +39,8 @@
                         </button>
                         <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1">
                             <a class="dropdown-item" target="_blank" href="{{ route('apps.jadwal-sidang.export', ['data' => 'belum_daftar']) }}">Belum Daftar Sidang</a>
-                            <a class="dropdown-item" target="_blank" href="{{ route('apps.jadwal-sidang.export', ['data' => 'sudah_terjadwal']) }}">Sudah Daftar Sidang</a>
+                            <a class="dropdown-item" target="_blank" href="{{ route('apps.jadwal-sidang.export', ['data' => 'sudah_daftar']) }}">Sudah Daftar Sidang</a>
+                            <a class="dropdown-item" target="_blank" href="{{ route('apps.jadwal-sidang.export', ['data' => 'sudah_terjadwal_sidang']) }}">Sudah Terjadwal Sidang</a>
                             <a class="dropdown-item" target="_blank" href="{{ route('apps.jadwal-sidang.export', ['data' => 'sudah_sidang']) }}">Telah Sidang</a>
                             <a class="dropdown-item" target="_blank" href="{{ route('apps.jadwal-sidang.export', ['data' => 'sudah_pemberkasan_sidang'])}}">Sudah Pemberkasan Sidang</a>
                             <a class="dropdown-item" target="_blank" href="{{ route('apps.jadwal-sidang.export', ['data' => 'sk_sidang'])}}">SK Sidang</a>
@@ -248,6 +249,7 @@
                                     @else
                                         <p class="fw-bold m-0">{{ $item->tugas_akhir->mahasiswa->nama_mhs }}</p>
                                     @endif
+                                        <p class="small m-0">{{ $item->tugas_akhir->mahasiswa->nim }}</p>
                                     </td>
                                 @endif
                                 <td>
@@ -381,12 +383,12 @@
                                             <button onclick="daftarSidang('{{ $item->id }}', '{{ route('apps.jadwal-sidang.register', $item->id) }}')" class="btn btn-sm btn-outline-dark"><i class="bx bx-file"></i>
                                                 Daftar
                                             </button>
-                                            @else 
-                                                @if($item->tugas_akhir->status_sidang != 'reject' && $item->tugas_akhir->status_pemberkasan != 'sudah_lengkap')    
-                                                <a href="javascript:void(0);" onclick="unggahFile('{{ $item->id }}', '{{ route('apps.jadwal-sidang.unggah-berkas', $item->id) }}')" class="btn btn-sm btn-outline-dark"><i class="bx bx-file"></i>
-                                                    Unggah
-                                                </a>
-                                                @endif
+                                        @else 
+                                        @if($item->tugas_akhir->status_sidang != 'reject' && $item->tugas_akhir->status_pemberkasan != 'sudah_lengkap')    
+                                            <a href="javascript:void(0);" onclick="unggahFile('{{ $item->id }}', '{{ route('apps.jadwal-sidang.unggah-berkas', $item->id) }}')" class="btn btn-sm btn-outline-dark"><i class="bx bx-file"></i>
+                                                Unggah
+                                            </a>
+                                            @endif
                                         @endif
                                     @endif
                                     @if(getInfoLogin()->hasRole('Admin'))

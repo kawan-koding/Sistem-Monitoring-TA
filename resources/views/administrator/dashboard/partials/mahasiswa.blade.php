@@ -67,6 +67,7 @@
         </div>
     </div> --}}
     <div class="col-md-4 col-sm-4 col-12">
+        
         <div class="card shadow-sm mb-4"
             style="border-left: 3px solid {{ is_null($tugasAkhir) ? '#b4b4b4' : ($tugasAkhir->status == 'acc' ? '#1db45c' : ($tugasAkhir->status == 'draft' || $tugasAkhir->status == 'revisi' ? '#ebe831' : '#ff5b5b')) }}">
             <div class="card-body p-3">
