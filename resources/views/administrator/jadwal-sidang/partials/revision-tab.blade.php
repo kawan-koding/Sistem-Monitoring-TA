@@ -5,7 +5,7 @@
             <p class="text-muted small m-0">Lihat uraian revisi yang telah diberikan oleh dosen penguji.</p>
         </div>
         @if (getInfoLogin()->hasRole('Mahasiswa'))
-
+        
             <div class="col-md-4 col-12 text-center">
                 <a href="{{ route('apps.jadwal-sidang.revisi', $data->id) }}" target="_blank"
                     class="btn btn-outline-dark btn-sm"><i class="bx bx-printer"></i> Cetak Lembar Revisi</a>

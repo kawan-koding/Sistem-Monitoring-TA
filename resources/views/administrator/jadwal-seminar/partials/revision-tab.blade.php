@@ -10,14 +10,12 @@
             });
             
 
-            $allValid = $revisi->every(function($rev) {
+            $allValid = !$revisi->isEmpty() && $revisi->every(function($rev) {
                 return $rev->is_valid == true && $rev->type == 'Seminar';
             });
-            
         @endphp
-        {{-- @dd($allValid) --}}
 
-        @if($allValid && $revisi->count() > 0)
+        @if($allValid)
             <a href="{{ route('apps.cetak.revisi', $data->id )}}" target="_blank" class="btn btn-outline-dark btn-sm"><i class="bx bx-printer"></i> Cetak Lembar Revisi</a>
         @endif
     </div>
