@@ -207,6 +207,7 @@ class JadwalController extends Controller
             'bimbingUji' => $bu,
         ];
 
+        // return view('administrator.template.revisi', $data);
         $pdf = Pdf::loadView('administrator.template.revisi', $data);
         $pdf->setPaper('A4', 'portrait');
         return $pdf->stream();
