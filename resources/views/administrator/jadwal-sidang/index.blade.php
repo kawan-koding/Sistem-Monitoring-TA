@@ -27,8 +27,6 @@
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             @endif
-            {{-- <a href="#" target="_blank" class="btn btn-success mb-2"><i class="far fa-file-alt"></i> Template Pendaftaran Sidang </a>
-                 <a href="#" target="_blank" class="btn btn-secondary mb-2"><i class="far fa-file-alt"></i> Template Pemberkasan Sidang </a> --}}
             <div class="d-flex flex-wrap align-items-center gap-2">
                 <a href="{{ getSetting('app_sidang_registration_template') }}" target="_blank" class="btn btn-success mb-2"><i class="far fa-file-alt"></i> Template Pendaftaran Sidang</a>
                 <a href="{{ getSetting('app_sidang_filing_template') }}" target="_blank" class="btn btn-secondary mb-2"><i class="far fa-file-alt"></i> Template Pemberkasan Sidang</a>
@@ -175,7 +173,7 @@
                     <thead>
                         <tr>
                             <th width="2%">No.</th>
-                            @if (getInfoLogin()->hasRole('Admin'))
+                            @if (getInfoLogin()->hasRole('Admin') || getInfoLogin()->hasRole('Dosen'))
                             <th>Mahasiswa</th>
                             @endif
                             <th width="40%">Judul</th>
@@ -246,11 +244,15 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    @else
-                                        <p class="fw-bold m-0">{{ $item->tugas_akhir->mahasiswa->nama_mhs }}</p>
                                     @endif
-                                        <p class="small m-0">{{ $item->tugas_akhir->mahasiswa->nim }}</p>
-                                    </td>
+                                    <p class="small m-0">{{ $item->tugas_akhir->mahasiswa->nim }}</p>
+                                </td>
+                                @elseif(getInfoLogin()->hasRole('Dosen'))
+                                <td>                                    
+                                    <span class="badge badge-soft-primary">{{ !is_null($item->tugas_akhir->mahasiswa->programStudi) ? $item->tugas_akhir->mahasiswa->programStudi->display : '' }}</span>
+                                    <p class="fw-bold m-0">{{ $item->tugas_akhir->mahasiswa->nama_mhs }}</p>
+                                    <p class="small m-0">{{ $item->tugas_akhir->mahasiswa->nim }}</p>
+                                </td>
                                 @endif
                                 <td>
                                     @if(getInfoLogin()->hasRole('Admin') || getInfoLogin()->hasRole('Mahasiswa'))
@@ -273,9 +275,6 @@
                                     <p class="m-0 text-muted small">{{ $item->tugas_akhir->topik->nama_topik }} -
                                         {{ $item->tugas_akhir->jenis_ta->nama_jenis }}</p>
                                     <span class="badge small mb-1 badge-soft-secondary">{{ isset($item->tugas_akhir) ? ($item->tugas_akhir->tipe == 'I' ? 'Individu' : 'Kelompok') : '' }}</span>
-                                    @if(getInfoLogin()->hasRole('Dosen'))
-                                        <p class="mt-2">{{ $item->tugas_akhir->mahasiswa->nama_mhs }}</p>
-                                    @endif
                                 </td>
                                 @if(getInfoLogin()->hasRole('Admin') || getInfoLogin()->hasRole('Mahasiswa'))
                                     <td>
@@ -314,7 +313,6 @@
                                         @endfor
                                         </ol>
                                         <p class="fw-bold small m-0">Pengganti</p>
-                                        {{-- @dd($item->tugas_akhir->bimbing_uji()->where('jenis', 'pengganti')->get()) --}}
                                         <ol>
                                             @for($i = 0; $i < 2; $i++)
                                                 @if($item->tugas_akhir->bimbing_uji()->where('jenis', 'pengganti')->where('urut', $i + 1)->count() > 0)
@@ -334,7 +332,6 @@
                                     </td>
                                 @endif
                                 <td>
-                                    {{-- @dd($item->tugas_akhir->sidang) --}}
                                     @if(getInfoLogin()->hasRole('Dosen'))
                                         <strong>{{ isset($item->tugas_akhir->sidang->ruangan->nama_ruangan) ? $item->tugas_akhir->sidang->ruangan->nama_ruangan : '-' }}</strong>
                                         <p class="m-0 small">Tanggal:

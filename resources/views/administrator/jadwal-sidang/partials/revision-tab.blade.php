@@ -4,12 +4,31 @@
             <h5 class="fw-bold mb-0">Lembar Revisi</h5>
             <p class="text-muted small m-0">Lihat uraian revisi yang telah diberikan oleh dosen penguji.</p>
         </div>
-        @if (getInfoLogin()->hasRole('Mahasiswa'))
-        
-            <div class="col-md-4 col-12 text-center">
-                <a href="{{ route('apps.jadwal-sidang.revisi', $data->id) }}" target="_blank"
-                    class="btn btn-outline-dark btn-sm"><i class="bx bx-printer"></i> Cetak Lembar Revisi</a>
-            </div>
+        @if (getInfoLogin()->hasRole('Mahasiswa'))        
+            @php
+                $pengganti = $data->tugas_akhir->bimbing_uji()->where('jenis', 'pengganti')->with('revisi')->get()->flatMap(function($bimbingUji) {
+                    return $bimbingUji->revisi;
+                });
+
+                if(!$pengganti->isEmpty()) {
+                    $revisi = $pengganti;
+                } else {
+                    $revisi = $data->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->with('revisi')->get()->flatMap(function($bimbingUji) {
+                        return $bimbingUji->revisi;
+                    });
+                }
+                
+                $allValid = !$revisi->isEmpty() && $revisi->every(function($rev) {
+                    return $rev->is_valid == true && $rev->type == 'Sidang';
+                });
+            @endphp
+
+            @if($allValid) 
+                <div class="col-md-4 col-12 text-center">
+                    <a href="{{ route('apps.jadwal-sidang.revisi', $data->id) }}" target="_blank"
+                        class="btn btn-outline-dark btn-sm"><i class="bx bx-printer"></i> Cetak Lembar Revisi</a>
+                </div>
+            @endif
             
         @endif
     </div>
