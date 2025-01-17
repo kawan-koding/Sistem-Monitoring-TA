@@ -172,7 +172,7 @@ class DashboardController extends Controller
 
     private function mahasiswaRole(): array
     {
-        $tugasAkhir = TugasAkhir::where('mahasiswa_id', getInfoLogin()->userable->id)->first();
+        $tugasAkhir = TugasAkhir::where('mahasiswa_id', getInfoLogin()->userable->id)->orderBy('id', 'desc')->first();
         $data = [
             'tugasAkhir' => $tugasAkhir,
             'mods' => 'dashboard',

@@ -69,19 +69,19 @@
     <div class="col-md-4 col-sm-4 col-12">
         
         <div class="card shadow-sm mb-4"
-            style="border-left: 3px solid {{ is_null($tugasAkhir) ? '#b4b4b4' : ($tugasAkhir->status == 'acc' ? '#1db45c' : ($tugasAkhir->status == 'draft' || $tugasAkhir->status == 'revisi' ? '#ebe831' : '#ff5b5b')) }}">
+            style="border-left: 3px solid {{ is_null($tugasAkhir) ? '#b4b4b4' : ($tugasAkhir->status == 'acc' ? '#1db45c' : ($tugasAkhir->status == 'draft' || $tugasAkhir->status == 'revisi' || $tugasAkhir->status == 'pengajuan ulang' ? '#ebe831' : '#ff5b5b')) }}">
             <div class="card-body p-3">
                 <div class="d-flex align-items-center justify-content-between gap-3">
                     <div style="width: 55px;height: 55px;font-size: 2rem"
-                        class="bg-soft-{{ is_null($tugasAkhir) ? 'secondary' : ($tugasAkhir->status == 'acc' ? 'success' : ($tugasAkhir->status == 'draft' || $tugasAkhir->status == 'revisi' ? 'warning' : 'danger')) }} rounded d-flex align-items-center justify-content-center text-{{ is_null($tugasAkhir) ? 'secondary' : ($tugasAkhir->status == 'acc' ? 'success' : ($tugasAkhir->status == 'draft' || $tugasAkhir->status == 'revisi' ? 'warning' : 'danger')) }}">
+                        class="bg-soft-{{ is_null($tugasAkhir) ? 'secondary' : ($tugasAkhir->status == 'acc' ? 'success' : ($tugasAkhir->status == 'draft' || $tugasAkhir->status == 'revisi' || $tugasAkhir->status == 'pengajuan ulang' ? 'warning' : 'danger')) }} rounded d-flex align-items-center justify-content-center text-{{ is_null($tugasAkhir) ? 'secondary' : ($tugasAkhir->status == 'acc' ? 'success' : ($tugasAkhir->status == 'draft' || $tugasAkhir->status == 'revisi' || $tugasAkhir->status == 'pengajuan ulang' ? 'warning' : 'danger')) }}">
                         <i
-                            class="{{ is_null($tugasAkhir) ? 'mdi mdi-alert-circle-outline' : ($tugasAkhir->status == 'acc' ? 'mdi mdi-file-document-box-check-outline' : ($tugasAkhir->status == 'draft' || $tugasAkhir->status == 'revisi' ? 'mdi mdi-calendar-clock' : 'mdi mdi-file-alert-outline')) }}"></i>
+                            class="{{ is_null($tugasAkhir) ? 'mdi mdi-alert-circle-outline' : ($tugasAkhir->status == 'acc' ? 'mdi mdi-file-document-box-check-outline' : ($tugasAkhir->status == 'draft' || $tugasAkhir->status == 'revisi' || $tugasAkhir->status == 'pengajuan ulang' ? 'mdi mdi-calendar-clock' : 'mdi mdi-file-alert-outline')) }}"></i>
                     </div>
                     <div class="col">
                         <span class="text-muted">Pengajuan TA</span>
                         <h5
-                            class="m-0 my-1 fw-bold text-{{ is_null($tugasAkhir) ? 'secondary' : ($tugasAkhir->status == 'acc' ? 'success' : ($tugasAkhir->status == 'draft' || $tugasAkhir->status == 'revisi' ? 'warning' : 'danger')) }}">
-                            {{ is_null($tugasAkhir) ? 'Tidak Ada Data' : ($tugasAkhir->status == 'acc' ? 'Sudah Disetujui' : ($tugasAkhir->status == 'draft' || $tugasAkhir->status == 'revisi' ? 'Sedang Berlangsung' : 'Ditolak/Tidak Dilanjutkan')) }}
+                            class="m-0 my-1 fw-bold text-{{ is_null($tugasAkhir) ? 'secondary' : ($tugasAkhir->status == 'acc' ? 'success' : ($tugasAkhir->status == 'draft' || $tugasAkhir->status == 'revisi' || $tugasAkhir->status == 'pengajuan ulang' ? 'warning' : 'danger')) }}">
+                            {{ is_null($tugasAkhir) ? 'Tidak Ada Data' : ($tugasAkhir->status == 'acc' ? 'Sudah Disetujui' : ($tugasAkhir->status == 'draft' || $tugasAkhir->status == 'revisi' || $tugasAkhir->status == 'pengajuan ulang' ? 'Sedang Berlangsung' : 'Ditolak/Tidak Dilanjutkan')) }}
                         </h5>
                     </div>
                 </div>
