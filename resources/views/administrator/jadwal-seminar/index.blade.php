@@ -42,7 +42,7 @@
                             <a class="dropdown-item" target="_blank"
                                 href="{{ route('apps.jadwal-seminar.export', ['type' => 'belum_terjadwal']) }}">Belum
                                 Terjadwal</a>
-                          	<a class="dropdown-item" target="_blank"
+                            <a class="dropdown-item" target="_blank"
                                 href="{{ route('apps.jadwal-seminar.export', ['type' => 'sudah_terjadwal']) }}">Sudah
                                 Terjadwal</a>
                             <a class="dropdown-item" target="_blank"
@@ -93,7 +93,9 @@
                                         <option value="semua" {{ $filter1 == 'semua' ? 'selected' : '' }}>Semua Program
                                             Studi</option>
                                         @foreach ($programStudies as $item)
-                                            <option value="{{ $item->id }}"{{ $filter1 == $item->id ? 'selected' : '' }}>{{ $item->display }}</option>
+                                            <option
+                                                value="{{ $item->id }}"{{ $filter1 == $item->id ? 'selected' : '' }}>
+                                                {{ $item->display }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -111,7 +113,8 @@
                                 </div>
                                 <div class="col-4">
                                     <select name="type" class="form-control" onchange="this.form.submit()">
-                                        <option value="semua" {{ $type == 'semua' ? 'selected' : '' }}>Semua Jenis Penyelesaian</option>
+                                        <option value="semua" {{ $type == 'semua' ? 'selected' : '' }}>Semua Jenis
+                                            Penyelesaian</option>
                                         <option value="I" {{ $type == 'I' ? 'selected' : '' }}>Individu</option>
                                         <option value="K" {{ $type == 'K' ? 'selected' : '' }}>Kelompok</option>
                                     </select>
@@ -183,47 +186,61 @@
                                 @if (getInfoLogin()->hasRole('Admin'))
                                     <td>
                                         @if (getInfoLogin()->hasRole('Admin'))
-                                            <span class="badge badge-soft-primary">{{ !is_null($item->tugas_akhir->mahasiswa->programStudi) ? $item->tugas_akhir->mahasiswa->programStudi->display : '' }}</span>
-                                            <a href="#" class="m-0" data-bs-toggle="modal" data-bs-target="#mahasiswaModal{{ $key }}">
+                                            <span
+                                                class="badge badge-soft-primary">{{ !is_null($item->tugas_akhir->mahasiswa->programStudi) ? $item->tugas_akhir->mahasiswa->programStudi->display : '' }}</span>
+                                            <a href="#" class="m-0" data-bs-toggle="modal"
+                                                data-bs-target="#mahasiswaModal{{ $key }}">
                                                 <p class="fw-bold m-0">{{ $item->tugas_akhir->mahasiswa->nama_mhs }}</p>
                                             </a>
-                                            <div class="modal fade" id="mahasiswaModal{{ $key }}" tabindex="-1" aria-labelledby="mahasiswaModalLabel{{ $key }}" aria-hidden="true">
+                                            <div class="modal fade" id="mahasiswaModal{{ $key }}"
+                                                tabindex="-1" aria-labelledby="mahasiswaModalLabel{{ $key }}"
+                                                aria-hidden="true">
                                                 <div class="modal-dialog modal-lg modal-dialog-centered">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
-                                                            <h5 class="modal-title" id="mahasiswaModalLabel{{ $key }}">Biodata Mahasiswa</h5>
-                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            <h5 class="modal-title"
+                                                                id="mahasiswaModalLabel{{ $key }}">Biodata
+                                                                Mahasiswa</h5>
+                                                            <button type="button" class="btn-close"
+                                                                data-bs-dismiss="modal" aria-label="Close"></button>
                                                         </div>
                                                         <div class="modal-body">
                                                             <div class="row">
                                                                 <div class="col-md-4 text-center">
-                                                                    <img src="{{ $item->tugas_akhir->mahasiswa->user->image == null ? 'https://ui-avatars.com/api/?background=random&name='. $item->tugas_akhir->mahasiswa->name : asset('storage/images/users/'. $item->tugas_akhir->mahasiswa->user->image) }}" alt="Foto Mahasiswa" class="img-fluid rounded">
+                                                                    <img src="{{ $item->tugas_akhir->mahasiswa->user->image == null ? 'https://ui-avatars.com/api/?background=random&name=' . $item->tugas_akhir->mahasiswa->name : asset('storage/images/users/' . $item->tugas_akhir->mahasiswa->user->image) }}"
+                                                                        alt="Foto Mahasiswa" class="img-fluid rounded">
                                                                 </div>
                                                                 <div class="col-md-8">
                                                                     <table class="table table-sm table-borderless">
                                                                         <tr>
                                                                             <th>Nama</th>
-                                                                            <td>{{ $item->tugas_akhir->mahasiswa->nama_mhs ?? '-' }}</td>
+                                                                            <td>{{ $item->tugas_akhir->mahasiswa->nama_mhs ?? '-' }}
+                                                                            </td>
                                                                         </tr>
                                                                         <tr>
                                                                             <th>NIM</th>
-                                                                            <td>{{ $item->tugas_akhir->mahasiswa->nim ?? '-' }}</td>
+                                                                            <td>{{ $item->tugas_akhir->mahasiswa->nim ?? '-' }}
+                                                                            </td>
                                                                         </tr>
                                                                         <tr>
                                                                             <th>Kelas</th>
-                                                                            <td>{{ $item->tugas_akhir->mahasiswa->kelas ?? '-' }}</td>
+                                                                            <td>{{ $item->tugas_akhir->mahasiswa->kelas ?? '-' }}
+                                                                            </td>
                                                                         </tr>
                                                                         <tr>
                                                                             <th>Prodi</th>
-                                                                            <td>{{ $item->tugas_akhir->mahasiswa->programStudi->display ?? '-' }}</td>
+                                                                            <td>{{ $item->tugas_akhir->mahasiswa->programStudi->display ?? '-' }}
+                                                                            </td>
                                                                         </tr>
                                                                         <tr>
                                                                             <th>Telepon</th>
-                                                                            <td>{{ $item->tugas_akhir->mahasiswa->telp ?? '-' }}</td>
+                                                                            <td>{{ $item->tugas_akhir->mahasiswa->telp ?? '-' }}
+                                                                            </td>
                                                                         </tr>
                                                                         <tr>
                                                                             <th>Email</th>
-                                                                            <td>{{ $item->tugas_akhir->mahasiswa->email ?? '-' }}</td>
+                                                                            <td>{{ $item->tugas_akhir->mahasiswa->email ?? '-' }}
+                                                                            </td>
                                                                         </tr>
                                                                     </table>
                                                                 </div>
@@ -254,16 +271,31 @@
                                     </td>
                                 @endif
                                 <td>
+                                    @php $ratingRecap = 0; @endphp
                                     <p class="fw-bold small m-0">Pembimbing</p>
                                     <ol>
                                         @for ($i = 0; $i < 2; $i++)
                                             @if ($item->tugas_akhir->bimbing_uji()->where('jenis', 'pembimbing')->count() > $i)
                                                 @foreach ($item->tugas_akhir->bimbing_uji as $pemb)
                                                     @if ($pemb->jenis == 'pembimbing' && $pemb->urut == 1 && $i == 0)
-                                                        <li class="small">{{ $pemb->dosen->name ?? '-' }}</li>
+                                                        @php $ratingRecap += ($pemb->penilaian->count() > 0 ? $pemb->penilaian->avg('nilai') : 0) * 0.3; @endphp
+                                                        <li class="small mb-2">
+                                                            <p class="mb-0">{{ $pemb->dosen->name ?? '-' }}</p>
+                                                            <span class="text-muted">Nilai :
+                                                                <strong>{{ number_format($pemb->penilaian->count() > 0 ? $pemb->penilaian->avg('nilai') : 0, 2, '.', ',') }}</strong>
+                                                                <span
+                                                                    style="font-size: 9px;">({{ number_format(($pemb->penilaian->count() > 0 ? $pemb->penilaian->avg('nilai') : 0) * 0.3, 2, '.', ',') }})</span></span>
+                                                        </li>
                                                     @endif
                                                     @if ($pemb->jenis == 'pembimbing' && $pemb->urut == 2 && $i == 1)
-                                                        <li class="small">{{ $pemb->dosen->name ?? '-' }}</li>
+                                                        @php $ratingRecap += ($pemb->penilaian->count() > 0 ? $pemb->penilaian->avg('nilai') : 0) * 0.3; @endphp
+                                                        <li class="small">
+                                                            <p class="mb-0">{{ $pemb->dosen->name ?? '-' }}</p>
+                                                            <span class="text-muted">Nilai :
+                                                                <strong>{{ number_format($pemb->penilaian->count() > 0 ? $pemb->penilaian->avg('nilai') : 0, 2, '.', ',') }}</strong>
+                                                                <span
+                                                                    style="font-size: 9px;">({{ number_format(($pemb->penilaian->count() > 0 ? $pemb->penilaian->avg('nilai') : 0) * 0.3, 2, '.', ',') }})</span></span>
+                                                        </li>
                                                     @endif
                                                 @endforeach
                                             @else
@@ -277,10 +309,24 @@
                                             @if ($item->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->count() > $i)
                                                 @foreach ($item->tugas_akhir->bimbing_uji as $pemb)
                                                     @if ($pemb->jenis == 'penguji' && $pemb->urut == 1 && $i == 0)
-                                                        <li class="small">{{ $pemb->dosen->name ?? '-' }}</li>
+                                                        @php $ratingRecap += ($pemb->penilaian->count() > 0 ? $pemb->penilaian->avg('nilai') : 0) * 0.2; @endphp
+                                                        <li class="small mb-2">
+                                                            <p class="mb-0">{{ $pemb->dosen->name ?? '-' }}</p>
+                                                            <span class="text-muted">Nilai :
+                                                                <strong>{{ number_format($pemb->penilaian->count() > 0 ? $pemb->penilaian->avg('nilai') : 0, 2, '.', ',') }}</strong>
+                                                                <span
+                                                                    style="font-size: 9px;">({{ number_format(($pemb->penilaian->count() > 0 ? $pemb->penilaian->avg('nilai') : 0) * 0.2, 2, '.', ',') }})</span></span>
+                                                        </li>
                                                     @endif
                                                     @if ($pemb->jenis == 'penguji' && $pemb->urut == 2 && $i == 1)
-                                                        <li class="small">{{ $pemb->dosen->name ?? '-' }}</li>
+                                                        @php $ratingRecap += ($pemb->penilaian->count() > 0 ? $pemb->penilaian->avg('nilai') : 0) * 0.2; @endphp
+                                                        <li class="small">
+                                                            <p class="mb-0">{{ $pemb->dosen->name ?? '-' }}</p>
+                                                            <span class="text-muted">Nilai :
+                                                                <strong>{{ number_format($pemb->penilaian->count() > 0 ? $pemb->penilaian->avg('nilai') : 0, 2, '.', ',') }}</strong>
+                                                                <span
+                                                                    style="font-size: 9px;">({{ number_format(($pemb->penilaian->count() > 0 ? $pemb->penilaian->avg('nilai') : 0) * 0.2, 2, '.', ',') }})</span></span>
+                                                        </li>
                                                     @endif
                                                 @endforeach
                                             @else
@@ -288,6 +334,8 @@
                                             @endif
                                         @endfor
                                     </ol>
+                                    <p class="fw-bold small m-0">Rekapitulasi Nilai :
+                                        {{ number_format($ratingRecap, 2, '.', ',') }}</p>
                                 </td>
                                 <td>
                                     <strong>{{ isset($item->ruangan->nama_ruangan) ? $item->ruangan->nama_ruangan : '-' }}</strong>
@@ -313,11 +361,15 @@
                                         @if ($item->status != 'telah_seminar')
                                             @can('update-jadwal-seminar')
                                                 <a href="{{ route('apps.jadwal-seminar.edit', ['jadwalSeminar' => $item->id]) }}"
-                                                    class="btn btn-sm btn-primary mb-2"><i class="bx bx-calendar-event"></i></a>
+                                                    class="btn btn-sm btn-primary mb-2"><i
+                                                        class="bx bx-calendar-event"></i></a>
                                             @endcan
                                         @endif
-                                        @if($item->status == "sudah_terjadwal")
-                                            <a href="javascript:void(0)" onclick="reset('{{ $item->id }}', '{{ route('apps.jadwal-seminar.reset', ['jadwalSeminar' => $item->id]) }}')" class="btn btn-sm btn-danger mb-2" title="Reset Jadwal Seminar"><i class="bx bx-reset"></i></a>
+                                        @if ($item->status == 'sudah_terjadwal')
+                                            <a href="javascript:void(0)"
+                                                onclick="reset('{{ $item->id }}', '{{ route('apps.jadwal-seminar.reset', ['jadwalSeminar' => $item->id]) }}')"
+                                                class="btn btn-sm btn-danger mb-2" title="Reset Jadwal Seminar"><i
+                                                    class="bx bx-reset"></i></a>
                                         @endif
                                         @if ($item->status == 'telah_seminar')
                                             <a href="{{ route('apps.jadwal-seminar.show', $item) }}"
@@ -336,7 +388,9 @@
                                         <a href="{{ route('apps.jadwal-seminar.detail', $item->id) }}"
                                             class="btn btn-sm btn-outline-primary my-1"><i class="bx bx-show"
                                                 title="Detail"></i></a>
-                                        @if($item->tugas_akhir->status_seminar != 'reject' && $item->tugas_akhir->status_pemberkasan != 'sudah_lengkap' || $item->tugas_akhir->status_seminar != 'reject' && is_null($item->tugas_akhir->status_sidang))
+                                        @if (
+                                            ($item->tugas_akhir->status_seminar != 'reject' && $item->tugas_akhir->status_pemberkasan != 'sudah_lengkap') ||
+                                                ($item->tugas_akhir->status_seminar != 'reject' && is_null($item->tugas_akhir->status_sidang)))
                                             <a href="javascript:void(0);"
                                                 onclick="uploadFileSeminar('{{ $item->id }}', '{{ route('apps.jadwal-seminar.unggah-berkas', $item->id) }}')"
                                                 class="btn btn-sm btn-outline-dark">
@@ -366,9 +420,9 @@
         function uploadFileSeminar(id, url) {
             $('#id_jadwal_seminar').val(id);
             $('#url_unggah_berkas').val(url);
-            $('#myModalUpload'+ id).find('form').trigger('reset');
-            $('#myModalUpload'+ id).find('form').attr("action", url);
-            $('#myModalUpload'+ id).modal('show');
+            $('#myModalUpload' + id).find('form').trigger('reset');
+            $('#myModalUpload' + id).find('form').attr("action", url);
+            $('#myModalUpload' + id).modal('show');
         }
 
         function changeFile(target) {
