@@ -46,7 +46,7 @@
             <br>
             <div class="text-end">
                 @if(!is_null($data->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->first()->revisi()->where('type', 'Seminar')->first()) && !$data->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->first()->revisi()->where('type', 'Seminar')->first()->is_valid)
-                    <a href="{{ route('apps.jadwal.revision-valid', $data->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->first()->revisi()->where('type', 'Seminar')->first()->id) }}" class="btn btn-success">Sudah Valid</a>
+                    <a href="{{ route('apps.jadwal.revision-valid', $data->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->first()->revisi()->where('type', 'Seminar')->first()->id) }}" class="btn btn-success">Sudah Revisi</a>
                 @endif
                 <button class="btn btn-primary" type="submit">Simpan</button>
             </div>
