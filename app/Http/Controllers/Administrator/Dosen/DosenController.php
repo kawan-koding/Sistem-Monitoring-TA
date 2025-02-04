@@ -28,7 +28,7 @@ class DosenController extends Controller
         $data = [
             'title' => 'Dosen',
             'mods' => 'dosen',
-            'breadscrumb' => [
+            'breadcrumbs' => [
                 [
                     'title' => 'Dashboard',
                     'url' => route('apps.dashboard')

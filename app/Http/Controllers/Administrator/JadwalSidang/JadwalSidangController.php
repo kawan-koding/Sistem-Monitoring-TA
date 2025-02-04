@@ -690,11 +690,11 @@ class JadwalSidangController extends Controller
 
         try {
             $sidang->tugas_akhir->update([
-                'status_sidang' => $request->status == 'reject' ? null : $request->status,
+                'status_sidang' => $request->status == 'repeat' ? null : $request->status,
                 'status_pemberkasan' => 'belum_lengkap',
             ]);
 
-            if($request->status == 'reject') {
+            if($request->status == 'repeat') {
                 Sidang::create([
                     'tugas_akhir_id' => $sidang->tugas_akhir_id,
                     'status' => 'sudah_daftar'
