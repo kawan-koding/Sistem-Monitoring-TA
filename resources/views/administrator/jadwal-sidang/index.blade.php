@@ -367,7 +367,7 @@
                                 <td class="mb-3 text-center">
                                     @if(getInfoLogin()->hasRole('Dosen'))
                                         <a href="{{ route('apps.jadwal-sidang.detail', $item->tugas_akhir->sidang->id) }}" class="btn btn-sm btn-outline-primary my-1" title="Detail Sidang"><i class="bx bx-clipboard" ></i></a>
-                                        @if ($item->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->where('jenis', 'pembimbing')->where('urut', 1)->count() > 0 && $item->tugas_akhir->sidang->status == 'sudah_sidang' && $item->tugas_akhir->status_sidang != 'repeat')
+                                        @if ($item->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->where('jenis', 'pembimbing')->where('urut', 1)->count() > 0 && $item->tugas_akhir->sidang->status == 'sudah_sidang' && $item->tugas_akhir->status_sidang != 'acc' && $item->tugas_akhir->status_sidang != 'revisi' && $item->tugas_akhir->status_sidang != 'repeat')
                                             <button class="btn btn-outline-warning btn-sm mb-1" type="button" data-bs-toggle="modal" data-bs-target="#myModal{{$item->id}}">Setujui?</button>
                                             @include('administrator.jadwal-sidang.partials.modal')
                                         @endif

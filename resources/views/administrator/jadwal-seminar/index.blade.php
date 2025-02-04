@@ -351,9 +351,15 @@
                                 @if (getInfoLogin()->hasRole('Admin'))
                                     <td class="text-align-center justify-content-center">
                                         <p style="white-space: nowrap"
-                                            class="font-size-12 {{ $item->tugas_akhir->status_pemberkasan == 'sudah_lengkap' || !is_null($item->tugas_akhir->status_sidang) ? 'badge badge-soft-success text-success' : 'badge badge-soft-danger text-danger' }}">
+                                            class="font-size-12 mb-0 {{ $item->tugas_akhir->status_pemberkasan == 'sudah_lengkap' || !is_null($item->tugas_akhir->status_sidang) ? 'badge badge-soft-success text-success' : 'badge badge-soft-danger text-danger' }}">
                                             {{ $item->tugas_akhir->status_pemberkasan == 'sudah_lengkap' || !is_null($item->tugas_akhir->status_sidang) ? 'Berkas sudah lengkap' : 'Berkas belum lengkap' }}
                                         </p>
+                                        @if($item->tugas_akhir->status_seminar == 'retrial')
+                                        <p style="white-space: nowrap"
+                                            class="font-size-12 badge badge-soft-warning">
+                                            Sempro Ulang
+                                        </p>
+                                        @endif
                                     </td>
                                 @endif
                                 <td class="mb-3 text-center">

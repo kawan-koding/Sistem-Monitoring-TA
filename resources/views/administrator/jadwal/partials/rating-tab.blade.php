@@ -19,18 +19,18 @@
                 </thead>
                 <tbody>
                     @if ($kategoriNilais->count() > 0)
-                        @foreach ($kategoriNilais as $item)
+                        @foreach ($kategoriNilais as $kategoriNilai)
                             <tr>
                                 <td width="25">{{ $loop->iteration }}.</td>
-                                <td>{{ $item->nama }}</td>
+                                <td>{{ $kategoriNilai->nama }}</td>
                                 <td>
-                                    <input type="text" name="nilai_{{ $item->id }}"
-                                        data-grade-display="#grade-display-{{ $item->id }}"
+                                    <input type="text" name="nilai_{{ $kategoriNilai->id }}"
+                                        data-grade-display="#grade-display-{{ $kategoriNilai->id }}"
                                         class="form-control numberOnly text-center w-25"
-                                        value="{{ $nilais->where('kategori_nilai_id', $item->id)->first()->nilai ?? '' }}">
+                                        value="{{ $nilais->where('kategori_nilai_id', $kategoriNilai->id)->first()->nilai ?? '' }}">
                                 </td>
-                                <td id="grade-display-{{ $item->id }}">
-                                    {{ grade($nilais->where('kategori_nilai_id', $item->id)->first()->nilai ?? 0) }}
+                                <td id="grade-display-{{ $kategoriNilai->id }}">
+                                    {{ grade($nilais->where('kategori_nilai_id', $kategoriNilai->id)->first()->nilai ?? 0) }}
                                 </td>
                             </tr>
                         @endforeach
@@ -88,9 +88,11 @@
                         </tr>
                     </table>
                 </div>
+                @if(is_null($item->tugas_akhir->status_seminar))
                 <div class=" col-sm-6 col-12 text-end mt-4">
                     <button type="submit" class="btn btn-primary">Simpan</button>
                 </div>
+                @endif
             </div>
         </form>
     </div>

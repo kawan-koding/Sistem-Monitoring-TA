@@ -18,6 +18,8 @@ use App\Models\KategoriNilai;
 use App\Exports\STSemproExport;
 use App\Exports\SemuaDataTaExport;
 use App\Http\Controllers\Controller;
+use App\Models\Penilaian;
+use App\Models\Revisi;
 use Illuminate\Support\Facades\File;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -267,6 +269,21 @@ class JadwalSeminarController extends Controller
                 'status' => 'sudah_terjadwal'
             ]);
             $jadwalSeminar->tugas_akhir->update(['status_seminar' => null]);
+
+            // delete penilaian
+            $rating = Penilaian::whereIn('bimbing_uji_id', $jadwalSeminar->tugas_akhir->bimbing_uji->pluck('id'));
+
+            if($rating->count() > 0) {
+                $rating->delete();
+            }
+
+            // delete revision
+            $revisi = Revisi::whereIn('bimbing_uji_id', $jadwalSeminar->tugas_akhir->bimbing_uji->pluck('id'));
+
+            if($revisi->count() > 0) {
+                $revisi->delete();
+            }
+            
             return redirect()->route('apps.jadwal-seminar')->with(['success' => 'Berhasil menyimpan data']);
         } catch (\Exception $e) {
             return redirect()->back()->with(['error' => $e->getMessage()]);

@@ -30,7 +30,7 @@
                     @endif
                     <form action="">
                         @can('create-pengajuan-tugas-akhir')
-                            @if (!$dataTA->whereNotIn('status', ['reject','cancel'])->count() > 0 || $dataTA->count() == 0)
+                            @if (!$dataTA->whereNotIn('status', ['reject','cancel'])->count() > 0 || $dataTA->count() == 0 || !$dataTA->where('status_seminar', '!=', 'reject')->count() > 0)
                                 <a href="{{ route('apps.pengajuan-ta.create') }}" class="btn btn-primary mb-2"><i class="fa fa-upload me-1"></i> Ajukan TA</a>
                             @endif
                         @endcan
@@ -155,13 +155,13 @@
                                                 </ol>
                                             </td>
                                             <td>
-                                                @if ($item->status == 'acc')
+                                                @if ($item->status == 'acc' && $item->status_seminar != 'reject' && $item->status_sidang != 'reject')
                                                     <span
                                                         class='badge sm rounded-pill badge-soft-primary font-size-11'>{{ ucfirst($item->status) }}</span>
                                                 @else
-                                                    @if ($item->status == 'reject')
+                                                    @if ($item->status == 'reject' || $item->status_seminar == 'reject' || $item->status_sidang == 'reject')
                                                         <span
-                                                            class='badge small rounded-pill badge-soft-danger font-size-11'>{{ ucfirst($item->status) }}</span>
+                                                            class='badge small rounded-pill badge-soft-danger font-size-11'>Ditolak</span>
                                                     @else
                                                         @if($item->status == 'revisi')
                                                             <span

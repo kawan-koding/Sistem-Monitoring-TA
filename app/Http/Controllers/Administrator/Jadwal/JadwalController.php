@@ -353,21 +353,28 @@ class JadwalController extends Controller
         ]);
 
         try {
-            $jadwal->tugas_akhir->update([
-                'status_seminar' => $request->status == 'reject' ? null : $request->status, 
+            $jadwal->update([
+                'status' => 'telah_seminar'
             ]);
 
-            if($request->status == 'reject') {
-                JadwalSeminar::create([
-                    'tugas_akhir_id' => $jadwal->tugas_akhir_id,
-                    'status' => 'belum_terjadwal',
+            if($request->status == 'retrial') {
+                $jadwal->update([
+                    'status' => 'belum_terjadwal'
                 ]);
-                Penilaian::whereIn('bimbing_uji_id', $jadwal->tugas_akhir->bimbing_uji->pluck('id'))->delete();
+                $jadwal->tugas_akhir->update(['status_seminar' => 'retrial']);
+
+                return redirect()->route('apps.jadwal')->with(['success' => 'Berhasil memperbarui jadwal seminar']);
+            }
+
+            if($request->status == 'reject') {
                 $jadwal->tugas_akhir->update(['status_seminar' => 'reject']);
-                $jadwal->delete();
 
                 return redirect()->route('apps.jadwal')->with(['success' => 'Berhasil menolak jadwal seminar']);
             }
+
+            $jadwal->tugas_akhir->update([
+                'status_seminar' => $request->status, 
+            ]);
 
             return redirect()->back()->with(['success' => 'Berhasil mengubah status']);
         } catch(Exception $e) {
