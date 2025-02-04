@@ -193,7 +193,7 @@
                         <label for="">Status Sidang Akhir <span class="text-danger">*</span></label><br>
                         <label for="acc{{$item->id}}" class="me-2"><input type="radio" name="status" id="acc{{$item->id}}" value="acc" {{$item->tugas_akhir->status_sidang == 'acc' ? 'checked' : ''}}> Setujui</label>
                         <label for="revisi{{$item->id}}" class="me-2"><input type="radio" name="status" id="revisi{{$item->id}}" value="revisi" {{$item->tugas_akhir->status_sidang == 'revisi' ? 'checked' : ''}}> Disetujui dengan revisi</label>
-                        <label for="reject{{$item->id}}" class="me-2"><input type="radio" name="status" id="reject{{$item->id}}" value="reject" {{$item->tugas_akhir->status_sidang == 'reject' ? 'checked' : ''}}> Ditolak</label>
+                        <label for="repeat{{$item->id}}" class="me-2"><input type="radio" name="status" id="repeat{{$item->id}}" value="repeat" {{$item->tugas_akhir->status_sidang == 'repeat' ? 'checked' : ''}}> Ditolak</label>
                     </div>
                 </div>
                 <div class="modal-footer">

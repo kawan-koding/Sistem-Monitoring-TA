@@ -8,7 +8,7 @@
     </style>
     <div class="row">
         <div class="col-md-3 col-sm-12 col-12">
-            <div class="card shadow-sm m-0 p-0 mb-3" style="position: relative;z-index: 99999!important">
+            <div class="card shadow-sm m-0 p-0 mb-3" style="position: relative;z-index: 555!important">
                 <a href="javascript:void(0)" data-toggle="tab" data-target="#revisionTab"
                     class="nav-link d-block border-start border-primary text-primary px-4 py-2 fw-bold"
                     style="border-width: 3px!important">Revisi</a>
@@ -18,6 +18,38 @@
                     class="nav-link d-block px-3 py-2">Rekapitulasi Nilai</a>
                 @endif
             </div>
+            @if (
+                    $data->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->where('jenis', 'pembimbing')->where('urut', 1)->count() > 0 &&
+                    $data->tugas_akhir->status_sidang != 'acc' &&
+                    $data->tugas_akhir->status_sidang != 'reject' &&
+                        (!is_null($data->tugas_akhir->sidang) && $data->tugas_akhir->sidang->status == 'sudah_sidang'))
+                    <button class="btn btn-primary btn-sm mb-1 w-100 mt-0" type="button" data-bs-toggle="modal" data-bs-target="#myModal{{$data->id}}">Setujui?</button>
+                    <div class="modal fade" id="myModal{{$data->id}}">
+                        <div class="modal-dialog text-start">
+                            <div class="modal-content">
+                                <form action="{{ route('apps.jadwal-sidang.update-status', $data->tugas_akhir->sidang->id) }}" method="POST">
+                                    @csrf
+                                    <div class="modal-header d-block">
+                                        <h5 class="mb-0">Update status sidang akhir</h5>
+                                        <p class="text-muted small mb-0">Berikan keputusan terkait status sidang akhir</p>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="mb-3">
+                                            <label for="">Status Sidang Akhir <span class="text-danger">*</span></label><br>
+                                            <label for="acc{{$data->id}}" class="me-2"><input type="radio" name="status" id="acc{{$data->id}}" value="acc" {{$data->tugas_akhir->status_sidang == 'acc' ? 'checked' : ''}}> Setujui</label>
+                                            <label for="revisi{{$data->id}}" class="me-2"><input type="radio" name="status" id="revisi{{$data->id}}" value="revisi" {{$data->tugas_akhir->status_sidang == 'revisi' ? 'checked' : ''}}> Disetujui dengan revisi</label>
+                                            <label for="repeat{{$data->id}}" class="me-2"><input type="radio" name="status" id="repeat{{$data->id}}" value="repeat" {{$data->tugas_akhir->status_sidang == 'repeat' ? 'checked' : ''}}> Sidang Ulang</label>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button class="btn btn-light" type="button" data-bs-dismiss="modal">Batal</button>
+                                        <button class="btn btn-primary" type="submit"><i class="bx bx-save"></i> Simpan</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                @endif
         </div>
         <div class="col-md-9 col-sm-12 col-12">
             @if(session('success'))
