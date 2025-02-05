@@ -22,7 +22,7 @@ return new class extends Migration
             $table->enum('status', ['draft', 'acc', 'reject', 'cancel', 'revisi','pengajuan ulang']);
             $table->text('catatan')->nullable();
             $table->enum('status_seminar', ['revisi', 'acc', 'reject'])->nullable();
-            $table->enum('status_sidang', ['revisi', 'acc', 'repeat'])->nullable();
+            $table->enum('status_sidang', ['revisi', 'acc', 'retrial'])->nullable();
             $table->enum('status_pemberkasan', ['belum_lengkap', 'sudah_lengkap'])->default('belum_lengkap')->nullable();
             $table->boolean('is_completed')->nullable()->default(false);
             $table->timestamps();

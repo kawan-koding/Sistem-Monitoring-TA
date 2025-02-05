@@ -28,15 +28,14 @@
                 $data->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->where('jenis', 'pembimbing')->where('urut', 1)->count() > 0 &&
                     $data->tugas_akhir->status_sidang != 'acc' &&
                     $data->tugas_akhir->status_sidang != 'revisi' &&
-                    $data->tugas_akhir->status_sidang != 'reject' &&
+                    $data->tugas_akhir->status_sidang != 'retrail' &&
                     (!is_null($data->tugas_akhir->sidang) && $data->tugas_akhir->sidang->status == 'sudah_sidang'))
                 <button class="btn btn-primary btn-sm mb-1 w-100 mt-0" type="button" data-bs-toggle="modal"
                     data-bs-target="#myModal{{ $data->id }}">Setujui?</button>
                 <div class="modal fade" id="myModal{{ $data->id }}">
                     <div class="modal-dialog text-start">
                         <div class="modal-content">
-                            <form action="{{ route('apps.jadwal-sidang.update-status', $data->tugas_akhir->sidang->id) }}"
-                                method="POST">
+                            <form action="{{ route('apps.jadwal-sidang.update-status', $data->tugas_akhir->sidang->id) }}" method="POST">
                                 @csrf
                                 <div class="modal-header d-block">
                                     <h5 class="mb-0">Update status sidang akhir</h5>
@@ -44,19 +43,12 @@
                                 </div>
                                 <div class="modal-body">
                                     <div class="mb-3">
-                                        <label for="">Status Sidang Akhir <span
-                                                class="text-danger">*</span></label><br>
-                                        <label for="acc{{ $data->id }}" class="me-2"><input type="radio"
-                                                name="status" id="acc{{ $data->id }}" value="acc"
-                                                {{ $data->tugas_akhir->status_sidang == 'acc' ? 'checked' : '' }}>
+                                        <label for="">Status Sidang Akhir <span class="text-danger">*</span></label><br>
+                                        <label for="acc{{ $data->id }}" class="me-2"><input type="radio" name="status" id="acc{{ $data->id }}" value="acc" {{ $data->tugas_akhir->status_sidang == 'acc' ? 'checked' : '' }}>
                                             Setujui</label>
-                                        <label for="revisi{{ $data->id }}" class="me-2"><input type="radio"
-                                                name="status" id="revisi{{ $data->id }}" value="revisi"
-                                                {{ $data->tugas_akhir->status_sidang == 'revisi' ? 'checked' : '' }}>
+                                        <label for="revisi{{ $data->id }}" class="me-2"><input type="radio" name="status" id="revisi{{ $data->id }}" value="revisi" {{ $data->tugas_akhir->status_sidang == 'revisi' ? 'checked' : '' }}>
                                             Disetujui dengan revisi</label>
-                                        <label for="repeat{{ $data->id }}" class="me-2"><input type="radio"
-                                                name="status" id="repeat{{ $data->id }}" value="repeat"
-                                                {{ $data->tugas_akhir->status_sidang == 'repeat' ? 'checked' : '' }}>
+                                        <label for="retrial{{ $data->id }}" class="me-2"><input type="radio" name="status" id="retrial{{ $data->id }}" value="retrial" {{ $data->tugas_akhir->status_sidang == 'retrial' ? 'checked' : '' }}>
                                             Sidang Ulang</label>
                                     </div>
                                 </div>

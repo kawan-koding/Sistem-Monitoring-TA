@@ -17,10 +17,9 @@
                         return $bimbingUji->revisi;
                     });
                 }
-                
-                $allValid = !$revisi->isEmpty() && $revisi->every(function($rev) {
-                    return $rev->is_valid == true && $rev->type == 'Sidang';
-                });
+
+                $sidang = $revisi->where('type', 'Sidang');
+                $allValid = $sidang->isNotEmpty() && $sidang->every(fn($rev) => $rev->is_valid == true);
             @endphp
 
             @if($allValid) 
@@ -72,6 +71,9 @@
             <textarea name="revisi" id="elm1">{{ !is_null($data->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->first()->revisi()->where('type', 'Sidang')->first())? $data->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->first()->revisi()->where('type', 'Sidang')->first()->catatan: '' }}</textarea>
             <br>
             <div class="text-end">
+                @if(!is_null($data->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->first()->revisi()->where('type', 'Sidang')->first()) && !$data->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->first()->revisi()->where('type', 'Sidang')->first()->is_valid)
+                    <a href="{{ route('apps.jadwal-sidang.revision-valid', $data->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->first()->revisi()->where('type', 'Sidang')->first()->id) }}" class="btn btn-success">Sudah Revisi</a>
+                @endif
                 <button class="btn btn-primary" type="submit">Simpan</button>
             </div>
         </form>

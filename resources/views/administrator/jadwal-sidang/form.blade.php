@@ -33,6 +33,10 @@
                     <form action="{{route('apps.jadwal-sidang.update', ['jadwalSidang' => $jadwalSidang->id])}}" method="post">
                         @csrf
                         <div class="mb-3">
+                            <label for="">Nama Mahasiswa<span class="text-danger"> *</span></label>
+                            <input type="text" name="name" class="form-control" value="{{ $editedData->tugas_akhir->mahasiswa->nim}} - {{ $editedData->tugas_akhir->mahasiswa->nama_mhs}}" readonly>
+                        </div>
+                        <div class="mb-3">
                             <label for="">Ruangan<span class="text-danger"> *</span></label>
                             <select name="ruangan" class="form-control">
                                 <option value="">Pilih Ruangan</option>

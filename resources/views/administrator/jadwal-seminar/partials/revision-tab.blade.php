@@ -8,11 +8,9 @@
             $revisi = $data->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->with('revisi')->get()->flatMap(function($bimbingUji) {
                 return $bimbingUji->revisi;
             });
-            
 
-            $allValid = !$revisi->isEmpty() && $revisi->every(function($rev) {
-                return $rev->is_valid == true && $rev->type == 'Seminar';
-            });
+            $revisi = $revisi->where('type', 'Seminar');
+            $allValid = $revisi->isNotEmpty() && $revisi->every(fn($rev) => $rev->is_valid == true);
         @endphp
 
         @if($allValid)

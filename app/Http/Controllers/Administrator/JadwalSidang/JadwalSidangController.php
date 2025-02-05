@@ -251,7 +251,6 @@ class JadwalSidangController extends Controller
             'jam_selesai.required' => 'Jam selesai harus diisi',
         ]);
         try {
-            // dd($request->tanggal);
             $periode = PeriodeTa::where('is_active', 1)->where('program_studi_id', $jadwalSidang->tugas_akhir->mahasiswa->program_studi_id)->first();
             if(!is_null($periode) && Carbon::createFromFormat('Y-m-d',$request->tanggal)->greaterThan(Carbon::parse($periode->akhir_sidang))){
                 return redirect()->back()->with(['error' => 'Jadwal sidang melebihi batas periode']);
@@ -282,6 +281,10 @@ class JadwalSidangController extends Controller
                 'jam_mulai' => $request->jam_mulai,
                 'jam_selesai' => $request->jam_selesai,
                 'status' => 'sudah_terjadwal'
+            ]);
+
+            $jadwalSidang->tugas_akhir->update([
+                'status_pemberkasan' => 'belum_lengkap',
             ]);
 
             if($request->has('pengganti1') && !empty($request->pengganti1)) {
@@ -689,17 +692,20 @@ class JadwalSidangController extends Controller
         ]);
 
         try {
-            $sidang->tugas_akhir->update([
-                'status_sidang' => $request->status == 'repeat' ? null : $request->status,
-                'status_pemberkasan' => 'belum_lengkap',
-            ]);
-
-            if($request->status == 'repeat') {
+            if($request->status == 'retrial') {
+                $sidang->tugas_akhir->update([
+                    'status_sidang' => 'retrial',
+                ]);
                 Sidang::create([
                     'tugas_akhir_id' => $sidang->tugas_akhir_id,
                     'status' => 'sudah_daftar'
                 ]);
                 $sidang->delete();
+                return redirect()->route('apps.jadwal-sidang')->with(['success' => 'Berhasil menolak  sidang']);
+            } else {
+                $sidang->tugas_akhir->update([
+                    'status_sidang' => $request->status,
+                ]);
             }
 
             return redirect()->back()->with(['success' => 'Berhasil mengubah status']);
@@ -914,4 +920,15 @@ class JadwalSidangController extends Controller
         // return view('administrator.template.rekapitulasi', $data);
 
     }
+
+    public function revisionValid(Revisi $revisi)
+    {
+        try {
+            $revisi->update(['is_valid' => true]);
+            return redirect()->route('apps.jadwal-sidang')->with(['success' => 'Berhasil memperbarui status revisi']);
+        } catch(Exception $e) {
+            return redirect()->back()->with(['error' => $e->getMessage()]);
+        }
+    }
+
 }

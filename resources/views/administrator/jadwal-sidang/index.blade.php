@@ -257,7 +257,7 @@
                                 <td>
                                     @if(getInfoLogin()->hasRole('Admin') || getInfoLogin()->hasRole('Mahasiswa'))
                                         @if ($item->status == 'sudah_sidang')
-                                            <span class="badge small mb-1 {{ !is_null($item->tugas_akhir->status_sidang) ? ($item->tugas_akhir->status_sidang == 'acc' ? 'badge-soft-success' : ($item->tugas_akhir->status_sidang == 'revisi' ? 'badge-soft-success' : 'badge-soft-danger')) : 'badge-soft-secondary' }}">{{ !is_null($item->tugas_akhir->status_sidang) ? ($item->tugas_akhir->status_sidang == 'acc' ? 'Disetujui' : ($item->tugas_akhir->status_sidang == 'revisi' ? 'Disetujui dengan revisi' : 'Ditolak')) : '-' }}</span>
+                                            <span class="badge small mb-1 {{ !is_null($item->tugas_akhir->status_sidang) ? ($item->tugas_akhir->status_sidang == 'acc' ? 'badge-soft-success' : ($item->tugas_akhir->status_sidang == 'revisi' ? 'badge-soft-success' : 'badge-soft-danger')) : 'badge-soft-secondary' }}">{{ !is_null($item->tugas_akhir->status_sidang) ? ($item->tugas_akhir->status_sidang == 'acc' ? 'Disetujui' : ($item->tugas_akhir->status_sidang == 'revisi' ? 'Disetujui dengan revisi' : 'Sempro Ulang')) : ($item->status == 'sudah_sidang' ? 'Tahap Diskusi' : 'Belum Sidang') }}</span>
                                         @endif
                                     @endif
                                     @if(getInfoLogin()->hasRole('Dosen'))
@@ -356,7 +356,7 @@
                                 </td>
                                 @if(getInfoLogin()->hasRole('Dosen'))
                                 <td>
-                                    <span class="badge small mb-1 {{ !is_null($item->tugas_akhir->status_sidang) ? ($item->tugas_akhir->status_sidang == 'acc' ? 'badge-soft-success' : ($item->tugas_akhir->status_sidang == 'revisi' ? 'badge-soft-success' : 'badge-soft-danger')) : 'badge-soft-secondary' }}">{{ !is_null($item->tugas_akhir->status_sidang) ? ($item->tugas_akhir->status_sidang == 'acc' ? 'Disetujui' : ($item->tugas_akhir->status_sidang == 'revisi' ? 'Disetujui dengan revisi' : 'Ditolak')) : '-' }}</span>
+                                    <span class="badge small mb-1 {{ !is_null($item->tugas_akhir->status_sidang) ? ($item->tugas_akhir->status_sidang == 'acc' ? 'badge-soft-success' : ($item->tugas_akhir->status_sidang == 'revisi' ? 'badge-soft-success' : 'badge-soft-danger')) : 'badge-soft-secondary' }}">{{ !is_null($item->tugas_akhir->status_sidang) ? ($item->tugas_akhir->status_sidang == 'acc' ? 'Disetujui' : ($item->tugas_akhir->status_sidang == 'revisi' ? 'Disetujui dengan revisi' : 'Sempro Ulang')) : '-' }}</span>
                                 </td>
                                 @endif
                                 @if (getInfoLogin()->hasRole('Admin'))
@@ -367,7 +367,7 @@
                                 <td class="mb-3 text-center">
                                     @if(getInfoLogin()->hasRole('Dosen'))
                                         <a href="{{ route('apps.jadwal-sidang.detail', $item->tugas_akhir->sidang->id) }}" class="btn btn-sm btn-outline-primary my-1" title="Detail Sidang"><i class="bx bx-clipboard" ></i></a>
-                                        @if ($item->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->where('jenis', 'pembimbing')->where('urut', 1)->count() > 0 && $item->tugas_akhir->sidang->status == 'sudah_sidang' && $item->tugas_akhir->status_sidang != 'acc' && $item->tugas_akhir->status_sidang != 'revisi' && $item->tugas_akhir->status_sidang != 'repeat')
+                                        @if ($item->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->where('jenis', 'pembimbing')->where('urut', 1)->count() > 0 && $item->tugas_akhir->sidang->status == 'sudah_sidang' && $item->tugas_akhir->status_sidang != 'acc' && $item->tugas_akhir->status_sidang != 'revisi' && $item->tugas_akhir->status_sidang != 'retrial')
                                             <button class="btn btn-outline-warning btn-sm mb-1" type="button" data-bs-toggle="modal" data-bs-target="#myModal{{$item->id}}">Setujui?</button>
                                             @include('administrator.jadwal-sidang.partials.modal')
                                         @endif

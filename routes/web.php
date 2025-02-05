@@ -295,6 +295,7 @@ Route::prefix('apps')->middleware('auth')->group(function () {
        Route::get('{sidang}/revisi', [JadwalSidangController::class, 'cetakRevisi'])->name('apps.jadwal-sidang.revisi');
        Route::get('{sidang}/nilai', [JadwalSidangController::class, 'cetakNilai'])->name('apps.jadwal-sidang.nilai');
        Route::get('{sidang}/rekapitulasi', [JadwalSidangController::class, 'cetakRekap'])->name('apps.jadwal-sidang.rekapitulasi');
+       Route::get('{revisi}/revision-valid', [JadwalSidangController::class, 'revisionValid'])->name('apps.jadwal-sidang.revision-valid');
     });
     Route::get('export-jadwal-sidang', [JadwalSidangController::class,'export'])->name('apps.jadwal-sidang.export'); 
     
