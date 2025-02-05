@@ -258,7 +258,7 @@
                                 <td>
                                     @if ($item->status == 'telah_seminar')
                                         <span
-                                            class="badge small mb-1 {{ !is_null($item->tugas_akhir->status_seminar) ? ($item->tugas_akhir->status_seminar == 'acc' ? 'badge-soft-success' : ($item->tugas_akhir->status_seminar == 'revisi' ? 'badge-soft-success' : 'badge-soft-danger')) : 'badge-soft-secondary' }}">{{ !is_null($item->tugas_akhir->status_seminar) ? ($item->tugas_akhir->status_seminar == 'acc' ? 'Disetujui' : ($item->tugas_akhir->status_seminar == 'revisi' ? 'Disetujui dengan revisi' : 'Ditolak')) : ($item->status == 'telah_seminar' ? 'Tahap Diskusi' : 'Belum Seminar') }}</span>
+                                            class="badge small mb-1 {{ !is_null($item->tugas_akhir->status_seminar) ? ($item->tugas_akhir->status_seminar == 'acc' ? 'badge-soft-success' : ($item->tugas_akhir->status_seminar == 'revisi' ? 'badge-soft-success' : 'badge-soft-danger')) : 'badge-soft-secondary' }}">{{ !is_null($item->tugas_akhir->status_seminar) ? ($item->tugas_akhir->status_seminar == 'acc' ? 'Disetujui' : ($item->tugas_akhir->status_seminar == 'revisi' ? 'Disetujui dengan revisi' : ($item->tugas_akhir->status_seminar == 'retrial' ? 'Seminar Ulang' : 'Ditolak'))) : ($item->status == 'telah_seminar' ? 'Tahap Diskusi' : 'Belum Seminar') }}</span>
                                     @endif
                                     <h5 class="font-size-14 m-0">{{ $item->tugas_akhir->judul }}</h5>
                                     <p class="m-0 text-muted small">{{ $item->tugas_akhir->topik->nama_topik }} -
@@ -388,6 +388,9 @@
                                                 class="btn btn-sm btn-outline-success mb-2" title="Validasi Berkas"><i
                                                     class="bx bx-pencil"></i></a>
                                         @endif
+                                        @if($item->status == 'telah_seminar' && $item->tugas_akhir->status_pemberkasan != 'sudah_lengkap' && is_null($item->tugas_akhir->status_sidang))
+                                            <button class="btn btn-outline-warning btn-sm mb-1" type="button" data-bs-toggle="modal" data-bs-target="#myModal">Setujui?</button>
+                                        @endif
                                     @endif
 
                                     @if (getInfoLogin()->hasRole('Mahasiswa'))
@@ -406,6 +409,7 @@
                                         @endif
                                     @endif
                                     @include('administrator.jadwal-seminar.partials.modal')
+                                    @include('administrator.jadwal.partials.modal')
                                 </td>
                             </tr>
                         @empty

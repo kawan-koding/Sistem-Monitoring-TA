@@ -88,11 +88,9 @@
                         </tr>
                     </table>
                 </div>
-                @if(is_null($item->tugas_akhir->status_seminar))
                 <div class=" col-sm-6 col-12 text-end mt-4">
                     <button type="submit" class="btn btn-primary">Simpan</button>
                 </div>
-                @endif
             </div>
         </form>
     </div>

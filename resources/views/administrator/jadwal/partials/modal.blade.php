@@ -12,7 +12,7 @@
                         <label for="">Status Seminar Proposal <span class="text-danger">*</span></label><br>
                         <label for="acc" class="me-2"><input type="radio" name="status" id="acc" value="acc" {{$item->tugas_akhir->status_seminar == 'acc' ? 'checked' : ''}}> Setujui</label>
                         <label for="revisi" class="me-2"><input type="radio" name="status" id="revisi" value="revisi" {{$item->tugas_akhir->status_seminar == 'revisi' ? 'checked' : ''}}> Disetujui dengan revisi</label>
-                        <label for="retrial" class="me-2"><input type="radio" name="status" id="retrial" value="retrial" {{$item->tugas_akhir->status_seminar == 'retrial' ? 'checked' : ''}}> Sidang Ulang</label>
+                        <label for="retrial" class="me-2"><input type="radio" name="status" id="retrial" value="retrial" {{$item->tugas_akhir->status_seminar == 'retrial' ? 'checked' : ''}}> Seminar Ulang</label>
                         <label for="reject" class="me-2"><input type="radio" name="status" id="reject" value="reject" {{$item->tugas_akhir->status_seminar == 'reject' ? 'checked' : ''}}> Ditolak</label>
                     </div>
                 </div>
