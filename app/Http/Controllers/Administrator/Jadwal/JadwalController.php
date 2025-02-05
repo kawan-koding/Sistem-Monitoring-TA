@@ -363,13 +363,13 @@ class JadwalController extends Controller
                 ]);
                 $jadwal->tugas_akhir->update(['status_seminar' => 'retrial']);
 
-                return redirect()->route('apps.jadwal')->with(['success' => 'Berhasil memperbarui jadwal seminar']);
+                return redirect()->back()->with(['success' => 'Berhasil memperbarui jadwal seminar']);
             }
 
             if($request->status == 'reject') {
                 $jadwal->tugas_akhir->update(['status_seminar' => 'reject']);
 
-                return redirect()->route('apps.jadwal')->with(['success' => 'Berhasil menolak jadwal seminar']);
+                return redirect()->back()->with(['success' => 'Berhasil menolak jadwal seminar']);
             }
 
             $jadwal->tugas_akhir->update([
