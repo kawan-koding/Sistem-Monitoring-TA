@@ -341,10 +341,10 @@ class JadwalSidangController extends Controller
         $recapPemb1 = $recapPemb1 > 0 ? $recapPemb1 / $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'pembimbing')->where('urut', 1)->first()->penilaian()->where('type', 'Sidang')->count() : 0;
         $recapPemb2 = $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'pembimbing')->where('urut', 2)->first()->penilaian()->where('type', 'Sidang')->sum('nilai');
         $recapPemb2 = $recapPemb2 > 0 ? $recapPemb2 / $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'pembimbing')->where('urut', 2)->first()->penilaian()->where('type', 'Sidang')->count() : 0;
-        $recapPenguji1 = $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 1)->first()->penilaian()->where('type', 'Sidang')->sum('nilai');
-        $recapPenguji1 = $recapPenguji1 > 0 ? $recapPenguji1 / $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 1)->first()->penilaian()->where('type', 'Sidang')->count() : 0;
-        $recapPenguji2 = $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 2)->first()->penilaian()->where('type', 'Sidang')->sum('nilai');
-        $recapPenguji2 = $recapPenguji2 > 0 ? $recapPenguji2 / $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 2)->first()->penilaian()->where('type', 'Sidang')->count() : 0;
+        $recapPenguji1 = $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'pengganti')->where('urut', 1)->count() > 0 ? $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'pengganti')->where('urut', 1)->first()->penilaian()->where('type', 'Sidang')->sum('nilai') : $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 1)->first()->penilaian()->where('type', 'Sidang')->sum('nilai');
+        $recapPenguji1 = $recapPenguji1 > 0 ? $recapPenguji1 / ($sidang->tugas_akhir->bimbing_uji()->where('jenis', 'pengganti')->where('urut', 1)->count() > 0 ? $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'pengganti')->where('urut', 1)->first()->penilaian()->where('type', 'Sidang')->count() : $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 1)->first()->penilaian()->where('type', 'Sidang')->count()) : 0;
+        $recapPenguji2 = $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'pengganti')->where('urut', 2)->count() > 0 ? $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'pengganti')->where('urut', 2)->first()->penilaian()->where('type', 'Sidang')->sum('nilai') : $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 2)->first()->penilaian()->where('type', 'Sidang')->sum('nilai');
+        $recapPenguji2 = $recapPenguji2 > 0 ? $recapPenguji2 / ($sidang->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 2)->first()->penilaian()->where('type', 'Sidang')->count() ? $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'pengganti')->where('urut', 2)->first()->penilaian()->where('type', 'Sidang')->count() : $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 2)->first()->penilaian()->where('type', 'Sidang')->count()) : 0;
 
         $data = [
             'title' => 'Jadwal Sidang',
@@ -380,10 +380,10 @@ class JadwalSidangController extends Controller
         $recapPemb1 = $recapPemb1 > 0 ? $recapPemb1 / $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'pembimbing')->where('urut', 1)->first()->penilaian()->where('type', 'Sidang')->count() : 0;
         $recapPemb2 = $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'pembimbing')->where('urut', 2)->first()->penilaian()->where('type', 'Sidang')->sum('nilai');
         $recapPemb2 = $recapPemb2 > 0 ? $recapPemb2 / $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'pembimbing')->where('urut', 2)->first()->penilaian()->where('type', 'Sidang')->count() : 0;
-        $recapPenguji1 = $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 1)->first()->penilaian()->where('type', 'Sidang')->sum('nilai');
-        $recapPenguji1 = $recapPenguji1 > 0 ? $recapPenguji1 / $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 1)->first()->penilaian()->where('type', 'Sidang')->count() : 0;
-        $recapPenguji2 = $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 2)->first()->penilaian()->where('type', 'Sidang')->sum('nilai');
-        $recapPenguji2 = $recapPenguji2 > 0 ? $recapPenguji2 / $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 2)->first()->penilaian()->where('type', 'Sidang')->count() : 0;
+        $recapPenguji1 = $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'pengganti')->where('urut', 1)->count() > 0 ? $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'pengganti')->where('urut', 1)->first()->penilaian()->where('type', 'Sidang')->sum('nilai') : $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 1)->first()->penilaian()->where('type', 'Sidang')->sum('nilai');
+        $recapPenguji1 = $recapPenguji1 > 0 ? $recapPenguji1 / ($sidang->tugas_akhir->bimbing_uji()->where('jenis', 'pengganti')->where('urut', 1)->count() > 0 ? $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'pengganti')->where('urut', 1)->first()->penilaian()->where('type', 'Sidang')->count() : $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 1)->first()->penilaian()->where('type', 'Sidang')->count()) : 0;
+        $recapPenguji2 = $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'pengganti')->where('urut', 2)->count() > 0 ? $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'pengganti')->where('urut', 2)->first()->penilaian()->where('type', 'Sidang')->sum('nilai') : $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 2)->first()->penilaian()->where('type', 'Sidang')->sum('nilai');
+        $recapPenguji2 = $recapPenguji2 > 0 ? $recapPenguji2 / ($sidang->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 2)->first()->penilaian()->where('type', 'Sidang')->count() ? $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'pengganti')->where('urut', 2)->first()->penilaian()->where('type', 'Sidang')->count() : $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 2)->first()->penilaian()->where('type', 'Sidang')->count()) : 0;
         
         $data = [
             'title' => 'Jadwal Sidang',
@@ -850,16 +850,20 @@ class JadwalSidangController extends Controller
     public function cetakRekap(Sidang $sidang)
     {
         $jdwl = Sidang::with(['tugas_akhir.bimbing_uji.revisi.bimbingUji.dosen','tugas_akhir.bimbing_uji.revisi.bimbingUji.tugas_akhir.mahasiswa'])->findOrFail($sidang->id);
-        $query = $jdwl->tugas_akhir->bimbing_uji->map(function ($bimbingUji) {
+        $bimbingUjis = $jdwl->tugas_akhir->bimbing_uji->filter(function ($item) use ($jdwl) {
+            return !($item->jenis == 'penguji' && $jdwl->tugas_akhir->bimbing_uji()->where('jenis', 'pengganti')->where('urut', $item->urut)->count() > 0);
+        })->sortBy('urut')->sortBy('jenis')->values();
+        
+        $query = $bimbingUjis->map(function ($bimbingUji) {
             $nilaiSeminar = $bimbingUji->penilaian->filter(function ($nilai) {
                 return $nilai->type == 'Sidang';
             });
             $totalNilaiAngka = $nilaiSeminar->avg('nilai');
             $totalNilaiHuruf = grade($totalNilaiAngka); 
-            $peran = '';
+            $peran = 'pengganti';
             if ($bimbingUji->jenis == 'pembimbing') {
                 $peran = 'Pembimbing ' . toRoman($bimbingUji->urut);
-            } elseif ($bimbingUji->jenis == 'penguji') {
+            } else {
                 $peran = 'Penguji ' . toRoman($bimbingUji->urut);
             }
             return [
@@ -894,6 +898,7 @@ class JadwalSidangController extends Controller
                 $totalNilaiTertimbang += $weightedValue;
             }
         }
+
         $totalNilaiHuruf = grade($totalNilai / count($rekap));
         $pemb1 = $sidang->tugas_akhir->bimbing_uji()->where('jenis','pembimbing')->where('urut', 1)->first();        
         $pemb2 = $sidang->tugas_akhir->bimbing_uji()->where('jenis','pembimbing')->where('urut', 2)->first(); 

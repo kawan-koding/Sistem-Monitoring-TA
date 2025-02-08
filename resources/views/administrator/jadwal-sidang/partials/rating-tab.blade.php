@@ -117,7 +117,7 @@
             <div class="col-12 mb-4">
                 <h5 class="mb-0 fw-bold">Lembar Penilaian</h5>
                 <strong>{{ getInfoLogin()->userable->name }}
-                    ({{ ucfirst($data->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->first()->jenis) }}
+                    ({{ ucfirst(str_replace('pengganti', 'penguji', $data->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->first()->jenis)) }}
                     {{ $data->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->first()->urut }})</strong>
                 <p class="text-muted small">Berikan nilai untuk :
                     <strong>{{ $data->tugas_akhir->mahasiswa->nama_mhs }}</strong></p>
