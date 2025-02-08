@@ -282,11 +282,15 @@ class JadwalSidangController extends Controller
                 'jam_selesai' => $request->jam_selesai,
                 'status' => 'sudah_terjadwal'
             ]);
-
-            $jadwalSidang->tugas_akhir->update([
-                'status_pemberkasan' => 'belum_lengkap',
-            ]);
-
+            $jadwalSidang->tugas_akhir->update(['status_sidang' => null,'status_pemberkasan' => 'belum_lengkap']);
+            $rating = Penilaian::whereIn('bimbing_uji_id', $jadwalSidang->tugas_akhir->bimbing_uji->pluck('id'));
+            if($rating->count() > 0) {
+                $rating->delete();
+            }
+            $revisi = Revisi::whereIn('bimbing_uji_id', $jadwalSidang->tugas_akhir->bimbing_uji->pluck('id'));
+            if($revisi->count() > 0) {
+                $revisi->delete();
+            }
             if($request->has('pengganti1') && !empty($request->pengganti1)) {
                 $cek = BimbingUji::where('tugas_akhir_id', $jadwalSidang->tugas_akhir_id)->where('jenis', 'pengganti')->where('urut', 1);
                 if($cek->count() > 0) {

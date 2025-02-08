@@ -6,20 +6,13 @@
         </div>
         @if (getInfoLogin()->hasRole('Mahasiswa'))        
             @php
-                $pengganti = $data->tugas_akhir->bimbing_uji()->where('jenis', 'pengganti')->with('revisi')->get()->flatMap(function($bimbingUji) {
-                    return $bimbingUji->revisi;
-                });
-
-                if(!$pengganti->isEmpty()) {
-                    $revisi = $pengganti;
-                } else {
-                    $revisi = $data->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->with('revisi')->get()->flatMap(function($bimbingUji) {
-                        return $bimbingUji->revisi;
-                    });
-                }
-
-                $sidang = $revisi->where('type', 'Sidang');
-                $allValid = $sidang->isNotEmpty() && $sidang->every(fn($rev) => $rev->is_valid == true);
+                $penguji1 = $data->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 1)->with('revisi')->first();
+                $penguji2 = $data->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 2)->with('revisi')->first();
+                $pengganti1 = $data->tugas_akhir->bimbing_uji()->where('jenis', 'pengganti')->where('urut', 1)->with('revisi')->first();
+                $pengganti2 = $data->tugas_akhir->bimbing_uji()->where('jenis', 'pengganti')->where('urut', 2)->with('revisi')->first();
+                $revisi1 = optional($pengganti1 ?? $penguji1)->revisi->where('type', 'Sidang')->first();
+                $revisi2 = optional($pengganti2 ?? $penguji2)->revisi->where('type', 'Sidang')->first();
+                $allValid = collect([$revisi1, $revisi2])->filter()->every(fn($rev) => $rev->is_valid == true);
             @endphp
 
             @if($allValid) 
