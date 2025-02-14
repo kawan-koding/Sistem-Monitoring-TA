@@ -278,11 +278,11 @@ class JadwalSeminarController extends Controller
             }
 
             // delete revision
-            $revisi = Revisi::whereIn('bimbing_uji_id', $jadwalSeminar->tugas_akhir->bimbing_uji->pluck('id'));
+            // $revisi = Revisi::whereIn('bimbing_uji_id', $jadwalSeminar->tugas_akhir->bimbing_uji->pluck('id'));
 
-            if($revisi->count() > 0) {
-                $revisi->delete();
-            }
+            // if($revisi->count() > 0) {
+            //     $revisi->delete();
+            // }
             
             return redirect()->route('apps.jadwal-seminar')->with(['success' => 'Berhasil menyimpan data']);
         } catch (\Exception $e) {

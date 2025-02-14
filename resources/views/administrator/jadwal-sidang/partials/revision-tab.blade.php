@@ -45,6 +45,11 @@
                             ? '-'
                             : $item->revisi()->where('type', 'Sidang')->first()->catatan !!}
                     </td>
+                    <td>
+                        @if(!is_null($item->revisi()->where('type', 'Sidang')->first()) && !$item->revisi()->where('type', 'Sidang')->first()->is_mentor_validation)
+                        <a href="{{ route('apps.jadwal-sidang.mentor-validation', $data->id) }}"
+                            class="btn btn-outline-primary btn-sm"><i class="bx bx-check"></i> Validasi Revisi</a>
+                    </td>
                 </tr>
             @endforeach
         </tbody>
@@ -64,7 +69,7 @@
             <textarea name="revisi" id="elm1">{{ !is_null($data->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->first()->revisi()->where('type', 'Sidang')->first())? $data->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->first()->revisi()->where('type', 'Sidang')->first()->catatan: '' }}</textarea>
             <br>
             <div class="text-end">
-                @if(!is_null($data->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->first()->revisi()->where('type', 'Sidang')->first()) && !$data->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->first()->revisi()->where('type', 'Sidang')->first()->is_valid)
+                @if(!is_null($data->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->first()->revisi()->where('type', 'Sidang')->first()) && $data->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->first()->revisi()->where('type', 'Sidang')->first()->is_mentor_validation && !$data->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->first()->revisi()->where('type', 'Sidang')->first()->is_valid)
                     <a href="{{ route('apps.jadwal-sidang.revision-valid', $data->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->first()->revisi()->where('type', 'Sidang')->first()->id) }}" class="btn btn-success">Sudah Revisi</a>
                 @endif
                 <button class="btn btn-primary" type="submit">Simpan</button>

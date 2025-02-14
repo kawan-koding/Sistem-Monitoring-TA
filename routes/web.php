@@ -260,6 +260,7 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::post('{jadwal}/nilai',[JadwalController::class, 'nilai'])->name('apps.jadwal.nilai');
         Route::post('{jadwal}/update-status',[JadwalController::class, 'updateStatus'])->name('apps.jadwal.update-status');
         Route::get('{revisi}/revision-valid', [JadwalController::class, 'revisionValid'])->name('apps.jadwal.revision-valid');
+        Route::get('{revisi}/mentor-validation', [JadwalController::class, 'mentorValidation'])->name('apps.jadwal.mentor-validation');
     });
 
     Route::prefix('cetak')->group( function(){
@@ -296,6 +297,7 @@ Route::prefix('apps')->middleware('auth')->group(function () {
        Route::get('{sidang}/nilai', [JadwalSidangController::class, 'cetakNilai'])->name('apps.jadwal-sidang.nilai');
        Route::get('{sidang}/rekapitulasi', [JadwalSidangController::class, 'cetakRekap'])->name('apps.jadwal-sidang.rekapitulasi');
        Route::get('{revisi}/revision-valid', [JadwalSidangController::class, 'revisionValid'])->name('apps.jadwal-sidang.revision-valid');
+       Route::get('{revisi}/mentor-validation', [JadwalSidangController::class, 'mentorValidation'])->name('apps.jadwal-sidang.mentor-validation');
     });
     Route::get('export-jadwal-sidang', [JadwalSidangController::class,'export'])->name('apps.jadwal-sidang.export'); 
     
