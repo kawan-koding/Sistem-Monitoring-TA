@@ -287,10 +287,13 @@ class JadwalSidangController extends Controller
             if($rating->count() > 0) {
                 $rating->delete();
             }
-            $revisi = Revisi::whereIn('bimbing_uji_id', $jadwalSidang->tugas_akhir->bimbing_uji->pluck('id'));
-            if($revisi->count() > 0) {
-                $revisi->delete();
-            }
+
+            // delete revisi
+            // $revisi = Revisi::whereIn('bimbing_uji_id', $jadwalSidang->tugas_akhir->bimbing_uji->pluck('id'));
+            // if($revisi->count() > 0) {
+            //     $revisi->delete();
+            // }
+            
             if($request->has('pengganti1') && !empty($request->pengganti1)) {
                 $cek = BimbingUji::where('tugas_akhir_id', $jadwalSidang->tugas_akhir_id)->where('jenis', 'pengganti')->where('urut', 1);
                 if($cek->count() > 0) {

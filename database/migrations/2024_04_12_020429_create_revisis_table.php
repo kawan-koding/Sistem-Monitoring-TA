@@ -17,6 +17,7 @@ return new class extends Migration
             $table->enum('type',['Seminar','Sidang']);
             $table->text('catatan')->nullable();
             $table->boolean('is_valid')->default(false);
+            $table->boolean('is_mentor_validation')->default(false);
             $table->timestamps();
         });
     }
