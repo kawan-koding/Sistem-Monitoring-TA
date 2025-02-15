@@ -940,4 +940,14 @@ class JadwalSidangController extends Controller
         }
     }
 
+    public function mentorValidation(Revisi $revisi)
+    {
+        try {
+            $revisi->update(['is_mentor_validation' => true]);
+            return redirect()->back()->with(['success' => 'Berhasil memperbarui status revisi']);
+        } catch(Exception $e) {
+            return redirect()->back()->with(['error' => $e->getMessage()]);
+        }
+    }
+
 }
