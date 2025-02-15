@@ -39,81 +39,43 @@ class SKSidangAkhirQueryExport implements FromCollection, WithHeadings, WithMapp
         $tugasAkhirData = collect();
         foreach($mahasiswa as $mhs) {
             $tugasAkhir = TugasAkhir::with(['mahasiswa','bimbing_uji'])->whereMahasiswaId($mhs->id)->wherePeriodeTaId($this->periodeId)->whereIn('status', ['acc', 'draft','pengajuan ulang'])->first();
-
+            dd($tugasAkhir);
             if($tugasAkhir) {
                 $bimbingUjiData = $tugasAkhir->bimbing_uji->mapWithKeys( function($item) {
                     return [ $item->jenis . $item->urut => $item->dosen->name ?? '-' ];
                 });
-                $nilai = $tugasAkhir->bimbing_uji->map(function ($bimbingUji) {
-                    $nilaiSidang = $bimbingUji->penilaian->filter(function ($nilai) {
-                        return $nilai->type == 'Sidang';
-                    });
-                    $totalNilaiAngka = $nilaiSidang->avg('nilai');
+                $nilai = $tugasAkhir->bimbing_uji->map(function ($bimbingUjiData) {
+                    // $nilaiSidang = $bimbingUjiData->penilaian->filter(function ($nilai) {
+                    //     return $nilai->type == 'Sidang';
+                    // });
+                    // $totalNilaiAngka = $nilaiSidang->avg('nilai');
+                    // $totalNilaiHuruf = grade($totalNilaiAngka); 
+                    // if ($bimbingUji->jenis == 'pembimbing') {
+                    //     $peran = 'Pembimbing ' . toRoman($bimbingUji->urut);
+                    // } else {
+                    //     $peran = 'Penguji ' . toRoman($bimbingUji->urut);
+                    // }
                 });
 
-                // $nilai = $tugasAkhir->bimbing_uji->map(function ($bimbingUji) {
-                //     $nilaiSeminar = $bimbingUji->penilaian->filter(function ($nilai) {
-                //         return $nilai->type == 'Sidang';
-                //     });
-                //     $totalNilaiAngka = $nilaiSeminar->avg('nilai');
-                //     $totalNilaiHuruf = grade($totalNilaiAngka); 
-                //     $peran = '';
-                //     if ($bimbingUji->jenis == 'pembimbing') {
-                //         $peran = 'Pembimbing ' . toRoman($bimbingUji->urut);
-                //     } elseif ($bimbingUji->jenis == 'penguji') {
-                //         $peran = 'Penguji ' . toRoman($bimbingUji->urut);
-                //     }
-                //     return [
-                //         'peran' => $peran,
-                //         'dosen' => $bimbingUji->dosen,
-                //         'nilai' => number_format($totalNilaiAngka, 2),
-                //     ];        
-                // })->toArray();
-                
-                // $weights = [
-                //     'Pembimbing I' => 0.30,
-                //     'Pembimbing II' => 0.30,
-                //     'Penguji I' => 0.20,
-                //     'Penguji II' => 0.20,
-                // ];
-
-                // $rekap = [];
-                // $totalNilai = 0;
-                // $totalNilaiTertimbang = 0;
-
-                // foreach ($nilai as $item) {
-                //     $peran = $item['peran'];
-                //     if (isset($weights[$peran])) {
-                //         $weightedValue = $weights[$peran] * $item['nilai'];
-                //         $rekap[] = [
-                //             'penilai' => $peran,
-                //             'nilai' => number_format($item['nilai'], 2),
-                //             'persentase' => ($weights[$peran] * 100) . '% X ' . number_format($item['nilai'], 2) . ' = ' . number_format($weightedValue, 2),
-                //         ];
-
-                //         $totalNilai += $item['nilai'];
-                //         $totalNilaiTertimbang += $weightedValue;
-                //     }
-                // }
-                // $totalNilaiHuruf = grade($totalNilai / count($rekap));
-                
                 $tugasAkhirData->push([
-                    'mahasiswa' => $mhs,
-                    'tugasAkhir' => $tugasAkhir,
-                    'bimbingUji' => $bimbingUjiData,
+                        'mahasiswa' => $mhs,
+                        'tugasAkhir' => $tugasAkhir,
+                        'bimbingUji' => $bimbingUjiData,
+                        'nilai' => $nilai,
                     // 'sidang' => $tugasAkhir->sidang,
-                    // 'nilai' => $nilai,
                 ]);
             } else {
-                $tugasAkhirData->push([
-                    'mahasiswa' => $mhs,
-                    'tugasAkhir' => $tugasAkhir,
-                    'bimbingUji' => [],
-                    'sidang' => $tugasAkhir->sidang,
-                    'nilai' => [],
-                ]);
+                // $tugasAkhirData->push([
+                //     'mahasiswa' => $mhs,
+                //     'tugasAkhir' => $tugasAkhir,
+                //     'bimbingUji' => [],
+                //     'sidang' => [],
+                //     'nilai' => [],
+                // ]);
             }
         }
+        dd($tugasAkhirData[10]);
+        // dd($tugasAkhirData->firstWhere('mahasiswa.nama_mhs', 'Tri Ayuk Lestari'));
         return $tugasAkhirData;
     }
 

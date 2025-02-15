@@ -267,8 +267,7 @@
                                         class="badge small mb-1 badge-soft-secondary">{{ isset($item->tugas_akhir) ? ($item->tugas_akhir->tipe == 'I' ? 'Individu' : 'Kelompok') : '' }}</span>
                                 </td>
                                 @if (getInfoLogin()->hasRole('Admin'))
-                                    <td>{{ !is_null($item->tugas_akhir->periode_ta) ? $item->tugas_akhir->periode_ta->nama : '-' }}
-                                    </td>
+                                    <td>{{ !is_null($item->tugas_akhir->periode_ta) ? $item->tugas_akhir->periode_ta->nama : '-' }}</td>
                                 @endif
                                 <td>
                                     @php $ratingRecap = 0; @endphp

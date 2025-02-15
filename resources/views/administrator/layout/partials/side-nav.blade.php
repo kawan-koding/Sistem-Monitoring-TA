@@ -118,8 +118,8 @@
                 </li>
                 @endcan
 
-                @if (in_array(session('switchRoles'), ['Admin','Developer','Kajur','Kaprodi']))  
-                    @canany(['read-mahasiswa', 'read-dosen', 'read-ruangan', 'read-topik', 'read-topik'])
+                @if (in_array(session('switchRoles'), ['Admin','Developer','Kajur','Kaprodi','Teknisi']))  
+                    @canany(['read-mahasiswa', 'read-dosen', 'read-ruangan', 'read-topik', 'read-topik', 'read-jurusan', 'read-program-studi', 'read-jenis', 'read-kuota', 'read-kategori-nilai', 'read-jenis-dokumen'])
                     <li>
                         <a href="javascript: void(0);" class="has-arrow waves-effect">
                             <i class="mdi mdi-inbox-full"></i>
@@ -201,7 +201,7 @@
                     @endcanany
                 @endif
 
-                @if (in_array(session('switchRoles'), ['Admin','Developer'])) 
+                @if (in_array(session('switchRoles'), ['Admin','Developer','Teknisi'])) 
                     @canany(['read-users', 'read-roles'])
                         <li>
                         <a href="javascript: void(0);" class="has-arrow waves-effect">

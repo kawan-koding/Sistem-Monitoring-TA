@@ -70,6 +70,19 @@
             </div>
             @endif
 
+            @if (in_array('Teknisi', $roles)) 
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                      <i class="fas fa-code card-icon"></i>
+                      <h5 class="card-title mt-3">Teknisi</h5>
+                      <p class="card-text">Masuk sebagai teknisi.</p>
+                      <a href="{{ route('apps.switcher', ['role' => 'Teknisi']) }}" class="btn btn-primary">Masuk</a>
+                    </div>
+                </div>
+            </div>
+            @endif
+
             @if (in_array('Developer', $roles)) 
             <div class="col-lg-4">
                 <div class="card">

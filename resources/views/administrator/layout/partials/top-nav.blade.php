@@ -19,7 +19,7 @@
                             </button>
                             <div class="dropdown-menu dropdown-menu-end">
                                 <!-- item-->
-                                @if(!getInfoLogin()->hasAnyRole(['Admin', 'Developer']))
+                                @if(!getInfoLogin()->hasAnyRole(['Admin', 'Developer','Teknisi']))
                                 <a class="dropdown-item" href="{{route('apps.profile')}}"><i class="bx bx-user font-size-16 align-middle me-1"></i>
                                     Profile</a>
                                 @endif

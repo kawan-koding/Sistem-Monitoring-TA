@@ -22,7 +22,7 @@ class DashboardController extends Controller
     {
         $dataRole = [];
 
-        if (session('switchRoles') == 'Admin') {
+        if (in_array(session('switchRoles'), ['Admin','Developer','Teknisi'])) {
             $dataRole = $this->adminRole();
         }
 

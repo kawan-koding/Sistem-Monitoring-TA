@@ -19,6 +19,7 @@ class UserController extends Controller
         $users = User::with(['roles'])->whereHas('roles', function($q) {
             $q->whereNotIn('name', ['Developer']);
         })->get();
+        // $users = User::all();
         $roles = Role::whereNotIn('name', ['Developer'])->get();
         
         $data = [

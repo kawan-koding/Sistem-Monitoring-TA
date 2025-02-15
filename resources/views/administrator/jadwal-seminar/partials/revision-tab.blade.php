@@ -33,6 +33,13 @@
                 <td style="white-space: nowrap">
                     <strong>{{ $item->dosen->name }}</strong>
                     <p class="m-0 text-muted small">Penguji {{ $item->urut }}</p>
+                    @php
+                        $revisi = $item->revisi()->where('type', 'Seminar')->first();
+                    @endphp
+                    <span class="badge small {{ isset($revisi->is_valid) ? ($revisi->is_valid ? 'badge-soft-success' : 'badge-soft-danger') : 'badge-soft-secondary' }} ">
+                        {{ isset($revisi->is_valid) ? ($revisi->is_valid ? 'Sudah Divalidasi' : 'Belum Divalidasi') : '-' }}
+                    </span>
+
                 </td>
                 <td>
                     {!! is_null($item->revisi()->where('type', 'Seminar')->first())
