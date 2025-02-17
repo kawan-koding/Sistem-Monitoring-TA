@@ -5,8 +5,9 @@ function tambahData() {
     $('#username').val('')
     $('#email').val('')
     $('#password').val('')
-    $('#confirm-_').val('')
-    $('#roles').val('')
+    $('#confirm_password').val('')
+    $('#roles').find('option[value=""]').remove();
+    $('#roles').val([]).trigger('change');
     $('#myModal').modal('show')
 }
 

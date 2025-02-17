@@ -224,8 +224,9 @@
                                                 isset($item->tugas_akhir->status_sidang) ? 
                                                     (($item->tugas_akhir->status_sidang == 'acc' || $item->tugas_akhir->status_sidang == 'revisi') && $item->tugas_akhir->sudah_pemberkasan == 'sudah_lengkap' && $item->tugas_akhir->sidang->status == 'sudah_sidang' ? 'Sudah Pemberkasan Sidang' : 
                                                     (($item->tugas_akhir->status_sidang == 'acc' || $item->tugas_akhir->status_sidang == 'revisi') && $item->tugas_akhir->sudah_pemberkasan == 'belum_lengkap' && $item->tugas_akhir->sidang->status == 'sudah_sidang' ? 'Proses Revisi Laporan' : 
-                                                    (is_null($item->tugas_akhir->status_sidang) && $item->tugas_akhir->sidang->status == 'sudah_terjadwal' ? 'Sudah Terjadwal Sidang' : 
-                                                    ($item->tugas_akhir->status_sidang == 'retrail'? 'Sidang Ulang' : '-'))))
+                                                    (is_null($item->tugas_akhir->status_sidang) && $item->tugas_akhir->sidang->status == 'sudah_terjadwal' ? 'Sudah Terjadwal Sidang' :
+                                                    ($item->tugas_akhir->sidang->status == 'sudah_daftar' ? 'Sudah Daftar Sidang' : 
+                                                    ($item->tugas_akhir->status_sidang == 'retrail' ? 'Sidang Ulang' : '-')))))
                                                 : (isset($item->tugas_akhir->status_seminar) ? 
                                                     (($item->tugas_akhir->status_seminar == 'acc' || $item->tugas_akhir->status_seminar == 'revisi') && $item->tugas_akhir->jadwal_seminar->status == 'telah_seminar' && $item->tugas_akhir->status_pemberkasan == 'sudah_lengkap' && is_null($item->tugas_akhir->status_sidang) ? 'Sudah Pemberkasan Sempro' : 
                                                     (($item->tugas_akhir->status_seminar == 'acc' || $item->tugas_akhir->status_seminar == 'revisi') && $item->tugas_akhir->jadwal_seminar->status == 'telah_seminar' && $item->tugas_akhir->status_pemberkasan == 'belum_lengkap' && is_null($item->tugas_akhir->status_sidang) ? 'Proses Revisi Proposal' : 
