@@ -39,6 +39,9 @@
                     <td style="white-space: nowrap">
                         <strong>{{ $item->dosen->name }}</strong>
                         <p class="m-0 text-muted small">Penguji {{ $item->urut }}</p>
+                        @if($item->revisi()->where('type', 'Sidang')->first()->is_mentor_validation)
+                            <span class="badge badge-soft-primary text-primary small">Sudah Divalidasi</span>
+                        @endif
                     </td>
                     @php
                         $revisi = $item->revisi()->where('type', 'Sidang')->first();
@@ -52,8 +55,11 @@
                             : $item->revisi()->where('type', 'Sidang')->first()->catatan !!}
                     </td>
                     <td>
-                        @if(!is_null($item->revisi()->where('type', 'Sidang')->first()) && !$item->revisi()->where('type', 'Sidang')->first()->is_mentor_validation)
-                        <a href="{{ route('apps.jadwal-sidang.mentor-validation', $data->id) }}"
+                        @if($item->revisi()->where('type', 'Seminar')->first()->is_mentor_validation)
+                            <button class="btn btn-success btn-small">Sudah Divalidasi</button>
+                        @endif
+                        @if(!is_null($item->revisi()->where('type', 'Sidang')->first()) && !$item->revisidata()->where('type', 'Sidang')->first()->is_mentor_validation)
+                        <a href="{{ route('apps.jadwal-sidang.mentor-validation', $item->revisi()->where('type', 'Sidang')->first()->id) }}"
                             class="btn btn-outline-primary btn-sm"><i class="bx bx-check"></i> Validasi Revisi</a>
                     </td>
                 </tr>
@@ -66,7 +72,7 @@
         <strong class="mb-0">{{ getInfoLogin()->userable->name }} (Penguji
             {{ $data->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->first()->urut }})</strong>
         <p class="text-muted small m-0">Tuliskan revisi untuk:
-            <strong>{{ $data->tugas_akhir->mahasiswa->nama_mhs }}</strong></p>
+            <strong>{{ $data->tugas_akhir->mahasiswa->nama_mhs }}</strong> @if(!$data->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->first()->revisi()->where('type', 'Sidang')->first()->is_mentor_validation) <span class="badge badge-soft-secondary">Belum divalidasi pembimbing</span> @elseif($data->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->first()->revisi()->where('type', 'Sidang')->first()->is_valid) <span class="badge badge-soft-success">Sudah Revisi</span> @endif</p>
     </div>
     <hr>
     <div class="">
