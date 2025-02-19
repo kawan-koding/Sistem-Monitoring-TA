@@ -18,6 +18,11 @@ class Mahasiswa extends Model
         return $this->belongsTo(ProgramStudi::class);
     }
 
+    public function tugas_akhir()
+    {
+        return $this->hasMany(TugasAkhir::class);
+    }
+
     public function periodeTa()
     {
         return $this->belongsTo(PeriodeTa::class);
