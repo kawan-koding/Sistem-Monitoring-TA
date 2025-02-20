@@ -30,7 +30,7 @@
                             : $item->revisi()->where('type', 'Seminar')->first()->catatan !!}
                     </td>
                     <td>
-                        @if($item->revisi()->where('type', 'Seminar')->first()->is_mentor_validation)
+                        @if(!is_null($item->revisi()->where('type', 'Seminar')->first()) && $item->revisi()->where('type', 'Seminar')->first()->is_mentor_validation)
                             <button class="btn btn-success btn-small">Sudah Divalidasi</button>
                         @endif
                         @if(!is_null($item->revisi()->where('type', 'Seminar')->first()) && !$item->revisi()->where('type', 'Seminar')->first()->is_mentor_validation)
