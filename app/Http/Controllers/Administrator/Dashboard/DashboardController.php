@@ -24,6 +24,7 @@ class DashboardController extends Controller
 
         if (in_array(session('switchRoles'), ['Admin','Developer','Teknisi'])) {
             $dataRole = $this->adminRole();
+            dd($dataRole);
         }
 
         if (session('switchRoles') == 'Mahasiswa') {
@@ -160,6 +161,8 @@ class DashboardController extends Controller
             'mhsCount' => Mahasiswa::all()->count(),
             'taCount' => TugasAkhir::all()->count(),
             'topikCount' => TugasAkhir::whereStatus('draft')->count(),
+            'totalTa' => TugasAkhir::whereIn('status', ['reject'])->count(),
+            'mhsBelumDaftarTa' => Mahasiswa::whereDoesntHave('tugas_akhir')->count(),
             'mhsBelumSeminarCount' => TugasAkhir::where('status', 'acc')->whereNull(['status_seminar', 'status_sidang'])->count(),
             'mhsSudahSeminarCount' => TugasAkhir::where('status', 'acc')->whereNotNull('status_seminar')->count(),
             'mhsBelumSidangCount' => TugasAkhir::where('status', 'acc')->whereNull('status_sidang')->count(),

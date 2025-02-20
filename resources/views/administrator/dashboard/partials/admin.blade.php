@@ -104,7 +104,31 @@
             </div>
             <div class="card-body">
                 <h3 class="mb-2">{{ $mhsBelumSeminarCount }} </h3>
+                <p class="mb-0">Total Mahasiswa Belum Mengajukan</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6 col-12">
+        <div class="card shadow-sm border-primary text-white"
+        style="border-width: 0px 0px 0px 3px;background: linear-gradient(to right, #3789f5, #222faa);">
+        <div class="card-icon">
+            <i class="bx bx-user-check"></i>
+        </div>
+            <div class="card-body">
+                <h3 class="mb-2">{{ $mhsBelumSidangCount }} </h3>
                 <p class="mb-0">Total Mahasiswa Belum Seminar</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6 col-12">
+        <div class="card shadow-sm border-primary text-white"
+            style="border-width: 0px 0px 0px 3px;background: linear-gradient(to right, #3789f5, #222faa);">
+            <div class="card-icon">
+                <i class="bx bx-user-pin"></i>
+            </div>
+            <div class="card-body">
+                <h3 class="mb-2">{{ $mhsSudahSeminarCount }} </h3>
+                <p class="mb-0">Total Mahasiswa Sudah Seminar</p>
             </div>
         </div>
     </div>
@@ -115,8 +139,21 @@
                 <i class="bx bx-user-check"></i>
             </div>
             <div class="card-body">
-                <h3 class="mb-2">{{ $mhsSudahSeminarCount }} </h3>
-                <p class="mb-0">Total Mahasiswa Sudah Seminar</p>
+                <h3 class="mb-2">{{ $mhsSudahSidangCount }} </h3>
+                <p class="mb-0">Total Mahasiswa Sudah Pemberkasan Seminar</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 col-sm-6 col-12">
+        <div class="card shadow-sm border-primary text-white"
+            style="border-width: 0px 0px 0px 3px;background: linear-gradient(to right, #3789f5, #222faa);">
+            <div class="card-icon">
+                <i class="bx bx-user-check"></i>
+            </div>
+            <div class="card-body">
+                <h3 class="mb-2">{{ $mhsBelumSeminarCount }} </h3>
+                <p class="mb-0">Total Mahasiswa Daftar Sidang</p>
             </div>
         </div>
     </div>
@@ -139,11 +176,24 @@
                 <i class="bx bx-user-check"></i>
             </div>
             <div class="card-body">
-                <h3 class="mb-2">{{ $mhsSudahSidangCount }} </h3>
+                <h3 class="mb-2">{{ $mhsBelumSidangCount }} </h3>
                 <p class="mb-0">Total Mahasiswa Sudah Sidang</p>
             </div>
         </div>
     </div>
+    <div class="col-md-3 col-sm-6 col-12">
+        <div class="card shadow-sm border-primary text-white"
+            style="border-width: 0px 0px 0px 3px;background: linear-gradient(to right, #3789f5, #222faa);">
+            <div class="card-icon">
+                <i class="bx bx-user-pin"></i>
+            </div>
+            <div class="card-body">
+                <h3 class="mb-2">{{ $mhsSudahSidangCount }} </h3>
+                <p class="mb-0">Total Mahasiswa Sudah Pemberkasan Sidang</p>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <div class="row">
@@ -164,47 +214,3 @@
         </div>
     </div>
 </div>
-{{-- 
-<div class="card shadow-sm mb-3">
-    <div class="d-flex border-bottom">
-        <div class="px-4 d-flex align-items-center border"><i class="fa fa-chevron-left"></i></div>
-        <div class="date-area" data-role="resizable-container">
-            <div class="date-area-scroll" data-role="resizable-item">
-                @for ($year = 2024; $year <= 2025; $year++)
-                    @for ($month = 1; $month <= 12; $month++)
-                        @for ($i = 1; $i <= date('t', mktime(0, 0, 0, $month, 1, $year)); $i++)
-                            <div class="date-item {{ date('d-m-Y', mktime(0, 0, 0, $month, $i, $year)) == date('d-m-Y') ? 'active' : '' }}"
-                                data-value="{{ date('Y-m-d', mktime(0, 0, 0, $month, $i, $year)) }}">
-                                <h3 class="m-0">{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}</h3>
-                                <span
-                                    class="text-muted small">{{ date('M Y', mktime(0, 0, 0, $month, $i, $year)) }}</span>
-                            </div>
-                        @endfor
-                    @endfor
-                @endfor
-            </div>
-        </div>
-        <div class="px-4 d-flex align-items-center border"><i class="fa fa-chevron-right"></i></div>
-    </div>
-    <div class="card-body">
-        <div class="col-md-5 col-sm-10 col-12 mb-3 mx-auto mt-2 mb-4">
-            <div class="row">
-                <div class="col-12 d-flex gap-3">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Search..." autocomplete="off" data-role="schedule-search">
-                        <span class="input-group-text"><i class="fa fa-search"></i></span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div id="schedule-content" style="min-height: 400px;max-height: 75vh;overflow-y: auto">
-            <div class="d-flex align-items-center justify-content-center py-5">
-                <div class="text-center py-5">
-                    <img src="{{ asset('assets/images/no-data.png') }}" height="350" alt="">
-                    <p class="text-muted m-0">Tidak ada jadwal yang ditemukan.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
- --}}
