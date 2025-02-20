@@ -232,6 +232,14 @@
                     </li>
                     @endcanany
                 @endif
+                @if(session('switchRoles') == 'Admin')
+                <li>
+                    <a href="{{route('apps.archives')}}" class=" waves-effect">
+                        <i class="mdi mdi-archive"></i>
+                        <span>Arsip</span>
+                    </a>
+                </li>
+                @endif
             </ul>
         </div>
         <!-- Sidebar -->

@@ -133,6 +133,8 @@ class PermissionSeeder extends Seeder
             
             ["name" => 'read-pemberkasan', 'display_name' => 'Lihat Pemberkasan'],
             ["name" => 'create-pemberkasan', 'display_name' => 'Buat Pemberkasan'],
+
+            ["name" => 'read-archives', 'display_name' => 'Lihat Arsip'],
         ]);
         $this->insertPermission($permissions);
     }

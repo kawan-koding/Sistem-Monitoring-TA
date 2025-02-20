@@ -20,6 +20,7 @@ use App\Http\Controllers\Administrator\Role\RoleController;
 use App\Http\Controllers\Administrator\User\UserController;
 use App\Http\Controllers\Administrator\Dosen\DosenController;
 use App\Http\Controllers\Administrator\Jadwal\JadwalController;
+use App\Http\Controllers\Administrator\Archive\ArchiveController;
 use App\Http\Controllers\Administrator\JenisTA\JenisTAController;
 use App\Http\Controllers\Administrator\Jurusan\JurusanController;
 use App\Http\Controllers\Administrator\Profile\ProfileController;
@@ -303,6 +304,12 @@ Route::prefix('apps')->middleware('auth')->group(function () {
     
     Route::prefix('profile-dosen')->group( function() {
        Route::get('',[ProfileDosenController::class,'index'])->name('apps.profile-dosen'); 
+    });
+
+    Route::prefix('archives')->group( function() {
+       Route::get('',[ArchiveController::class,'index'])->name('apps.archives');
+       Route::get('{tugasAkhir}/show', [ArchiveController::class, 'show'])->name('apps.archives.show');
+
     });
     
     Route::get('coming-soon', function(){
