@@ -15,15 +15,12 @@
         </thead>
         <tbody>
             @foreach ($data->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->orderBy('urut', 'asc')->get() as $item)
-                @php
-                    $revisiSeminar = $item->revisi()->where('type', 'Seminar')->first();
-                @endphp
                 <tr>
                     <td>1.</td>
                     <td style="white-space: nowrap">
                         <strong>{{ $item->dosen->name }}</strong>
                         <p class="m-0 text-muted small">Penguji {{ $item->urut }}</p>
-                        @if($revisiSeminar && $revisiSeminar->is_mentor_validation)
+                        @if(!is_null($item->revisi()->where('type', 'Seminar')->first()) && $item->revisi()->where('type', 'Seminar')->first()->is_mentor_validation)
                             <span class="badge badge-soft-primary text-primary small">Sudah Divalidasi</span>
                         @endif
                     </td>

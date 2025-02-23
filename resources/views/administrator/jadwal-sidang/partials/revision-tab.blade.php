@@ -35,14 +35,11 @@
         <tbody>
             @foreach ($data->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->orderBy('urut', 'asc')->get() as $item)
                 <tr>
-                    @php
-                        $revisi = $item->revisi()->where('type', 'Sidang')->first();
-                    @endphp
                     <td>{{ $loop->iteration }}</td>
                     <td style="white-space: nowrap">
                         <strong>{{ $item->dosen->name }}</strong>
                         <p class="m-0 text-muted small">Penguji {{ $item->urut }}</p>
-                        @if($revisi && $revisi->is_mentor_validation)
+                        @if(!is_null($item->revisi()->where('type', 'Sidang')->first()) && $item->revisi()->where('type', 'Sidang')->first()->is_mentor_validation)
                             <span class="badge badge-soft-primary text-primary small">Sudah Divalidasi</span>
                         @endif
                     </td>
