@@ -24,7 +24,6 @@ class DashboardController extends Controller
 
         if (in_array(session('switchRoles'), ['Admin','Developer','Teknisi'])) {
             $dataRole = $this->adminRole();
-            dd($dataRole);
         }
 
         if (session('switchRoles') == 'Mahasiswa') {
@@ -163,13 +162,18 @@ class DashboardController extends Controller
             'topikCount' => TugasAkhir::whereStatus('draft')->count(),
             // 'totalTa' => TugasAkhir::whereIn('status', ['reject'])->count(),
             // 'mhsBelumDaftarTa' => Mahasiswa::whereDoesntHave('tugas_akhir')->count(),
+            'mhsBelumMengajukanCount' => Mahasiswa::whereDoesntHave('tugas_akhir')->count(),
             'mhsBelumSeminarCount' => TugasAkhir::where('status', 'acc')->whereNull(['status_seminar', 'status_sidang'])->count(),
             'mhsSudahSeminarCount' => TugasAkhir::where('status', 'acc')->whereNotNull('status_seminar')->count(),
-            'mhsBelumSidangCount' => TugasAkhir::where('status', 'acc')->whereNull('status_sidang')->count(),
-            'mhsSudahSidangCount' => TugasAkhir::where('status', 'acc')->whereNotNull('status_sidang')->count(),
+            'mhsSudahPemberkasanSeminarCount' => TugasAkhir::where('status', 'acc')->whereNotNull(['status_seminar', 'status_sidang'])->where('status_pemberkasan', 'belum_lengkap')->orWhereNotNull('status_seminar')->where('status_pemberkasan', 'sudah_lengkap')->count(),
+            'mhsDaftarSidangCount' => TugasAkhir::where('status', 'acc')->whereNotNull('status_seminar')->whereHas('sidang', fn ($q) => $q->where('status', 'sudah_daftar'))->count(),
+            'mhsBelumSidangCount' => TugasAkhir::where('status', 'acc')->whereNotNull('status_seminar')->whereNull('status_sidang')->count(),
+            'mhsSudahSidangCount' => TugasAkhir::where('status', 'acc')->whereNotNull(['status_seminar', 'status_sidang'])->count(),
+            'mhsSudahPemberkasanSidangCount' => TugasAkhir::where('status', 'acc')->whereNotNull(['status_seminar', 'status_sidang'])->whereStatusPemberkasan('sudah_lengkap')->count(),
             'mods' => ['dashboard_admin', 'dashboard'],
         ];
 
+        // dd($data);
         return $data;
     }
 

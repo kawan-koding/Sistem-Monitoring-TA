@@ -103,7 +103,7 @@
                 <i class="bx bx-user-pin"></i>
             </div>
             <div class="card-body">
-                <h3 class="mb-2">{{ $mhsBelumSeminarCount }} </h3>
+                <h3 class="mb-2">{{ $mhsBelumMengajukanCount }} </h3>
                 <p class="mb-0">Total Mahasiswa Belum Mengajukan</p>
             </div>
         </div>
@@ -115,7 +115,7 @@
             <i class="bx bx-user-check"></i>
         </div>
             <div class="card-body">
-                <h3 class="mb-2">{{ $mhsBelumSidangCount }} </h3>
+                <h3 class="mb-2">{{ $mhsBelumSeminarCount }} </h3>
                 <p class="mb-0">Total Mahasiswa Belum Seminar</p>
             </div>
         </div>
@@ -139,7 +139,7 @@
                 <i class="bx bx-user-check"></i>
             </div>
             <div class="card-body">
-                <h3 class="mb-2">{{ $mhsSudahSidangCount }} </h3>
+                <h3 class="mb-2">{{ $mhsSudahPemberkasanSeminarCount }} </h3>
                 <p class="mb-0">Total Mahasiswa Sudah Pemberkasan Seminar</p>
             </div>
         </div>
@@ -152,7 +152,7 @@
                 <i class="bx bx-user-check"></i>
             </div>
             <div class="card-body">
-                <h3 class="mb-2">{{ $mhsBelumSeminarCount }} </h3>
+                <h3 class="mb-2">{{ $mhsDaftarSidangCount }} </h3>
                 <p class="mb-0">Total Mahasiswa Daftar Sidang</p>
             </div>
         </div>
@@ -176,7 +176,7 @@
                 <i class="bx bx-user-check"></i>
             </div>
             <div class="card-body">
-                <h3 class="mb-2">{{ $mhsBelumSidangCount }} </h3>
+                <h3 class="mb-2">{{ $mhsSudahSidangCount }} </h3>
                 <p class="mb-0">Total Mahasiswa Sudah Sidang</p>
             </div>
         </div>
@@ -188,7 +188,7 @@
                 <i class="bx bx-user-pin"></i>
             </div>
             <div class="card-body">
-                <h3 class="mb-2">{{ $mhsSudahSidangCount }} </h3>
+                <h3 class="mb-2">{{ $mhsSudahPemberkasanSidangCount }} </h3>
                 <p class="mb-0">Total Mahasiswa Sudah Pemberkasan Sidang</p>
             </div>
         </div>
