@@ -14,9 +14,7 @@ class ArchiveController extends Controller
     public function index(Request $request)
     {
         $periode = PeriodeTa::whereIsActive(true)->get();
-        $query = TugasAkhir::with(['mahasiswa','periode_ta'])->whereStatus('acc')->whereIn('periode_ta_id', $periode->pluck('id'))
-        // ->whereNotNull('status_sidang')->where('status_pemberkasan','sudah_lengkap')
-        ;
+        $query = TugasAkhir::with(['mahasiswa','periode_ta'])->whereStatus('acc')->whereIn('periode_ta_id', $periode->pluck('id'))->whereNotNull('status_sidang')->where('status_pemberkasan','sudah_lengkap');
 
         if($request->has('program_studi') && !empty($request->program_studi) && $request->program_studi != 'semua') {
             $query->whereHas('mahasiswa', function($q) use ($request) {

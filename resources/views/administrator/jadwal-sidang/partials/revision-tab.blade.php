@@ -12,10 +12,12 @@
                 $pengganti2 = $data->tugas_akhir->bimbing_uji()->where('jenis', 'pengganti')->where('urut', 2)->with('revisi')->first();
                 $revisi1 = optional($pengganti1 ?? $penguji1)->revisi->where('type', 'Sidang')->first();
                 $revisi2 = optional($pengganti2 ?? $penguji2)->revisi->where('type', 'Sidang')->first();
-                $allValid = collect([$revisi1, $revisi2])->filter()->every(fn($rev) => $rev->is_valid == true);
+
+                $validRevisions = collect([$revisi1, $revisi2])->filter();
+                $allValid = $validRevisions->every(fn($rev) => $rev->is_valid == true);
             @endphp
 
-            @if($allValid) 
+            @if($validRevisions->isNotEmpty() && $allValid) 
                 <div class="col-md-4 col-12 text-center">
                     <a href="{{ route('apps.jadwal-sidang.revisi', $data->id) }}" target="_blank"
                         class="btn btn-outline-dark btn-sm"><i class="bx bx-printer"></i> Cetak Lembar Revisi</a>

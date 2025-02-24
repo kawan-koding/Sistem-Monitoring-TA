@@ -17,7 +17,7 @@
                             </select>
                             <select name="periode" id="" class="form-control" onchange="this.form.submit()">
                                 <option selected disabled hidden>Filter Periode</option>
-                                <option value="semua" {{ request('periode') == 'semua'  ? 'selected' : '' }}>Periode Aktif</option>
+                                <option value="semua" {{ request('periode') == 'semua'  ? 'selected' : '' }}>Semua</option>
                                 @foreach ($periode as $item)
                                     <option value="">{{$item->programStudi->display}} - ({{ $item->nama }})</option>
                                 @endforeach
