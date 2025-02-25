@@ -70,7 +70,7 @@ class SemuaDataTaQueryExport implements FromCollection, WithHeadings, WithMappin
                 $tugasAkhir->tanggal = !is_null($tugasAkhir->jadwal_seminar->tanggal) ? Carbon::parse($tugasAkhir->jadwal_seminar->tanggal)->translatedFormat('l, d F Y') : null;
                 $tugasAkhir->jam = !is_null($tugasAkhir->jadwal_seminar->jam_mulai) && !is_null($tugasAkhir->jadwal_seminar->jam_selesai) ? Carbon::parse($tugasAkhir->jadwal_seminar->jam_mulai)->format('H:i') . ' - ' . Carbon::parse($tugasAkhir->jadwal_seminar->jam_selesai)->format('H:i') : null;
                 $tugasAkhir->tempat = !is_null($tugasAkhir->jadwal_seminar->ruangan) ? $tugasAkhir->jadwal_seminar->ruangan->nama_ruangan : null;
-            } elseif (in_array($this->status,['belum_daftar','sudah_sidang','sudah_terjadwal_sidang','sudah_daftar'])) {
+            } elseif (in_array($this->status,['belum_daftar','sudah_sidang','sudah_terjadwal_sidang','sudah_daftar','sudah_pemberkasan_sidang'])) {
                 $tugasAkhir->tanggal = !is_null($tugasAkhir->sidang->tanggal) ? Carbon::parse($tugasAkhir->sidang->tanggal)->translatedFormat('l, d F Y') : null;
                 $tugasAkhir->jam = !is_null($tugasAkhir->sidang->jam_mulai) && !is_null($tugasAkhir->sidang->jam_selesai) ? Carbon::parse($tugasAkhir->sidang->jam_mulai)->format('H:i') . ' - ' . Carbon::parse($tugasAkhir->sidang->jam_selesai)->format('H:i') : null;
                 $tugasAkhir->tempat = !is_null($tugasAkhir->sidang->ruangan) ? $tugasAkhir->sidang->ruangan->nama_ruangan : null;

@@ -407,7 +407,6 @@ class JadwalSidangController extends Controller
         $countPenguji2 = isset($pengganti2->penilaian) ? $pengganti2->penilaian()->where('type', 'Sidang')->count() : (isset($penguji2->penilaian) ? $penguji2->penilaian()->where('type', 'Sidang')->count() : 0);
         $recapPenguji2 = $countPenguji2 > 0 ? $recapPenguji2 / $countPenguji2 : 0;
 
-
         $data = [
             'title' => 'Jadwal Sidang',
             'breadcrumbs' => [

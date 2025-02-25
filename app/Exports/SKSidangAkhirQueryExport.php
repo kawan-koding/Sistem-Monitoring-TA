@@ -2,6 +2,7 @@
 
 namespace App\Exports;
 
+use Carbon\Carbon;
 use App\Models\Mahasiswa;
 use App\Models\TugasAkhir;
 use Maatwebsite\Excel\Concerns\WithTitle;
@@ -36,74 +37,83 @@ class SKSidangAkhirQueryExport implements FromCollection, WithHeadings, WithMapp
     public function collection()
     {
         $mahasiswa = Mahasiswa::whereProgramStudiId($this->prodiId)->wherePeriodeTaId($this->periodeId)->orderBy('nim')->get();
+
         $tugasAkhirData = collect();
         foreach($mahasiswa as $mhs) {
             $tugasAkhir = TugasAkhir::with(['mahasiswa','bimbing_uji'])->whereMahasiswaId($mhs->id)->wherePeriodeTaId($this->periodeId)->whereIn('status', ['acc', 'draft','pengajuan ulang'])->first();
-            dd($tugasAkhir);
             if($tugasAkhir) {
-                $bimbingUjiData = $tugasAkhir->bimbing_uji->mapWithKeys( function($item) {
-                    return [ $item->jenis . $item->urut => $item->dosen->name ?? '-' ];
-                });
-                $nilai = $tugasAkhir->bimbing_uji->map(function ($bimbingUjiData) {
-                    // $nilaiSidang = $bimbingUjiData->penilaian->filter(function ($nilai) {
-                    //     return $nilai->type == 'Sidang';
-                    // });
-                    // $totalNilaiAngka = $nilaiSidang->avg('nilai');
-                    // $totalNilaiHuruf = grade($totalNilaiAngka); 
-                    // if ($bimbingUji->jenis == 'pembimbing') {
-                    //     $peran = 'Pembimbing ' . toRoman($bimbingUji->urut);
-                    // } else {
-                    //     $peran = 'Penguji ' . toRoman($bimbingUji->urut);
-                    // }
-                });
+                $pembimbing1 = $tugasAkhir->bimbing_uji()->where('jenis', 'pembimbing')->where('urut', 1)->first();
+                $recapPemb1 = isset($pembimbing1->penilaian) ? $pembimbing1->penilaian()->where('type', 'Sidang')->sum('nilai') : 0;
+                $countPemb1 = isset($pembimbing1->penilaian) ? $pembimbing1->penilaian()->where('type', 'Sidang')->count() : 0;
+                $recapPemb1 = $countPemb1 > 0 ? $recapPemb1 / $countPemb1 : 0;
+                $pembimbing2 = $tugasAkhir->bimbing_uji()->where('jenis', 'pembimbing')->where('urut', 2)->first();
+                $recapPemb2 = isset($pembimbing2->penilaian) ? $pembimbing2->penilaian()->where('type', 'Sidang')->sum('nilai') : 0;
+                $countPemb2 = isset($pembimbing2->penilaian) ? $pembimbing2->penilaian()->where('type', 'Sidang')->count() : 0;
+                $recapPemb2 = $countPemb2 > 0 ? $recapPemb2 / $countPemb2 : 0;
+                $pengganti1 = $tugasAkhir->bimbing_uji()->where('jenis', 'pengganti')->where('urut', 1)->first();
+                $penguji1 = $tugasAkhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 1)->first();
+                $recapPenguji1 = isset($pengganti1->penilaian) ? $pengganti1->penilaian()->where('type', 'Sidang')->sum('nilai') : (isset($penguji1->penilaian) ? $penguji1->penilaian()->where('type', 'Sidang')->sum('nilai') : 0);
+                $countPenguji1 = isset($pengganti1->penilaian) ? $pengganti1->penilaian()->where('type', 'Sidang')->count() : (isset($penguji1->penilaian) ? $penguji1->penilaian()->where('type', 'Sidang')->count() : 0);
+                $recapPenguji1 = $countPenguji1 > 0 ? $recapPenguji1 / $countPenguji1 : 0;
+                $pengganti2 = $tugasAkhir->bimbing_uji()->where('jenis', 'pengganti')->where('urut', 2)->first();
+                $penguji2 = $tugasAkhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 2)->first();
+                $recapPenguji2 = isset($pengganti2->penilaian) ? $pengganti2->penilaian()->where('type', 'Sidang')->sum('nilai') : (isset($penguji2->penilaian) ? $penguji2->penilaian()->where('type', 'Sidang')->sum('nilai') : 0);
+                $countPenguji2 = isset($pengganti2->penilaian) ? $pengganti2->penilaian()->where('type', 'Sidang')->count() : (isset($penguji2->penilaian) ? $penguji2->penilaian()->where('type', 'Sidang')->count() : 0);
+                $recapPenguji2 = $countPenguji2 > 0 ? $recapPenguji2 / $countPenguji2 : 0;
+                $nilaiAngka = number_format(($recapPemb1 > 0 ? $recapPemb1 * 0.3 : 0) + ($recapPemb2 > 0 ? $recapPemb2 * 0.3 : 0) + ($recapPenguji1 > 0 ? $recapPenguji1 * 0.2 : 0) + ($recapPenguji2 > 0 ? $recapPenguji2 * 0.2 : 0), 2);
+                $nilaiHuruf = grade(($recapPemb1 > 0 ? $recapPemb1 * 0.3 : 0) + ($recapPemb2 > 0 ? $recapPemb2 * 0.3 : 0) + ($recapPenguji1 > 0 ? $recapPenguji1 * 0.2 : 0) + ($recapPenguji2 > 0 ? $recapPenguji2 * 0.2 : 0));
 
+                $getPeng1 = $pengganti1 ? $pengganti1->dosen : ($penguji1 ? $penguji1->dosen : null);
+                $getPeng2 = $pengganti2 ? $pengganti2->dosen : ($penguji2 ? $penguji2->dosen : null);
                 $tugasAkhirData->push([
-                        'mahasiswa' => $mhs,
-                        'tugasAkhir' => $tugasAkhir,
-                        'bimbingUji' => $bimbingUjiData,
-                        'nilai' => $nilai,
-                    // 'sidang' => $tugasAkhir->sidang,
+                    'mahasiswa' => $mhs,
+                    'tugasAkhir' => $tugasAkhir,
+                    'pemb_1' => $pembimbing1 ? "{$pembimbing1->dosen->name}\nNIP/NIPPPK : {$pembimbing1->dosen->nip}" : '-',
+                    'pemb_2' => $pembimbing2 ? "{$pembimbing2->dosen->name}\nNIP/NIPPPK : {$pembimbing2->dosen->nip}" : '-',
+                    'peng_1' => $getPeng1 ? "{$getPeng1->name}\nNIP/NIPPPK : {$getPeng1->nip}" : '-',
+                    'peng_2' => $getPeng2 ? "{$getPeng2->name}\nNIP/NIPPPK : {$getPeng2->nip}" : '-',
+                    'nilai_huruf' => $nilaiHuruf,
+                    'nilai_angka' => $nilaiAngka,
+                    'tanggal_sidang' => (isset($tugasAkhir->sidang) && isset($tugasAkhir->sidang->tanggal)) ? Carbon::parse($tugasAkhir->sidang->tanggal)->translatedFormat('l, d F Y') : null,
+
                 ]);
+
             } else {
-                // $tugasAkhirData->push([
-                //     'mahasiswa' => $mhs,
-                //     'tugasAkhir' => $tugasAkhir,
-                //     'bimbingUji' => [],
-                //     'sidang' => [],
-                //     'nilai' => [],
-                // ]);
+                $tugasAkhirData->push([
+                    'mahasiswa' => $mhs,
+                    'tugasAkhir' => $tugasAkhir,
+                    'pemb_1' => '-',
+                    'pemb_2' => '-',
+                    'peng_1' => '-',
+                    'peng_2' => '-',
+                    'nilai_huruf' => '-',
+                    'nilai_angka' => '-',
+                    'tanggal_sidang' => '-'
+                ]);
             }
         }
-        dd($tugasAkhirData[10]);
-        // dd($tugasAkhirData->firstWhere('mahasiswa.nama_mhs', 'Tri Ayuk Lestari'));
         return $tugasAkhirData;
     }
 
     public function map($row): array
     {   
         $mahasiswa = $row['mahasiswa'] ?? new \stdClass();
-        $bimbingUji = $row['bimbingUji'] ?? new \stdClass();
         $tugasAkhir = $row['tugasAkhir'] ?? new \stdClass();
-        $pembimbing1 = optional($bimbingUji)['pembimbing1'] ?? '-';
-        $pembimbing2 = optional($bimbingUji)['pembimbing2'] ?? '-';
-        $penguji1 = optional($bimbingUji)['penguji1'] ?? '-';
-        $penguji2 = optional($bimbingUji)['penguji2'] ?? '-';
-
         return [
             $this->no++,
             $mahasiswa['nama_mhs'] ?? '-',
-            "'" .  $mahasiswa['nim'] ?? '-',
-            $pembimbing1,
+            "'" . ($mahasiswa['nim'] ?? '-'),
+            $row['pemb_1'] ?? '-',
             '-',
-            $pembimbing2,
+            $row['pemb_2'] ?? '-',
             '-',
-            $penguji1,
-            $penguji2,
+            $row['peng_1'] ?? '-',
+            $row['peng_2'] ?? '-',
             $tugasAkhir->judul ?? '-',
             '-',
-            'TANGGAL SIDANG',
-            'NILAI HURUF',
-            'NILAI ANGKA',
+            $row['tanggal_sidang'] ?? '-',
+            $row['nilai_huruf'] ?? '-',
+            $row['nilai_angka'] ?? '-',
         ];
     }
 
