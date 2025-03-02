@@ -35,7 +35,11 @@
             <th></th>
         </thead>
         <tbody>
-            @foreach ($data->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->orderBy('urut', 'asc')->get() as $item)
+            @php
+                $penguji = $data->tugas_akhir->bimbing_uji()->whereIn('jenis', ['pengganti', 'penguji'])->orderBy('urut', 'asc')->get();
+                $penguji = $penguji->filter(fn ($item) => $item->jenis == 'penguji' && $penguji->where('jenis', 'pengganti')->where('urut', $item->urut)->count() == 0 || $item->jenis == 'pengganti');
+            @endphp
+            @foreach ($penguji as $item)
                 <tr>
                     <td>{{ $loop->iteration }}</td>
                     <td style="white-space: nowrap">
