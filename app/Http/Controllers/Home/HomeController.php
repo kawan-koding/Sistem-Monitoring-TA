@@ -115,7 +115,7 @@ class HomeController extends Controller
         if ($perHari) {
             $jadwal->whereDate('tanggal', Carbon::today());
         }
-        $jadwal = $jadwal->orderBy('tanggal', 'asc')->orderBy('jam_mulai', 'asc')->get();
+        $jadwal = $jadwal->orderBy('tanggal', 'asc')->orderBy('jam_mulai', 'asc')->whereNotNull('tanggal')->get();
         return $this->processJadwal($jadwal, $type);
     }
 

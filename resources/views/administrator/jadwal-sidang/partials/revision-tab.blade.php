@@ -19,11 +19,9 @@
 
             @if($validRevisions->isNotEmpty() && $allValid) 
                 <div class="col-md-4 col-12 text-center">
-                    <a href="{{ route('apps.jadwal-sidang.revisi', $data->id) }}" target="_blank"
-                        class="btn btn-outline-dark btn-sm"><i class="bx bx-printer"></i> Cetak Lembar Revisi</a>
+                    <a href="{{ route('apps.jadwal-sidang.revisi', $data->id) }}" target="_blank" class="btn btn-outline-dark btn-sm"><i class="bx bx-printer"></i> Cetak Lembar Revisi</a>
                 </div>
             @endif
-            
         @endif
     </div>
     <hr>
@@ -45,25 +43,28 @@
                     <td style="white-space: nowrap">
                         <strong>{{ $item->dosen->name }}</strong>
                         <p class="m-0 text-muted small">Penguji {{ $item->urut }}</p>
-                        @if(!is_null($item->revisi()->where('type', 'Sidang')->first()) && $item->revisi()->where('type', 'Sidang')->first()->is_mentor_validation)
-                            <span class="badge badge-soft-primary text-primary small">Sudah Divalidasi</span>
-                        @endif
-                    </td>
-                    <span class="badge small {{ isset($revisi->is_valid) ? ($revisi->is_valid ? 'badge-soft-success' : 'badge-soft-danger') : 'badge-soft-secondary' }} ">
-                        {{ isset($revisi->is_valid) ? ($revisi->is_valid ? 'Sudah Divalidasi' : 'Belum Divalidasi') : '-' }}
-                    </span>
-                    <td>
-                        {!! is_null($item->revisi()->where('type', 'Sidang')->first())
-                            ? '-'
-                            : $item->revisi()->where('type', 'Sidang')->first()->catatan !!}
+                        @php
+                            $revisi = $item->revisi()->where('type', 'Sidang')->first();
+                        @endphp
+                        <span class="badge small {{ isset($revisi->is_valid) ? ($revisi->is_valid ? 'badge-soft-success' : 'badge-soft-danger') : 'badge-soft-secondary' }} ">
+                            {{ isset($revisi->is_valid) ? ($revisi->is_valid ? 'Sudah Divalidasi' : 'Belum Divalidasi') : '-' }}
+                        </span>
                     </td>
                     <td>
-                        @if(!is_null($item->revisi()->where('type', 'Sidang')->first()) && $item->revisi()->where('type', 'Sidang')->first()->is_mentor_validation)
-                            <button class="btn btn-success btn-small">Sudah Divalidasi</button>
-                        @endif
-                        @if(!is_null($item->revisi()->where('type', 'Sidang')->first()) && !$item->revisi()->where('type', 'Sidang')->first()->is_mentor_validation)
-                        <a href="{{ route('apps.jadwal-sidang.mentor-validation', $item->revisi()->where('type', 'Sidang')->first()->id) }}"
-                            class="btn btn-outline-primary btn-sm"><i class="bx bx-check"></i> Validasi Revisi</a>
+                        {!! is_null($item->revisi()->where('type', 'Sidang')->first()) ? '-' : $item->revisi()->where('type', 'Sidang')->first()->catatan !!}
+                    </td>
+                        @php
+                           $mentors = $item->tugas_akhir->bimbing_uji()->where('jenis', 'pembimbing')->pluck('dosen_id')->toArray();
+                        @endphp
+
+                    <td>
+                        @if(in_array(getInfoLogin()->userable_id, $mentors))
+                            @if(!is_null($item->revisi()->where('type', 'Sidang')->first()) && $item->revisi()->where('type', 'Sidang')->first()->is_mentor_validation)
+                                <button class="btn btn-success btn-small">Sudah Divalidasi</button>
+                            @endif
+                            @if(!is_null($item->revisi()->where('type', 'Sidang')->first()) && !$item->revisi()->where('type', 'Sidang')->first()->is_mentor_validation)
+                                <a href="{{ route('apps.jadwal-sidang.mentor-validation', $item->revisi()->where('type', 'Sidang')->first()->id) }}" class="btn btn-outline-primary btn-sm"><i class="bx bx-check"></i> Validasi Revisi</a>
+                            @endif
                         @endif
                     </td>
                 </tr>
@@ -73,8 +74,7 @@
 @else
     <div class="row align-items-center">
         <h5 class="fw-bold mb-0">Lembar Revisi</h5>
-        <strong class="mb-0">{{ getInfoLogin()->userable->name }} (Penguji
-            {{ $data->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->first()->urut }})</strong>
+        <strong class="mb-0">{{ getInfoLogin()->userable->name }} (Penguji {{ $data->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->first()->urut }})</strong>
         <p class="text-muted small m-0">Tuliskan revisi untuk:
             @php
                 $bimbingUji = $data->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->first();
