@@ -270,8 +270,16 @@
                                     <td>{{ !is_null($item->tugas_akhir->periode_ta) ? $item->tugas_akhir->periode_ta->nama : '-' }}</td>
                                 @endif
                                 <td>
-                                    @php $ratingRecap = 0; @endphp
-                                    <p class="fw-bold small m-0">Pembimbing</p>
+                                    @php 
+                                        $ratingRecap = 0;
+
+                                        $penguji = $item->tugas_akhir->bimbing_uji()->where('jenis','Penguji')->get();
+                                        $revisions = $penguji->flatMap(function ($bimbing) {
+                                            return $bimbing->revisi->where('type', 'Seminar');
+                                        });
+                                        $allMentorValidated = isset($revisions) && $revisions->isNotEmpty() && $revisions->every(fn($revisi) => $revisi->is_mentor_validation);
+                                    @endphp
+                                    <p class="fw-bold small m-0">Pembimbing  @if (isset($revisions) && $revisions->isNotEmpty()) <i class="bx {{ $allMentorValidated ? 'bx-check-circle text-success' : 'bx-time' }}"></i> @endif </p>
                                     <ol>
                                         @for ($i = 0; $i < 2; $i++)
                                             @if ($item->tugas_akhir->bimbing_uji()->where('jenis', 'pembimbing')->count() > $i)
@@ -292,8 +300,9 @@
                                                             <p class="mb-0">{{ $pemb->dosen->name ?? '-' }}</p>
                                                             <span class="text-muted">Nilai :
                                                                 <strong>{{ number_format($pemb->penilaian->count() > 0 ? $pemb->penilaian->avg('nilai') : 0, 2, '.', ',') }}</strong>
-                                                                <span
-                                                                    style="font-size: 9px;">({{ number_format(($pemb->penilaian->count() > 0 ? $pemb->penilaian->avg('nilai') : 0) * 0.3, 2, '.', ',') }})</span></span>
+                                                                <span style="font-size: 9px;">({{ number_format(($pemb->penilaian->count() > 0 ? $pemb->penilaian->avg('nilai') : 0) * 0.3, 2, '.', ',') }})</span>
+                                                                
+                                                            </span>
                                                         </li>
                                                     @endif
                                                 @endforeach
@@ -313,8 +322,16 @@
                                                             <p class="mb-0">{{ $pemb->dosen->name ?? '-' }}</p>
                                                             <span class="text-muted">Nilai :
                                                                 <strong>{{ number_format($pemb->penilaian->count() > 0 ? $pemb->penilaian->avg('nilai') : 0, 2, '.', ',') }}</strong>
-                                                                <span
-                                                                    style="font-size: 9px;">({{ number_format(($pemb->penilaian->count() > 0 ? $pemb->penilaian->avg('nilai') : 0) * 0.2, 2, '.', ',') }})</span></span>
+                                                                <span style="font-size: 9px;">({{ number_format(($pemb->penilaian->count() > 0 ? $pemb->penilaian->avg('nilai') : 0) * 0.2, 2, '.', ',') }})</span>
+                                                                @if (isset($pemb->revisi) && $pemb->revisi->isNotEmpty())
+                                                                    @php
+                                                                        $penguji1 = $pemb->revisi->where('type', 'Seminar')->first();
+                                                                    @endphp
+                                                                    @if ($penguji1)
+                                                                        <i class="bx {{ $penguji1->is_valid ? 'bx-check-circle text-success' : 'bx-time' }}"></i>
+                                                                    @endif
+                                                                @endif
+                                                            </span>
                                                         </li>
                                                     @endif
                                                     @if ($pemb->jenis == 'penguji' && $pemb->urut == 2 && $i == 1)
@@ -323,8 +340,16 @@
                                                             <p class="mb-0">{{ $pemb->dosen->name ?? '-' }}</p>
                                                             <span class="text-muted">Nilai :
                                                                 <strong>{{ number_format($pemb->penilaian->count() > 0 ? $pemb->penilaian->avg('nilai') : 0, 2, '.', ',') }}</strong>
-                                                                <span
-                                                                    style="font-size: 9px;">({{ number_format(($pemb->penilaian->count() > 0 ? $pemb->penilaian->avg('nilai') : 0) * 0.2, 2, '.', ',') }})</span></span>
+                                                                <span style="font-size: 9px;">({{ number_format(($pemb->penilaian->count() > 0 ? $pemb->penilaian->avg('nilai') : 0) * 0.2, 2, '.', ',') }})</span>
+                                                                @if (isset($pemb->revisi) && $pemb->revisi->isNotEmpty())
+                                                                @php
+                                                                    $penguji2 = $pemb->revisi->where('type', 'Seminar')->first();
+                                                                @endphp
+                                                                @if ($penguji2)
+                                                                    <i class="bx {{ $penguji2->is_valid ? 'bx-check-circle text-success' : 'bx-time' }}"></i>
+                                                                @endif
+                                                            @endif
+                                                            </span>
                                                         </li>
                                                     @endif
                                                 @endforeach

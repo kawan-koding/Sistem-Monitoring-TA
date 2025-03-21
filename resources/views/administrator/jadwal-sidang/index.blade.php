@@ -339,8 +339,22 @@
                                     </td>
                                     @if (getInfoLogin()->hasRole('Admin') || getInfoLogin()->hasRole('Mahasiswa'))
                                         <td>
-                                            @php $ratingRecap = 0; @endphp
-                                            <p class="fw-bold small m-0">Pembimbing</p>
+                                            @php 
+                                                $ratingRecap = 0; 
+                                                
+                                                $penguji = $item->tugas_akhir->bimbing_uji()->whereIn('jenis', ['pengganti', 'penguji'])->orderBy('urut', 'asc')->get();
+                                                $prioritasBimbing = collect();
+                                                $penguji->groupBy('urut')->each(function ($group) use ($prioritasBimbing) {
+                                                    $prioritasBimbing->push($group->where('jenis', 'pengganti')->first() ?? $group->where('jenis', 'penguji')->first());
+                                                });
+                                                $revisions = $prioritasBimbing->flatMap(fn($bimbing) => $bimbing->revisi->where('type', 'Sidang'));
+                                                $allMentorValidated = $revisions->isNotEmpty() && $revisions->every(fn($revisi) => $revisi->is_mentor_validation);
+                                            @endphp
+                                            <p class="fw-bold small m-0">Pembimbing
+                                                @if (getInfoLogin()->hasRole('Admin'))
+                                                    @if (isset($revisions) && $revisions->isNotEmpty())  <i class="bx {{ $allMentorValidated ? 'bx-check-circle text-success' : 'bx-time' }}"></i> @endif
+                                                @endif
+                                                </p>
                                             <ol>
                                                 @for ($i = 0; $i < 2; $i++)
                                                     @if ($item->tugas_akhir->bimbing_uji()->where('jenis', 'pembimbing')->where('urut', $i + 1)->count() > 0)
@@ -379,6 +393,17 @@
                                                                     <p class="mb-0">{{ $pemb->dosen->name ?? '-' }}</p>
                                                                     <span class="text-muted">Nilai : <strong>{{ number_format($pemb->penilaian()->where('type', 'Sidang')->count() > 0 ? $pemb->penilaian()->where('type', 'Sidang')->avg('nilai') : 0, 2, '.', ',') }}</strong>
                                                                         <span style="font-size: 9px;">({{ number_format(($pemb->penilaian()->where('type', 'Sidang')->count() > 0 ? $pemb->penilaian()->where('type', 'Sidang')->avg('nilai') : 0) * 0.2, 2, '.', ',') }})</span>
+                                                                        @if (getInfoLogin()->hasRole('Admin'))
+                                                                        @if (isset($pemb->revisi) && $pemb->revisi->isNotEmpty())
+                                                                            @php
+                                                                                $penguji1 = $pemb->revisi->where('type', 'Sidang')->first();
+                                                                            @endphp
+                                                                            @if ($penguji1)
+                                                                                <i class="bx {{ $penguji1->is_valid ? 'bx-check-circle text-success' : 'bx-time' }}"></i>
+                                                                            @endif
+                                                                        @endif
+                                                                        @endif
+
                                                                     </span>
                                                                 </li>
                                                             @endif
@@ -388,6 +413,16 @@
                                                                     <p class="mb-0">{{ $pemb->dosen->name ?? '-' }}</p>
                                                                     <span class="text-muted">Nilai :<strong>{{ number_format($pemb->penilaian()->where('type', 'Sidang')->count() > 0 ? $pemb->penilaian()->where('type', 'Sidang')->avg('nilai') : 0, 2, '.', ',') }}</strong>
                                                                         <span style="font-size: 9px;">({{ number_format(($pemb->penilaian()->where('type', 'Sidang')->count() > 0 ? $pemb->penilaian()->where('type', 'Sidang')->avg('nilai') : 0) * 0.2, 2, '.', ',') }})</span>
+                                                                        @if (getInfoLogin()->hasRole('Admin'))
+                                                                        @if (isset($pemb->revisi) && $pemb->revisi->isNotEmpty())
+                                                                            @php
+                                                                                $penguji2 = $pemb->revisi->where('type', 'Sidang')->first();
+                                                                            @endphp
+                                                                            @if ($penguji2)
+                                                                                <i class="bx {{ $penguji2->is_valid ? 'bx-check-circle text-success' : 'bx-time' }}"></i>
+                                                                            @endif
+                                                                        @endif
+                                                                        @endif
                                                                     </span>
                                                                 </li>
                                                             @endif
@@ -408,6 +443,16 @@
                                                                 <p class="mb-0">{{ $peng->dosen->name ?? '-' }}</p>
                                                                 <span class="text-muted">Nilai : <strong>{{ number_format($peng->penilaian()->where('type', 'Sidang')->count() > 0 ? $peng->penilaian()->where('type', 'Sidang')->avg('nilai') : 0, 2, '.', ',') }}</strong>
                                                                     <span style="font-size: 9px;">({{ number_format(($peng->penilaian()->where('type', 'Sidang')->count() > 0 ? $peng->penilaian()->where('type', 'Sidang')->avg('nilai') : 0) * 0.2, 2, '.', ',') }})</span>
+                                                                    @if (getInfoLogin()->hasRole('Admin'))
+                                                                    @if (isset($peng->revisi) && $peng->revisi->isNotEmpty())
+                                                                        @php
+                                                                            $pengganti1 = $peng->revisi->where('type', 'Sidang')->first();
+                                                                        @endphp
+                                                                        @if ($pengganti1)
+                                                                            <i class="bx {{ $pengganti1->is_valid ? 'bx-check-circle text-success' : 'bx-time' }}"></i>
+                                                                        @endif
+                                                                    @endif
+                                                                    @endif
                                                                 </span>
                                                             </li>
                                                             @endif
@@ -417,6 +462,16 @@
                                                                 <p class="mb-0">{{ $peng->dosen->name ?? '-' }}</p>
                                                                 <span class="text-muted">Nilai : <strong>{{ number_format($peng->penilaian()->where('type', 'Sidang')->count() > 0 ? $peng->penilaian()->where('type', 'Sidang')->avg('nilai') : 0, 2, '.', ',') }}</strong>
                                                                     <span style="font-size: 9px;">({{ number_format(($peng->penilaian()->where('type', 'Sidang')->count() > 0 ? $peng->penilaian()->where('type', 'Sidang')->avg('nilai') : 0) * 0.2, 2, '.', ',') }})</span>
+                                                                    @if (getInfoLogin()->hasRole('Admin'))
+                                                                    @if (isset($peng->revisi) && $peng->revisi->isNotEmpty())
+                                                                        @php
+                                                                            $pengganti2 = $peng->revisi->where('type', 'Sidang')->first();
+                                                                        @endphp
+                                                                        @if ($pengganti2)
+                                                                            <i class="bx {{ $pengganti2->is_valid ? 'bx-check-circle text-success' : 'bx-time' }}"></i>
+                                                                        @endif
+                                                                    @endif
+                                                                    @endif
                                                                 </span>
                                                             </li>
                                                             @endif
