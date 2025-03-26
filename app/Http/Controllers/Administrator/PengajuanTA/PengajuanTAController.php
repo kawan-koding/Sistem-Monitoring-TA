@@ -475,6 +475,9 @@ class PengajuanTAController extends Controller
                 'catatan' => $request->catatan
             ]);
 
+            $pengajuanTA->jadwal_seminar()->delete();
+            $pengajuanTA->sidang()->delete();
+
             return redirect()->back()->with('success', 'Pengajuan TA telah di batalkan');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());

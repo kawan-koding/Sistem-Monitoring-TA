@@ -972,6 +972,39 @@ class JadwalSidangController extends Controller
         }
     }
 
-    
+    public function showData(Sidang $sidang)
+    {
+        $query = $sidang->tugas_akhir;
+        $bimbingUji = $query->bimbing_uji;
+        $pembimbing1 = $bimbingUji->where('jenis', 'pembimbing')->where('urut', 1)->first();
+        $pembimbing2 = $bimbingUji->where('jenis', 'pembimbing')->where('urut', 2)->first();
+        $penguji1 = $bimbingUji->where('jenis', 'penguji')->where('urut', 1)->first();
+        $penguji2 = $bimbingUji->where('jenis', 'penguji')->where('urut', 2)->first();
+        $docPengajuan = JenisDokumen::all();
+
+        $data = [
+            'title' => 'Detail Sidang',
+            'breadcrumbs' => [
+                [
+                    'title' => 'Dashboard',
+                    'url' => route('apps.dashboard'),
+                ],
+                [
+                    'title' => 'Jadwal Seminar',
+                    'is_active' => true,
+                ],
+            ],
+            'dataTA' => $query,
+            'pembimbingPenguji' => $bimbingUji,
+            'pembimbing1' => $pembimbing1,
+            'pembimbing2' => $pembimbing2,
+            'penguji1' => $penguji1,
+            'penguji2' => $penguji2,
+            'doc' => $docPengajuan,
+        ];
+
+        return view('administrator.pengajuan-ta.partials.detail', $data);
+    }
+
 
 }

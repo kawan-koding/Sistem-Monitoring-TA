@@ -557,7 +557,7 @@
                                                 <a href="{{ route('apps.jadwal-sidang.edit', ['jadwalSidang' => $item->id]) }}" class="btn btn-sm btn-primary"><i class="bx bx-calendar-event"></i></a>
                                             @endif
                                             @if ($item->status == 'sudah_sidang')
-                                                <a href="{{ route('apps.jadwal-seminar.show', $item) }}" class="btn btn-sm btn-outline-warning mb-2" title="Detail"><i class="bx bx-show"></i></a>
+                                                <a href="{{ route('apps.jadwal-sidang.show-data', $item) }}" class="btn btn-sm btn-outline-warning mb-2" title="Detail"><i class="bx bx-show"></i></a>
                                             @endif
                                         @endif
 

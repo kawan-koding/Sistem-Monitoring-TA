@@ -160,8 +160,7 @@
                                                         class='badge sm rounded-pill badge-soft-primary font-size-11'>{{ ucfirst($item->status) }}</span>
                                                 @else
                                                     @if ($item->status == 'reject' || $item->status_seminar == 'reject' || $item->status_sidang == 'reject')
-                                                        <span
-                                                            class='badge small rounded-pill badge-soft-danger font-size-11'>Ditolak</span>
+                                                        <span class='badge small rounded-pill badge-soft-danger font-size-11'>Ditolak</span>
                                                     @else
                                                         @if($item->status == 'revisi')
                                                             <span
