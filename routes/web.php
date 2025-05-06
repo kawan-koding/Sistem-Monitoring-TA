@@ -23,6 +23,7 @@ use App\Http\Controllers\Administrator\Jadwal\JadwalController;
 use App\Http\Controllers\Administrator\Archive\ArchiveController;
 use App\Http\Controllers\Administrator\JenisTA\JenisTAController;
 use App\Http\Controllers\Administrator\Jurusan\JurusanController;
+use App\Http\Controllers\Administrator\Panduan\PanduanController;
 use App\Http\Controllers\Administrator\Profile\ProfileController;
 use App\Http\Controllers\Administrator\Ruangan\RuanganController;
 use App\Http\Controllers\Administrator\Setting\SettingController;
@@ -77,7 +78,7 @@ Route::prefix('apps')->middleware('auth')->group(function () {
     Route::get('profile', [ProfileController::class, 'index'])->name('apps.profile');
     Route::post('{user}/update', [ProfileController::class, 'update'])->name('apps.profile.update');
     Route::post('{user}/updatePassword', [ProfileController::class, 'updatePassword'])->name('apps.profile.update-password');
-    
+
     Route::prefix('dashboard')->group(function() {
         Route::get('', [DashboardController::class, 'index'])->name('apps.dashboard');
         Route::get('get-graduated-data', [DashboardController::class, 'getGraduatedData'])->name('apps.dashboard.get-graduated-data');
@@ -85,7 +86,7 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::get('get-schedule-data', [DashboardController::class, 'getScheduleData'])->name('apps.dashboard.get-schedule-data');
         Route::get('export-jadwal', [DashboardController::class, 'exportJadwal'])->name('apps.dashboard.export-jadwal');
     });
-    
+
     Route::prefix('users')->middleware('can:read-users')->group(function () {
         Route::get('', [UserController::class, 'index'])->name('apps.users');
         Route::post('store', [UserController::class, 'store'])->name('apps.users.store')->middleware('can:create-users');
@@ -174,13 +175,13 @@ Route::prefix('apps')->middleware('auth')->group(function () {
     });
 
     Route::prefix('rekomendasi-topik')->middleware('can:read-rekomendasi-topik')->group(function () {
-        Route::get('', [RekomendasiTopikController::class, 'index'])->name('apps.rekomendasi-topik'); 
+        Route::get('', [RekomendasiTopikController::class, 'index'])->name('apps.rekomendasi-topik');
         Route::post('store', [RekomendasiTopikController::class, 'store'])->name('apps.rekomendasi-topik.store')->middleware('can:create-rekomendasi-topik');
-        Route::get('{rekomendasiTopik}/show', [RekomendasiTopikController::class, 'show'])->name('apps.rekomendasi-topik.show'); 
-        Route::post('{rekomendasiTopik}/update', [RekomendasiTopikController::class, 'update'])->name('apps.rekomendasi-topik.update')->middleware('can:update-rekomendasi-topik'); 
-        Route::get('{rekomendasiTopik}/delete', [RekomendasiTopikController::class, 'destroy'])->name('apps.rekomendasi-topik.delete')->middleware('can:delete-rekomendasi-topik'); 
+        Route::get('{rekomendasiTopik}/show', [RekomendasiTopikController::class, 'show'])->name('apps.rekomendasi-topik.show');
+        Route::post('{rekomendasiTopik}/update', [RekomendasiTopikController::class, 'update'])->name('apps.rekomendasi-topik.update')->middleware('can:update-rekomendasi-topik');
+        Route::get('{rekomendasiTopik}/delete', [RekomendasiTopikController::class, 'destroy'])->name('apps.rekomendasi-topik.delete')->middleware('can:delete-rekomendasi-topik');
         Route::post('{rekomendasiTopik}/mengambil-topik', [RekomendasiTopikController::class, 'ambilTopik'])->name('apps.ambil-topik');
-        Route::get('{rekomendasiTopik}/detail', [RekomendasiTopikController::class, 'detail'])->name('apps.rekomendasi-topik.detail'); 
+        Route::get('{rekomendasiTopik}/detail', [RekomendasiTopikController::class, 'detail'])->name('apps.rekomendasi-topik.detail');
         Route::post('{rekomendasiTopik}/acc', [RekomendasiTopikController::class, 'acc'])->name('apps.rekomendasi-topik.acc');
         Route::post('{rekomendasiTopik}/reject-topik', [RekomendasiTopikController::class, 'rejectTopik'])->name('apps.rekomendasi-topik.rejcet-topik');
         Route::get('topik-yang-diambil', [RekomendasiTopikController::class, 'apply'])->name('apps.topik-yang-diambil');
@@ -191,7 +192,7 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::get('{ambilTawaran}/edit-topik', [RekomendasiTopikController::class, 'editTopik'])->name('apps.edit-topik-terkait');
         Route::post('{ambilTawaran}/update-topik', [RekomendasiTopikController::class, 'updateTopik'])->name('apps.update-topik-terkait');
     });
-    
+
     Route::prefix('dosen')->middleware('can:read-dosen')->group(function () {
         Route::get('', [DosenController::class, 'index'])->name('apps.dosen');
         Route::post('store', [DosenController::class, 'store'])->name('apps.dosen.store');
@@ -209,13 +210,13 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::get('{kuotaDosen}/show', [KuotaDosenController::class, 'show'])->name('apps.kuota-dosen.show');
         Route::post('{kuotaDosen}/update', [KuotaDosenController::class, 'update'])->name('apps.kuota-dosen.update')->middleware('can:update-kuota');
     });
-    
+
     Route::prefix('settings')->middleware('can:read-setting')->group( function() {
         Route::get('', [SettingController::class, 'index'])->name('apps.settings');
         Route::get('{setting}/show', [SettingController::class, 'show'])->name('apps.settings.show');
         Route::post('{setting}/update', [SettingController::class, 'update'])->name('apps.settings.update')->middleware('can:update-setting');
     });
-    
+
     Route::prefix('pembagian-dosen')->middleware('can:read-pembagian-dosen')->group( function() {
         Route::get('', [PembagianDosenController::class, 'index'])->name('apps.pembagian-dosen');
         Route::get('{tugasAkhir}/edit', [PembagianDosenController::class, 'edit'])->name('apps.pembagian-dosen.edit');
@@ -223,12 +224,12 @@ Route::prefix('apps')->middleware('auth')->group(function () {
     });
 
     Route::prefix('daftar-tugas-akhir')->middleware('can:read-daftar-ta')->group( function() {
-        Route::get('', [DaftarTaController::class, 'index'])->name('apps.daftar-ta'); 
+        Route::get('', [DaftarTaController::class, 'index'])->name('apps.daftar-ta');
         Route::get('{tugasAkhir}/show', [DaftarTaController::class, 'show'])->name('apps.daftar-ta.show')->middleware('can:read-daftar-ta');
         Route::get('{tugasAkhir}/edit', [DaftarTaController::class, 'edit'])->name('apps.daftar-ta.edit');
         Route::post('{tugasAkhir}/update', [DaftarTaController::class, 'update'])->name('apps.daftar-ta.update')->middleware('can:update-daftar-ta');
         Route::get('{tugasAkhir}/destroy', [DaftarTaController::class, 'destroy'])->name('apps.daftar-ta.delete')->middleware('can:delete-daftar-ta');
-        Route::get('export-tugas-akhir', [DaftarTaController::class, 'exportAll'])->name('apps.daftar-ta.export'); 
+        Route::get('export-tugas-akhir', [DaftarTaController::class, 'exportAll'])->name('apps.daftar-ta.export');
     });
 
     Route::prefix('jadwal-seminar')->middleware('can:read-jadwal-seminar')->group( function() {
@@ -251,9 +252,9 @@ Route::prefix('apps')->middleware('auth')->group(function () {
        Route::post('store', [KategoriNilaiController::class, 'store'])->name('apps.kategori-nilai.store')->middleware('can:create-kategori-nilai');
        Route::get('{kategoriNilai}/show', [KategoriNilaiController::class, 'show'])->name('apps.kategori-nilai.show');
        Route::post('{kategoriNilai}/update', [KategoriNilaiController::class, 'update'])->name('apps.kategori-nilai.update')->middleware('can:update-kategori-nilai');
-       Route::get('{kategoriNilai}/destroy', [KategoriNilaiController::class, 'destroy'])->name('apps.kategori-nilai.delete')->middleware('can:delete-kategori-nilai'); 
+       Route::get('{kategoriNilai}/destroy', [KategoriNilaiController::class, 'destroy'])->name('apps.kategori-nilai.delete')->middleware('can:delete-kategori-nilai');
     });
-    
+
     Route::prefix('jadwal')->middleware('can:read-jadwal-seminar')->group( function(){
         Route::get('{jenis?}',[JadwalController::class, 'index'])->name('apps.jadwal');
         Route::get('{jadwal}/penilaian',[JadwalController::class, 'evaluation'])->name('apps.jadwal.penilaian');
@@ -283,13 +284,13 @@ Route::prefix('apps')->middleware('auth')->group(function () {
         Route::get('{jenisDokumen}/destroy', [JenisDokumenController::class, 'destroy'])->name('apps.jenis-dokumen.delete')->middleware('can:delete-jenis-dokumen');
     });
 
-    Route::prefix('jadwal-sidang')->middleware('can:read-daftar-sidang')->group( function() { 
-       Route::get('{jenis?}',[JadwalSidangController::class,'index'])->name('apps.jadwal-sidang'); 
-       Route::get('{sidang}/detail',[JadwalSidangController::class,'show'])->name('apps.jadwal-sidang.detail'); 
-       Route::post('{sidang}/daftar-sidang',[JadwalSidangController::class,'register'])->name('apps.jadwal-sidang.register'); 
-       Route::post('{sidang}/unggah-berkas',[JadwalSidangController::class,'uploadfile'])->name('apps.jadwal-sidang.unggah-berkas'); 
-       Route::post('{jadwalSidang}/update',[JadwalSidangController::class,'update'])->name('apps.jadwal-sidang.update'); 
-       Route::get('{jadwalSidang}/edit',[JadwalSidangController::class,'edit'])->name('apps.jadwal-sidang.edit'); 
+    Route::prefix('jadwal-sidang')->middleware('can:read-daftar-sidang')->group( function() {
+       Route::get('{jenis?}',[JadwalSidangController::class,'index'])->name('apps.jadwal-sidang');
+       Route::get('{sidang}/detail',[JadwalSidangController::class,'show'])->name('apps.jadwal-sidang.detail');
+       Route::post('{sidang}/daftar-sidang',[JadwalSidangController::class,'register'])->name('apps.jadwal-sidang.register');
+       Route::post('{sidang}/unggah-berkas',[JadwalSidangController::class,'uploadfile'])->name('apps.jadwal-sidang.unggah-berkas');
+       Route::post('{jadwalSidang}/update',[JadwalSidangController::class,'update'])->name('apps.jadwal-sidang.update');
+       Route::get('{jadwalSidang}/edit',[JadwalSidangController::class,'edit'])->name('apps.jadwal-sidang.edit');
        Route::post('{jadwalSidang}/validasi-berkas',[JadwalSidangController::class,'validasiBerkas'])->name('apps.jadwal-sidang.validasi-berkas');
        Route::post('{sidang}/nilai', [JadwalSidangController::class, 'nilai'])->name('apps.jadwal-sidang.nilai');
        Route::post('{sidang}/revisi', [JadwalSidangController::class, 'revisi'])->name('apps.jadwal-sidang.revisi');
@@ -299,20 +300,21 @@ Route::prefix('apps')->middleware('auth')->group(function () {
        Route::get('{sidang}/rekapitulasi', [JadwalSidangController::class, 'cetakRekap'])->name('apps.jadwal-sidang.rekapitulasi');
        Route::get('{revisi}/revision-valid', [JadwalSidangController::class, 'revisionValid'])->name('apps.jadwal-sidang.revision-valid');
        Route::get('{revisi}/mentor-validation', [JadwalSidangController::class, 'mentorValidation'])->name('apps.jadwal-sidang.mentor-validation');
-       Route::get('{sidang}/show-data',[JadwalSidangController::class,'showData'])->name('apps.jadwal-sidang.show-data'); 
+       Route::get('{sidang}/show-data',[JadwalSidangController::class,'showData'])->name('apps.jadwal-sidang.show-data');
     });
-    Route::get('export-jadwal-sidang', [JadwalSidangController::class,'export'])->name('apps.jadwal-sidang.export'); 
-    
+    Route::get('export-jadwal-sidang', [JadwalSidangController::class,'export'])->name('apps.jadwal-sidang.export');
+
     Route::prefix('profile-dosen')->group( function() {
-       Route::get('',[ProfileDosenController::class,'index'])->name('apps.profile-dosen'); 
+       Route::get('',[ProfileDosenController::class,'index'])->name('apps.profile-dosen');
     });
 
     Route::prefix('archives')->group( function() {
        Route::get('',[ArchiveController::class,'index'])->name('apps.archives');
        Route::get('{tugasAkhir}/show', [ArchiveController::class, 'show'])->name('apps.archives.show');
-
     });
-    
+
+    Route::get('guide', [PanduanController::class, 'index'])->name('apps.guide');
+
     Route::get('coming-soon', function(){
         return view('errors.coming-soon');
     })->name('apps.coming-soon');

@@ -65,6 +65,7 @@ class JadwalSidangController extends Controller
             $query = $query->whereHas('tugas_akhir', function ($q) use ($periode) {
                 $q->where('is_completed', 1)->whereIn('periode_ta_id', $periode);
             });
+
             if($request->has('tanggal') && !empty($request->tanggal)) {
                 $query = $query->whereDate('tanggal', $request->tanggal);
             }
@@ -87,7 +88,7 @@ class JadwalSidangController extends Controller
                         $q->where('status_pemberkasan', $request->status_pemberkasan);
                     });
                 } else {
-                    $query = $query->where('status', 'sudah_daftar');
+                    $query = $query->where('status', 'belum_daftar');
                 }
             }
 
@@ -106,7 +107,7 @@ class JadwalSidangController extends Controller
             }
 
             $query = $query->get();
-            
+
             // dd($query);
 
             $query = $query->map(function($item) {
@@ -145,7 +146,7 @@ class JadwalSidangController extends Controller
             'prodi' => ProgramStudi::all(),
             'type' => $request->has('type') ? $request->type : null
         ];
-        
+
         return view('administrator.jadwal-sidang.index', $data);
     }
 
@@ -153,7 +154,7 @@ class JadwalSidangController extends Controller
     {
         $currentWeekDays = [];
         $i = 0;
-        
+
         while(count($currentWeekDays) <= 7) {
             $date = Carbon::now()->addDays($i);
 
@@ -236,7 +237,7 @@ class JadwalSidangController extends Controller
         return view('administrator.jadwal-sidang.form', $data);
     }
 
-    public function update(Request $request, Sidang $jadwalSidang) 
+    public function update(Request $request, Sidang $jadwalSidang)
     {
         $request->validate([
             'ruangan' => 'required',
@@ -270,7 +271,7 @@ class JadwalSidangController extends Controller
             if(!is_null($check)) {
                 return redirect()->back()->withInput($request->all())->with(['error' => 'Jadwal ini sudah ada']);
             }
-            
+
             if(!is_null($checkRuangan)) {
                 return redirect()->back()->withInput($request->all())->with(['error' => 'Ruangan sudah digunakan pada waktu tersebut']);
             }
@@ -293,7 +294,7 @@ class JadwalSidangController extends Controller
             // if($revisi->count() > 0) {
             //     $revisi->delete();
             // }
-            
+
             if($request->has('pengganti1') && !empty($request->pengganti1)) {
                 $cek = BimbingUji::where('tugas_akhir_id', $jadwalSidang->tugas_akhir_id)->where('jenis', 'pengganti')->where('urut', 1);
                 if($cek->count() > 0) {
@@ -387,7 +388,7 @@ class JadwalSidangController extends Controller
         // $recapPenguji1 = $recapPenguji1 > 0 ? $recapPenguji1 / ($sidang->tugas_akhir->bimbing_uji()->where('jenis', 'pengganti')->where('urut', 1)->count() > 0 ? $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'pengganti')->where('urut', 1)->first()->penilaian()->where('type', 'Sidang')->count() : $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 1)->first()->penilaian()->where('type', 'Sidang')->count()) : 0;
         // $recapPenguji2 = $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'pengganti')->where('urut', 2)->count() > 0 ? (is_null($sidang->tugas_akhir->bimbing_uji()->where('jenis', 'pengganti')->where('urut', 2)->first()->penilaian) ? 0 : $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'pengganti')->where('urut', 2)->first()->penilaian()->where('type', 'Sidang')->sum('nilai')) : (is_null($sidang->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 2)->first()->penilaian) ? 0 : $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 2)->first()->penilaian()->where('type', 'Sidang')->sum('nilai'));
         // $recapPenguji2 = $recapPenguji2 > 0 ? $recapPenguji2 / ($sidang->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 2)->first()->penilaian()->where('type', 'Sidang')->count() ? $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'pengganti')->where('urut', 2)->first()->penilaian()->where('type', 'Sidang')->count() : $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 2)->first()->penilaian()->where('type', 'Sidang')->count()) : 0;
-        
+
         $pembimbing1 = $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'pembimbing')->where('urut', 1)->first();
         $recapPemb1 = isset($pembimbing1->penilaian) ? $pembimbing1->penilaian()->where('type', 'Sidang')->sum('nilai') : 0;
         $countPemb1 = isset($pembimbing1->penilaian) ? $pembimbing1->penilaian()->where('type', 'Sidang')->count() : 0;
@@ -467,7 +468,7 @@ class JadwalSidangController extends Controller
                     }
                 }
             }
-            
+
             $request->validate($validates, $messages);
 
             foreach($documentTypes as $item) {
@@ -476,7 +477,7 @@ class JadwalSidangController extends Controller
                         $file = $request->file('document_'. $item->id);
                         $filename = 'document_'. rand(0, 999999999) .'_'. rand(0, 999999999) .'.'. $file->getClientOriginalExtension();
                         $file->move(public_path('storage/files/pemberkasan'), $filename);
-    
+
                         $document = $item->pemberkasan()->where('tugas_akhir_id', $sidang->tugas_akhir->id)->first();
                         if($document) {
                             File::delete(public_path('storage/files/pemberkasan/'. $document->filename));
@@ -558,7 +559,7 @@ class JadwalSidangController extends Controller
                     }
                 }
             }
-            
+
             $request->validate($validates, $messages);
 
             foreach($documentTypes as $item) {
@@ -567,7 +568,7 @@ class JadwalSidangController extends Controller
                         $file = $request->file('document_'. $item->id);
                         $filename = 'document_'. rand(0, 999999999) .'_'. rand(0, 999999999) .'.'. $file->getClientOriginalExtension();
                         $file->move(public_path('storage/files/pemberkasan'), $filename);
-    
+
                         $document = $item->pemberkasan()->where('tugas_akhir_id', $sidang->tugas_akhir->id)->first();
                         if($document) {
                             File::delete(public_path('storage/files/pemberkasan/'. $document->filename));
@@ -686,7 +687,7 @@ class JadwalSidangController extends Controller
         $request->validate([
             'revisi' => 'required'
         ]);
-        
+
         try {
             // get penguji
             $bimbingUji = $sidang->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->first();
@@ -773,7 +774,7 @@ class JadwalSidangController extends Controller
             default:
                 return redirect()->back()->with('error', 'Jenis export tidak valid.');
         }
-    
+
         $sheets = $export->sheets();
         if (empty($sheets) || count($sheets) === 1 && $sheets[0] instanceof DummySheet) {
             return redirect()->back()->with('error', 'Data Tidak Ditemukan.');
@@ -782,7 +783,7 @@ class JadwalSidangController extends Controller
         return Excel::download($export, "{$title}.xlsx");
     }
 
-    public function cetakRevisi(Sidang $sidang) 
+    public function cetakRevisi(Sidang $sidang)
     {
         $jdwl = Sidang::with(['tugas_akhir.bimbing_uji.revisi.bimbingUji.dosen','tugas_akhir.bimbing_uji.revisi.bimbingUji.tugas_akhir.mahasiswa'])->findOrFail($sidang->id);
         $allRevisis = $jdwl->tugas_akhir->bimbing_uji->filter(function($bimbingUji) {
@@ -814,7 +815,7 @@ class JadwalSidangController extends Controller
         return $pdf->stream();
         // return view('administrator.template.revisi', $data);
     }
-    
+
     public function cetakNilai(Sidang $sidang)
     {
         $jdwl = Sidang::with(['tugas_akhir.bimbing_uji.revisi.bimbingUji.dosen','tugas_akhir.bimbing_uji.revisi.bimbingUji.tugas_akhir.mahasiswa'])->findOrFail($sidang->id);
@@ -823,7 +824,7 @@ class JadwalSidangController extends Controller
                 return $nilai->type == 'Sidang';
             });
             $totalNilaiAngka = $nilaiSeminar->avg('nilai');
-            $totalNilaiHuruf = grade($totalNilaiAngka); 
+            $totalNilaiHuruf = grade($totalNilaiAngka);
             $peran = '';
             if ($bimbingUji->jenis == 'pembimbing') {
                 $peran = 'Pembimbing ' . toRoman($bimbingUji->urut);
@@ -868,20 +869,20 @@ class JadwalSidangController extends Controller
         return $pdf->stream();
         // return view('administrator.template.lembar-penilaian', $data);
     }
-    
+
     public function cetakRekap(Sidang $sidang)
     {
         $jdwl = Sidang::with(['tugas_akhir.bimbing_uji.revisi.bimbingUji.dosen','tugas_akhir.bimbing_uji.revisi.bimbingUji.tugas_akhir.mahasiswa'])->findOrFail($sidang->id);
         $bimbingUjis = $jdwl->tugas_akhir->bimbing_uji->filter(function ($item) use ($jdwl) {
             return !($item->jenis == 'penguji' && $jdwl->tugas_akhir->bimbing_uji()->where('jenis', 'pengganti')->where('urut', $item->urut)->count() > 0);
         })->sortBy('urut')->sortBy('jenis')->values();
-        
+
         $query = $bimbingUjis->map(function ($bimbingUji) {
             $nilaiSeminar = $bimbingUji->penilaian->filter(function ($nilai) {
                 return $nilai->type == 'Sidang';
             });
             $totalNilaiAngka = $nilaiSeminar->avg('nilai');
-            $totalNilaiHuruf = grade($totalNilaiAngka); 
+            $totalNilaiHuruf = grade($totalNilaiAngka);
             $peran = 'pengganti';
             if ($bimbingUji->jenis == 'pembimbing') {
                 $peran = 'Pembimbing ' . toRoman($bimbingUji->urut);
@@ -922,12 +923,12 @@ class JadwalSidangController extends Controller
         }
 
         $totalNilaiHuruf = grade($totalNilai / count($rekap));
-        $pemb1 = $sidang->tugas_akhir->bimbing_uji()->where('jenis','pembimbing')->where('urut', 1)->first();        
-        $pemb2 = $sidang->tugas_akhir->bimbing_uji()->where('jenis','pembimbing')->where('urut', 2)->first(); 
-        
+        $pemb1 = $sidang->tugas_akhir->bimbing_uji()->where('jenis','pembimbing')->where('urut', 1)->first();
+        $pemb2 = $sidang->tugas_akhir->bimbing_uji()->where('jenis','pembimbing')->where('urut', 2)->first();
+
         $user = getInfoLogin()->userable;
         $programStudi = $user->programStudi;
-        $dosen = Dosen::where('program_studi_id', $programStudi->id)->whereHas('user', function($q) { 
+        $dosen = Dosen::where('program_studi_id', $programStudi->id)->whereHas('user', function($q) {
             $q->whereHas('roles', function ($q) {
                 $q->where('name', 'Kaprodi');
             });

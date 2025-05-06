@@ -8,7 +8,7 @@
             <div class="mt-3">
 
                 <a href="#" class="text-reset fw-medium font-size-16">{{ ucfirst(getInfoLogin()->name) }}</a>
-                <p class="text-muted mt-1 mb-0 font-size-13 mb-2">{{ucfirst(session('switchRoles'))}} 
+                <p class="text-muted mt-1 mb-0 font-size-13 mb-2">{{ucfirst(session('switchRoles'))}}
                     @if (session('switchRoles') === 'Kaprodi' && session('program_studi'))
                         {{ session('program_studi') }}
                     @endif
@@ -81,7 +81,7 @@
                     </li>
                     @endcan
                 @endif
-                
+
                 @if(in_array(session('switchRoles'), ['Mahasiswa','Developer']))
                     @can(['read-pengajuan-tugas-akhir'])
                     <li>
@@ -118,7 +118,7 @@
                 </li>
                 @endcan
 
-                @if (in_array(session('switchRoles'), ['Admin','Developer','Kajur','Kaprodi','Teknisi']))  
+                @if (in_array(session('switchRoles'), ['Admin','Developer','Kajur','Kaprodi','Teknisi']))
                     @canany(['read-mahasiswa', 'read-dosen', 'read-ruangan', 'read-topik', 'read-topik', 'read-jurusan', 'read-program-studi', 'read-jenis', 'read-kuota', 'read-kategori-nilai', 'read-jenis-dokumen'])
                     <li>
                         <a href="javascript: void(0);" class="has-arrow waves-effect">
@@ -168,7 +168,7 @@
                         </li>
                     @endcan
                 @endif
-                
+
                 @if (in_array(session('switchRoles'), ['Admin','Kaprodi','Developer','Kajur']))
                     @canany(['read-daftar-ta', 'read-pengajuan-tugas-akhir', 'read-pembagian-dosen'])
                         <li>
@@ -188,7 +188,7 @@
                                 @can(['read-pembagian-dosen'])
                                 <li><a href="{{route('apps.pembagian-dosen')}}">Pembagian Dosen</a></li>
                                 @endcan
-                                @if ((getInfoLogin()->hasRole('Admin') && (session('switchRoles') == 'Admin') || getInfoLogin()->hasRole('Mahasiswa')))    
+                                @if ((getInfoLogin()->hasRole('Admin') && (session('switchRoles') == 'Admin') || getInfoLogin()->hasRole('Mahasiswa')))
                                     @can('read-jadwal-seminar')
                                     <li><a href="{{route('apps.jadwal-seminar')}}">Jadwal Seminar</a></li>
                                     @endcan
@@ -201,7 +201,7 @@
                     @endcanany
                 @endif
 
-                @if (in_array(session('switchRoles'), ['Admin','Developer','Teknisi'])) 
+                @if (in_array(session('switchRoles'), ['Admin','Developer','Teknisi']))
                     @canany(['read-users', 'read-roles'])
                         <li>
                         <a href="javascript: void(0);" class="has-arrow waves-effect">
@@ -240,6 +240,12 @@
                     </a>
                 </li>
                 @endif
+                <li>
+                    <a href="{{route('apps.guide')}}" class=" waves-effect">
+                        <i class="mdi mdi-television-guide"></i>
+                        <span>Panduan</span>
+                    </a>
+                </li>
             </ul>
         </div>
         <!-- Sidebar -->

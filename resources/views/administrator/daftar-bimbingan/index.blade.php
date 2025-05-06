@@ -15,7 +15,7 @@
                         <div class="font-size-16 mt-1 fw-bold">Total Kuota Pembimbing 1</div>
                         <p class="font-size-14 mt-1 text-muted m-0">
                             @foreach ($kuota as $item)
-                                {{ $item->programStudi->display ?? '-' }} : <span class="text-primary">{{ $item->pembimbing_1 ?? 0}}</span> @if(!$loop->last) | @endif 
+                                {{ $item->programStudi->display ?? '-' }} : <span class="text-primary">{{ $item->pembimbing_1 ?? 0}}</span> @if(!$loop->last) | @endif
                             @endforeach
                         </p>
                     </div>
@@ -36,7 +36,7 @@
                         <div class="font-size-16 mt-1 fw-bold">Sisa Kuota Pembimbing 1</div>
                         <p class="font-size-14 mt-1 text-muted m-0">
                             @foreach ($sisaKuota as $item)
-                                {{ $item['prodi'] ?? '-' }} : <span class="text-primary">{{ $item['sisa_kuota_pemb_1'] ?? 0}}</span> @if(!$loop->last) | @endif 
+                                {{ $item['prodi'] ?? '-' }} : <span class="text-primary">{{ $item['sisa_kuota_pemb_1'] ?? 0}}</span> @if(!$loop->last) | @endif
                             @endforeach
                         </p>
                     </div>
@@ -57,7 +57,7 @@
                         <div class="font-size-16 mt-1 fw-bold">Sisa Kuota Pembimbing 2</div>
                         <p class="font-size-14 mt-1 text-muted m-0">
                             @foreach ($sisaKuota as $item)
-                                {{ $item['prodi'] ?? '-' }} : <span class="text-primary">{{ $item['sisa_kuota_pemb_2'] ?? 0}}</span> @if(!$loop->last) | @endif 
+                                {{ $item['prodi'] ?? '-' }} : <span class="text-primary">{{ $item['sisa_kuota_pemb_2'] ?? 0}}</span> @if(!$loop->last) | @endif
                             @endforeach
                         </p>
                     </div>
@@ -120,7 +120,7 @@
                             @endif
                         </div>
                     </form>
-                    
+
                 </div>
                 <hr>
 
@@ -202,49 +202,99 @@
                                         {{ $item->tugas_akhir->periode_ta->nama }}
                                     </td>
                                     <td>
-                                        <span class="badge {{ 
-                                            isset($item->tugas_akhir->status_sidang) ?
-                                                (($item->tugas_akhir->status_sidang == 'acc' || $item->tugas_akhir->status_sidang == 'revisi') && $item->tugas_akhir->sudah_pemberkasan == 'sudah_lengkap' && $item->tugas_akhir->sidang->status == 'sudah_sidang' ? 'badge-soft-success' : 
-                                                (($item->tugas_akhir->status_sidang == 'acc' || $item->tugas_akhir->status_sidang == 'revisi') && $item->tugas_akhir->sudah_pemberkasan == 'belum_lengkap' && $item->tugas_akhir->sidang->status == 'sudah_sidang' ? 'badge-soft-warning' : 
-                                                ($item->tugas_akhir->status_sidang == 'retrail' ? 'badge-soft-danger' : 'badge-soft-secondary')))
-                                            : (isset($item->tugas_akhir->status_seminar) ? 
-                                                (($item->tugas_akhir->status_seminar == 'acc' || $item->tugas_akhir->status_seminar == 'revisi') && $item->tugas_akhir->jadwal_seminar->status == 'telah_seminar' && $item->tugas_akhir->status_pemberkasan == 'sudah_lengkap' && is_null($item->tugas_akhir->status_sidang) ? 'badge-soft-success' : 
-                                                (($item->tugas_akhir->status_seminar == 'acc' || $item->tugas_akhir->status_seminar == 'revisi') && $item->tugas_akhir->jadwal_seminar->status == 'telah_seminar' && $item->tugas_akhir->status_pemberkasan == 'belum_lengkap' && is_null($item->tugas_akhir->status_sidang) ? 'badge-soft-warning' : 
-                                                ($item->tugas_akhir->status_seminar == 'retrail' && $item->tugas_akhir->jadwal_seminar->status == 'telah_seminar' ? 'badge-soft-danger' :
-                                                ($item->tugas_akhir->status_seminar == 'reject' ? 'badge-soft-danger' : 'badge-soft-secondary'))))
-                                            : (isset($item->tugas_akhir->status) ? 
-                                                ($item->tugas_akhir->status == 'acc' ? 'badge-soft-info' : 
-                                                ($item->tugas_akhir->status == 'reject' ? 'badge-soft-danger' : 
-                                                ($item->tugas_akhir->status == 'draft' ? 'badge-soft-dark' : 
-                                                ($item->tugas_akhir->status == 'revisi' ? 'badge-soft-danger' : 
-                                                ($item->tugas_akhir->status == 'cancel' ? 'badge-soft-danger' : 'badge-soft-secondary')))))
-                                                : 'badge-soft-secondary'))
-                                        }} small mb-1">
-                                            {{
-                                                isset($item->tugas_akhir->status_sidang) ? 
-                                                    (($item->tugas_akhir->status_sidang == 'acc' || $item->tugas_akhir->status_sidang == 'revisi') && $item->tugas_akhir->sudah_pemberkasan == 'sudah_lengkap' && $item->tugas_akhir->sidang->status == 'sudah_sidang' ? 'Sudah Pemberkasan Sidang' : 
-                                                    (($item->tugas_akhir->status_sidang == 'acc' || $item->tugas_akhir->status_sidang == 'revisi') && $item->tugas_akhir->sudah_pemberkasan == 'belum_lengkap' && $item->tugas_akhir->sidang->status == 'sudah_sidang' ? 'Proses Revisi Laporan' : 
-                                                    (is_null($item->tugas_akhir->status_sidang) && $item->tugas_akhir->sidang->status == 'sudah_terjadwal' ? 'Sudah Terjadwal Sidang' :
-                                                    ($item->tugas_akhir->sidang->status == 'sudah_daftar' ? 'Sudah Daftar Sidang' : 
-                                                    ($item->tugas_akhir->status_sidang == 'retrail' ? 'Sidang Ulang' : '-')))))
-                                                : (isset($item->tugas_akhir->status_seminar) ? 
-                                                    (($item->tugas_akhir->status_seminar == 'acc' || $item->tugas_akhir->status_seminar == 'revisi') && $item->tugas_akhir->jadwal_seminar->status == 'telah_seminar' && $item->tugas_akhir->status_pemberkasan == 'sudah_lengkap' && is_null($item->tugas_akhir->status_sidang) ? 'Sudah Pemberkasan Sempro' : 
-                                                    (($item->tugas_akhir->status_seminar == 'acc' || $item->tugas_akhir->status_seminar == 'revisi') && $item->tugas_akhir->jadwal_seminar->status == 'telah_seminar' && $item->tugas_akhir->status_pemberkasan == 'belum_lengkap' && is_null($item->tugas_akhir->status_sidang) ? 'Proses Revisi Proposal' : 
-                                                    (is_null($item->tugas_akhir->status_seminar) && $item->tugas_akhir->jadwal_seminar->status == 'telah_terjadwal' ? 'Sudah Terjadwal Sempro': 
-                                                    ($item->tugas_akhir->status_seminar == 'retrail' && $item->tugas_akhir->jadwal_seminar->status == 'telah_seminar' ? 'Sempro Ulang': 
-                                                    ($item->tugas_akhir->status_seminar == 'reject' ? 'Sempro Ditolak' : '-' )))))
-                                                : (isset($item->tugas_akhir->status) ? 
-                                                    ($item->tugas_akhir->status == 'acc' ? 'Proses Penyusunan Proposal' :
-                                                    ($item->tugas_akhir->status == 'draft' ? 'Proses Pengajuan' :
-                                                    ($item->tugas_akhir->status == 'pengajuan ulang' ? 'Pengajuan Ulang' :
-                                                    ($item->tugas_akhir->status == 'revisi' ? 'Revisi' :
-                                                    ($item->tugas_akhir->status == 'reject' ? 'Topik Ditolak' :
-                                                    ($item->tugas_akhir->status == 'cancel' ? 'Tidak Dilanjutkan' : '-'))))))
-                                                : '-'))
-                                            }}                                            
+                                        @php
+                                            $badgeClass = 'badge-soft-secondary';
+                                            if (isset($item->tugas_akhir)) {
+                                                $ta = $item->tugas_akhir;
+                                                if (isset($ta->status_sidang)) {
+                                                    if (($ta->status_sidang == 'acc' || $ta->status_sidang == 'revisi') && $ta->sudah_pemberkasan == 'sudah_lengkap' && isset($ta->sidang) && $ta->sidang->status == 'sudah_sidang') {
+                                                        $badgeClass = 'badge-soft-success';
+                                                    } elseif (($ta->status_sidang == 'acc' || $ta->status_sidang == 'revisi') && $ta->sudah_pemberkasan == 'belum_lengkap' && isset($ta->sidang) && $ta->sidang->status == 'sudah_sidang') {
+                                                        $badgeClass = 'badge-soft-warning';
+                                                    } elseif ($ta->status_sidang == 'retrail') {
+                                                        $badgeClass = 'badge-soft-danger';
+                                                    } else {
+                                                        $badgeClass = 'badge-soft-secondary';
+                                                    }
+                                                } elseif (isset($ta->status_seminar)) {
+                                                    if (($ta->status_seminar == 'acc' || $ta->status_seminar == 'revisi') && isset($ta->jadwal_seminar) && $ta->jadwal_seminar->status == 'telah_seminar' && $ta->status_pemberkasan == 'sudah_lengkap' && is_null($ta->status_sidang)) {
+                                                        $badgeClass = 'badge-soft-success';
+                                                    } elseif (($ta->status_seminar == 'acc' || $ta->status_seminar == 'revisi') && isset($ta->jadwal_seminar) && $ta->jadwal_seminar->status == 'telah_seminar' && $ta->status_pemberkasan == 'belum_lengkap' && is_null($ta->status_sidang)) {
+                                                        $badgeClass = 'badge-soft-warning';
+                                                    } elseif ($ta->status_seminar == 'retrail' && isset($ta->jadwal_seminar) && $ta->jadwal_seminar->status == 'telah_seminar') {
+                                                        $badgeClass = 'badge-soft-danger';
+                                                    } elseif ($ta->status_seminar == 'reject') {
+                                                        $badgeClass = 'badge-soft-danger';
+                                                    } else {
+                                                        $badgeClass = 'badge-soft-secondary';
+                                                    }
+                                                } elseif (isset($ta->status)) {
+                                                    if ($ta->status == 'acc') {
+                                                        $badgeClass = 'badge-soft-info';
+                                                    } elseif ($ta->status == 'reject') {
+                                                        $badgeClass = 'badge-soft-danger';
+                                                    } elseif ($ta->status == 'draft') {
+                                                        $badgeClass = 'badge-soft-dark';
+                                                    } elseif ($ta->status == 'revisi') {
+                                                        $badgeClass = 'badge-soft-danger';
+                                                    } elseif ($ta->status == 'cancel') {
+                                                        $badgeClass = 'badge-soft-danger';
+                                                    } else {
+                                                        $badgeClass = 'badge-soft-secondary';
+                                                    }
+                                                }
+                                            }
+                                        @endphp
+                                        <span class="badge {{ $badgeClass }} small mb-1">
+                                            @php
+                                            $statusText = '-';
+
+                                            if (isset($item->tugas_akhir)) {
+                                                $ta = $item->tugas_akhir;
+                                                if (isset($ta->status_sidang)) {
+                                                    if (($ta->status_sidang == 'acc' || $ta->status_sidang == 'revisi') && $ta->sudah_pemberkasan == 'sudah_lengkap' && isset($ta->sidang) && $ta->sidang->status == 'sudah_sidang') {
+                                                        $statusText = 'Sudah Pemberkasan Sidang';
+                                                    } elseif (($ta->status_sidang == 'acc' || $ta->status_sidang == 'revisi') && $ta->sudah_pemberkasan == 'belum_lengkap' && isset($ta->sidang) && $ta->sidang->status == 'sudah_sidang') {
+                                                        $statusText = 'Proses Revisi Laporan';
+                                                    } elseif (is_null($ta->status_sidang) && isset($ta->sidang) && $ta->sidang->status == 'sudah_terjadwal') {
+                                                        $statusText = 'Sudah Terjadwal Sidang';
+                                                    } elseif (isset($ta->sidang) && $ta->sidang->status == 'sudah_daftar') {
+                                                        $statusText = 'Sudah Daftar Sidang';
+                                                    } elseif ($ta->status_sidang == 'retrail') {
+                                                        $statusText = 'Sidang Ulang';
+                                                    }
+                                                } elseif (isset($ta->status_seminar)) {
+                                                    if (($ta->status_seminar == 'acc' || $ta->status_seminar == 'revisi') && isset($ta->jadwal_seminar) && $ta->jadwal_seminar->status == 'telah_seminar' && $ta->status_pemberkasan == 'sudah_lengkap' && is_null($ta->status_sidang)) {
+                                                        $statusText = 'Sudah Pemberkasan Sempro';
+                                                    } elseif (($ta->status_seminar == 'acc' || $ta->status_seminar == 'revisi') && isset($ta->jadwal_seminar) && $ta->jadwal_seminar->status == 'telah_seminar' && $ta->status_pemberkasan == 'belum_lengkap' && is_null($ta->status_sidang)) {
+                                                        $statusText = 'Proses Revisi Proposal';
+                                                    } elseif (is_null($ta->status_seminar) && isset($ta->jadwal_seminar) && $ta->jadwal_seminar->status == 'telah_terjadwal') {
+                                                        $statusText = 'Sudah Terjadwal Sempro';
+                                                    } elseif ($ta->status_seminar == 'retrail' && isset($ta->jadwal_seminar) && $ta->jadwal_seminar->status == 'telah_seminar') {
+                                                        $statusText = 'Sempro Ulang';
+                                                    } elseif ($ta->status_seminar == 'reject') {
+                                                        $statusText = 'Sempro Ditolak';
+                                                    }
+                                                } elseif (isset($ta->status)) {
+                                                    if ($ta->status == 'acc') {
+                                                        $statusText = 'Proses Penyusunan Proposal';
+                                                    } elseif ($ta->status == 'draft') {
+                                                        $statusText = 'Proses Pengajuan';
+                                                    } elseif ($ta->status == 'pengajuan ulang') {
+                                                        $statusText = 'Pengajuan Ulang';
+                                                    } elseif ($ta->status == 'revisi') {
+                                                        $statusText = 'Revisi';
+                                                    } elseif ($ta->status == 'reject') {
+                                                        $statusText = 'Topik Ditolak';
+                                                    } elseif ($ta->status == 'cancel') {
+                                                        $statusText = 'Tidak Dilanjutkan';
+                                                    }
+                                                }
+                                            }
+                                        @endphp
+                                        {{ $statusText }}
                                         </span>
                                     </td>
-
                                     <td>
                                         <a href="{{ route('apps.daftar-bimbingan.show', $item->id)}}" class="btn btn-sm btn-outline-warning mb-3" title="Detail"><i class="bx bx-show"></i></a>
                                     </td>

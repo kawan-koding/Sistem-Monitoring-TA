@@ -164,6 +164,14 @@
                                     (\Request::is('apps/jadwal-sidang') && \Request::has('tanggal') && !\Request::has('status'))) active @endif"
                                 href="{{ route('apps.jadwal-sidang') }}">
                                 <span class="d-block d-sm-none"><i class="bx bx-timer"></i></span>
+                                <span class="d-none d-sm-block">Belum Daftar</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @if (url()->full() == route('apps.jadwal-sidang',['status' => 'sudah_daftar']) ||
+                                    (\Request::is('apps/jadwal-sidang') && \Request::has('tanggal') && !\Request::has('status') == 'sudah_daftar')) ) active @endif"
+                                href="{{ route('apps.jadwal-sidang',['status' => 'sudah_daftar']) }}">
+                                <span class="d-block d-sm-none"><i class="bx bx-timer"></i></span>
                                 <span class="d-none d-sm-block">Belum Terjadwal</span>
                             </a>
                         </li>
@@ -339,9 +347,9 @@
                                     </td>
                                     @if (getInfoLogin()->hasRole('Admin') || getInfoLogin()->hasRole('Mahasiswa'))
                                         <td>
-                                            @php 
-                                                $ratingRecap = 0; 
-                                                
+                                            @php
+                                                $ratingRecap = 0;
+
                                                 $penguji = $item->tugas_akhir->bimbing_uji()->whereIn('jenis', ['pengganti', 'penguji'])->orderBy('urut', 'asc')->get();
                                                 $prioritasBimbing = collect();
                                                 $penguji->groupBy('urut')->each(function ($group) use ($prioritasBimbing) {
@@ -550,7 +558,10 @@
                                         @endif
 
                                         @if (getInfoLogin()->hasRole('Admin'))
-                                            @if ($item->tugas_akhir->status_pemberkasan != 'sudah_lengkap')
+                                            @if ($item->status == 'belum_daftar')
+                                                <a href="{{ route('apps.jadwal-sidang.edit', ['jadwalSidang' => $item->id]) }}" class="btn btn-sm btn-primary"><i class="bx bx-calendar-event"></i></a>
+                                            @endif
+                                            @if ($item->tugas_akhir->status_pemberkasan != 'sudah_lengkap' && $item->status !== 'belum_daftar')
                                                 <a href="javascript:void(0);" onclick="validasiFile('{{ $item->id }}', '{{ route('apps.jadwal-sidang.validasi-berkas', $item->id) }}')" class="btn btn-sm btn-outline-success my-1" title="Detail Berkas"><i class="bx bx-pencil"></i></a>
                                             @endif
                                             @if ($item->status == 'sudah_daftar' || $item->status == 'sudah_terjadwal')
