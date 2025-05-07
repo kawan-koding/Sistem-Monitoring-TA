@@ -43,7 +43,11 @@ class SettingController extends Controller
     {
         $request->validate([
             'value' => $setting->type != 'file' ? 'required' : 'nullable',
-            'file' => $setting->type == 'file' ? 'required|mimes:jpg,jpeg,png,gif' : 'nullable' 
+            'file' => $setting->type == 'file' ? 'required|mimes:jpg,jpeg,png,gif,pdf' : 'nullable'
+        ],[
+            'value.required' => 'Value harus diisi',
+            'file.required' => 'File harus diisi',
+            'file.mimes' => 'File harus berupa gambar atau pdf'
         ]);
 
         try {

@@ -10,7 +10,7 @@
             <form action="" id="daftarSidangAction{{ $item->id }}" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
-                    @if ($item->status == 'belum_daftar')
+                    @if ($item->status == 'belum_daftar' || $item->status == 'sudah_daftar')
                         @foreach ($document_sidang->where('jenis', 'pra_sidang') as $key => $doc)
                             @php
                                 $document = $doc
@@ -48,7 +48,7 @@
                             </div>
                         @endforeach
                     @else
-                        @foreach ($document_sidang->where('jenis', 'sidang') as $key => $doc)
+                        @foreach ($document_sidang->whereIn('jenis', ['pra_sidang', 'sidang']) as $key => $doc)
                             @php
                                 $document = $doc
                                     ->pemberkasan()
@@ -141,7 +141,7 @@
                     </div>
                     @else
                     <div class="row">
-                        @foreach ($document_sidang->where('jenis', 'sidang') as $key => $doc)
+                        @foreach ($document_sidang->whereIn('jenis', ['pra_sidang', 'sidang']) as $key => $doc)
                             @php
                                 $document = $doc
                                 ->pemberkasan()

@@ -546,9 +546,9 @@
                                             @if ($item->status == 'sudah_sidang')
                                                 <a href="{{ route('apps.jadwal-sidang.detail', $item->id) }}" class="btn btn-sm btn-outline-primary my-1" title="Detail Sidang"><i class="bx bx-show"></i></a>
                                             @endif
-                                            @if ($item->status == 'belum_daftar')
+                                            @if ($item->status == 'belum_daftar' || $item->status == 'sudah_daftar')
                                                 @if ($item->tugas_akhir->status_pemberkasan == 'sudah_lengkap')
-                                                    <button onclick="daftarSidang('{{ $item->id }}', '{{ route('apps.jadwal-sidang.register', $item->id) }}')" class="btn btn-sm btn-outline-dark"><i class="bx bx-file"></i>Daftar</button>
+                                                <button onclick="daftarSidang('{{ $item->id }}', '{{ route('apps.jadwal-sidang.register', $item->id) }}')" class="btn btn-sm btn-outline-dark"><i class="bx bx-file"></i>Daftar</button>
                                                 @endif
                                             @else
                                                 @if ($item->tugas_akhir->status_sidang != 'reject' && $item->tugas_akhir->status_pemberkasan != 'sudah_lengkap')
@@ -560,6 +560,9 @@
                                         @if (getInfoLogin()->hasRole('Admin'))
                                             @if ($item->status == 'belum_daftar')
                                                 <a href="{{ route('apps.jadwal-sidang.edit', ['jadwalSidang' => $item->id]) }}" class="btn btn-sm btn-primary"><i class="bx bx-calendar-event"></i></a>
+                                            @endif
+                                            @if ($item->status == 'sudah_daftar')
+                                                <a href="javascript:void(0);" onclick="validasiFile('{{ $item->id }}', '{{ route('apps.jadwal-sidang.validasi-berkas', $item->id) }}')" class="btn btn-sm btn-outline-success my-1" title="Detail Berkas"><i class="bx bx-pencil"></i></a>
                                             @endif
                                             @if ($item->tugas_akhir->status_pemberkasan != 'sudah_lengkap' && $item->status !== 'belum_daftar')
                                                 <a href="javascript:void(0);" onclick="validasiFile('{{ $item->id }}', '{{ route('apps.jadwal-sidang.validasi-berkas', $item->id) }}')" class="btn btn-sm btn-outline-success my-1" title="Detail Berkas"><i class="bx bx-pencil"></i></a>
