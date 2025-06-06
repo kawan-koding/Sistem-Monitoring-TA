@@ -270,7 +270,7 @@
                                     <td>{{ !is_null($item->tugas_akhir->periode_ta) ? $item->tugas_akhir->periode_ta->nama : '-' }}</td>
                                 @endif
                                 <td>
-                                    @php 
+                                    @php
                                         $ratingRecap = 0;
 
                                         $penguji = $item->tugas_akhir->bimbing_uji()->where('jenis','Penguji')->get();
@@ -285,23 +285,23 @@
                                             @if ($item->tugas_akhir->bimbing_uji()->where('jenis', 'pembimbing')->count() > $i)
                                                 @foreach ($item->tugas_akhir->bimbing_uji as $pemb)
                                                     @if ($pemb->jenis == 'pembimbing' && $pemb->urut == 1 && $i == 0)
-                                                        @php $ratingRecap += ($pemb->penilaian->count() > 0 ? $pemb->penilaian->avg('nilai') : 0) * 0.3; @endphp
+                                                        @php $ratingRecap += ($pemb->penilaian()->where('type', 'Seminar')->count() > 0 ? $pemb->penilaian()->where('type', 'Seminar')->avg('nilai') : 0) * 0.3; @endphp
                                                         <li class="small mb-2">
                                                             <p class="mb-0">{{ $pemb->dosen->name ?? '-' }}</p>
                                                             <span class="text-muted">Nilai :
-                                                                <strong>{{ number_format($pemb->penilaian->count() > 0 ? $pemb->penilaian->avg('nilai') : 0, 2, '.', ',') }}</strong>
+                                                                <strong>{{ number_format($pemb->penilaian()->where('type', 'Seminar')->count() > 0 ? $pemb->penilaian()->where('type', 'Seminar')->avg('nilai') : 0, 2, '.', ',') }}</strong>
                                                                 <span
-                                                                    style="font-size: 9px;">({{ number_format(($pemb->penilaian->count() > 0 ? $pemb->penilaian->avg('nilai') : 0) * 0.3, 2, '.', ',') }})</span></span>
+                                                                    style="font-size: 9px;">({{ number_format(($pemb->penilaian()->where('type', 'Seminar')->count() > 0 ? $pemb->penilaian()->where('type', 'Seminar')->avg('nilai') : 0) * 0.3, 2, '.', ',') }})</span></span>
                                                         </li>
                                                     @endif
                                                     @if ($pemb->jenis == 'pembimbing' && $pemb->urut == 2 && $i == 1)
-                                                        @php $ratingRecap += ($pemb->penilaian->count() > 0 ? $pemb->penilaian->avg('nilai') : 0) * 0.3; @endphp
+                                                        @php $ratingRecap += ($pemb->penilaian()->where('type', 'Seminar')->count() > 0 ? $pemb->penilaian()->where('type', 'Seminar')->avg('nilai') : 0) * 0.3; @endphp
                                                         <li class="small">
                                                             <p class="mb-0">{{ $pemb->dosen->name ?? '-' }}</p>
                                                             <span class="text-muted">Nilai :
-                                                                <strong>{{ number_format($pemb->penilaian->count() > 0 ? $pemb->penilaian->avg('nilai') : 0, 2, '.', ',') }}</strong>
-                                                                <span style="font-size: 9px;">({{ number_format(($pemb->penilaian->count() > 0 ? $pemb->penilaian->avg('nilai') : 0) * 0.3, 2, '.', ',') }})</span>
-                                                                
+                                                                <strong>{{ number_format($pemb->penilaian()->where('type', 'Seminar')->count() > 0 ? $pemb->penilaian()->where('type', 'Seminar')->avg('nilai') : 0, 2, '.', ',') }}</strong>
+                                                                <span style="font-size: 9px;">({{ number_format(($pemb->penilaian()->where('type', 'Seminar')->count() > 0 ? $pemb->penilaian()->where('type', 'Seminar')->avg('nilai') : 0) * 0.3, 2, '.', ',') }})</span>
+
                                                             </span>
                                                         </li>
                                                     @endif
@@ -317,12 +317,12 @@
                                             @if ($item->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->count() > $i)
                                                 @foreach ($item->tugas_akhir->bimbing_uji as $pemb)
                                                     @if ($pemb->jenis == 'penguji' && $pemb->urut == 1 && $i == 0)
-                                                        @php $ratingRecap += ($pemb->penilaian->count() > 0 ? $pemb->penilaian->avg('nilai') : 0) * 0.2; @endphp
+                                                        @php $ratingRecap += ($pemb->penilaian()->where('type', 'Seminar')->count() > 0 ? $pemb->penilaian()->where('type', 'Seminar')->avg('nilai') : 0) * 0.2; @endphp
                                                         <li class="small mb-2">
                                                             <p class="mb-0">{{ $pemb->dosen->name ?? '-' }}</p>
                                                             <span class="text-muted">Nilai :
-                                                                <strong>{{ number_format($pemb->penilaian->count() > 0 ? $pemb->penilaian->avg('nilai') : 0, 2, '.', ',') }}</strong>
-                                                                <span style="font-size: 9px;">({{ number_format(($pemb->penilaian->count() > 0 ? $pemb->penilaian->avg('nilai') : 0) * 0.2, 2, '.', ',') }})</span>
+                                                                <strong>{{ number_format($pemb->penilaian()->where('type', 'Seminar')->count() > 0 ? $pemb->penilaian()->where('type', 'Seminar')->avg('nilai') : 0, 2, '.', ',') }}</strong>
+                                                                <span style="font-size: 9px;">({{ number_format(($pemb->penilaian()->where('type', 'Seminar')->count() > 0 ? $pemb->penilaian()->where('type', 'Seminar')->avg('nilai') : 0) * 0.2, 2, '.', ',') }})</span>
                                                                 @if (isset($pemb->revisi) && $pemb->revisi->isNotEmpty())
                                                                     @php
                                                                         $penguji1 = $pemb->revisi->where('type', 'Seminar')->first();
@@ -335,12 +335,12 @@
                                                         </li>
                                                     @endif
                                                     @if ($pemb->jenis == 'penguji' && $pemb->urut == 2 && $i == 1)
-                                                        @php $ratingRecap += ($pemb->penilaian->count() > 0 ? $pemb->penilaian->avg('nilai') : 0) * 0.2; @endphp
+                                                        @php $ratingRecap += ($pemb->penilaian()->where('type', 'Seminar')->count() > 0 ? $pemb->penilaian()->where('type', 'Seminar')->avg('nilai') : 0) * 0.2; @endphp
                                                         <li class="small">
                                                             <p class="mb-0">{{ $pemb->dosen->name ?? '-' }}</p>
                                                             <span class="text-muted">Nilai :
-                                                                <strong>{{ number_format($pemb->penilaian->count() > 0 ? $pemb->penilaian->avg('nilai') : 0, 2, '.', ',') }}</strong>
-                                                                <span style="font-size: 9px;">({{ number_format(($pemb->penilaian->count() > 0 ? $pemb->penilaian->avg('nilai') : 0) * 0.2, 2, '.', ',') }})</span>
+                                                                <strong>{{ number_format($pemb->penilaian()->where('type', 'Seminar')->count() > 0 ? $pemb->penilaian()->where('type', 'Seminar')->avg('nilai') : 0, 2, '.', ',') }}</strong>
+                                                                <span style="font-size: 9px;">({{ number_format(($pemb->penilaian()->where('type', 'Seminar')->count() > 0 ? $pemb->penilaian()->where('type', 'Seminar')->avg('nilai') : 0) * 0.2, 2, '.', ',') }})</span>
                                                                 @if (isset($pemb->revisi) && $pemb->revisi->isNotEmpty())
                                                                 @php
                                                                     $penguji2 = $pemb->revisi->where('type', 'Seminar')->first();

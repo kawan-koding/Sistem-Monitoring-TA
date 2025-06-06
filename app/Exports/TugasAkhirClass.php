@@ -18,7 +18,7 @@ class TugasAkhirClass implements FromCollection, WithHeadings, WithMapping, With
     protected $prodiId;
     protected $kelas;
     protected $periodeId;
-    protected $no = 1; 
+    protected $no = 1;
 
     public function __construct($prodiId, $kelas, $periodeId)
     {
@@ -75,7 +75,7 @@ class TugasAkhirClass implements FromCollection, WithHeadings, WithMapping, With
     {
         return ['No','NIM','Nama','NO HP','JUDUL/TOPIK','DOSEN PEMBIMBING 1','DOSEN PEMBIMBING 2','DOSEN PENGUJI 1','DOSEN PENGUJI 2',];
     }
-    
+
     public function map($row): array
     {
         $mahasiswa = $row['mahasiswa'] ?? new \stdClass();
@@ -109,7 +109,7 @@ class TugasAkhirClass implements FromCollection, WithHeadings, WithMapping, With
             $penguji2,
         ];
     }
-    
+
     public function title(): string
     {
         $programStudi = ProgramStudi::find($this->prodiId);
@@ -129,7 +129,7 @@ class TugasAkhirClass implements FromCollection, WithHeadings, WithMapping, With
         $sheet->getColumnDimension('G')->setWidth(25);
         $sheet->getColumnDimension('H')->setWidth(25);
         $sheet->getColumnDimension('I')->setWidth(25);
-    
+
         $sheet->getStyle('F:I')->getAlignment()->setWrapText(true);
         return [
             1 => [

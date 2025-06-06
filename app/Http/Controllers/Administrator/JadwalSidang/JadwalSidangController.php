@@ -284,7 +284,7 @@ class JadwalSidangController extends Controller
                 'status' => 'sudah_terjadwal'
             ]);
             $jadwalSidang->tugas_akhir->update(['status_sidang' => null,'status_pemberkasan' => 'belum_lengkap']);
-            $rating = Penilaian::whereIn('bimbing_uji_id', $jadwalSidang->tugas_akhir->bimbing_uji->pluck('id'));
+            $rating = Penilaian::where('type','Sidang')->whereIn('bimbing_uji_id', $jadwalSidang->tugas_akhir->bimbing_uji->pluck('id'));
             if($rating->count() > 0) {
                 $rating->delete();
             }
@@ -495,7 +495,7 @@ class JadwalSidangController extends Controller
                         }
                     }
                 } else {
-                    if($item->jenis == 'sidang' && $request->hasFile('document_'. $item->id)) {
+                    if(($item->jenis == 'sidang' || $item->jenis == 'pra_sidang')  && $request->hasFile('document_'. $item->id)) {
                         $file = $request->file('document_'. $item->id);
                         $filename = 'document_'. rand(0, 999999999) .'_'. rand(0, 999999999) .'.'. $file->getClientOriginalExtension();
                         $file->move(public_path('storage/files/pemberkasan'), $filename);
@@ -586,7 +586,7 @@ class JadwalSidangController extends Controller
                         }
                     }
                 } else {
-                    if($item->jenis == 'sidang' && $request->hasFile('document_'. $item->id)) {
+                    if(($item->jenis == 'sidang' || $item->jenis == 'pra_sidang') && $request->hasFile('document_'. $item->id)) {
                         $file = $request->file('document_'. $item->id);
                         $filename = 'document_'. rand(0, 999999999) .'_'. rand(0, 999999999) .'.'. $file->getClientOriginalExtension();
                         $file->move(public_path('storage/files/pemberkasan'), $filename);

@@ -42,7 +42,7 @@ class MahasiswaController extends Controller
             'breadcrumbs' => [
                 [
                     'title' => "Dashboard",
-                    'url' => route('apps.dashboard') 
+                    'url' => route('apps.dashboard')
                 ],
                 [
                     'title' => "Master Data",
@@ -101,9 +101,12 @@ class MahasiswaController extends Controller
             $user = $mahasiswa->user;
             $existingUser = User::where('username', $mahasiswa->nim)->where('id', '!=', $user->id)->first();
             if(is_null($existingUser)) {
-                $request->merge(['username' => $mahasiswa->nim, 'name'=> $mahasiswa->nama_mhs, 'email' => $mahasiswa->email, 'password' => Hash::make($mahasiswa->nim)]);
-                $mahasiswa->user->update($request->only(['name', 'username', 'email', 'password']));          
-            }            
+                $updateData = ['name' => $mahasiswa->name,'username' => $mahasiswa->nim,'email' => $mahasiswa->email,];
+                if ($user->username !== $mahasiswa->nim) {
+                    $updateData['password'] = Hash::make($mahasiswa->nim);
+                }
+                $user->update($updateData);
+            }
             return redirect()->route('apps.mahasiswa')->with('success', 'Data berhasil diupdate');
         } catch (\Exception $e) {
             return redirect()->route('apps.mahasiswa')->with('error', $e->getMessage());
@@ -117,8 +120,8 @@ class MahasiswaController extends Controller
     {
         try {
             $mahasiswa->user()->delete();
-            $mahasiswa->delete();   
-            return $this->successResponse('Data berhasil di hapus');    
+            $mahasiswa->delete();
+            return $this->successResponse('Data berhasil di hapus');
         } catch (\Exception $e) {
             return $this->exceptionResponse($e);
         }
@@ -136,9 +139,9 @@ class MahasiswaController extends Controller
         try {
             if ($request->hasFile('file')) {
                 $file = $request->file('file');
-            }            
+            }
             Excel::import(new MahasiswaImport, $file);
-            
+
             return redirect()->route('apps.mahasiswa')->with('success', 'Berhasil import mahasiswa');
         } catch (\Exception $e) {
             return redirect()->route('apps.mahasiswa')->with('error', $e->getMessage());

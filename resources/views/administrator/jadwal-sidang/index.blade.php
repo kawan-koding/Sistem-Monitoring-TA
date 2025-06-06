@@ -553,7 +553,7 @@
                                             @else
                                                 @if ($item->tugas_akhir->status_sidang != 'reject' && $item->tugas_akhir->status_pemberkasan != 'sudah_lengkap')
                                                     <a href="javascript:void(0);" onclick="unggahFile('{{ $item->id }}', '{{ route('apps.jadwal-sidang.unggah-berkas', $item->id) }}')" class="btn btn-sm btn-outline-dark"><i class="bx bx-file"></i>Unggah</a>
-                                                @endif
+                                                @endif  
                                             @endif
                                         @endif
 

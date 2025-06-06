@@ -31,6 +31,7 @@
                 </thead>
                 <tbody>
                     @foreach ($kategoriNilais as $key => $category)
+                    {{-- @dd($bimbingUji->penilaian->where('kategori_nilai_id', $category->id)->where('type', 'Seminar')) --}}
                         <tr>
                             <td width="25">{{ $key + 1 }}.</td>
                             <td>{{ $category->nama }}</td>

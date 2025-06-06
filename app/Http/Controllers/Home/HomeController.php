@@ -22,13 +22,13 @@ class HomeController extends Controller
             $q->where('status', 'Disetujui');
         }, '<', DB::raw('kuota'))->take(5)->get();
         $tugasAkhir = TugasAkhir::with(['topik','mahasiswa','jenis_ta','bimbing_uji'])->where('status','acc')->take(5)->get();
-    
+
         $data = [
             'title' => 'Beranda',
             'tawaran' => $tawaran,
             'tugasAkhir' => $tugasAkhir
         ];
-    
+
         return view('index', $data);
     }
 
@@ -109,7 +109,7 @@ class HomeController extends Controller
     protected function fetchJadwal($type, $perHari)
     {
         $model = $type === 'seminar' ? JadwalSeminar::class : Sidang::class;
-        $jadwal = $model::with(['tugas_akhir.mahasiswa.programStudi', 'ruangan', 'tugas_akhir.bimbing_uji'])->where('status', $type === 'seminar' ? 'sudah_terjadwal' : 'sudah_daftar')->whereHas('tugas_akhir', function ($q) {
+        $jadwal = $model::with(['tugas_akhir.mahasiswa.programStudi', 'ruangan', 'tugas_akhir.bimbing_uji'])->where('status', $type === 'seminar' ? 'sudah_terjadwal' : 'sudah_terjadwal')->whereHas('tugas_akhir', function ($q) {
             $q->where('status', 'acc');
         });
         if ($perHari) {
@@ -141,14 +141,15 @@ class HomeController extends Controller
         ]);
     }
 
+
     public function getJadwal(Request $request)
     {
         $activeTab = $request->get('active_tab', 'pra_seminar');
 
         if ($activeTab === 'pra_seminar') {
-            $jadwal = $this->fetchJadwal('seminar', true);
+            $jadwal = $this->fetchJadwal('seminar', false);
         } elseif ($activeTab === 'pra_sidang') {
-            $jadwal = $this->fetchJadwal('sidang', true);
+            $jadwal = $this->fetchJadwal('sidang', false);
         } else {
             return response()->json([
                 'message' => 'Tab tidak ditemukan',

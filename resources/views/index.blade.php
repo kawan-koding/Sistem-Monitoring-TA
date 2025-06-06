@@ -1,7 +1,7 @@
 @extends('layout.app')
 @section('content')
 
-    <section id="hero-fullscreen" class="hero-fullscreen d-flex align-items-center" style="background: url('{{ asset('storage/images/settings/' . getSetting('app_bg')) }}') center center; width: 100%; min-height: 100vh; background-size: cover; padding: 120px 0 60px;"> 
+    <section id="hero-fullscreen" class="hero-fullscreen d-flex align-items-center" style="background: url('{{ asset('storage/images/settings/' . getSetting('app_bg')) }}') center center; width: 100%; min-height: 100vh; background-size: cover; padding: 120px 0 60px;">
         <div class="container d-flex flex-column align-items-center position-relative" data-aos="zoom-out">
             <h2 class="text-white text-center">{{ getSetting('app_name') }}</h2>
             <p class="text-center text-white">Ajukan tugas akhir anda sekarang, explorasi ide-ide kreatif, dan bersama kita capai kesuksesan dalam perjalanan akademis yang luar biasa</p>
@@ -13,7 +13,7 @@
             <div class="text-center mb-5">
                 <h5 class="font-size-24  m-0 fw-bold" style="color: var(--primary-color)">Tawaran Topik Tugas Akhir</h5>
                 <p class="text-muted"><span>Temukan topik yang sesuai dengan bidang keahlian kamu</span></p>
-            </div>            
+            </div>
             <div class="info" id="info">
                 @forelse ($tawaran as $item)
                 <div class="info-item d-flex">
@@ -71,7 +71,7 @@
                         </span>
                     </p>
                 </div>
-            </div>  
+            </div>
             @empty
                 <tr>
                 <p class="text-center " style="color: #aeaeae">Tidak ada tugas akhir</p>
@@ -85,77 +85,6 @@
         @endif
     </section>
 
-    {{-- <section id="jadwal" class="jadwal" style="padding: 60px 0 100px 0">
-        <div class="container">
-            <h5 class="font-size-24 text-center m-0 fw-bold mb-1">Jadwal Mahasiswa</h5>
-            <ul class="nav nav-pills w-100 mb-2">
-                <li class="flex-fill">
-                    <a  class="nav-link text-center fw-bold {{ $activeTab === 'pra_seminar' ? 'active' : '' }}"   href="{{ url()->current() }}?active_tab=pra_seminar&tanggal={{ $tanggal }}"  style="color: var(--primary-color)">
-                        Akan Seminar
-                    </a>
-                </li>
-                <li class="flex-fill">
-                    <a class="nav-link text-center fw-bold {{ $activeTab === 'pra_sidang' ? 'active' : '' }}" href="{{ url()->current() }}?active_tab=pra_sidang&tanggal={{ $tanggal }}" style="color: var(--primary-color)">
-                        Akan Sidang
-                    </a>
-                </li>
-            </ul>
-
-            <ul class="nav nav-pills w-100 mb-3">
-                @foreach ($tanggalTabs as $tabTanggal)
-                    <li class="flex-fill">
-                        <a class="nav-link text-center {{ $tabTanggal === $tanggal ? 'active' : '' }}" style="font-size: 14px; color: var(--primary-color)"  href="{{ url()->current() }}?active_tab={{ $activeTab }}&tanggal={{ $tabTanggal }}">
-                            {{ $tabTanggal }}
-                        </a>
-                    </li>
-                @endforeach
-            </ul>
-
-            @forelse ($jadwal as $key => $item)
-                <div class="row p-1 mt-3 g-0 mb-3 align-items-center" style="max-width: 750px;">
-                    <div class="col-md-2">
-                        <img id="modal-image-{{ $key }}" src="{{ $item->poster == null ? 'https://ui-avatars.com/api/?background=random&name='. urlencode($item->nama) : asset('storage/files/pemberkasan/' . $item->poster) }}" alt="Poster" class="img-fluid" style="width: 120px; height: 150px; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#imagePreviewModal-{{ $key }}">
-                        <div class="modal fade" id="imagePreviewModal-{{ $key }}" tabindex="-1" aria-labelledby="imagePreviewLabel" aria-hidden="true" style="backdrop-filter: blur(5px); background-color: rgba(0, 0, 0, 0.5);">
-                            <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content">
-                                    <div class="modal-body p-0">
-                                        <img id="preview-image-{{ $key }}" src="{{ $item->poster == null ? 'https://ui-avatars.com/api/?background=random&name='. urlencode($item->nama) : asset('storage/files/pemberkasan/' . $item->poster) }}" alt="Preview Poster" class="img-fluid preview-image">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-10">
-                        <div class="ps-3">
-                            <p class="m-0">{{ $item->jam }} WIB</p>
-                            <h6 class="m-0"><b>{{ $item->judul_ta }}</b></h6>
-                            <p class="m-0">
-                                <span class="badge me-2" style="background-color: #dfdfdf; color:var(--primary-color); letter-spacing: 1px">{{ $item->tipe }}</span> |
-                                <span class="ms-2">{{ $item->topik }}</span>
-                            </p>
-                            <p class="m-0 fw-bold" style="font-size: 16px">{{ $item->nama }}</p>
-                            <p class="text-muted small m-0" style="font-size: 14px">
-                                Pembimbing: <span class="me-2">{{ $item->pembimbing_1 }}</span> /
-                                <span class="ms-2">{{ $item->pembimbing_2 }}</span>
-                            </p>
-                            <p class="text-muted small m-0" style="font-size: 14px">
-                                Penguji: <span class="me-2">{{ $item->penguji_1 }}</span> /
-                                <span class="ms-2">{{ $item->penguji_2 }}</span>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            @empty
-                <p class="text-center " style="color: #aeaeae">Belum ada data</p>
-            @endforelse
-
-            @if($jadwal->count() > 4)
-            <div class="text-center mt-5">
-                <a href="#" style="color: var(--primary-color)" class="small">Lihat Semua...</a>
-            </div>
-            @endif
-        </div>
-    </section> --}}
     <section id="jadwal" class="jadwal" style="padding: 60px 0 100px 0">
         <div class="container">
             <h5 class="font-size-24 text-center m-0 fw-bold mb-1">Jadwal Mahasiswa</h5>
@@ -166,137 +95,11 @@
                 <li class="flex-fill">
                     <a class="nav-link nav-active text-center fw-bold" data-tab="pra_sidang" href="javascript:void(0);" onclick="changeTab('pra_sidang', this)">Akan Sidang</a>
                 </li>
-            </ul> 
-            
+            </ul>
             <div id="jadwal-list" class="row"></div>
         </div>
     </section>
 
-    
-            {{-- @if($jadwal->count() > 0)
-            <div class="table-container">
-                <table class="table zero-configuration" style="font-size: 14px!important">
-                    <thead>
-                        <th style="min-width: 80px; max-width: 100px;">Poster</th>
-                        <th>Nama</th>
-                        <th style="min-width: 250px">Judul</th>
-                        <th>Pembimbing</th>
-                        <th>Penguji</th>
-                        <th>Waktu dan Tempat</th>
-                    </thead>
-                    <tbody>
-                        @foreach ($jadwal as $key => $item)    
-                            <tr>
-                                <td >
-                                    <img id="modal-image-{{ $key }}" src="{{ $item->poster == null ? 'https://ui-avatars.com/api/?background=random&name='. urlencode($item->nama) : asset('storage/files/pemberkasan/' . $item->poster) }}" alt="Poster" class="img-fluid" style="max-width: 100px; max-height: 120px; cursor: pointer; object-fit: cover; border-radius: 5px; border: 1px solid #ccc;" data-bs-toggle="modal" data-bs-target="#imagePreviewModal-{{ $key }}">
-                                    <div class="modal fade" id="imagePreviewModal-{{ $key }}" tabindex="-1" aria-labelledby="imagePreviewLabel" aria-hidden="true" style="backdrop-filter: blur(5px); background-color: rgba(0, 0, 0, 0.5);">
-                                        <div class="modal-dialog modal-dialog-centered">
-                                            <div class="modal-content">
-                                                <div class="modal-body p-0">
-                                                    <img id="preview-image-{{ $key }}" src="{{ $item->poster == null ? 'https://ui-avatars.com/api/?background=random&name='. urlencode($item->nama) : asset('storage/files/pemberkasan/' . $item->poster) }}" alt="Preview Poster" class="img-fluid preview-image" style="border-radius: 5px; border: 1px solid #ccc;">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>{{ $item->nama ?? '-' }}</td>
-                                <td>{{ $item->judul ?? '-' }}</td>
-                                <td style="white-space: nowrap">
-                                    <ol>
-                                        <li>{{ $item->pembimbing_1 ?? '-' }}</li>
-                                        <li>{{ $item->pembimbing_2 ?? '-' }}</li>
-                                    </ol>
-                                </td>
-                                <td style="white-space: nowrap">
-                                    <ol>
-                                        <li>{{ $item->penguji_1 ?? '-' }}</li>
-                                        <li>{{ $item->penguji_2 ?? '-' }}</li>
-                                    </ol>
-                                </td>
-                                <td>
-                                    <strong>{{ $item->ruangan->nama_ruangan ?? '-' }}</strong>
-                                    <p class="m-0">{{ $item->tanggal ?? '-' }}</p>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-            @else
-                <div class="d-flex align-items-center justify-content-center py-5">
-                    <div class="text-center py-5">
-                        <img src="{{ asset('assets/images/no-data.png') }}" height="350" alt="">
-                        <p class="text-muted m-0">Tidak ada jadwal yang ditemukan.</p>
-                    </div>
-                </div>
-            @endif --}}
-
-    {{-- <section id="mahasiswa" class="mahasiswa" style="padding: 60px 0 100px 0">
-        <div class="container">
-            <h5 class="font-size-24 text-center m-0 fw-bold mb-1">Daftar Mahasiswa</h5>
-            <ul class="nav nav-pills w-100 mb-5">
-                <li class="flex-fill">
-                    <a class="nav-link {{ $tabs === 'seminar' ? 'active' : '' }} text-center fw-bold"  href="{{ url()->current() . '?tabs=seminar' }}" style="color: var(--primary-color)">
-                        Sudah Seminar
-                    </a>
-                </li>
-                <li class="flex-fill">
-                    <a class="nav-link {{ $tabs === 'sidang' ? 'active' : '' }} text-center fw-bold"  href="{{ url()->current() . '?tabs=sidang' }}" style="color: var(--primary-color)">
-                        Sudah Sidang
-                    </a>
-                </li>
-            </ul>
-            
-            @forelse ($completed as $key => $item)
-                <div class="row p-1 mt-3 g-0 mb-3 align-items-center" style="max-width: 750px;">
-                    <div class="col-md-2">
-                        <img id="modal-image-{{ $key }}" src="{{ $item->poster == null ? 'https://ui-avatars.com/api/?background=random&name='. urlencode($item->nama) : asset('storage/files/pemberkasan/' . $item->poster) }}"
-                        alt="Poster" class="img-fluid" style="width: 120px; height: 150px; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#imagePreviewModal-{{ $key }}">
-                        <div class="modal fade" id="imagePreviewModal-{{ $key }}" tabindex="-1" aria-labelledby="imagePreviewLabel" aria-hidden="true" style="backdrop-filter: blur(5px); background-color: rgba(0, 0, 0, 0.5);">
-                            <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content">
-                                    <div class="modal-body p-0">
-                                        <img id="preview-image-{{ $key }}" src="{{ $item->poster == null ? 'https://ui-avatars.com/api/?background=random&name='. urlencode($item->nama) : asset('storage/files/pemberkasan/' . $item->poster) }}" alt="Preview Poster" class="img-fluid preview-image">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-10">
-                        <div class="ps-3">
-                            <h6 class="m-0"><b>{{ $item->judul_ta ?? '-' }}</b></h6>
-                            <p class="m-0">
-                                <span class="badge me-2" style="background-color: #dfdfdf; color:var(--primary-color); letter-spacing: 1px">{{ $item->tipe ?? '-' }}</span> |
-                                <span class="ms-2">{{ $item->topik ?? '-' }}</span>
-                            </p>
-                            <p class="m-0 fw-bold" style="font-size: 16px">{{ $item->nama ?? '-' }}</p>
-                            <p class="text-muted small m-0" style="font-size: 14px">
-                                Pembimbing: <span class="me-2">{{ $item->pembimbing_1 ?? '-' }}</span> /
-                                <span class="ms-2">{{ $item->pembimbing_2 ?? '-' }}</span>
-                            </p>
-                            <p class="text-muted small m-0" style="font-size: 14px">
-                                Penguji: <span class="me-2">{{ $item->penguji_1 ?? '-' }}</span> /
-                                <span class="ms-2">{{ $item->penguji_2 ?? '-' }}</span>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            @empty
-                <div class="d-flex align-items-center justify-content-center py-5">
-                    <div class="text-center py-5">
-                        <img src="{{ asset('assets/images/no-data.png') }}" height="350" alt="">
-                        <p class="text-muted m-0">Tidak ada data yang ditemukan.</p>
-                    </div>
-                </div>
-            @endforelse
-
-            @if($jadwal->count() > 4)
-                <div class="text-center mt-5">
-                    <a href="#" style="color: var(--primary-color)" class="small">Lihat Semua...</i></a>
-                </div>
-            @endif
-        </div>
-    </section> --}}
 @endsection
 
 @section('scripts')
@@ -397,7 +200,7 @@
                     </tr>
                 `;
             }
-            
+
             render += `
                     </tbody>
                 </table>
@@ -421,7 +224,7 @@
         tabs.forEach(tab => tab.classList.remove('active'));
         tabElement.classList.add('active');
         const data = await fetchJadwalData(activeTab);
-        Swal.close();   
+        Swal.close();
         renderJadwalTable(data);
     };
 

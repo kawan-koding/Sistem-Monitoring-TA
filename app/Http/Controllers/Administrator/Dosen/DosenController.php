@@ -47,10 +47,10 @@ class DosenController extends Controller
             'studyPrograms' => ProgramStudi::all(),
         ];
         // dd(Jurusan::all());
-        
+
         return view('administrator.dosen.index', $data);
     }
-    
+
     public function store(DosenRequest $request)
     {
         try {
@@ -123,9 +123,12 @@ class DosenController extends Controller
             $dosen->update($request->only(['nip', 'nidn', 'name', 'email', 'jenis_kelamin', 'telp', 'ttd', 'bidang_keahlian', 'program_studi_id','alamat']));
             $user = $dosen->user;
             $existingUser = User::where('username', $dosen->nidn)->where('id', '!=', $user->id)->first();
-            if(is_null($existingUser)) {
-                $request->merge(['username' => $dosen->nidn, 'password' => Hash::make($dosen->nidn)]);
-                $dosen->user->update($request->only(['name', 'username', 'email', 'password']));
+            if (is_null($existingUser)) {
+                $updateData = ['name' => $dosen->name,'username' => $dosen->nidn,'email' => $dosen->email,];
+                if ($user->username !== $dosen->nidn) {
+                    $updateData['password'] = Hash::make($dosen->nidn);
+                }
+                $user->update($updateData);
             }
             return redirect()->route('apps.dosen')->with('success', 'Data berhasil diperbarui');
         } catch (\Exception $e) {
@@ -164,10 +167,10 @@ class DosenController extends Controller
                 // $filename = 'Dosen_'. rand(0, 999999999) .'_'. rand(0, 999999999) .'.'. $file->getClientOriginalExtension();
                 // $file->move(public_path('storage/files/dosen'), $filename);
             }
-            
+
             // Excel::import(new DosenImport, public_path('storage/files/dosen/'. $filename));
             Excel::import(new DosenImport, $file);
-            
+
             return redirect()->route('apps.dosen')->with('success', 'Berhasil import dosen');
         } catch (\Exception $e) {
             return redirect()->route('apps.dosen')->with('error', $e->getMessage());
@@ -177,7 +180,7 @@ class DosenController extends Controller
     public function exportExcel() {
         return Excel::download(new DosenExport, 'Data Dosen.xlsx');
     }
-    
+
     // public function tarikData(){
     //     try{
     //         //dd($response);
@@ -185,7 +188,7 @@ class DosenController extends Controller
     //         if (!isset($token)) {
     //             return redirect()->route('apps.dosen')->with('error', 'Set token bearer terlebih dahulu');
     //         }
-            
+
     //         $response = Http::withoutVerifying()
     //         ->withHeaders([
     //             'Accept' => 'application/json',
@@ -194,10 +197,10 @@ class DosenController extends Controller
     //         ->get('https://sit.poliwangi.ac.id/v2/api/v1/sitapi/pegawai', [
     //             'prodi' => 4,
     //         ]);
-    //         $data = $response->json()['data']; 
+    //         $data = $response->json()['data'];
     //         // dd($data);
     //         foreach ($data as $key) {
-                
+
     //             $cek_user = User::where('username', $key['username'])->first();
     //             if(!isset($cek_user->id) && isset($key['username'])){
     //                 $dsnNew = User::create([

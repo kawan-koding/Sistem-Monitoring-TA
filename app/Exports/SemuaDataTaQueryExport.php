@@ -20,7 +20,7 @@ class SemuaDataTaQueryExport implements FromCollection, WithHeadings, WithMappin
     protected $periodeName;
     protected $status;
     protected $no = 1;
-    
+
     public function __construct($periodeId, $prodiId, $prodiName, $periodeName, $status)
     {
         $this->periodeId = $periodeId;
@@ -34,7 +34,7 @@ class SemuaDataTaQueryExport implements FromCollection, WithHeadings, WithMappin
     {
         $this->no = 1;
     }
- 
+
     public function collection()
     {
         $query = TugasAkhir::with(['mahasiswa', 'jadwal_seminar', 'bimbing_uji','sidang'])->wherePeriodeTaId($this->periodeId)->whereStatus('acc');
@@ -42,16 +42,18 @@ class SemuaDataTaQueryExport implements FromCollection, WithHeadings, WithMappin
         if($this->status == 'sudah_pemberkasan') {
             $query->whereNotNull('status_sidang')->orWhere('status_pemberkasan', 'sudah_lengkap');
         } elseif(in_array($this->status, ['belum_terjadwal','telah_seminar','sudah_pemberkasan','sudah_terjadwal'])) {
-            $query->whereHas('jadwal_seminar', function($q) { 
+            $query->whereHas('jadwal_seminar', function($q) {
                 $q->whereStatus($this->status);
             });
         } elseif(in_array($this->status, ['belum_daftar','sudah_sidang','sudah_terjadwal_sidang','sudah_daftar'])) {
             $sts = $this->status === 'sudah_terjadwal_sidang' ? 'sudah_terjadwal' : $this->status;
-            $query->whereHas('sidang', function($q) use ($sts) { 
+            dd($sts);
+            $query->whereHas('sidang', function($q) use ($sts) {
                 $q->whereStatus($sts);
             });
-        } elseif($this->status == 'sudah_pemberkasan_sidang') { 
+        } elseif($this->status == 'sudah_pemberkasan_sidang') {
             $query->whereNotNull('status_sidang')->whereStatusPemberkasan('sudah_lengkap');
+            dd('disini 2');
         }
         $query = $query->get();
         $query = $query->map(function ($tugasAkhir, $index) {
@@ -113,7 +115,7 @@ class SemuaDataTaQueryExport implements FromCollection, WithHeadings, WithMappin
             }
             return '-';
         };
-    
+
         return [
             $this->no++,
             $tugasAkhir->kelas ?? '-',
@@ -157,7 +159,7 @@ class SemuaDataTaQueryExport implements FromCollection, WithHeadings, WithMappin
                 'font' => ['bold' => true, 'color' => ['argb' => '000000']],
                 'fill' => [
                     'fillType' => 'solid',
-                    'startColor' => ['argb' => 'FFFF00'], 
+                    'startColor' => ['argb' => 'FFFF00'],
                 ],
                 'alignment' => [
                     'horizontal' => 'center',

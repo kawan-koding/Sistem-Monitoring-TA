@@ -29,7 +29,7 @@ class STSemproQueryExport implements FromCollection, WithHeadings, WithMapping, 
         $this->periodeName = $periodeName;
     }
 
-    
+
     public function beforeSheet(BeforeSheet $event)
     {
         $this->no = 1;
@@ -43,7 +43,12 @@ class STSemproQueryExport implements FromCollection, WithHeadings, WithMapping, 
             $tugasAkhir = TugasAkhir::with(['mahasiswa','bimbing_uji'])->whereMahasiswaId($mhs->id)->wherePeriodeTaId($this->periodeId)->whereIn('status', ['acc', 'draft','pengajuan ulang'])->first();
             if ($tugasAkhir) {
                 $bimbingUjiData = $tugasAkhir->bimbing_uji->mapWithKeys(function ($item) {
-                    return [ $item->jenis . $item->urut => $item->dosen->name ?? '-', ];
+                    return [
+                        $item->jenis . $item->urut => [
+                            'name' => $item->dosen->name ?? '-',
+                            'nip' => $item->dosen->nip ?? '-',
+                        ],
+                    ];
                 });
 
                 $tugasAkhirData->push([
@@ -60,41 +65,6 @@ class STSemproQueryExport implements FromCollection, WithHeadings, WithMapping, 
             }
         }
         return $tugasAkhirData;
-
-        // $query = TugasAkhir::where('periode_ta_id', $this->periodeId)->whereIn('status',['acc', 'draft','pengajuan ulang'])->whereHas('mahasiswa', function ($query) {
-        //     $query->where('program_studi_id', $this->prodiId);
-        // })->with(['mahasiswa' => function ($query) {
-        //     $query->orderBy('nim');
-        // }])->get()->map(function ($item) {
-        //     return [
-        //         'nim' => $item->mahasiswa->nim,
-        //         'nama' => $item->mahasiswa->nama_mhs,
-        //         'judul' => $item->judul,
-        //         'pembimbing_1' => $item->bimbing_uji()->where('jenis', 'pembimbing')->where('urut', 1)->first() 
-        //             ? $item->bimbing_uji()->where('jenis', 'pembimbing')->where('urut', 1)->first()->dosen->name 
-        //             : '-',
-        //         'pembimbing_2' => $item->bimbing_uji()->where('jenis', 'pembimbing')->where('urut', 2)->first() 
-        //             ? $item->bimbing_uji()->where('jenis', 'pembimbing')->where('urut', 2)->first()->dosen->name 
-        //             : '-',
-        //         'penguji_1' => $item->bimbing_uji()->where('jenis', 'penguji')->where('urut', 1)->first() 
-        //             ? $item->bimbing_uji()->where('jenis', 'penguji')->where('urut', 1)->first()->dosen->name 
-        //             : '-',
-        //         'penguji_2' => $item->bimbing_uji()->where('jenis', 'penguji')->where('urut', 2)->first() 
-        //             ? $item->bimbing_uji()->where('jenis', 'penguji')->where('urut', 2)->first()->dosen->name 
-        //             : '-',
-        //         // 'penguji_1' => $item->bimbing_uji()->where('jenis', 'penguji')->where('urut', 1)->first() 
-        //         //     ? ($item->bimbing_uji()->where('jenis', 'pengganti')->where('urut', 1)->first() 
-        //         //         ? $item->bimbing_uji()->where('jenis', 'pengganti')->where('urut', 1)->first()->dosen->name 
-        //         //         : $item->bimbing_uji()->where('jenis', 'penguji')->where('urut', 1)->first()->dosen->name)
-        //         //     : '-',
-        //         // 'penguji_2' => $item->bimbing_uji()->where('jenis', 'penguji')->where('urut', 2)->first() 
-        //         //     ? ($item->bimbing_uji()->where('jenis', 'pengganti')->where('urut', 2)->first() 
-        //         //         ? $item->bimbing_uji()->where('jenis', 'pengganti')->where('urut', 2)->first()->dosen->name 
-        //         //         : $item->bimbing_uji()->where('jenis', 'penguji')->where('urut', 2)->first()->dosen->name)
-        //         //     : '-',
-        //     ];
-        // });
-        // return $query;
     }
 
     public function map($row): array
@@ -102,10 +72,17 @@ class STSemproQueryExport implements FromCollection, WithHeadings, WithMapping, 
         $mahasiswa = $row['mahasiswa'] ?? new \stdClass();
         $bimbingUji = $row['bimbingUji'] ?? new \stdClass();
         $tugasAkhir = $row['tugasAkhir'] ?? new \stdClass();
-        $pembimbing1 = optional($bimbingUji)['pembimbing1'] ?? '-';
-        $pembimbing2 = optional($bimbingUji)['pembimbing2'] ?? '-';
-        $penguji1 = optional($bimbingUji)['penguji1'] ?? '-';
-        $penguji2 = optional($bimbingUji)['penguji2'] ?? '-';
+
+        $formatDosen = function ($bimbingUji, $key) {
+            $name = $bimbingUji[$key]['name'] ?? '-';
+            $nip = $bimbingUji[$key]['nip'] ?? '-';
+            return "{$name}\nNIP/NIPPPK: {$nip}";
+        };
+
+        $pembimbing1 = isset($bimbingUji['pembimbing1']) ? $formatDosen($bimbingUji, 'pembimbing1') : '-';
+        $pembimbing2 = isset($bimbingUji['pembimbing2']) ? $formatDosen($bimbingUji, 'pembimbing2') : '-';
+        $penguji1 = isset($bimbingUji['penguji1']) ? $formatDosen($bimbingUji, 'penguji1') : '-';
+        $penguji2 = isset($bimbingUji['penguji2']) ? $formatDosen($bimbingUji, 'penguji2') : '-';
 
         return [
             $this->no++,
@@ -174,5 +151,30 @@ class STSemproQueryExport implements FromCollection, WithHeadings, WithMapping, 
         $sheet->getColumnDimension('F')->setWidth(30);
         $sheet->getColumnDimension('G')->setWidth(20);
         $sheet->getColumnDimension('H')->setWidth(30);
+
+        $sheet->getStyle('E:H')->getAlignment()->setWrapText(true);
+        return [
+            1 => [
+                'font' => [
+                    'bold' => true,
+                    'color' => ['argb' => '000000'],
+                ],
+                'fill' => [
+                    'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                    'startColor' => [
+                        'argb' => 'FFFF00',
+                    ],
+                ],
+                'borders' => [
+                    'allBorders' => [
+                        'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                    ],
+                ],
+                'alignment' => [
+                    'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                    'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+                ],
+            ],
+        ];
     }
 }
