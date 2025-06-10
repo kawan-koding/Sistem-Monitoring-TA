@@ -20,6 +20,7 @@ use App\Exports\SemuaDataTaExport;
 use App\Http\Controllers\Controller;
 use App\Models\Penilaian;
 use App\Models\Revisi;
+use App\Models\Sidang;
 use Illuminate\Support\Facades\File;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -253,7 +254,19 @@ class JadwalSeminarController extends Controller
                 });
             })->whereDate('tanggal', $request->tanggal)->whereStatus('sudah_terjadwal')->where('jam_mulai', '>=', $request->jam_mulai)->whereBetween('jam_mulai', [$request->jam_mulai, $request->jam_selesai])->first();
 
+            if(is_null($check)) {
+                $check = Sidang::whereHas('tugas_akhir', function($q) use ($jadwalSeminar) {
+                    $q->whereHas('bimbing_uji', function($q) use ($jadwalSeminar) {
+                        $q->whereIn('dosen_id', $jadwalSeminar->tugas_akhir->bimbing_uji->pluck('dosen_id')->toArray());
+                    });
+                })->whereDate('tanggal', $request->tanggal)->whereStatus('sudah_terjadwal')->where('jam_mulai', '>=', $request->jam_mulai)->whereBetween('jam_mulai', [$request->jam_mulai, $request->jam_selesai])->first();
+            }
+
             $checkRuangan = JadwalSeminar::whereNot('id', $jadwalSeminar->id)->whereRuanganId($request->ruangan)->whereDate('tanggal', $request->tanggal)->whereStatus('sudah_terjadwal')->where('jam_mulai', '>=', $request->jam_mulai)->whereBetween('jam_mulai', [$request->jam_mulai, $request->jam_selesai])->first();
+
+            if(is_null($checkRuangan)) {
+                $checkRuangan = Sidang::whereRuanganId($request->ruangan)->whereDate('tanggal', $request->tanggal)->whereStatus('sudah_terjadwal')->where('jam_mulai', '>=', $request->jam_mulai)->whereBetween('jam_mulai', [$request->jam_mulai, $request->jam_selesai])->first();
+            }
             
             if (!is_null($check)) {
                 return redirect()->back()->withInput($request->all())->with(['error' => 'Ada jadwal pada waktu tersebut']);
