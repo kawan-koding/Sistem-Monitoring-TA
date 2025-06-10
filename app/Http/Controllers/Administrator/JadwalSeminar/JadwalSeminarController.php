@@ -54,7 +54,7 @@ class JadwalSeminarController extends Controller
 
             if ($request->has('status') && !empty($request->status)) {
                 $query = $query->where('status', $request->status)->whereHas('tugas_akhir', function ($q) use ($request) {
-                    $q->where('status_sidang', );
+                    // $q->where('status_sidang', );
                     $q->whereNull('status_sidang');
                 });
             } else {
@@ -254,7 +254,7 @@ class JadwalSeminarController extends Controller
             })->whereDate('tanggal', $request->tanggal)->whereStatus('sudah_terjadwal')->where('jam_mulai', '>=', $request->jam_mulai)->whereBetween('jam_mulai', [$request->jam_mulai, $request->jam_selesai])->first();
 
             $checkRuangan = JadwalSeminar::whereNot('id', $jadwalSeminar->id)->whereRuanganId($request->ruangan)->whereDate('tanggal', $request->tanggal)->whereStatus('sudah_terjadwal')->where('jam_mulai', '>=', $request->jam_mulai)->whereBetween('jam_mulai', [$request->jam_mulai, $request->jam_selesai])->first();
-            
+
             if (!is_null($check)) {
                 return redirect()->back()->withInput($request->all())->with(['error' => 'Ada jadwal pada waktu tersebut']);
             }
@@ -284,7 +284,7 @@ class JadwalSeminarController extends Controller
             // if($revisi->count() > 0) {
             //     $revisi->delete();
             // }
-            
+
             return redirect()->route('apps.jadwal-seminar')->with(['success' => 'Berhasil menyimpan data']);
         } catch (\Exception $e) {
             return redirect()->back()->with(['error' => $e->getMessage()]);
