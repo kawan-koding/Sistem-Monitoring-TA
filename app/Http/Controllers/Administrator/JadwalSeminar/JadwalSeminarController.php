@@ -54,7 +54,8 @@ class JadwalSeminarController extends Controller
 
             if ($request->has('status') && !empty($request->status)) {
                 $query = $query->where('status', $request->status)->whereHas('tugas_akhir', function ($q) use ($request) {
-                    $q->where('status_pemberkasan', 'belum_lengkap');
+                    $q->where('status_sidang', );
+                    $q->whereNull('status_sidang');
                 });
             } else {
                 if ($request->has('status_pemberkasan') && !empty($request->status_pemberkasan)) {
