@@ -24,8 +24,10 @@
                             </select>
                         </div>
                     </form>
+                    @if(auth()->user()->hasRole('Developer'))
+                        <a href="{{ route('apps.download-all') }}" target="_blank" class="btn btn-primary">Download Dokumen Pemberkasan</a>
+                    @endif
                 </div>
-                <hr>
                 <div class="table-responsive">
                     <table class="table table-striped" id="datatable">
                         <thead>
@@ -43,8 +45,8 @@
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>
-                                        <p class="m-0 badge rounded-pill bg-primary-subtle text-primary small">{{ $item->mahasiswa->programStudi->display }}</p> 
-                                        <a href="#" class="m-0" data-bs-toggle="modal" data-bs-target="#mahasiswaModal{{ $key }}"> 
+                                        <p class="m-0 badge rounded-pill bg-primary-subtle text-primary small">{{ $item->mahasiswa->programStudi->display }}</p>
+                                        <a href="#" class="m-0" data-bs-toggle="modal" data-bs-target="#mahasiswaModal{{ $key }}">
                                             <p class="fw-bold m-0">{{ $item->mahasiswa->nama_mhs }}</p>
                                         </a>
                                         <div class="modal fade" id="mahasiswaModal{{ $key }}" tabindex="-1" aria-labelledby="mahasiswaModalLabel{{ $key }}" aria-hidden="true">

@@ -20,6 +20,7 @@ class DashboardController extends Controller
 {
     public function index()
     {
+        
         $dataRole = [];
 
         if (in_array(session('switchRoles'), ['Admin','Developer','Teknisi'])) {
@@ -95,7 +96,7 @@ class DashboardController extends Controller
     {
         // get periode active
         $periode = PeriodeTa::whereIsActive(true)->get();
-        
+
         // set default type
         $type = $request->has('type') ? $request->type : 'seminar';
         $date = $request->has('date') ? $request->date : date('Y-m-d');
@@ -115,7 +116,7 @@ class DashboardController extends Controller
             $dataSeminar->whereHas('tugas_akhir.bimbing_uji', function ($q) {
                 $q->where('dosen_id', getinfologin()->userable->id);
             });
-    
+
             $dataSidang->whereHas('tugas_akhir.bimbing_uji', function ($q) {
                 $q->where('dosen_id', getinfologin()->userable->id);
             });
@@ -125,7 +126,7 @@ class DashboardController extends Controller
             $dataSeminar->whereHas('tugas_akhir.mahasiswa', function ($q) {
                 $q->where('program_studi_id', getInfoLogin()->userable->program_studi_id);
             });
-    
+
             $dataSidang->whereHas('tugas_akhir.mahasiswa', function ($q) {
                 $q->where('program_studi_id', getInfoLogin()->userable->program_studi_id);
             });
@@ -223,7 +224,7 @@ class DashboardController extends Controller
         $taAcc = TugasAkhir::where('status','acc')->whereHas('mahasiswa', function($query) use ($prodi) {
             $query->where('program_studi_id', $prodi);
         })->get();
-        
+
         $data = [
             'mods' => 'dashboard',
             'belumAcc' => $belumAcc,

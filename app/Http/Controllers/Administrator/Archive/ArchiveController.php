@@ -8,6 +8,9 @@ use App\Models\JenisDokumen;
 use App\Models\ProgramStudi;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
+use ZipArchive;
+use Illuminate\Http\Response;
 
 class ArchiveController extends Controller
 {
@@ -21,7 +24,7 @@ class ArchiveController extends Controller
                 $q->where('program_studi_id', $request->program_studi);
             });
         }
-        
+
         if($request->has('periode') && !empty($request->periode) && $request->periode != 'semua') {
             $query->where('program_studi_id', $request->program_studi);
 
@@ -33,7 +36,7 @@ class ArchiveController extends Controller
         } else {
             $periode = PeriodeTa::all();
         }
-    
+
         $data = [
             'title' => 'Arsip',
             'breadcrumbs' => [
@@ -88,5 +91,28 @@ class ArchiveController extends Controller
         ];
 
         return view('administrator.pengajuan-ta.partials.detail', $data);
+    }
+
+    public function download()
+    {
+        $files = Storage::disk('public')->files('files/pemberkasan');
+        if (empty($files)) {
+            return response()->json(['message' => 'Tidak ada file untuk diunduh.'], 404);
+        }
+
+        $zipFileName = 'pemberkasan.zip';
+        $zipPath = storage_path('app/' . $zipFileName);
+        $zip = new ZipArchive;
+
+        if ($zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) === true) {
+            foreach ($files as $file) {
+                $zip->addFile(storage_path('app/public/' . $file), basename($file));
+            }
+            $zip->close();
+        } else {
+            return response()->json(['message' => 'Gagal membuat file ZIP.'], 500);
+        }
+
+        return response()->download($zipPath)->deleteFileAfterSend(true);
     }
 }
