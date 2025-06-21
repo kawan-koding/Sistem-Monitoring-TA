@@ -39,21 +39,26 @@ class SemuaDataTaQueryExport implements FromCollection, WithHeadings, WithMappin
     {
         $query = TugasAkhir::with(['mahasiswa', 'jadwal_seminar', 'bimbing_uji','sidang'])->wherePeriodeTaId($this->periodeId)->whereStatus('acc');
 
-        if($this->status == 'sudah_pemberkasan') {
-            $query->whereNotNull('status_sidang')->orWhere('status_pemberkasan', 'sudah_lengkap');
-        } elseif(in_array($this->status, ['belum_terjadwal','telah_seminar','sudah_pemberkasan','sudah_terjadwal'])) {
+        // Filter tambahan berdasarkan status request
+        if ($this->status == 'sudah_pemberkasan') {
+            $query->Where('status_pemberkasan', 'sudah_lengkap');
+        } elseif (in_array($this->status, ['belum_terjadwal', 'telah_seminar', 'sudah_pemberkasan', 'sudah_terjadwal'])) {
+            // Filter berdasarkan status dari relasi jadwal_seminar
             $query->whereHas('jadwal_seminar', function($q) {
                 $q->whereStatus($this->status);
             });
-        } elseif(in_array($this->status, ['belum_daftar','sudah_sidang','sudah_terjadwal_sidang','sudah_daftar'])) {
+        } elseif (in_array($this->status, ['belum_daftar', 'sudah_sidang', 'sudah_terjadwal_sidang', 'sudah_daftar'])) {
+            // Untuk sidang, konversi status 'sudah_terjadwal_sidang' menjadi 'sudah_terjadwal'
             $sts = $this->status === 'sudah_terjadwal_sidang' ? 'sudah_terjadwal' : $this->status;
-            $query->whereNull('status_sidang')->where('status_pemberkasan','sudah_lengkap')->whereHas('sidang', function($q) use ($sts) {
+
+            // Hanya ambil data yang sudah pemberkasan lengkap dan status sidangnya sesuai
+            $query->where('status_pemberkasan','sudah_lengkap')->whereHas('sidang', function($q) use ($sts) {
                 $q->whereStatus($sts);
             });
-            dd($query->get());
-        } elseif($this->status == 'sudah_pemberkasan_sidang') {
-            $query->whereNotNull('status_sidang')->whereStatusPemberkasan('sudah_lengkap');
+        } elseif ($this->status == 'sudah_pemberkasan_sidang') {
+            $query->whereStatusPemberkasanSidang('sudah_lengkap');
         }
+
         $query = $query->get();
         $query = $query->map(function ($tugasAkhir, $index) {
             $bimbingUjiData = $tugasAkhir->bimbing_uji->mapWithKeys(function ($item) {

@@ -318,6 +318,4 @@ Route::prefix('apps')->middleware('auth')->group(function () {
     Route::get('coming-soon', function(){
         return view('errors.coming-soon');
     })->name('apps.coming-soon');
-
-    Route::get('download-all', [ArchiveController::class, 'download'])->name('apps.download-all');
 });

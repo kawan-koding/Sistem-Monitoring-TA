@@ -31,7 +31,7 @@ class ProfileController extends Controller
                 ]
             ],
             'profile' => $user,
-            'bidangKeahlian' => $bidangKeahlian,  
+            'bidangKeahlian' => $bidangKeahlian,
         ];
 
         return view('administrator.profile.index', $data);
@@ -46,7 +46,7 @@ class ProfileController extends Controller
                 'fileImage.image' => 'File harus berupa gambar',
                 'fileImage.mimes' => 'Format file harus jpeg, png, jpg, atau gif',
             ]);
-            
+
             if($request->hasFile('fileImage')) {
                 $file = $request->file('fileImage');
                 $filename = 'Users_'. rand(0, 999999999) .'_'. rand(0, 999999999) .'.'. $file->getClientOriginalExtension();
@@ -77,7 +77,7 @@ class ProfileController extends Controller
                     'telp.required' => 'Telp harus diisi',
                     'jenis_kelamin.required' => 'Jenis Kelamin harus diisi',
                 ]);
-                
+
                 $user->name = $request->name;
                 $user->userable->nama_mhs = $request->name;
                 $user->email = $request->email;
@@ -93,7 +93,6 @@ class ProfileController extends Controller
                     'jenis_kelamin' => 'required',
                     'file' => 'nullable|mimes:png,jpg,jpeg',
                     'bidang_keahlian' => 'nullable',
-                    'foto_profile' => 'nullable|image|mimes:jpeg,png,jpg',
                 ],
                 [
                     'name.required' => 'Nama harus diisi',
@@ -102,8 +101,6 @@ class ProfileController extends Controller
                     'telp.required' => 'Telp harus diisi',
                     'jenis_kelamin.required' => 'Jenis Kelamin harus diisi',
                     'file.mimes' => 'File harus berupa png, jpg, atau jpeg',
-                    'foto_profile.image' => 'File harus berupa gambar',
-                    'foto_profile.mimes' => 'File harus berupa png, jpg, atau jpeg',
                 ]);
                 $user->name = $request->name;
                 $user->userable->name = $request->name;
@@ -112,21 +109,9 @@ class ProfileController extends Controller
                 $user->userable->telp = $request->telp;
                 $user->userable->jenis_kelamin = $request->jenis_kelamin;
                 $user->userable->bidang_keahlian = $request->bidang_keahlian ? implode(', ', $request->bidang_keahlian) : null;
-                if($request->hasFile('foto_profile')) {
-                    $file = $request->file('foto_profile');
-                    $filename = 'Dosen_'. rand(0, 999999999) .'_'. rand(0, 999999999) .'.'. $file->getClientOriginalExtension();
-                    $file->move(public_path('storage/images/dosen'), $filename);
-                    if($user->userable->ttd) {
-                        File::delete(public_path('storage/images/dosen/'. $user->userable->ttd));
-                    }
-                } else {
-                    $filename = $user->userable->ttd;
-                }
-                $user->userable->ttd = $filename;
             }
             $user->save();
             $user->userable->save();
-
             return redirect()->route('apps.profile')->with('success', 'Data berhasil diperbarui');
         } catch (\Exception $e) {
             return redirect()->route('apps.profile')->with('error', $e->getMessage());

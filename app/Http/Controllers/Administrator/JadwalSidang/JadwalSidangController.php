@@ -74,22 +74,22 @@ class JadwalSidangController extends Controller
             if ($request->has('status') && !empty($request->status)) {
                 if ($request->status == 'sudah_sidang') {
                     $query = $query->where('status', $request->status)->whereHas('tugas_akhir', function ($q) use ($request) {
-                        $q->where('status_pemberkasan', 'belum_lengkap');
+                        $q->where('status_pemberkasan_sidang', 'belum_lengkap');
                     });
                 } else {
                     $query = $query->where('status', $request->status)->whereHas('tugas_akhir', function ($q) use ($request) {
                         $q->whereNull('status_sidang');
-                        // $q->where('status_pemberkasan', 'sudah_lengkap');
                     });
                 }
             } else {
-                if ($request->has('status_pemberkasan') && !empty($request->status_pemberkasan)) {
+                if ($request->has('status_pemberkasan_sidang') && !empty($request->status_pemberkasan_sidang)) {
                     $query = $query->whereHas('tugas_akhir', function ($q) use ($request) {
-                        $q->whereNotNull('status_sidang');
-                        $q->where('status_pemberkasan', $request->status_pemberkasan);
+                        $q->where('status_pemberkasan_sidang', $request->status_pemberkasan_sidang);
                     });
                 } else {
-                    $query = $query->where('status', 'belum_daftar');
+                    $query = $query->where('status', 'belum_daftar')->whereHas('tugas_akhir', function ($q) use ($request) {
+                        $q->where('status_pemberkasan_sidang', 'belum_lengkap')->where('status_pemberkasan', 'sudah_lengkap');
+                    });
                 }
             }
 
@@ -137,7 +137,7 @@ class JadwalSidangController extends Controller
             ],
             'data' => $query,
             'status' => $request->has('status') ? $request->status : null,
-            'status_pemberkasan' => $request->has('status_pemberkasan') ? $request->status_pemberkasan : null,
+            'status_pemberkasan_sidang' => $request->has('status_pemberkasan_sidang') ? $request->status_pemberkasan_sidang : null,
             'document_sidang' => $docSidang,
             'periodes' => $request->has('filter1') && $request->filter1 != 'semua' ? PeriodeTa::where('program_studi_id', $request->filter1)->get() : PeriodeTa::whereIsActive(true)->get(),
             'programStudies' => ProgramStudi::all(),
@@ -298,7 +298,7 @@ class JadwalSidangController extends Controller
                 'jam_selesai' => $request->jam_selesai,
                 'status' => 'sudah_terjadwal'
             ]);
-            $jadwalSidang->tugas_akhir->update(['status_sidang' => null, 'status_pemberkasan' => 'belum_lengkap']);
+            // $jadwalSidang->tugas_akhir->update(['status_sidang' => null, 'status_pemberkasan' => 'belum_lengkap']);
             $rating = Penilaian::where('type', 'Sidang')->whereIn('bimbing_uji_id', $jadwalSidang->tugas_akhir->bimbing_uji->pluck('id'));
             if ($rating->count() > 0) {
                 $rating->delete();
@@ -395,15 +395,6 @@ class JadwalSidangController extends Controller
 
     public function show(Sidang $sidang)
     {
-        // $recapPemb1 = is_null($sidang->tugas_akhir->bimbing_uji()->where('jenis', 'pembimbing')->where('urut', 1)->first()->penilaian) ? 0 : $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'pembimbing')->where('urut', 1)->first()->penilaian()->where('type', 'Sidang')->sum('nilai');
-        // $recapPemb1 = $recapPemb1 > 0 ? $recapPemb1 / $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'pembimbing')->where('urut', 1)->first()->penilaian()->where('type', 'Sidang')->count() : 0;
-        // $recapPemb2 = is_null($sidang->tugas_akhir->bimbing_uji()->where('jenis', 'pembimbing')->where('urut', 2)->first()->penilaian) ? 0 : $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'pembimbing')->where('urut', 2)->first()->penilaian()->where('type', 'Sidang')->sum('nilai');
-        // $recapPemb2 = $recapPemb2 > 0 ? $recapPemb2 / $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'pembimbing')->where('urut', 2)->first()->penilaian()->where('type', 'Sidang')->count() : 0;
-        // $recapPenguji1 = $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'pengganti')->where('urut', 1)->count() > 0 ? (is_null($sidang->tugas_akhir->bimbing_uji()->where('jenis', 'pengganti')->where('urut', 1)->first()->penilaian) ? 0 : $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'pengganti')->where('urut', 1)->first()->penilaian()->where('type', 'Sidang')->sum('nilai')) : (is_null($sidang->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 1)->first()->penilaian) ? 0 : $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 1)->first()->penilaian()->where('type', 'Sidang')->sum('nilai'));
-        // $recapPenguji1 = $recapPenguji1 > 0 ? $recapPenguji1 / ($sidang->tugas_akhir->bimbing_uji()->where('jenis', 'pengganti')->where('urut', 1)->count() > 0 ? $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'pengganti')->where('urut', 1)->first()->penilaian()->where('type', 'Sidang')->count() : $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 1)->first()->penilaian()->where('type', 'Sidang')->count()) : 0;
-        // $recapPenguji2 = $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'pengganti')->where('urut', 2)->count() > 0 ? (is_null($sidang->tugas_akhir->bimbing_uji()->where('jenis', 'pengganti')->where('urut', 2)->first()->penilaian) ? 0 : $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'pengganti')->where('urut', 2)->first()->penilaian()->where('type', 'Sidang')->sum('nilai')) : (is_null($sidang->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 2)->first()->penilaian) ? 0 : $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 2)->first()->penilaian()->where('type', 'Sidang')->sum('nilai'));
-        // $recapPenguji2 = $recapPenguji2 > 0 ? $recapPenguji2 / ($sidang->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 2)->first()->penilaian()->where('type', 'Sidang')->count() ? $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'pengganti')->where('urut', 2)->first()->penilaian()->where('type', 'Sidang')->count() : $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'penguji')->where('urut', 2)->first()->penilaian()->where('type', 'Sidang')->count()) : 0;
-
         $pembimbing1 = $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'pembimbing')->where('urut', 1)->first();
         $recapPemb1 = isset($pembimbing1->penilaian) ? $pembimbing1->penilaian()->where('type', 'Sidang')->sum('nilai') : 0;
         $countPemb1 = isset($pembimbing1->penilaian) ? $pembimbing1->penilaian()->where('type', 'Sidang')->count() : 0;
@@ -635,7 +626,7 @@ class JadwalSidangController extends Controller
     public function validasiBerkas(Sidang $jadwalSidang)
     {
         try {
-            $jadwalSidang->tugas_akhir()->update(['status_pemberkasan' => 'sudah_lengkap']);
+            $jadwalSidang->tugas_akhir()->update(['status_pemberkasan_sidang' => 'sudah_lengkap']);
 
             return redirect()->back()->with(['success' => 'Berkas berhasil diperbarui']);
         } catch (Exception $e) {
@@ -643,15 +634,6 @@ class JadwalSidangController extends Controller
         }
     }
 
-    public function berkasLengkap(Sidang $sidang)
-    {
-        try {
-            $sidang->tugas_akhir->update(['status_pemberkasan' => 'sudah_lengkap']);
-            return redirect()->back()->with(['success' => 'Berhasil memperbarui data']);
-        } catch (Exception $e) {
-            return redirect()->back()->with(['error' => $e->getMessage()]);
-        }
-    }
 
     public function nilai(Request $request, Sidang $sidang)
     {

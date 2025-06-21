@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Administrator\User;
 
-use File;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\Dosen;
 use App\Models\Mahasiswa;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\User\UserRequest;
 
@@ -21,7 +21,7 @@ class UserController extends Controller
         })->get();
         // $users = User::all();
         $roles = Role::whereNotIn('name', ['Developer'])->get();
-        
+
         $data = [
             'title' => 'Pengguna',
             'mods' => 'user',
@@ -101,7 +101,7 @@ class UserController extends Controller
                 $dosen = $user->userable;
                 $dosen->update(['name' => $user->name, 'email' => $user->email, 'nidn' => $user->username]);
             }
-            
+
             return redirect()->route('apps.users')->with('success', 'Data berhasil diupdate');
         } catch (\Exception $e) {
             return redirect()->route('apps.users')->with('error', $e->getMessage());

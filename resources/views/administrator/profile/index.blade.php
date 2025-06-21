@@ -147,22 +147,7 @@
                                     {{-- <span class="small text-danger"><i>*Tekan enter untuk menambahkan bidang keahlian dan gunakan tanda (-) sebagai sebagai pemisah</i></span><br> --}}
                                 </div>
                             @endif
-                            @if ($profile->hasRole(['Dosen', 'Admin', 'Kaprodi']))
-                                <div class="mb-3">
-                                    <label for="">Tanda Tangan</label>
-                                    <p class="text-danger small m-0"><i>*) TTD harus berupa barcode</i></p>
-                                    <div class="border p-4 text-center" style="border-radius: 8px">
-                                        <input type="text" name="foto_profile" id="foto_profile"
-                                            class="form-control filepond">
-                                        @if (!is_null($profile->userable->ttd))
-                                            <a href="{{ asset('storage/images/dosen/' . $profile->userable->ttd) }}"
-                                                class="btn btn-primary btn-sm w-100" target="_blank"> Lihat Tanda
-                                                Tangan</a>
-                                        @endif
-                                    </div>
-                                    
-                                </div>
-                            @endif
+                           
                             <div class="my-2 text-end">
                                 <button class="btn btn-primary" type="submit"><i class="bx bx-save"></i>
                                     Simpan</button>

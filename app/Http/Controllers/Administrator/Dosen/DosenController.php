@@ -59,15 +59,6 @@ class DosenController extends Controller
             if(isset($user->id)){
                 return redirect()->route('apps.dosen')->with('error', 'Username telah terpakai');
             }
-            if($request->hasFile('file')) {
-                $file = $request->file('file');
-                $filename = 'Dosen_'. rand(0, 999999999) .'_'. rand(0, 999999999) .'.'. $file->getClientOriginalExtension();
-                $file->move(public_path('storage/images/dosen'), $filename);
-            } else {
-                $filename = null;
-            }
-
-            $request->merge(['ttd' => $filename]);
             $dosen = Dosen::create($request->only(['nip', 'nidn', 'name', 'email', 'jenis_kelamin', 'telp', 'ttd', 'program_studi_id', 'bidang_keahlian', 'alamat']));
             $existingUser = User::where('username', $dosen->nidn)->orWhere('email', $dosen->email)->first();
             if(!$existingUser) {
@@ -75,7 +66,7 @@ class DosenController extends Controller
                     'name' => $request->name,
                     'username' => $request->nidn,
                     'email' => $request->email,
-                    'password' => Hash::make($request->nidn),
+                    'password' => Hash::make('Poliwangi@1234'),
                     'image' => 'default.jpg',
                     'is_active' => 1,
                     'userable_type' => Dosen::class,
@@ -107,27 +98,12 @@ class DosenController extends Controller
     {
         //
         try {
-            if($request->hasFile('file')) {
-                $file = $request->file('file');
-                $filename = 'Dosen_'. rand(0, 999999999) .'_'. rand(0, 999999999) .'.'. $file->getClientOriginalExtension();
-                $file->move(public_path('storage/images/dosen'), $filename);
-                if($dosen->ttd) {
-                    File::delete(public_path('storage/images/dosen/'. $dosen->ttd));
-                }
-            } else {
-                $filename = $dosen->ttd;
-            }
-
-            $request->merge(['ttd' => $filename]);
             $oldEmail = $dosen->email;
             $dosen->update($request->only(['nip', 'nidn', 'name', 'email', 'jenis_kelamin', 'telp', 'ttd', 'bidang_keahlian', 'program_studi_id','alamat']));
             $user = $dosen->user;
             $existingUser = User::where('username', $dosen->nidn)->where('id', '!=', $user->id)->first();
             if (is_null($existingUser)) {
-                $updateData = ['name' => $dosen->name,'username' => $dosen->nidn,'email' => $dosen->email,];
-                if ($user->username !== $dosen->nidn) {
-                    $updateData['password'] = Hash::make($dosen->nidn);
-                }
+                $updateData = ['name' => $dosen->name,'username' => $dosen->nidn,'email' => $dosen->email];
                 $user->update($updateData);
             }
             return redirect()->route('apps.dosen')->with('success', 'Data berhasil diperbarui');

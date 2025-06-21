@@ -2,15 +2,21 @@
 
 namespace App\Http\Controllers\Administrator\Archive;
 
+use ZipArchive;
+use ZipStream\ZipStream;
 use App\Models\PeriodeTa;
 use App\Models\TugasAkhir;
 use App\Models\JenisDokumen;
 use App\Models\ProgramStudi;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Storage;
-use ZipArchive;
 use Illuminate\Http\Response;
+use ZipStream\Option\Archive;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ArchiveController extends Controller
 {
@@ -93,26 +99,35 @@ class ArchiveController extends Controller
         return view('administrator.pengajuan-ta.partials.detail', $data);
     }
 
-    public function download()
+    public function backupDatabase()
     {
-        $files = Storage::disk('public')->files('files/pemberkasan');
-        if (empty($files)) {
-            return response()->json(['message' => 'Tidak ada file untuk diunduh.'], 404);
+        $database = env('DB_DATABASE');
+        $username = env('DB_USERNAME');
+        $password = env('DB_PASSWORD');
+        $host     = env('DB_HOST', '127.0.0.1');
+        $port     = env('DB_PORT', '3306');
+
+        // Generate filename with timestamp
+        $filename = "Database_{$database}_backup_" . now()->format('Y-m-d_H-i-s') . ".sql";
+
+        // Construct mysqldump command with compression
+        $command = "mysqldump --user={$username} --password=\"{$password}\" --host={$host} --port={$port} {$database}";
+
+        // Execute the command and capture the output
+        $result = null;
+        $output = null;
+        exec($command, $output, $result);
+
+        // Check if backup was successful
+        if ($result !== 0) {
+            return response()->json(['status' => 'error', 'message' => 'Database backup failed.'], 500);
         }
 
-        $zipFileName = 'pemberkasan.zip';
-        $zipPath = storage_path('app/' . $zipFileName);
-        $zip = new ZipArchive;
-
-        if ($zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) === true) {
-            foreach ($files as $file) {
-                $zip->addFile(storage_path('app/public/' . $file), basename($file));
-            }
-            $zip->close();
-        } else {
-            return response()->json(['message' => 'Gagal membuat file ZIP.'], 500);
-        }
-
-        return response()->download($zipPath)->deleteFileAfterSend(true);
+        return response()->streamDownload(function () use ($command) {
+            passthru($command);
+        }, $filename, [
+            'Content-Type' => 'application/sql',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+        ]);
     }
 }

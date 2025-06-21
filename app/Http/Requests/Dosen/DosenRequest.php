@@ -49,7 +49,6 @@ class DosenRequest extends FormRequest
             'telp' => 'nullable',
             'alamat' => 'nullable',
             'program_studi_id' => 'nullable',
-            'file' => 'nullable|image|mimes:png,jpg,jpeg',
         ];
     }
 
@@ -65,8 +64,6 @@ class DosenRequest extends FormRequest
             'email.required' => 'Email harus diisi',
             'email.unique' => 'Email sudah ada',
             'jenis_kelamin.required' => 'Jenis kelamin harus diisi',
-            'file.image' => 'File harus berupa gambar',
-            'file.mimes' => 'File harus png,jpg,jpeg',
         ];
     }
 }

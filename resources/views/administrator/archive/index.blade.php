@@ -5,29 +5,36 @@
     <div class="col-md-12 col-sm-12 col-g-12">
         <div class="card">
             <div class="card-body">
-                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
-                    <form action="" >
-                        <div class="d-flex gap-2 flex-column flex-md-row">
-                            <select name="program_studi" id="program_studi" class="form-control" onchange="this.form.submit()">
-                                <option selected disabled hidden>Filter Program Studi</option>
-                                <option value="semua" {{ request('program_studi') == 'semua' ? 'selected' : '' }}>Semua Program Studi</option>
-                                @foreach($prodi as $p)
-                                    <option value="{{ $p->id }}" {{ request('program_studi') == $p->id ? 'selected' : '' }}>{{ $p->nama }}</option>
-                                @endforeach
-                            </select>
-                            <select name="periode" id="" class="form-control" onchange="this.form.submit()">
-                                <option selected disabled hidden>Filter Periode</option>
-                                <option value="semua" {{ request('periode') == 'semua'  ? 'selected' : '' }}>Semua</option>
-                                @foreach ($periode as $item)
-                                    <option value="">{{$item->programStudi->display}} - ({{ $item->nama }})</option>
-                                @endforeach
-                            </select>
-                        </div>
+              <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 mb-3">
+                    {{-- Kiri: Filter Form --}}
+                    <form action="" class="d-flex gap-2 flex-column flex-md-row align-items-start">
+                        <select name="program_studi" id="program_studi" class="form-control" onchange="this.form.submit()">
+                            <option selected disabled hidden>Filter Program Studi</option>
+                            <option value="semua" {{ request('program_studi') == 'semua' ? 'selected' : '' }}>Semua Program Studi</option>
+                            @foreach($prodi as $p)
+                                <option value="{{ $p->id }}" {{ request('program_studi') == $p->id ? 'selected' : '' }}>{{ $p->nama }}</option>
+                            @endforeach
+                        </select>
+                        <select name="periode" class="form-control" onchange="this.form.submit()">
+                            <option selected disabled hidden>Filter Periode</option>
+                            <option value="semua" {{ request('periode') == 'semua'  ? 'selected' : '' }}>Semua</option>
+                            @foreach ($periode as $item)
+                                <option value="{{ $item->id }}" {{ request('periode') == $item->id ? 'selected' : '' }}>
+                                    {{ $item->programStudi->display }} - ({{ $item->nama }})
+                                </option>
+                            @endforeach
+                        </select>
                     </form>
-                    @if(auth()->user()->hasRole('Developer'))
-                        <a href="{{ route('apps.download-all') }}" target="_blank" class="btn btn-primary">Download Dokumen Pemberkasan</a>
+
+                    {{-- Kanan: Tombol Aksi --}}
+                    @if(auth()->user()->hasRole('Developer') || auth()->user()->hasRole('Admin'))
+                        <div class="d-flex flex-column flex-md-row gap-2">
+                            <button id="backup-btn" class="btn btn-success"><i class="bx bx-cloud-download me-2"></i>Backup Database</button>
+                        </div>
                     @endif
                 </div>
+
+                <hr>
                 <div class="table-responsive">
                     <table class="table table-striped" id="datatable">
                         <thead>
@@ -152,5 +159,28 @@
         </div>
     </div>
 </div>
+
+@endsection
+
+
+@section('js')
+
+<script>
+    $('#backup-btn').on('click', function (e) {
+        e.preventDefault();
+        let $btn = $(this);
+        $btn.html('<i class="bx bx-loader bx-spin font-size-16 align-middle me-2"></i>Loading...');
+        $btn.prop('disabled', true);
+
+        // Gunakan window.open untuk memicu download
+        const downloadUrl = "{{ route('apps.backup-database') }}";
+        window.open(downloadUrl, '_blank');
+
+        setTimeout(() => {
+            $btn.html('<i class="bx bx-cloud-download me-2"></i>Backup Database');
+            $btn.prop('disabled', false);
+        }, 3000); // tunggu sebentar sebelum aktifkan lagi tombol
+    });
+</script>
 
 @endsection

@@ -20,7 +20,6 @@ return new class extends Migration
             $table->string('email')->nullable();
             $table->string('telp')->nullable();
             $table->text('alamat')->nullable();
-            $table->text('ttd')->nullable();    
             $table->string('bidang_keahlian')->nullable();
             $table->foreignId('program_studi_id')->nullable()->references('id')->on('program_studis')->onDelete('cascade');
             $table->timestamps();

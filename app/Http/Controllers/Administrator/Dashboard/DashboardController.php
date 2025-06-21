@@ -20,7 +20,7 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        
+
         $dataRole = [];
 
         if (in_array(session('switchRoles'), ['Admin','Developer','Teknisi'])) {
@@ -48,7 +48,7 @@ class DashboardController extends Controller
 
     public function getGraduatedData(Request $request)
     {
-        $data = TugasAkhir::select(DB::raw('count(*) as count'), 'periode_tas.id')->join('periode_tas', 'tugas_akhirs.periode_ta_id', '=', 'periode_tas.id')->where('status', 'acc')->whereNotNull('status_sidang')->where('status_pemberkasan', 'sudah_lengkap')->groupBy('periode_ta_id')->get();
+        $data = TugasAkhir::select(DB::raw('count(*) as count'), 'periode_tas.id')->join('periode_tas', 'tugas_akhirs.periode_ta_id', '=', 'periode_tas.id')->where('status', 'acc')->where('status_pemberkasan_sidang', 'sudah_lengkap')->groupBy('periode_tas.id')->get();
         $periode = PeriodeTa::limit(8)->get();
 
         $data = $periode->map(function ($item) use ($data) {
@@ -166,11 +166,11 @@ class DashboardController extends Controller
             'mhsBelumMengajukanCount' => Mahasiswa::whereDoesntHave('tugas_akhir')->count(),
             'mhsBelumSeminarCount' => TugasAkhir::where('status', 'acc')->whereNull(['status_seminar', 'status_sidang'])->count(),
             'mhsSudahSeminarCount' => TugasAkhir::where('status', 'acc')->whereNotNull('status_seminar')->count(),
-            'mhsSudahPemberkasanSeminarCount' => TugasAkhir::where('status', 'acc')->whereNotNull(['status_seminar', 'status_sidang'])->where('status_pemberkasan', 'belum_lengkap')->orWhereNotNull('status_seminar')->where('status_pemberkasan', 'sudah_lengkap')->count(),
             'mhsDaftarSidangCount' => TugasAkhir::where('status', 'acc')->whereNotNull('status_seminar')->whereHas('sidang', fn ($q) => $q->where('status', 'sudah_daftar'))->count(),
             'mhsBelumSidangCount' => TugasAkhir::where('status', 'acc')->whereNotNull('status_seminar')->whereNull('status_sidang')->count(),
             'mhsSudahSidangCount' => TugasAkhir::where('status', 'acc')->whereNotNull(['status_seminar', 'status_sidang'])->count(),
-            'mhsSudahPemberkasanSidangCount' => TugasAkhir::where('status', 'acc')->whereNotNull(['status_seminar', 'status_sidang'])->whereStatusPemberkasan('sudah_lengkap')->count(),
+            'mhsSudahPemberkasanSeminarCount' => TugasAkhir::where('status', 'acc')->where('status_pemberkasan', 'sudah_lengkap')->count(),
+            'mhsSudahPemberkasanSidangCount' => TugasAkhir::where('status', 'acc')->whereStatusPemberkasanSidang('sudah_lengkap')->count(),
             'mods' => ['dashboard_admin', 'dashboard'],
         ];
 
@@ -237,9 +237,9 @@ class DashboardController extends Controller
     }
 
 
-    public function exportJadwal()
-    {
+    // public function exportJadwal()
+    // {
 
-        return Excel::download(new JadwalExport(), "Jadwal.xlsx");
-    }
+    //     return Excel::download(new JadwalExport(), "Jadwal.xlsx");
+    // }
 }

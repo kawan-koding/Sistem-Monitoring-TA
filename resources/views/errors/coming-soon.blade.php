@@ -18,17 +18,17 @@
             <div class="row justify-content-center">
                 <div class="col-md-8 col-lg-6 col-xl-5">
                     <div class="card overflow-hidden">
-    
+
                         <div class="card-body">
-    
+
                             <div class="text-center p-3">
-    
+
                                 <div class="img">
                                     <img src="{{ asset('assets/images/coming-soon.png')}}" class="img-fluid" alt="">
                                 </div>
-    
+
                                 <h1 class="error-page mt-5" style="font-size: 34px!important"><span>Coming Soon</span></h1>
-                                <p class="mb-4 w-75 mx-auto">Mohon maaf, sistem masih dalam pengembangan dan akan tersedia dalam.</p>
+                                <p class="mb-4 w-75 mx-auto">Mohon maaf, sistem masih dalam Perbaikan dan akan tersedia dalam.</p>
                                 <div class="row">
                                     <div class="col-3">
                                         <div class="card shadow-sm mb-3">
@@ -89,22 +89,42 @@
     <!-- App js -->
     {{-- <script src="{{ asset('assets/js/app.js') }}"></script> --}}
     <script>
-        $(document).ready(function() {
-            // create time countdown 20 days and render in .days-display, .hours-display, .minutes-display, .seconds-display with interval
-            var target_date = new Date(2024, 10, 20).getTime();
-            setInterval(function() {
-                var now = new Date().getTime();
-                var distance = target_date - now;
-                var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-                $(".days-display").text(days);
-                $(".hours-display").text(hours);
-                $(".minutes-display").text(minutes);
-                $(".seconds-display").text(seconds);
-            }, 1000);
-        });
+    $(document).ready(function () {
+        // Dapatkan waktu sekarang
+        var now = new Date();
+
+        // Buat target date: hari ini jam 23:59:59
+        var target_date = new Date(
+            now.getFullYear(),
+            now.getMonth(),
+            now.getDate(),
+            23, 59, 59, 999
+        ).getTime();
+
+        var interval = setInterval(function () {
+            var now = new Date().getTime();
+            var distance = target_date - now;
+
+            if (distance < 0) {
+                clearInterval(interval);
+                $(".days-display").text(0);
+                $(".hours-display").text(0);
+                $(".minutes-display").text(0);
+                $(".seconds-display").text(0);
+                return;
+            }
+
+            var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            $(".days-display").text(days);
+            $(".hours-display").text(hours);
+            $(".minutes-display").text(minutes);
+            $(".seconds-display").text(seconds);
+        }, 1000);
+    });
     </script>
 </body>
 </html>
