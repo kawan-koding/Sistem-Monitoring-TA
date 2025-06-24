@@ -114,12 +114,20 @@ $(document).ready(function () {
 });
 
 $('.modal').on('hidden.bs.modal', function () {
-    $(this).find('form')[0].reset();
-    $(this).find('input, textarea').val('');
+    const $form = $(this).find('form');
+
+    $form.each(function () {
+        const token = $(this).find('input[name="_token"]').val();
+        this.reset();
+        $(this).find('input[name="_token"]').val(token);
+    });
+
+    $(this).find('input:not([name="_token"]):not([type="file"]), textarea').val('');
     $(this).find('input[type="file"]').val(null);
     $(this).find('select').val(null).trigger('change');
     $(this).find('.filepond').each(function () {
         FilePond.find(this).removeFiles();
     });
 });
+
 
