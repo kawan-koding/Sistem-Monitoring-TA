@@ -24,10 +24,6 @@
     <link href="{{ asset('landing-assets/vendor/sweetalert/css/sweetalert2.min.css') }}" rel="stylesheet" type="text/css" />
     <!-- Icons Css -->
     <link href="{{ asset('landing-assets/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
-    {{-- <link href="{{ asset('landing-assets/css/dataTables.min.css')}}" rel="stylesheet"> --}}
-    <!-- Datatblae -->
-    <link href="{{ asset('landing-assets/vendor/datatables.net-bs4/css/dataTables.bootstrap4.min.css') }}" rel="stylesheet" type="text/css" />
-    <link href="{{ asset('landing-assets/vendor/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css') }}" rel="stylesheet" type="text/css" />
     <!-- Template Main CSS File -->
     <link href="{{ asset('landing-assets/css/main.css')}}" rel="stylesheet">
     <script>
@@ -42,29 +38,13 @@
     @yield('app')
 
     <script src="{{ asset('landing-assets/js/jquery.min.js')}}"></script>
-    <!-- Required datatable js -->
-    <script src="{{ asset('landing-assets/vendor/datatables.net/js/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('landing-assets/vendor/datatables.net-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
-    <!-- Responsive examples -->
-    <script src="{{ asset('landing-assets/vendor/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
-    <script src="{{ asset('landing-assets/vendor/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js') }}"></script>
     <!-- Responsive datatable examples -->
     <link href="{{ asset('landing-assets/vendor/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css') }}" rel="stylesheet" type="text/css" />
     <!-- Vendor JS Files -->
     <script src="{{ asset('landing-assets/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
     <script src="{{ asset('landing-assets/vendor/aos/aos.js')}}"></script>
-    <script src="{{ asset('landing-assets/vendor/glightbox/js/glightbox.min.js')}}"></script>
-    <script src="{{ asset('landing-assets/vendor/isotope-layout/isotope.pkgd.min.js')}}"></script>
-    <script src="{{ asset('landing-assets/vendor/swiper/swiper-bundle.min.js')}}"></script>
-    <script src="{{ asset('landing-assets/vendor/php-email-form/validate.js')}}"></script>
     <!-- Sweet Alerts js -->
     <script src="{{ asset('landing-assets/vendor/sweetalert/js/sweetalert2.all.min.js') }}"></script>
-    <!-- Apexcharts -->
-    <script src="{{ asset('landing-assets/vendor/apexcharts/apexcharts.min.js')}}"></script>
-    <script src="{{ asset('landing-assets/js/apexcharts.init.js')}}"></script>
-    <!-- Template Main JS File -->
-
-    <script src="{{ asset('landing-assets/js/datatables.init.js')}}"></script>
     <script src="{{ asset('landing-assets/js/main.js')}}"></script>
     @yield('scripts')
 </body>

@@ -133,6 +133,7 @@
     const renderJadwalTable = (data = null) => {
         var renderData = $('#jadwal-list');
         var render = '';
+        console.log(data);
         if (data.data.length == 0) {
             render += `
                 <div class="d-flex align-items-center justify-content-center py-5">

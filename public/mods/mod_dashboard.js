@@ -119,15 +119,15 @@ async function getScheduleData(data = null) {
                             </ol>
                             <p class="small m-0 fw-bold">Penguji</p>
                             <ol>
-                                ${item.tugas_akhir.bimbing_uji
-                                    .filter(
-                                        (bimbing) => bimbing.jenis == "penguji"
-                                    )
-                                    .map(
-                                        (bimbing) =>
-                                            `<li>${bimbing.dosen.name}</li>`
-                                    )
-                                    .join("")}
+                               ${
+                                    (() => {
+                                        const bimbingUji = item.tugas_akhir.bimbing_uji;
+                                        const pengganti = bimbingUji.filter(b => b.jenis === "pengganti");
+                                        const penguji = bimbingUji.filter(b => b.jenis === "penguji").filter(b => !pengganti.some(p => p.urut === b.urut));
+                                        const finalPenguji = [...penguji, ...pengganti].sort((a, b) => a.urut - b.urut);
+                                        return finalPenguji.map(b => `<li>${b.dosen.name}</li>`).join("");
+                                    })()
+                                }
                             </ol>
                         </td>
                         <td class="text-center">

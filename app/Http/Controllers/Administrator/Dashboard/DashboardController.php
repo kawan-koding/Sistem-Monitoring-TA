@@ -20,7 +20,6 @@ class DashboardController extends Controller
 {
     public function index()
     {
-
         $dataRole = [];
 
         if (in_array(session('switchRoles'), ['Admin','Developer','Teknisi'])) {
@@ -147,6 +146,7 @@ class DashboardController extends Controller
             return $item;
         });
 
+        // dd($dataSeminar, $dataSidang);
         // merge and return data
         return response()->json([
             'message' => 'success',
@@ -159,12 +159,14 @@ class DashboardController extends Controller
         $data = [
             'dosenCount' => Dosen::all()->count(),
             'mhsCount' => Mahasiswa::all()->count(),
-            'taCount' => TugasAkhir::all()->count(),
+            'taCount' => TugasAkhir::where('status', 'acc')->count(),
             'topikCount' => TugasAkhir::whereStatus('draft')->count(),
             // 'totalTa' => TugasAkhir::whereIn('status', ['reject'])->count(),
             // 'mhsBelumDaftarTa' => Mahasiswa::whereDoesntHave('tugas_akhir')->count(),
             'mhsBelumMengajukanCount' => Mahasiswa::whereDoesntHave('tugas_akhir')->count(),
-            'mhsBelumSeminarCount' => TugasAkhir::where('status', 'acc')->whereNull(['status_seminar', 'status_sidang'])->count(),
+            'mhsBelumSeminarCount' => Mahasiswa::whereHas('tugas_akhir', function ($query) {
+                $query->where('status', 'acc')->whereNull('status_seminar')->where('is_completed', true);
+            })->count(),
             'mhsSudahSeminarCount' => TugasAkhir::where('status', 'acc')->whereNotNull('status_seminar')->count(),
             'mhsDaftarSidangCount' => TugasAkhir::where('status', 'acc')->whereNotNull('status_seminar')->whereHas('sidang', fn ($q) => $q->where('status', 'sudah_daftar'))->count(),
             'mhsBelumSidangCount' => TugasAkhir::where('status', 'acc')->whereNotNull('status_seminar')->whereNull('status_sidang')->count(),
@@ -174,7 +176,7 @@ class DashboardController extends Controller
             'mods' => ['dashboard_admin', 'dashboard'],
         ];
 
-        // dd($data);
+        // dd(Mahasiswa::whereDoesntHave('tugas_akhir')->count());
         return $data;
     }
 

@@ -78,7 +78,7 @@ class JadwalSidangController extends Controller
                     });
                 } else {
                     $query = $query->where('status', $request->status)->whereHas('tugas_akhir', function ($q) use ($request) {
-                        $q->whereNull('status_sidang');
+                        $q->whereNull('status_sidang')->orWhere('status_sidang', 'retrial');
                     });
                 }
             } else {
@@ -715,7 +715,7 @@ class JadwalSidangController extends Controller
         ]);
 
         try {
-            if ($request->status == 'retrial') {
+            if ($request->status == '   ') {
                 $sidang->tugas_akhir->update([
                     'status_sidang' => 'retrial',
                 ]);
