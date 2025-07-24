@@ -7,6 +7,7 @@ use App\Models\ProgramStudi;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PeriodeTA\PeriodeTARequest;
+use App\Models\TugasAkhir;
 
 class PeriodeTAController extends Controller
 {
@@ -44,13 +45,13 @@ class PeriodeTAController extends Controller
                 $request->merge(['program_studi_id' => getInfoLogin()->userable->programStudi->id]);
                 PeriodeTa::create($request->only('nama', 'mulai_daftar', 'akhir_daftar', 'mulai_seminar', 'akhir_seminar', 'mulai_sidang', 'akhir_sidang', 'program_studi_id'));
             }
-            
+
             if(session('switchRoles') == 'Admin') {
                 $prodi = $request->input('program_studi_id', []);
                 if (empty($prodi) || !is_array($prodi)) {
                     return redirect()->back()->with('error', 'Program studi harus dipilih.');
                 }
-                
+
                 foreach ($prodi as $id) {
                     if (!ProgramStudi::where('id', $id)->exists()) {
                         return redirect()->back()->with('error', 'Program studi dengan ID ' . $id . ' tidak valid.');
@@ -108,24 +109,28 @@ class PeriodeTAController extends Controller
         try {
             if ($request->is == 0) {
                 $activeCount = PeriodeTa::where('program_studi_id', $periode->program_studi_id)->where('is_active', 1)->count();
-    
+
                 if ($activeCount <= 1) {
                     return $this->errorResponse(400, 'Setidaknya satu periode harus aktif untuk setiap program studi!');
                 }
             }
-    
+
             if ($request->is == 1) {
                 PeriodeTa::where('program_studi_id', $periode->program_studi_id)->where('is_active', 1)->update(['is_active' => 0]);
+                $oldPeriode = PeriodeTa::where('program_studi_id', $periode->program_studi_id)->where('id', '!=', $periode->id)->orderBy('id', 'desc')->first();
+                if ($oldPeriode) {
+                    TugasAkhir::where('periode_ta_id', $oldPeriode->id)->where('status_pemberkasan_sidang', 'belum_lengkap')->update(['periode_ta_id' => $periode->id]);
+                }
             }
-    
+
             $periode->update([
                 'is_active' => $request->is
             ]);
-    
+
             return $this->successResponse('Data berhasil diubah');
         } catch (\Exception $e) {
             return $this->exceptionResponse($e);
         }
     }
-    
+
 }

@@ -25,27 +25,40 @@ class DaftarTAController extends Controller
     public function index(Request $request)
     {
         $periode = PeriodeTa::where('is_active', 1)->get();
+
         if (session('switchRoles') == 'Kaprodi') {
             $programStudiId = getInfoLogin()->userable->program_studi_id ?? null;
             if (!empty($programStudiId)) {
                 $periode = $periode->where('program_studi_id', $programStudiId);
             }
         }
-        $dataTa = Mahasiswa::with(['tugas_akhir' => function ($query) use ($periode) {
-            $query->with(['bimbing_uji', 'periode_ta', 'topik', 'jenis_ta'])->whereNotIn('status', ['reject', 'cancel'])->whereIn('periode_ta_id', $periode->pluck('id'));
+
+        $dataTa = Mahasiswa::with(['tugas_akhir' => function ($query) {
+            $query->with(['bimbing_uji', 'periode_ta', 'topik', 'jenis_ta'])
+                ->whereNotIn('status', ['reject', 'cancel']);
         }]);
-        
-        if(session('switchRoles') == 'Kaprodi') {
-            if(!empty(getInfoLogin()->userable->program_studi_id)) {
-                $dataTa->where('program_studi_id', getInfoLogin()->userable->program_studi_id);  
+
+        if (session('switchRoles') == 'Kaprodi') {
+            if (!empty(getInfoLogin()->userable->program_studi_id)) {
+                $dataTa->where('program_studi_id', getInfoLogin()->userable->program_studi_id);
             }
         }
 
-        if ($request->has('mahasiswa') && !empty($request->mahasiswa) && $request->mahasiswa != 'semua' ) {
+        if ($request->has('periode') && !empty($request->periode) && $request->periode != 'semua') {
+            $dataTa->whereHas('tugas_akhir', function ($query) use ($request) {
+                $query->where('periode_ta_id', $request->periode);
+            });
+        } else {
+            $dataTa->whereHas('tugas_akhir', function ($query) use ($periode) {
+                $query->whereIn('periode_ta_id', $periode->pluck('id'));
+            });
+        }
+
+        if ($request->has('mahasiswa') && !empty($request->mahasiswa) && $request->mahasiswa != 'semua') {
             if ($request->mahasiswa == 'tanpa_ta') {
                 $dataTa->whereDoesntHave('tugas_akhir');
             }
-        
+
             if ($request->mahasiswa == 'belum_sempro') {
                 $dataTa->whereHas('tugas_akhir', function ($query) {
                     $query->whereHas('jadwal_seminar', function ($q) {
@@ -53,35 +66,51 @@ class DaftarTAController extends Controller
                     });
                 });
             }
-        
+
             if ($request->mahasiswa == 'belum_sidang') {
                 $dataTa->whereHas('tugas_akhir', function ($query) {
-                    $query->whereHas('sidang', function ($q) {
-                        $q->where('status', 'belum_daftar');
-                    });
+                    $query->whereNull('status_sidang');
                 });
             }
-            
+
             if ($request->mahasiswa == 'belum_pemberkasan') {
                 $dataTa->whereHas('tugas_akhir', function ($query) {
-                    $query->where('status_pemberkasan', 'belum_lengkap')->whereNotNull('status_sidang');
+                    $query->where('status_pemberkasan_sidang', 'belum_lengkap');
                 });
             }
         }
 
+        // === FILTER PROGRAM STUDI ===
         if ($request->has('program_studi') && !empty($request->program_studi) && $request->program_studi !== 'semua') {
             $dataTa->where('program_studi_id', $request->program_studi);
         }
 
+        // === FILTER TIPE TA ===
         if ($request->has('filter') && !empty($request->filter) && $request->filter != 'semua') {
-            $dataTa = $dataTa->whereHas('tugas_akhir', function ($query) use ($request) {
-                $query = $query->where('tipe', $request->filter);
+            $dataTa->whereHas('tugas_akhir', function ($query) use ($request) {
+                $query->where('tipe', $request->filter);
             });
         }
 
+        // Ambil data akhirnya
         $dataTa = $dataTa->get();
+        // dd($dataTa);
 
-        $data = [
+            $listPeriode = null;
+
+            if ($request->has('program_studi') && !empty($request->program_studi) && $request->program_studi != 'semua') {
+                // Jika user filter program studi
+                $listPeriode = PeriodeTa::where('program_studi_id', $request->program_studi)->get();
+            } elseif (session('switchRoles') === 'Kaprodi') {
+                // Jika yang login adalah Kaprodi dan tidak pilih prodi di filter
+                $kaprodiProdiId = getInfoLogin()->userable->program_studi_id ?? null;
+
+                $listPeriode = PeriodeTa::where('program_studi_id', $kaprodiProdiId)->get();
+            } else {
+                // Selain itu, ambil semua
+                $listPeriode = PeriodeTa::all();
+            }
+            $data = [
             'title' => 'Daftar Tugas Akhir',
             'mods' => 'daftar_ta',
             'breadcrumbs' => [
@@ -100,9 +129,10 @@ class DaftarTAController extends Controller
             ],
             'data' => $dataTa,
             'prodi' => ProgramStudi::all(),
+            'periode' => $listPeriode,
             'filter' => $request->has('filter') ? $request->filter : 'semua',
         ];
-        
+
         return view('administrator.daftar-ta.index', $data);
     }
 
@@ -150,7 +180,7 @@ class DaftarTAController extends Controller
 
     public function edit(TugasAkhir $tugasAkhir)
     {
-        $remapped = clone $tugasAkhir; 
+        $remapped = clone $tugasAkhir;
         $remapped->load('mahasiswa','bimbing_uji','periode_ta','topik','jenis_ta');
         $pemb1 = $remapped->bimbing_uji()->where('urut', 1)->where('jenis','pembimbing')->first();
         $pemb2 = $remapped->bimbing_uji()->where('urut', 2)->where('jenis','pembimbing')->first();
@@ -230,7 +260,7 @@ class DaftarTAController extends Controller
             'doc' => $docPengajuan,
             'action' => route('apps.daftar-ta.update', $tugasAkhir->id),
         ];
-        
+
         return view('administrator.daftar-ta.form', $data);
     }
 
@@ -263,7 +293,7 @@ class DaftarTAController extends Controller
             'doc_pemb_1.mimes' => 'Dokumen pembimbing 1 harus dalam format PDF atau DOCX.',
             'doc_ringkasan.mimes' => 'Dokumen ringkasan harus dalam format PDF atau DOCX.',
         ]);
-        
+
         try {
             DB::beginTransaction();
             $kuota = KuotaDosen::where('dosen_id', $request->pembimbing_1)->where('periode_ta_id', $tugasAkhir->periode_ta_id)->first();
@@ -287,7 +317,7 @@ class DaftarTAController extends Controller
                 // if ($bimbingUji >= $validasi['kuota']) {
                 //     return redirect()->back()->with('error', 'Kuota untuk dosen ' . $validasi['tipe'] . ' ' . $validasi['urut'] . ' telah penuh.');
                 // }
-                
+
                 $isExistingSelection = BimbingUji::where('tugas_akhir_id', $tugasAkhir->id)->where('jenis', $validasi['tipe'])->where('urut', $validasi['urut'])->where('dosen_id', $validasi['dosen_id'])->exists();
                 if (!$isExistingSelection && $bimbingUji >= $validasi['kuota']) {
                     return redirect()->back()->with(
@@ -296,7 +326,7 @@ class DaftarTAController extends Controller
                     );
                 }
             }
- 
+
             if($request->jenis_ta_new !== null) {
                 $newJenis = JenisTa::create(['nama_jenis' => $request->jenis_ta_new]);
                 $jenis = $newJenis->id;

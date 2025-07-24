@@ -44,12 +44,21 @@
                                 <option value="I" {{ $filter == 'I' ? 'selected' : '' }}>Individu</option>
                                 <option value="K" {{ $filter == 'K' ? 'selected' : '' }}>Kelompok</option>
                             </select>
+                            <select name="periode" class="form-control" onchange="this.form.submit()">
+                            <option selected disabled hidden>Filter Periode</option>
+                            <option value="semua" {{ request('periode') == 'semua'  ? 'selected' : '' }}>Semua</option>
+                            @foreach ($periode as $item)
+                                <option value="{{ $item->id }}" {{ request('periode') == $item->id ? 'selected' : '' }}>
+                                    {{ $item->programStudi->display }} - ({{ $item->nama }})
+                                </option>
+                            @endforeach
+                        </select>
                         </div>
                     </form>
                 </div>
                 <hr>
                 @endif
-                
+
                 @if(session('success'))
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
                         <i class="mdi mdi-check-all me-2"></i> {{ session('success') }}
@@ -93,8 +102,8 @@
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>
-                                        <p class="m-0 badge rounded-pill bg-primary-subtle text-primary small">{{ $item->programStudi->display }}</p> 
-                                        <a href="#" class="m-0" data-bs-toggle="modal" data-bs-target="#mahasiswaModal{{ $key }}"> 
+                                        <p class="m-0 badge rounded-pill bg-primary-subtle text-primary small">{{ $item->programStudi->display }}</p>
+                                        <a href="#" class="m-0" data-bs-toggle="modal" data-bs-target="#mahasiswaModal{{ $key }}">
                                             <p class="fw-bold m-0">{{ $item->nama_mhs }}</p>
                                         </a>
                                         <div class="modal fade" id="mahasiswaModal{{ $key }}" tabindex="-1" aria-labelledby="mahasiswaModalLabel{{ $key }}" aria-hidden="true">
@@ -194,7 +203,7 @@
                                             @can('delete-daftar-ta')
                                             <button onclick="hapusDaftarTa('{{ $item->tugas_akhir->first()->id }}', '{{ route('apps.daftar-ta.delete', $item->tugas_akhir->first()->id) }}')" class="btn btn-sm btn-outline-dark mb-3" title="Hapus"><i class="bx bx-trash"></i></button>
                                             @endcan
-                                        @else 
+                                        @else
                                             -
                                         @endif
                                     </td>

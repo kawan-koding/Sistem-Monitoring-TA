@@ -20,29 +20,43 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ArchiveController extends Controller
 {
-    public function index(Request $request)
+   public function index(Request $request)
     {
-        $periode = PeriodeTa::whereIsActive(true)->get();
-        $query = TugasAkhir::with(['mahasiswa','periode_ta'])->whereStatus('acc')->whereIn('periode_ta_id', $periode->pluck('id'))->whereNotNull('status_sidang')->where('status_pemberkasan','sudah_lengkap');
+        // Ambil semua periode aktif
+        $activePeriodes = PeriodeTa::where('is_active', true)->get();
+        $activePeriodeIds = $activePeriodes->pluck('id');
 
-        if($request->has('program_studi') && !empty($request->program_studi) && $request->program_studi != 'semua') {
-            $query->whereHas('mahasiswa', function($q) use ($request) {
+        // Cek apakah user memilih filter periode atau tidak
+        $selectedPeriodeId = $request->has('periode') && !empty($request->periode) && $request->periode != 'semua'
+            ? $request->periode
+            : ($activePeriodeIds->count() > 0 ? $activePeriodeIds : []); // default gunakan periode aktif
+
+        // Mulai query
+        $query = TugasAkhir::with(['mahasiswa', 'periode_ta'])
+            ->where('status', 'acc')
+            ->where('status_pemberkasan_sidang', 'sudah_lengkap');
+
+        // Filter periode (pakai dari filter user atau default aktif)
+        if (!empty($selectedPeriodeId)) {
+            $query->whereIn('periode_ta_id', is_array($selectedPeriodeId) ? $selectedPeriodeId : [$selectedPeriodeId]);
+        }
+
+        // Filter program studi jika dipilih
+        if ($request->has('program_studi') && !empty($request->program_studi) && $request->program_studi != 'semua') {
+            $query->whereHas('mahasiswa', function ($q) use ($request) {
                 $q->where('program_studi_id', $request->program_studi);
             });
         }
 
-        if($request->has('periode') && !empty($request->periode) && $request->periode != 'semua') {
-            $query->where('program_studi_id', $request->program_studi);
+        // Ambil data
+        $dataTugasAkhir = $query->get();
 
-        }
-        $query = $query->get();
+        // Ambil data periode untuk select option di view
+        $listPeriode = $request->has('program_studi') && !empty($request->program_studi) && $request->program_studi != 'semua'
+            ? PeriodeTa::where('program_studi_id', $request->program_studi)->get()
+            : PeriodeTa::all();
 
-        if($request->has('program_studi') && !empty($request->program_studi) && $request->program_studi != 'semua') {
-            $periode = PeriodeTa::whereProgramStudiId($request->program_studi)->get();
-        } else {
-            $periode = PeriodeTa::all();
-        }
-
+        // Siapkan data untuk dikirim ke view
         $data = [
             'title' => 'Arsip',
             'breadcrumbs' => [
@@ -55,12 +69,15 @@ class ArchiveController extends Controller
                     'is_active' => true
                 ],
             ],
-            'data' => $query,
+            'data' => $dataTugasAkhir,
             'prodi' => ProgramStudi::all(),
-            'periode' => $periode,
+            'periode' => $listPeriode,
+            'selected_periode' => $selectedPeriodeId,
         ];
+
         return view('administrator.archive.index', $data);
     }
+
 
     public function show(TugasAkhir $tugasAkhir)
     {
@@ -97,37 +114,5 @@ class ArchiveController extends Controller
         ];
 
         return view('administrator.pengajuan-ta.partials.detail', $data);
-    }
-
-    public function backupDatabase()
-    {
-        $database = env('DB_DATABASE');
-        $username = env('DB_USERNAME');
-        $password = env('DB_PASSWORD');
-        $host     = env('DB_HOST', '127.0.0.1');
-        $port     = env('DB_PORT', '3306');
-
-        // Generate filename with timestamp
-        $filename = "Database_{$database}_backup_" . now()->format('Y-m-d_H-i-s') . ".sql";
-
-        // Construct mysqldump command with compression
-        $command = "mysqldump --user={$username} --password=\"{$password}\" --host={$host} --port={$port} {$database}";
-
-        // Execute the command and capture the output
-        $result = null;
-        $output = null;
-        exec($command, $output, $result);
-
-        // Check if backup was successful
-        if ($result !== 0) {
-            return response()->json(['status' => 'error', 'message' => 'Database backup failed.'], 500);
-        }
-
-        return response()->streamDownload(function () use ($command) {
-            passthru($command);
-        }, $filename, [
-            'Content-Type' => 'application/sql',
-            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
-        ]);
     }
 }

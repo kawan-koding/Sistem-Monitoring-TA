@@ -26,12 +26,6 @@
                         </select>
                     </form>
 
-                    {{-- Kanan: Tombol Aksi --}}
-                    @if(auth()->user()->hasRole('Developer') || auth()->user()->hasRole('Admin'))
-                        <div class="d-flex flex-column flex-md-row gap-2">
-                            <button id="backup-btn" class="btn btn-success"><i class="bx bx-cloud-download me-2"></i>Backup Database</button>
-                        </div>
-                    @endif
                 </div>
 
                 <hr>
@@ -159,28 +153,5 @@
         </div>
     </div>
 </div>
-
-@endsection
-
-
-@section('js')
-
-<script>
-    $('#backup-btn').on('click', function (e) {
-        e.preventDefault();
-        let $btn = $(this);
-        $btn.html('<i class="bx bx-loader bx-spin font-size-16 align-middle me-2"></i>Loading...');
-        $btn.prop('disabled', true);
-
-        // Gunakan window.open untuk memicu download
-        const downloadUrl = "{{ route('apps.backup-database') }}";
-        window.open(downloadUrl, '_blank');
-
-        setTimeout(() => {
-            $btn.html('<i class="bx bx-cloud-download me-2"></i>Backup Database');
-            $btn.prop('disabled', false);
-        }, 3000); // tunggu sebentar sebelum aktifkan lagi tombol
-    });
-</script>
 
 @endsection

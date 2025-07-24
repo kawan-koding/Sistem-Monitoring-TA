@@ -89,6 +89,19 @@
                         </a>
                     </li>
                 </ul>
+                <div class="mb-3 d-flex gap-2 flex-column justify-content-end flex-md-row" >
+                    <form action="">
+                        <select name="filter1" class="form-control" onchange="this.form.submit()">
+                            <option value="semua" {{ $filter1 == 'semua' ? 'selected' : '' }}>Semua Program
+                                Studi</option>
+                            @foreach ($programStudies as $item)
+                                <option
+                                    value="{{ $item->id }}"{{ $filter1 == $item->id ? 'selected' : '' }}>
+                                    {{ $item->display }}</option>
+                            @endforeach
+                        </select>
+                    </form>
+                </div>
             @endif
 
             @if (getInfoLogin()->hasRole('Admin'))

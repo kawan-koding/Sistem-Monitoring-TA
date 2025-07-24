@@ -52,14 +52,24 @@ class JadwalSidangController extends Controller
                     $q->where('periode_ta_id', $periode)->whereHas('sidang', function ($q) {
                         $q->whereIn('status', ['sudah_daftar', 'sudah_terjadwal', 'sudah_sidang']);
                     });
-                })->get();
+                });
             } else {
                 $query = BimbingUji::where('dosen_id', $user->id)->where('jenis', $jenis)->whereHas('tugas_akhir', function ($q) use ($periode) {
                     $q->where('periode_ta_id', $periode)->whereHas('sidang', function ($q) {
                         $q->whereIn('status', ['sudah_daftar', 'sudah_terjadwal', 'sudah_sidang']);
                     });
-                })->get();
+                });
             }
+
+            if ($request->has('filter1') && !empty($request->filter1) && $request->filter1 != 'semua') {
+                $query = $query->whereHas('tugas_akhir', function ($q) use ($request) {
+                    $q->whereHas('mahasiswa', function ($q) use ($request) {
+                        $q->where('program_studi_id', $request->filter1);
+                    });
+                });
+            }
+
+            $query = $query->get();
         }
 
         if (getInfoLogin()->hasRole('Admin')) {
@@ -77,8 +87,11 @@ class JadwalSidangController extends Controller
                         $q->where('status_pemberkasan_sidang', 'belum_lengkap');
                     });
                 } else {
-                    $query = $query->where('status', $request->status)->whereHas('tugas_akhir', function ($q) use ($request) {
-                        $q->whereNull('status_sidang')->orWhere('status_sidang', 'retrial');
+                    // dd('oi');
+                    $query = $query->where('status', $request->status)->whereHas('tugas_akhir', function ($q) {
+                        $q->where(function ($sub) {
+                            $sub->whereNull('status_sidang')->orWhere('status_sidang', 'retrial');
+                        });
                     });
                 }
             } else {
@@ -715,7 +728,7 @@ class JadwalSidangController extends Controller
         ]);
 
         try {
-            if ($request->status == '   ') {
+            if ($request->status == 'retrial') {
                 $sidang->tugas_akhir->update([
                     'status_sidang' => 'retrial',
                 ]);

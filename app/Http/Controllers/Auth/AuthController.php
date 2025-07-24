@@ -21,7 +21,6 @@ class AuthController extends Controller
         $data = [
             'title' => 'Login',
         ];
-
         return view('auth.login', $data);
     }
 
@@ -71,7 +70,7 @@ class AuthController extends Controller
                 $request->user()->token()->delete();
             }
         }
-        Session::flush();  
+        Session::flush();
         Auth::logout();
         return redirect('/');
     }
@@ -113,7 +112,7 @@ class AuthController extends Controller
 
     protected function authAfterSso($response)
     {
-        
+
         if (!isset($response['access_token'])) {
             return redirect()->route('login');
         }
@@ -152,7 +151,7 @@ class AuthController extends Controller
                         'name' => $mhs->nama_mhs,
                         'username' => $mhs->nim,
                         'email' => $mhs->email,
-                        'password' => Hash::make($mhs->nim), 
+                        'password' => Hash::make($mhs->nim),
                         'image' => 'default.png',
                         'userable_type' => Mahasiswa::class,
                         'userable_id' => $mhs->id
@@ -181,7 +180,7 @@ class AuthController extends Controller
                         $user->assignRole($role);
                     }
                 }
-                
+
                 Auth::login($user,true);
                 $user->token()->delete();
                 return 0;
@@ -190,7 +189,7 @@ class AuthController extends Controller
             return redirect()->route('login');
         }
     }
-	
+
 	public function refresh(Request $request)
     {
         $response = Http::withoutVerifying()->post(config('services.oauth_server.uri') . '/oauth/token', [
@@ -200,13 +199,13 @@ class AuthController extends Controller
             'client_secret' => config('services.oauth_server.client_secret'),
             'redirect_uri' => config('services.oauth_server.redirect'),
         ]);
-        
+
         if ($response->status() !== 200) {
             $request->user()->token()->delete();
             return redirect()->route('login')->withStatus('Authorization failed from OAuth server.');
         } else {
             $this->logout($request);
-        } 
+        }
 
         $response = $response->json();
         $request->user()->token()->update([
