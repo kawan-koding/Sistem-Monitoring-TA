@@ -639,7 +639,7 @@ class JadwalSidangController extends Controller
     public function validasiBerkas(Sidang $jadwalSidang)
     {
         try {
-            $jadwalSidang->tugas_akhir()->update(['status_pemberkasan_sidang' => 'sudah_lengkap']);
+            $jadwalSidang->tugas_akhir()->update(['status_pemberkasan_sidang' => 'sudah_lengkap', 'tanggal_lulus' => Carbon::now()]);
 
             return redirect()->back()->with(['success' => 'Berkas berhasil diperbarui']);
         } catch (Exception $e) {

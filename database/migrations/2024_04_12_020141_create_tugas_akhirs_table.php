@@ -25,6 +25,7 @@ return new class extends Migration
             $table->enum('status_sidang', ['revisi', 'acc', 'retrial'])->nullable();
             $table->enum('status_pemberkasan', ['belum_lengkap', 'sudah_lengkap'])->default('belum_lengkap')->nullable();
             $table->enum('status_pemberkasan_sidang', ['belum_lengkap', 'sudah_lengkap'])->default('belum_lengkap')->nullable();
+            $table->date('tanggal_lulus')->nullable();
             $table->boolean('is_completed')->nullable()->default(false);
             $table->timestamps();
         });

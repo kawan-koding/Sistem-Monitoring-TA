@@ -28,7 +28,7 @@ class SKSidangAkhirQueryExport implements FromCollection, WithHeadings, WithMapp
         $this->prodiName = $prodiName;
         $this->periodeName = $periodeName;
     }
-    
+
     public function beforeSheet(BeforeSheet $event)
     {
         $this->no = 1;
@@ -96,7 +96,7 @@ class SKSidangAkhirQueryExport implements FromCollection, WithHeadings, WithMapp
     }
 
     public function map($row): array
-    {   
+    {
         $mahasiswa = $row['mahasiswa'] ?? new \stdClass();
         $tugasAkhir = $row['tugasAkhir'] ?? new \stdClass();
         return [
@@ -114,6 +114,9 @@ class SKSidangAkhirQueryExport implements FromCollection, WithHeadings, WithMapp
             $row['tanggal_sidang'] ?? '-',
             $row['nilai_huruf'] ?? '-',
             $row['nilai_angka'] ?? '-',
+            isset($tugasAkhir->tanggal_lulus)
+            ? \Carbon\Carbon::parse($tugasAkhir->tanggal_lulus)->locale('id')->translatedFormat('j F Y')
+            : '-'
         ];
     }
 
@@ -123,8 +126,8 @@ class SKSidangAkhirQueryExport implements FromCollection, WithHeadings, WithMapp
             ['SK PEMBIMBING PENGUJI TUGAS AKHIR'],
             ["{$this->prodiName}"],
             ["YUDISIUM {$this->periodeName}"],
-            ['No', 'Nama Mahasiswa', 'NIM', 'Pembimbing 1', '','Pembimbing 2','', 'Penguji 1', 'Penguji 2','Judul Tugas Akhir','Yudisium','Tanggal Sidang','Nilai Huruf','Nilai Angka'],
-            ['', '', '', 'Nama Dosen', 'Tepat Waktu/Tidak Tepat Waktu', 'Nama Dosen', 'Tepat Waktu/Tidak Tepat Waktu', '','','','','','',''],
+            ['No', 'Nama Mahasiswa', 'NIM', 'Pembimbing 1', '','Pembimbing 2','', 'Penguji 1', 'Penguji 2','Judul Tugas Akhir','Yudisium','Tanggal Sidang','Nilai Huruf','Nilai Angka','Tanggal Validasi Berkas Sidang Akhir'],
+            ['', '', '', 'Nama Dosen', 'Tepat Waktu/Tidak Tepat Waktu', 'Nama Dosen', 'Tepat Waktu/Tidak Tepat Waktu', '','','','','','','',''],
         ];
     }
 
@@ -146,6 +149,7 @@ class SKSidangAkhirQueryExport implements FromCollection, WithHeadings, WithMapp
         $sheet->mergeCells('L4:L5');
         $sheet->mergeCells('M4:M5');
         $sheet->mergeCells('N4:N5');
+        $sheet->mergeCells('O4:O5');
 
         // Style for merged cells in header
         $sheet->getStyle('A1:A3')->applyFromArray([
@@ -160,7 +164,7 @@ class SKSidangAkhirQueryExport implements FromCollection, WithHeadings, WithMapp
         ]);
 
         // Style for table headers
-        $sheet->getStyle('A4:J5')->applyFromArray([
+        $sheet->getStyle('A4:O5')->applyFromArray([
             'alignment' => [
                 'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
                 'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
@@ -209,6 +213,7 @@ class SKSidangAkhirQueryExport implements FromCollection, WithHeadings, WithMapp
         $sheet->getColumnDimension('L')->setWidth(20);
         $sheet->getColumnDimension('M')->setWidth(15);
         $sheet->getColumnDimension('N')->setWidth(15);
+        $sheet->getColumnDimension('O')->setWidth(40);
 
         $sheet->getStyle('K4:K1000')->applyFromArray([
             'font' => [
@@ -298,7 +303,7 @@ class SKSidangAkhirQueryExport implements FromCollection, WithHeadings, WithMapp
     //                     'color' => ['argb' => 'FF0000'],
     //                 ],
     //             ]);
-                
+
     //         },
     //     ];
     // }
