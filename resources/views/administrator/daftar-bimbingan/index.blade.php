@@ -199,7 +199,7 @@
                                         <p class="m-0 text-muted small">{{ $item->tugas_akhir->topik->nama_topik }} - {{ $item->tugas_akhir->jenis_ta->nama_jenis}}</p>
                                     </td>
                                     <td>
-                                        {{ $item->tugas_akhir->periode_ta->nama }}
+                                        {{ $item->tugas_akhir->mahasiswa->periodeTa->nama ?? '-' }}
                                     </td>
                                     <td>
                                         @php

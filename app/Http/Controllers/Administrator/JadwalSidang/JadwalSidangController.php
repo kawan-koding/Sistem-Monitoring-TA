@@ -795,22 +795,54 @@ class JadwalSidangController extends Controller
     public function cetakRevisi(Sidang $sidang)
     {
         $jdwl = Sidang::with(['tugas_akhir.bimbing_uji.revisi.bimbingUji.dosen', 'tugas_akhir.bimbing_uji.revisi.bimbingUji.tugas_akhir.mahasiswa'])->findOrFail($sidang->id);
-        $allRevisis = $jdwl->tugas_akhir->bimbing_uji->filter(function ($bimbingUji) {
-            return $bimbingUji->jenis === 'penguji';
-        })->flatMap(function ($bimbingUji) {
-            if ($bimbingUji->revisi->isEmpty()) {
-                return [];
+        $bimbingUjiGrouped = $jdwl->tugas_akhir->bimbing_uji->groupBy('urut');
+
+        $allRevisis = collect();
+
+        foreach ($bimbingUjiGrouped as $urut => $bimbingGroup) {
+            // Cek apakah ada pengganti untuk urutan ini
+            $pengganti = $bimbingGroup->firstWhere('jenis', 'pengganti');
+
+            if ($pengganti && $pengganti->revisi) {
+                $revisis = $pengganti->revisi->where('type', 'Sidang');
+                foreach ($revisis as $revisi) {
+                    $allRevisis->push([
+                        'revisi' => $revisi,
+                        'judul' => 'SIDANG AKHIR',
+                        'dosen' => $pengganti->dosen,
+                    ]);
+                }
+            } else {
+                // Kalau tidak ada pengganti, ambil penguji asli
+                $penguji = $bimbingGroup->firstWhere('jenis', 'penguji');
+                if ($penguji && $penguji->revisi) {
+                    $revisis = $penguji->revisi->where('type', 'Sidang');
+                    foreach ($revisis as $revisi) {
+                        $allRevisis->push([
+                            'revisi' => $revisi,
+                            'judul' => 'SIDANG AKHIR',
+                            'dosen' => $penguji->dosen,
+                        ]);
+                    }
+                }
             }
-            return $bimbingUji->revisi->filter(function ($revisi) {
-                return $revisi->type == 'Sidang';
-            })->map(function ($revisi) use ($bimbingUji) {
-                return [
-                    'revisi' => $revisi,
-                    'judul' => 'SIDANG AKHIR',
-                    'dosen' => $bimbingUji->dosen,
-                ];
-            });
-        })->toArray();
+        }
+        // $allRevisis = $jdwl->tugas_akhir->bimbing_uji->filter(function ($bimbingUji) {
+        //     return $bimbingUji->jenis === 'penguji';
+        // })->flatMap(function ($bimbingUji) {
+        //     if ($bimbingUji->revisi->isEmpty()) {
+        //         return [];
+        //     }
+        //     return $bimbingUji->revisi->filter(function ($revisi) {
+        //         return $revisi->type == 'Sidang';
+        //     })->map(function ($revisi) use ($bimbingUji) {
+        //         return [
+        //             'revisi' => $revisi,
+        //             'judul' => 'SIDANG AKHIR',
+        //             'dosen' => $bimbingUji->dosen,
+        //         ];
+        //     });
+        // })->toArray();
         $bu = $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'pembimbing')->orderBy('urut', 'asc')->get();
         $data = [
             'title' => 'Lembar Revisi Sidang Akhir',
@@ -818,61 +850,124 @@ class JadwalSidangController extends Controller
             'rvs' => $allRevisis,
             'bimbingUji' => $bu,
         ];
-
+        // dd($data);
         $pdf = Pdf::loadView('administrator.template.revisi', $data);
         $pdf->setPaper('A4', 'portrait');
         return $pdf->stream();
-        // return view('administrator.template.revisi', $data);
     }
 
     public function cetakNilai(Sidang $sidang)
     {
-        $jdwl = Sidang::with(['tugas_akhir.bimbing_uji.revisi.bimbingUji.dosen', 'tugas_akhir.bimbing_uji.revisi.bimbingUji.tugas_akhir.mahasiswa'])->findOrFail($sidang->id);
-        $query = $jdwl->tugas_akhir->bimbing_uji->map(function ($bimbingUji) {
-            $nilaiSeminar = $bimbingUji->penilaian->filter(function ($nilai) {
-                return $nilai->type == 'Sidang';
-            });
-            $totalNilaiAngka = $nilaiSeminar->avg('nilai');
-            $totalNilaiHuruf = grade($totalNilaiAngka);
-            $peran = '';
-            if ($bimbingUji->jenis == 'pembimbing') {
-                $peran = 'Pembimbing ' . toRoman($bimbingUji->urut);
-            } elseif ($bimbingUji->jenis == 'penguji') {
-                $peran = 'Penguji ' . toRoman($bimbingUji->urut);
+        $jdwl = Sidang::with([
+            'tugas_akhir.bimbing_uji.penilaian.kategori',
+            'tugas_akhir.bimbing_uji.dosen'
+        ])->findOrFail($sidang->id);
+
+        $bimbingUjiGrouped = $jdwl->tugas_akhir->bimbing_uji->groupBy('urut');
+        $query = collect();
+        foreach ($bimbingUjiGrouped as $urut => $group) {
+            $pembimbings = $group->where('jenis', 'pembimbing');
+            foreach ($pembimbings as $pembimbing) {
+                $nilaiSeminar = $pembimbing->penilaian->where('type', 'Sidang');
+                $totalNilaiAngka = $nilaiSeminar->avg('nilai');
+                $query->push([
+                    'tipe' => 'SIDANG AKHIR',
+                    'peran' => 'Pembimbing ' . toRoman($pembimbing->urut),
+                    'dosen' => $pembimbing->dosen,
+                    'nilai' => $nilaiSeminar->map(function ($nilai) {
+                        return [
+                            'nilai' => $nilai->nilai,
+                            'kategori_nilai' => $nilai->kategori->nama,
+                            'nilai_huruf' => grade($nilai->nilai),
+                        ];
+                    })->toArray(),
+                    'totalNilaiAngka' => number_format($totalNilaiAngka, 2),
+                    'totalNilaiHuruf' => grade($totalNilaiAngka),
+                ]);
             }
-            return [
-                'tipe' => 'SIDANG AKHIR',
-                'peran' => $peran,
-                'dosen' => $bimbingUji->dosen,
-                'nilai' => $nilaiSeminar->map(function ($nilai) {
-                    return [
-                        'nilai' => $nilai->nilai,
-                        'kategori_nilai' => $nilai->kategori->nama,
-                        'nilai_huruf' => grade($nilai->nilai),
-                    ];
-                })->toArray(),
-                'totalNilaiAngka' => number_format($totalNilaiAngka, 2),
-                'totalNilaiHuruf' => $totalNilaiHuruf,
-            ];
-        });
+
+            // Cek apakah ada pengganti
+            $pengganti = $group->firstWhere('jenis', 'pengganti');
+
+            if ($pengganti) {
+                $nilaiSeminar = $pengganti->penilaian->where('type', 'Sidang');
+                $totalNilaiAngka = $nilaiSeminar->avg('nilai');
+                $query->push([
+                    'tipe' => 'SIDANG AKHIR',
+                    'peran' => 'Penguji ' . toRoman($pengganti->urut),
+                    'dosen' => $pengganti->dosen,
+                    'nilai' => $nilaiSeminar->map(function ($nilai) {
+                        return [
+                            'nilai' => $nilai->nilai,
+                            'kategori_nilai' => $nilai->kategori->nama,
+                            'nilai_huruf' => grade($nilai->nilai),
+                        ];
+                    })->toArray(),
+                    'totalNilaiAngka' => number_format($totalNilaiAngka, 2),
+                    'totalNilaiHuruf' => grade($totalNilaiAngka),
+                ]);
+            } else {
+                $penguji = $group->firstWhere('jenis', 'penguji');
+                if ($penguji) {
+                    $nilaiSeminar = $penguji->penilaian->where('type', 'Sidang');
+                    $totalNilaiAngka = $nilaiSeminar->avg('nilai');
+                    $query->push([
+                        'tipe' => 'SIDANG AKHIR',
+                        'peran' => 'Penguji ' . toRoman($penguji->urut),
+                        'dosen' => $penguji->dosen,
+                        'nilai' => $nilaiSeminar->map(function ($nilai) {
+                            return [
+                                'nilai' => $nilai->nilai,
+                                'kategori_nilai' => $nilai->kategori->nama,
+                                'nilai_huruf' => grade($nilai->nilai),
+                            ];
+                        })->toArray(),
+                        'totalNilaiAngka' => number_format($totalNilaiAngka, 2),
+                        'totalNilaiHuruf' => grade($totalNilaiAngka),
+                    ]);
+                }
+            }
+        }
+
+        // Urutkan sesuai peran
         $query = $query->sortBy(function ($item) {
-            $order = [
-                'Pembimbing 1' => 1,
-                'Pembimbing 2' => 2,
-                'Penguji 1' => 3,
-                'Penguji 2' => 4,
+           preg_match('/^(Pembimbing|Penguji)\s+([IVXLC]+)/', $item['peran'], $matches);
+            $jenis = $matches[1] ?? '';
+            $romawi = $matches[2] ?? 'I';
+
+            // Konversi angka Romawi ke angka biasa
+            $romawiMap = [
+                'I' => 1,
+                'II' => 2,
+                'III' => 3,
+                'IV' => 4,
+                'V' => 5,
+                'VI' => 6,
+                'VII' => 7,
+                'VIII' => 8,
+                'IX' => 9,
+                'X' => 10,
             ];
-            return $order[$item['peran']] ?? 99;
+            $urut = $romawiMap[$romawi] ?? 99;
+
+            // Atur prioritas jenis
+            $jenisUrutan = $jenis === 'Pembimbing' ? 0 : 1;
+
+            // Gabungkan jenis dan urutan sebagai kunci urut
+            return $jenisUrutan * 100 + $urut;
         })->values()->toArray();
+
         $bu = $sidang->tugas_akhir->bimbing_uji()->where('jenis', 'pembimbing')->orderBy('urut', 'asc')->get();
+
         $data = [
             'title' => 'Lembar Penilaian',
             'judul' => 'Sidang Akhir',
             'nilai' => $query,
             'jadwal' => $jdwl,
             'bimbingUji' => $bu,
+            'kategoriNilai' => KategoriNilai::all(),
         ];
-
+        // dd($data);
         $pdf = Pdf::loadView('administrator.template.lembar-penilaian', $data);
         $pdf->setPaper('A4', 'portrait');
         return $pdf->stream();

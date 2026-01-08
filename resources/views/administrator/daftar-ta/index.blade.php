@@ -45,14 +45,14 @@
                                 <option value="K" {{ $filter == 'K' ? 'selected' : '' }}>Kelompok</option>
                             </select>
                             <select name="periode" class="form-control" onchange="this.form.submit()">
-                            <option selected disabled hidden>Filter Periode</option>
-                            <option value="semua" {{ request('periode') == 'semua'  ? 'selected' : '' }}>Semua</option>
-                            @foreach ($periode as $item)
-                                <option value="{{ $item->id }}" {{ request('periode') == $item->id ? 'selected' : '' }}>
-                                    {{ $item->programStudi->display }} - ({{ $item->nama }})
-                                </option>
-                            @endforeach
-                        </select>
+                                <option selected disabled hidden>Filter Periode</option>
+                                <option value="semua" {{ request('periode') == 'semua'  ? 'selected' : '' }}>Semua</option>
+                                @foreach ($periode as $item)
+                                    <option value="{{ $item->id }}" {{ request('periode') == $item->id ? 'selected' : '' }}>
+                                        {{ $item->programStudi->display }} - ({{ $item->nama }})
+                                    </option>
+                                @endforeach
+                            </select>
                         </div>
                     </form>
                 </div>

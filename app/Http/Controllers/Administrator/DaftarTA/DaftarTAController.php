@@ -24,7 +24,7 @@ class DaftarTAController extends Controller
 {
     public function index(Request $request)
     {
-        $periode = PeriodeTa::where('is_active', 1)->get();
+        $periode = PeriodeTa::where('is_active', 1);
 
         if (session('switchRoles') == 'Kaprodi') {
             $programStudiId = getInfoLogin()->userable->program_studi_id ?? null;
@@ -33,10 +33,25 @@ class DaftarTAController extends Controller
             }
         }
 
-        $dataTa = Mahasiswa::with(['tugas_akhir' => function ($query) {
-            $query->with(['bimbing_uji', 'periode_ta', 'topik', 'jenis_ta'])
-                ->whereNotIn('status', ['reject', 'cancel']);
-        }]);
+        $periode = $periode->get();
+
+        $dataTa = Mahasiswa::query()
+            ->whereHas('tugas_akhir', function ($query) use ($request, $periode) {
+                $query->whereNotIn('status', ['reject', 'cancel']);
+
+                if ($request->filled('periode') && $request->periode !== 'semua') {
+                    return $query->where('periode_ta_id', (int) $request->periode);
+                }
+
+                if (session('switchRoles') == 'Kaprodi') {
+                    return $query->whereIn('periode_ta_id', $periode->pluck('id'));
+                }
+            })
+            ->with([
+                'tugas_akhir' => function ($query) {
+                    $query->with(['bimbing_uji', 'periode_ta', 'topik', 'jenis_ta']);
+                }
+            ]);
 
         if (session('switchRoles') == 'Kaprodi') {
             if (!empty(getInfoLogin()->userable->program_studi_id)) {
@@ -44,16 +59,7 @@ class DaftarTAController extends Controller
             }
         }
 
-        if ($request->has('periode') && !empty($request->periode) && $request->periode != 'semua') {
-            $dataTa->whereHas('tugas_akhir', function ($query) use ($request) {
-                $query->where('periode_ta_id', $request->periode);
-            });
-        } else {
-            $dataTa->whereHas('tugas_akhir', function ($query) use ($periode) {
-                $query->whereIn('periode_ta_id', $periode->pluck('id'));
-            });
-        }
-
+        // === FILTER MAHASISWA ===
         if ($request->has('mahasiswa') && !empty($request->mahasiswa) && $request->mahasiswa != 'semua') {
             if ($request->mahasiswa == 'tanpa_ta') {
                 $dataTa->whereDoesntHave('tugas_akhir');
@@ -92,25 +98,37 @@ class DaftarTAController extends Controller
             });
         }
 
-        // Ambil data akhirnya
-        $dataTa = $dataTa->get();
-        // dd($dataTa);
+        if (session('switchRoles') == 'Kaprodi') {
 
-            $listPeriode = null;
+            $dataTa = $dataTa->get();
 
-            if ($request->has('program_studi') && !empty($request->program_studi) && $request->program_studi != 'semua') {
-                // Jika user filter program studi
-                $listPeriode = PeriodeTa::where('program_studi_id', $request->program_studi)->get();
-            } elseif (session('switchRoles') === 'Kaprodi') {
-                // Jika yang login adalah Kaprodi dan tidak pilih prodi di filter
-                $kaprodiProdiId = getInfoLogin()->userable->program_studi_id ?? null;
+        } else {
 
-                $listPeriode = PeriodeTa::where('program_studi_id', $kaprodiProdiId)->get();
-            } else {
-                // Selain itu, ambil semua
-                $listPeriode = PeriodeTa::all();
-            }
-            $data = [
+            $dataTa->orderByDesc(
+                TugasAkhir::select('periode_ta_id')
+                    ->whereColumn('mahasiswas.id', 'tugas_akhirs.mahasiswa_id')
+                    ->limit(1)
+            )->orderBy('nama_mhs', 'asc');
+
+            $dataTa = $dataTa->get();
+        }
+
+        $listPeriode = null;
+
+        if ($request->has('program_studi') && !empty($request->program_studi) && $request->program_studi != 'semua') {
+            // Jika user filter program studi
+            $listPeriode = PeriodeTa::where('program_studi_id', $request->program_studi)->get();
+        } elseif (session('switchRoles') === 'Kaprodi') {
+            // Jika yang login adalah Kaprodi dan tidak pilih prodi di filter
+            $kaprodiProdiId = getInfoLogin()->userable->program_studi_id ?? null;
+
+            $listPeriode = PeriodeTa::where('program_studi_id', $kaprodiProdiId)->get();
+        } else {
+            // Selain itu, ambil semua
+            $listPeriode = PeriodeTa::all();
+        }
+
+        $data = [
             'title' => 'Daftar Tugas Akhir',
             'mods' => 'daftar_ta',
             'breadcrumbs' => [
@@ -148,7 +166,7 @@ class DaftarTAController extends Controller
 
         $data = [
             'title' => 'Detail Tugas Akhir',
-                  'breadcrumbs' => [
+            'breadcrumbs' => [
                 [
                     'title' => 'Dashboard',
                     'url' => route('apps.dashboard')
@@ -181,31 +199,31 @@ class DaftarTAController extends Controller
     public function edit(TugasAkhir $tugasAkhir)
     {
         $remapped = clone $tugasAkhir;
-        $remapped->load('mahasiswa','bimbing_uji','periode_ta','topik','jenis_ta');
-        $pemb1 = $remapped->bimbing_uji()->where('urut', 1)->where('jenis','pembimbing')->first();
-        $pemb2 = $remapped->bimbing_uji()->where('urut', 2)->where('jenis','pembimbing')->first();
-        $peng1 = $remapped->bimbing_uji()->where('urut', 1)->where('jenis','penguji')->first();
-        $peng2 = $remapped->bimbing_uji()->where('urut', 2)->where('jenis','penguji')->first();
+        $remapped->load('mahasiswa', 'bimbing_uji', 'periode_ta', 'topik', 'jenis_ta');
+        $pemb1 = $remapped->bimbing_uji()->where('urut', 1)->where('jenis', 'pembimbing')->first();
+        $pemb2 = $remapped->bimbing_uji()->where('urut', 2)->where('jenis', 'pembimbing')->first();
+        $peng1 = $remapped->bimbing_uji()->where('urut', 1)->where('jenis', 'penguji')->first();
+        $peng2 = $remapped->bimbing_uji()->where('urut', 2)->where('jenis', 'penguji')->first();
 
         $bimbingUji = $tugasAkhir->bimbing_uji;
         $pembimbing = $bimbingUji->where('jenis', 'pembimbing')->sortBy('urut')->values();
         $penguji = $bimbingUji->where('jenis', 'penguji')->sortBy('urut')->values();
         $prodi = $tugasAkhir->mahasiswa->program_studi_id;
         $periode = PeriodeTa::where('is_active', true)->where('program_studi_id', $prodi)->first();
-        $dosen = Dosen::all()->map(function($dosen) use ($periode) {
+        $dosen = Dosen::all()->map(function ($dosen) use ($periode) {
             $kuota = KuotaDosen::where('dosen_id', $dosen->id)->where('periode_ta_id', $periode->id)->first();
-            $totalPembimbing1 = BimbingUji::where('dosen_id', $dosen->id)->where('jenis', 'pembimbing')->where('urut', 1)->whereHas('tugas_akhir', function($query) use ($periode) {
-                                    $query->where('periode_ta_id', $periode->id)->whereNotIn('status', ['reject', 'cancel']);
-                                })->count();
-            $totalPembimbing2 = BimbingUji::where('dosen_id', $dosen->id)->where('jenis', 'pembimbing')->where('urut', 2)->whereHas('tugas_akhir', function($query) use ($periode) {
-                                    $query->where('periode_ta_id', $periode->id)->whereNotIn('status', ['reject', 'cancel']);
-                                })->count();
-            $totalPenguji1 = BimbingUji::where('dosen_id', $dosen->id)->where('jenis', 'penguji')->where('urut', 1)->whereHas('tugas_akhir', function($query) use ($periode) {
-                                $query->where('periode_ta_id', $periode->id)->whereNotIn('status', ['reject', 'cancel']);
-                            })->count();
-            $totalPenguji2 = BimbingUji::where('dosen_id', $dosen->id)->where('jenis', 'penguji')->where('urut', 2)->whereHas('tugas_akhir', function($query) use ($periode) {
-                                $query->where('periode_ta_id', $periode->id)->whereNotIn('status', ['reject', 'cancel']);
-                            })->count();
+            $totalPembimbing1 = BimbingUji::where('dosen_id', $dosen->id)->where('jenis', 'pembimbing')->where('urut', 1)->whereHas('tugas_akhir', function ($query) use ($periode) {
+                $query->where('periode_ta_id', $periode->id)->whereNotIn('status', ['reject', 'cancel']);
+            })->count();
+            $totalPembimbing2 = BimbingUji::where('dosen_id', $dosen->id)->where('jenis', 'pembimbing')->where('urut', 2)->whereHas('tugas_akhir', function ($query) use ($periode) {
+                $query->where('periode_ta_id', $periode->id)->whereNotIn('status', ['reject', 'cancel']);
+            })->count();
+            $totalPenguji1 = BimbingUji::where('dosen_id', $dosen->id)->where('jenis', 'penguji')->where('urut', 1)->whereHas('tugas_akhir', function ($query) use ($periode) {
+                $query->where('periode_ta_id', $periode->id)->whereNotIn('status', ['reject', 'cancel']);
+            })->count();
+            $totalPenguji2 = BimbingUji::where('dosen_id', $dosen->id)->where('jenis', 'penguji')->where('urut', 2)->whereHas('tugas_akhir', function ($query) use ($periode) {
+                $query->where('periode_ta_id', $periode->id)->whereNotIn('status', ['reject', 'cancel']);
+            })->count();
             return (object)[
                 'id' => $dosen->id,
                 'nama' => $dosen->name,
@@ -224,7 +242,7 @@ class DaftarTAController extends Controller
             ];
         });
 
-        $docPengajuan = JenisDokumen::where('jenis','pendaftaran')->get();
+        $docPengajuan = JenisDokumen::where('jenis', 'pendaftaran')->get();
         $data = [
             'title' => 'Edit Tugas Akhir',
             'mods' => 'daftar_ta',
@@ -279,7 +297,7 @@ class DaftarTAController extends Controller
             'doc_ringkasan' => 'nullable|mimes:docx,pdf|max:5120',
             'topik_ta_new' => 'nullable',
             'jenis_ta_new' => 'nullable',
-        ],[
+        ], [
             'judul' => 'Judul Tugas Akhir harus diisi.',
             'pembimbing_1' => 'Pembimbing 1 harus diisi.',
             'pembimbing_2' => 'Pembimbing 2 harus diisi.',
@@ -327,14 +345,14 @@ class DaftarTAController extends Controller
                 }
             }
 
-            if($request->jenis_ta_new !== null) {
+            if ($request->jenis_ta_new !== null) {
                 $newJenis = JenisTa::create(['nama_jenis' => $request->jenis_ta_new]);
                 $jenis = $newJenis->id;
             } else {
                 $jenis = $request->jenis_ta_id;
             }
 
-            if($request->topik_ta_new !== null) {
+            if ($request->topik_ta_new !== null) {
                 $newTopik = Topik::create(['nama_topik' => $request->topik_ta_new]);
                 $topik = $newTopik->id;
             } else {
@@ -361,7 +379,7 @@ class DaftarTAController extends Controller
                 );
             }
 
-            $docPengajuan = JenisDokumen::where('jenis','pendaftaran')->get();
+            $docPengajuan = JenisDokumen::where('jenis', 'pendaftaran')->get();
             $validates = [];
             $messages = [];
 
@@ -414,7 +432,7 @@ class DaftarTAController extends Controller
             $tugasAkhir->delete();
 
             return $this->successResponse('Berhasi menghapus data');
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return $this->exceptionResponse($e);
         }
     }

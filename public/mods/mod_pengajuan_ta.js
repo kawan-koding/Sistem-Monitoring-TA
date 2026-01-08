@@ -4,9 +4,11 @@ function uploadFile(id) {
 }
 
 function acceptTA(id) {
-    $('#myModal').find('form').attr('action', `${BASE_URL}/apps/pengajuan-ta/${id}/accept`);
-    $('#myModal').find('.modal-title').html('Setujui TA?');
-    $('#myModal').modal('show');
+    const modalEl = document.getElementById('myModal');
+    modalEl.querySelector('form').action = `${BASE_URL}/apps/pengajuan-ta/${id}/accept`;
+    modalEl.querySelector('.modal-title').innerText = 'Setujui TA?';
+    const modal = new bootstrap.Modal(modalEl);
+    modal.show();
 }
 
 function rejectTA(id) {
