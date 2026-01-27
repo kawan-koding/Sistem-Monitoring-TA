@@ -14,7 +14,7 @@ class KuotaDosenController extends Controller
     public function index(Request $request)
     {
         $query = [];
-        if(session('switchRoles') == 'Admin') {
+        if (session('switchRoles') == 'Admin') {
             $periode = PeriodeTa::where('is_active', true)->get();
             $query = KuotaDosen::whereIn('periode_ta_id', $periode->pluck('id'))->with(['dosen']);
             if ($request->has('program_studi') && !empty($request->program_studi) && $request->program_studi !== 'semua') {
@@ -22,8 +22,8 @@ class KuotaDosenController extends Controller
             }
             $query = $query->get();
         }
-        
-        if(session('switchRoles') == 'Kaprodi') {
+
+        if (session('switchRoles') == 'Kaprodi') {
             $user = getInfoLogin()->userable;
             $prodi = $user->programStudi;
             $periode = PeriodeTa::where('is_active', true)->where('program_studi_id', $prodi->id)->first();
@@ -75,20 +75,20 @@ class KuotaDosenController extends Controller
     }
 
     public function createAll(Request $request)
-    {        
+    {
         try {
             $request->validate([
                 'pembimbing_1' => 'required',
                 'pembimbing_2' => 'required',
                 'penguji_1' => 'required',
                 'penguji_2' => 'required',
-            ],[
+            ], [
                 'pembimbing_1' => 'Kuota Pembimbing 1 wajib diisi',
                 'pembimbing_2' => 'Kuota Pembimbing 2 wajib diisi',
                 'penguji_1' => 'Kuota Penguji 1 wajib diisi',
                 'penguji_2' => 'Kuota Penguji 2 wajib diisi',
             ]);
-            if(session('switchRoles') == 'Kaprodi') {
+            if (session('switchRoles') == 'Kaprodi') {
                 $user = getInfoLogin()->userable;
                 $prodi = $user->programStudi;
                 $request->merge([
@@ -96,34 +96,39 @@ class KuotaDosenController extends Controller
                 ]);
             }
 
-            if(session('switchRoles') == 'Admin') {
+            if (session('switchRoles') == 'Admin') {
                 $request->validate([
                     'program_studi_id' => 'required',
-                ],[
+                ], [
                     'program_studi_id' => 'Program Studi wajib diisi',
                 ]);
             }
-            
+
             $periode = PeriodeTa::where('is_active', true)->where('program_studi_id', $request->program_studi_id)->first();
-            if(empty($periode)) {
+            if (empty($periode)) {
                 return redirect()->back()->with('error', 'Periode TA belum dibuat');
             }
             $dosen = Dosen::all();
-            foreach($dosen as $item) {
-                $existingKuota = KuotaDosen::where('dosen_id', $item->id)->where('periode_ta_id', $periode->id)->where('program_studi_id', $request->program_studi_id)->exists();
+            foreach ($dosen as $item) {
+                $existingKuota = KuotaDosen::where('dosen_id', $item->id)
+                    ->where('periode_ta_id', $periode->id)
+                    ->where('program_studi_id', $request->program_studi_id)
+                    ->exists();
+
                 if ($existingKuota) {
-                    return redirect()->back()->with('error', "Data sudah ada");
-                } else {
-                    KuotaDosen::create([
-                        'dosen_id' => $item->id,
-                        'periode_ta_id' => $periode->id,
-                        'pembimbing_1' => $request->pembimbing_1,
-                        'pembimbing_2' => $request->pembimbing_2,
-                        'penguji_1' => $request->penguji_1,
-                        'penguji_2' => $request->penguji_2,
-                        'program_studi_id' => $request->program_studi_id
-                    ]);
+                    continue;
                 }
+
+                // 👉 kalau belum ada, CREATE
+                KuotaDosen::create([
+                    'dosen_id' => $item->id,
+                    'periode_ta_id' => $periode->id,
+                    'pembimbing_1' => $request->pembimbing_1,
+                    'pembimbing_2' => $request->pembimbing_2,
+                    'penguji_1' => $request->penguji_1,
+                    'penguji_2' => $request->penguji_2,
+                    'program_studi_id' => $request->program_studi_id
+                ]);
             }
             return redirect()->back()->with('success', 'Berhasil menyimpan data');
         } catch (\Exception $e) {

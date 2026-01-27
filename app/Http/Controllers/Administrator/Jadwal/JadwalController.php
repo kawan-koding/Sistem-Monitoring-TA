@@ -99,7 +99,7 @@ class JadwalController extends Controller
             'recapPenguji1' => $recapPenguji1,
             'recapPenguji2' => $recapPenguji2
         ];
-        
+
         return view('administrator.jadwal.penilaian', $data);
     }
 
@@ -108,7 +108,7 @@ class JadwalController extends Controller
         $request->validate([
             'revisi' => 'required'
         ]);
-        
+
         try {
             // get penguji
             $bimbingUji = $jadwal->tugas_akhir->bimbing_uji()->where('dosen_id', getInfoLogin()->userable_id)->first();
@@ -176,7 +176,7 @@ class JadwalController extends Controller
         }
     }
 
-    public function cetakRevisi(JadwalSeminar $jadwal) 
+    public function cetakRevisi(JadwalSeminar $jadwal)
     {
         $jdwl = JadwalSeminar::with(['tugas_akhir.bimbing_uji.revisi.bimbingUji.dosen','tugas_akhir.bimbing_uji.revisi.bimbingUji.tugas_akhir.mahasiswa'])->findOrFail($jadwal->id);
         $allRevisis = $jdwl->tugas_akhir->bimbing_uji->filter(function($bimbingUji) {
@@ -212,7 +212,7 @@ class JadwalController extends Controller
         $pdf->setPaper('A4', 'portrait');
         return $pdf->stream();
     }
-    
+
     public function cetakNilai(JadwalSeminar $jadwal)
     {
         $jdwl = JadwalSeminar::with(['tugas_akhir.bimbing_uji.revisi.bimbingUji.dosen','tugas_akhir.bimbing_uji.revisi.bimbingUji.tugas_akhir.mahasiswa'])->findOrFail($jadwal->id);
@@ -221,7 +221,7 @@ class JadwalController extends Controller
                 return $nilai->type == 'Seminar';
             });
             $totalNilaiAngka = $nilaiSeminar->avg('nilai');
-            $totalNilaiHuruf = grade($totalNilaiAngka); 
+            $totalNilaiHuruf = grade($totalNilaiAngka);
             $peran = '';
             if ($bimbingUji->jenis == 'pembimbing') {
                 $peran = 'Pembimbing ' . toRoman($bimbingUji->urut);
@@ -267,7 +267,7 @@ class JadwalController extends Controller
         return $pdf->stream();
         // return view('administrator.template.lembar-penilaian', $data);
     }
-    
+
     public function cetakRekap(JadwalSeminar $jadwal)
     {
         $jdwl = JadwalSeminar::with(['tugas_akhir.bimbing_uji.revisi.bimbingUji.dosen','tugas_akhir.bimbing_uji.revisi.bimbingUji.tugas_akhir.mahasiswa'])->findOrFail($jadwal->id);
@@ -276,7 +276,7 @@ class JadwalController extends Controller
                 return $nilai->type == 'Seminar';
             });
             $totalNilaiAngka = $nilaiSeminar->avg('nilai');
-            $totalNilaiHuruf = grade($totalNilaiAngka); 
+            $totalNilaiHuruf = grade($totalNilaiAngka);
             $peran = '';
             if ($bimbingUji->jenis == 'pembimbing') {
                 $peran = 'Pembimbing ' . toRoman($bimbingUji->urut);
@@ -316,16 +316,16 @@ class JadwalController extends Controller
             }
         }
         $totalNilaiHuruf = grade($totalNilai / count($rekap));
-        $pemb1 = $jadwal->tugas_akhir->bimbing_uji()->where('jenis','pembimbing')->where('urut', 1)->first();        
-        $pemb2 = $jadwal->tugas_akhir->bimbing_uji()->where('jenis','pembimbing')->where('urut', 2)->first(); 
-        
+        $pemb1 = $jadwal->tugas_akhir->bimbing_uji()->where('jenis','pembimbing')->where('urut', 1)->first();
+        $pemb2 = $jadwal->tugas_akhir->bimbing_uji()->where('jenis','pembimbing')->where('urut', 2)->first();
+
         $user = getInfoLogin()->userable;
         $programStudi = $user->programStudi;
-        $dosen = Dosen::where('program_studi_id', $programStudi->id)->whereHas('user', function($q) { 
+        $dosen = Dosen::where('program_studi_id', $programStudi->id)->whereHas('user', function($q) {
             $q->whereHas('roles', function ($q) {
                 $q->where('name', 'Kaprodi');
             });
-        })->first();
+        })->orderByDesc('id')->first();
         $data = [
             'title' => 'Rekapitulasi Nilai',
             'tipe' => 'SEMINAR PROPOSAL',
@@ -373,7 +373,7 @@ class JadwalController extends Controller
             }
 
             $jadwal->tugas_akhir->update([
-                'status_seminar' => $request->status, 
+                'status_seminar' => $request->status,
             ]);
 
             return redirect()->back()->with(['success' => 'Berhasil mengubah status']);

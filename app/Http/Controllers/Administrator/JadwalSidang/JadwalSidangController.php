@@ -1036,7 +1036,7 @@ class JadwalSidangController extends Controller
             $q->whereHas('roles', function ($q) {
                 $q->where('name', 'Kaprodi');
             });
-        })->first();
+        })->orderByDesc('id')->first();
         $data = [
             'title' => 'Rekapitulasi Nilai',
             'tipe' => 'SIDANG AKHIR',
