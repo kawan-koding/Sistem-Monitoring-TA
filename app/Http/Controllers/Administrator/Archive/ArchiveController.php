@@ -22,60 +22,41 @@ class ArchiveController extends Controller
 {
    public function index(Request $request)
     {
-        // Ambil semua periode aktif
-        $activePeriodes = PeriodeTa::where('is_active', true)->get();
-        $activePeriodeIds = $activePeriodes->pluck('id');
+        $activePeriodeIds = PeriodeTa::where('is_active', false)
+            ->pluck('id')
+            ->toArray();
 
-        // Cek apakah user memilih filter periode atau tidak
-        $selectedPeriodeId = $request->has('periode') && !empty($request->periode) && $request->periode != 'semua'
-            ? $request->periode
-            : ($activePeriodeIds->count() > 0 ? $activePeriodeIds : []); // default gunakan periode aktif
+        $selectedPeriodeId = $request->filled('periode') && $request->periode != 'semua'
+            ? (array) $request->periode
+            : $activePeriodeIds;
 
-        // Mulai query
         $query = TugasAkhir::with(['mahasiswa', 'periode_ta'])
             ->where('status', 'acc')
             ->where('status_pemberkasan_sidang', 'sudah_lengkap');
 
-        // Filter periode (pakai dari filter user atau default aktif)
         if (!empty($selectedPeriodeId)) {
-            $query->whereIn('periode_ta_id', is_array($selectedPeriodeId) ? $selectedPeriodeId : [$selectedPeriodeId]);
+            $query->whereIn('periode_ta_id', $selectedPeriodeId);
         }
 
-        // Filter program studi jika dipilih
-        if ($request->has('program_studi') && !empty($request->program_studi) && $request->program_studi != 'semua') {
+        if ($request->filled('program_studi') && $request->program_studi != 'semua') {
             $query->whereHas('mahasiswa', function ($q) use ($request) {
                 $q->where('program_studi_id', $request->program_studi);
             });
         }
 
-        // Ambil data
         $dataTugasAkhir = $query->get();
 
-        // Ambil data periode untuk select option di view
-        $listPeriode = $request->has('program_studi') && !empty($request->program_studi) && $request->program_studi != 'semua'
+        $listPeriode = $request->filled('program_studi') && $request->program_studi != 'semua'
             ? PeriodeTa::where('program_studi_id', $request->program_studi)->get()
             : PeriodeTa::all();
 
-        // Siapkan data untuk dikirim ke view
-        $data = [
+        return view('administrator.archive.index', [
             'title' => 'Arsip',
-            'breadcrumbs' => [
-                [
-                    'title' => 'Dashboard',
-                    'url' => route('apps.dashboard')
-                ],
-                [
-                    'title' => 'Arsip',
-                    'is_active' => true
-                ],
-            ],
             'data' => $dataTugasAkhir,
             'prodi' => ProgramStudi::all(),
             'periode' => $listPeriode,
             'selected_periode' => $selectedPeriodeId,
-        ];
-
-        return view('administrator.archive.index', $data);
+        ]);
     }
 
 
@@ -90,7 +71,7 @@ class ArchiveController extends Controller
 
         $data = [
             'title' => 'Detail Tugas Akhir',
-                  'breadcrumbs' => [
+            'breadcrumbs' => [
                 [
                     'title' => 'Dashboard',
                     'url' => route('apps.dashboard')
