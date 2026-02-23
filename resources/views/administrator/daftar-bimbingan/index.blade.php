@@ -106,18 +106,8 @@
                             <select name="periode" id="periode" class="form-control" style="min-width: 300px; width: 100%" onchange="this.form.submit()">
                                 <option selected disabled hidden>Filter Periode</option>
                                 <option value="semua" {{ request('periode') == 'semua' || !request('periode') ? 'selected' : '' }}>Semua Periode</option>
-                                @foreach($periode as $nama => $periodeGroup)
-                                    @if(count($periodeGroup) > 1)
-                                        <optgroup label="{{ $nama }}">
-                                            @foreach($periodeGroup as $p)
-                                                <option value="{{ $p->id }}" {{ request('periode') == $p->id ? 'selected' : '' }}>{{ $p->nama }}@if(!request('program_studi') || request('program_studi') == 'semua') - {{ $p->programStudi->display ?? '' }}@endif</option>
-                                            @endforeach
-                                        </optgroup>
-                                    @else
-                                        @foreach($periodeGroup as $p)
-                                            <option value="{{ $p->id }}" {{ request('periode') == $p->id ? 'selected' : '' }}>{{ $p->nama }}</option>
-                                        @endforeach
-                                    @endif
+                                @foreach($periode as $p)
+                                    <option value="{{ $p->nama }}" {{ request('periode') == $p->nama ? 'selected' : '' }}>{{ $p->nama }}</option>
                                 @endforeach
                             </select>
                             @if (request('status') == 'mahasiswa_uji')

@@ -20,32 +20,28 @@ class DaftarBimbinganController extends Controller
         // Get selected program studi
         $selectedProdiId = $request->input('program_studi');
         
-        // Get periods based on selected program studi, grouped by nama
-        $periodeQuery = PeriodeTa::orderBy('nama', 'desc');
-        if ($selectedProdiId && $selectedProdiId !== 'semua') {
-            // Filter periods by selected program studi
-            $periodeQuery->where('program_studi_id', $selectedProdiId);
-        }
-        $filteredPeriode = $periodeQuery->get()->groupBy('nama');
+        // Get unique period names (grouped by nama) - show all periods regardless of program studi
+        $allPeriode = PeriodeTa::orderBy('nama', 'desc')->get();
+        $uniquePeriodeNames = $allPeriode->groupBy('nama')->keys()->sortDesc();
+        
+        // Get periods for dropdown (unique names only)
+        $periodeForDropdown = $uniquePeriodeNames->map(function($nama) use ($allPeriode) {
+            return $allPeriode->where('nama', $nama)->first(); // Get first period with this name for display
+        });
         
         // Determine which period to filter by
-        $selectedPeriodeId = $request->input('periode');
+        $selectedPeriodeNama = $request->input('periode');
         
-        // Validate if selected period is relevant to selected program studi
-        if ($selectedPeriodeId && $selectedPeriodeId !== '' && $selectedPeriodeId !== 'semua') {
-            $selectedPeriode = PeriodeTa::find($selectedPeriodeId);
-            // If program studi is selected and period doesn't match, reset to semua
-            if ($selectedProdiId && $selectedProdiId !== 'semua' && $selectedPeriode && $selectedPeriode->program_studi_id != $selectedProdiId) {
-                $selectedPeriodeId = 'semua'; // Reset to semua
-            }
-        }
-        
-        if ($selectedPeriodeId && $selectedPeriodeId !== '' && $selectedPeriodeId !== 'semua') {
-            // Get specific period
-            $periode = PeriodeTa::where('id', $selectedPeriodeId)->get();
+        if ($selectedPeriodeNama && $selectedPeriodeNama !== '' && $selectedPeriodeNama !== 'semua') {
+            // Get all periods with the same name (from all program studi)
+            $periode = PeriodeTa::where('nama', $selectedPeriodeNama)->get();
         } else {
             // Get all periods (filtered by program studi if selected) - default to semua
-            $periode = $filteredPeriode->flatten();
+            if ($selectedProdiId && $selectedProdiId !== 'semua') {
+                $periode = PeriodeTa::where('program_studi_id', $selectedProdiId)->get();
+            } else {
+                $periode = $allPeriode;
+            }
         }
         
         $query = BimbingUji::with(['tugas_akhir', 'dosen'])->where('dosen_id', $user->id)->whereHas('tugas_akhir', function($q) use ($periode){
@@ -128,7 +124,7 @@ class DaftarBimbinganController extends Controller
             'bimbing1' => $bimbing1,
             'bimbing2' => $bimbing2,
             'prodi' => ProgramStudi::all(),
-            'periode' => $filteredPeriode,
+            'periode' => $periodeForDropdown,
         ];
         
         return view('administrator.daftar-bimbingan.index', $data);
