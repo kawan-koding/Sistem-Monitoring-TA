@@ -47,7 +47,9 @@
                                 <th width="40%">Judul</th>
                                 <th width="20%">Dosen</th>
                                 <th width="10%">Periode</th>
-                                <th>Aksi</th>
+                                @if(session('switchRoles') == 'Admin')
+                                    <th>Aksi</th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody>
@@ -150,9 +152,11 @@
                                         </ol>
                                     </td>
                                     <td><p class="small">{{ $item->periode_ta->nama ?? '-' }}</p></td>
+                                    @if(session('switchRoles') == 'Admin')
                                     <td>
                                         <a href="{{ route('apps.archives.show', $item->id)}}" class="btn btn-sm btn-outline-warning mb-1" title="Detail"><i class="bx bx-show"></i></a>
                                     </td>
+                                    @endif
                                 </tr>
                             @endforeach
                         </tbody>
