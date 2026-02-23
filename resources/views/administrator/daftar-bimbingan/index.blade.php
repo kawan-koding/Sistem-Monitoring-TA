@@ -103,6 +103,23 @@
                                     <option value="{{ $p->id }}" {{ request('program_studi') == $p->id ? 'selected' : '' }}>{{ $p->display }}</option>
                                 @endforeach
                             </select>
+                            <select name="periode" id="periode" class="form-control" style="min-width: 300px; width: 100%" onchange="this.form.submit()">
+                                <option selected disabled hidden>Filter Periode</option>
+                                <option value="semua" {{ request('periode') == 'semua' || !request('periode') ? 'selected' : '' }}>Semua Periode</option>
+                                @foreach($periode as $nama => $periodeGroup)
+                                    @if(count($periodeGroup) > 1)
+                                        <optgroup label="{{ $nama }}">
+                                            @foreach($periodeGroup as $p)
+                                                <option value="{{ $p->id }}" {{ request('periode') == $p->id ? 'selected' : '' }}>{{ $p->nama }}@if(!request('program_studi') || request('program_studi') == 'semua') - {{ $p->programStudi->display ?? '' }}@endif</option>
+                                            @endforeach
+                                        </optgroup>
+                                    @else
+                                        @foreach($periodeGroup as $p)
+                                            <option value="{{ $p->id }}" {{ request('periode') == $p->id ? 'selected' : '' }}>{{ $p->nama }}</option>
+                                        @endforeach
+                                    @endif
+                                @endforeach
+                            </select>
                             @if (request('status') == 'mahasiswa_uji')
                                 <select name="penguji" id="penguji" class="form-control" style="min-width: 300px; width: 100%" onchange="this.form.submit()">
                                     <option selected disabled hidden>Filter Penguji</option>
@@ -206,7 +223,10 @@
                                             $badgeClass = 'badge-soft-secondary';
                                             if (isset($item->tugas_akhir)) {
                                                 $ta = $item->tugas_akhir;
-                                                if (isset($ta->status_sidang)) {
+                                                // Check if sudah lulus (tanggal_lulus is not null)
+                                                if (!is_null($ta->tanggal_lulus)) {
+                                                    $badgeClass = 'badge-soft-success';
+                                                } elseif (isset($ta->status_sidang)) {
                                                     if (($ta->status_sidang == 'acc' || $ta->status_sidang == 'revisi') && $ta->sudah_pemberkasan == 'sudah_lengkap' && isset($ta->sidang) && $ta->sidang->status == 'sudah_sidang') {
                                                         $badgeClass = 'badge-soft-success';
                                                     } elseif (($ta->status_sidang == 'acc' || $ta->status_sidang == 'revisi') && $ta->sudah_pemberkasan == 'belum_lengkap' && isset($ta->sidang) && $ta->sidang->status == 'sudah_sidang') {
@@ -251,7 +271,10 @@
 
                                             if (isset($item->tugas_akhir)) {
                                                 $ta = $item->tugas_akhir;
-                                                if (isset($ta->status_sidang)) {
+                                                // Check if sudah lulus (tanggal_lulus is not null)
+                                                if (!is_null($ta->tanggal_lulus)) {
+                                                    $statusText = 'Sudah Lulus';
+                                                } elseif (isset($ta->status_sidang)) {
                                                     if (($ta->status_sidang == 'acc' || $ta->status_sidang == 'revisi') && $ta->sudah_pemberkasan == 'sudah_lengkap' && isset($ta->sidang) && $ta->sidang->status == 'sudah_sidang') {
                                                         $statusText = 'Sudah Pemberkasan Sidang';
                                                     } elseif (($ta->status_sidang == 'acc' || $ta->status_sidang == 'revisi') && $ta->sudah_pemberkasan == 'belum_lengkap' && isset($ta->sidang) && $ta->sidang->status == 'sudah_sidang') {
