@@ -17,10 +17,19 @@
                         </select>
                         <select name="periode" class="form-control" onchange="this.form.submit()">
                             <option selected disabled hidden>Filter Periode</option>
-                            <option value="semua" {{ request('periode') == 'semua'  ? 'selected' : '' }}>Semua</option>
+                            <option value="semua" {{ request('periode') == 'semua'  ? 'selected' : '' }}>Semua Periode</option>
                             @foreach ($periode as $item)
                                 <option value="{{ $item->id }}" {{ request('periode') == $item->id ? 'selected' : '' }}>
                                     {{ $item->programStudi->display }} - ({{ $item->nama }})
+                                </option>
+                            @endforeach
+                        </select>
+                        <select name="dosen" class="form-control" onchange="this.form.submit()">
+                            <option selected disabled hidden>Filter Dosen</option>
+                            <option value="semua" {{ request('dosen') == 'semua'  ? 'selected' : '' }}>Semua Dosen</option>
+                            @foreach ($dosen as $item)
+                                <option value="{{ $item->id }}" {{ request('dosen') == $item->id ? 'selected' : '' }}>
+                                    {{ $item->name }}
                                 </option>
                             @endforeach
                         </select>

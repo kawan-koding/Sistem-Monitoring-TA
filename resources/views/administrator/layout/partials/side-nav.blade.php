@@ -232,7 +232,7 @@
                     </li>
                     @endcanany
                 @endif
-                @if(session('switchRoles') == 'Admin' || session('switchRoles') == 'Dosen')
+                @if(session('switchRoles') != 'Mahasiswa' && session('switchRoles') != 'Teknisi')
                 <li>
                     <a href="{{route('apps.archives')}}" class=" waves-effect">
                         <i class="mdi mdi-archive"></i>

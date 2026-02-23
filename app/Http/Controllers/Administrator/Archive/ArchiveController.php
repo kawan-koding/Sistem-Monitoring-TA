@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use ZipStream\Option\Archive;
 use App\Http\Controllers\Controller;
+use App\Models\Dosen;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Artisan;
@@ -44,6 +45,12 @@ class ArchiveController extends Controller
             });
         }
 
+        if ($request->filled('dosen') && $request->dosen != 'semua') {
+            $query->whereHas('bimbing_uji', function ($q) use ($request) {
+                $q->where('dosen_id', $request->dosen);
+            });
+        }
+
         $dataTugasAkhir = $query->get();
 
         $listPeriode = $request->filled('program_studi') && $request->program_studi != 'semua'
@@ -55,6 +62,7 @@ class ArchiveController extends Controller
             'data' => $dataTugasAkhir,
             'prodi' => ProgramStudi::all(),
             'periode' => $listPeriode,
+            'dosen' => Dosen::all(),
             'selected_periode' => $selectedPeriodeId,
         ]);
     }
