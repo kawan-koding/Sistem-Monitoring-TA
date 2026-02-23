@@ -16,7 +16,38 @@ class DaftarBimbinganController extends Controller
     {
         $query = [];
         $user = getInfoLogin()->userable;
-        $periode = PeriodeTa::where('is_active', 1)->get();
+        
+        // Get selected program studi
+        $selectedProdiId = $request->input('program_studi');
+        
+        // Get periods based on selected program studi, grouped by nama
+        $periodeQuery = PeriodeTa::orderBy('nama', 'desc');
+        if ($selectedProdiId && $selectedProdiId !== 'semua') {
+            // Filter periods by selected program studi
+            $periodeQuery->where('program_studi_id', $selectedProdiId);
+        }
+        $filteredPeriode = $periodeQuery->get()->groupBy('nama');
+        
+        // Determine which period to filter by
+        $selectedPeriodeId = $request->input('periode');
+        
+        // Validate if selected period is relevant to selected program studi
+        if ($selectedPeriodeId && $selectedPeriodeId !== '' && $selectedPeriodeId !== 'semua') {
+            $selectedPeriode = PeriodeTa::find($selectedPeriodeId);
+            // If program studi is selected and period doesn't match, reset to semua
+            if ($selectedProdiId && $selectedProdiId !== 'semua' && $selectedPeriode && $selectedPeriode->program_studi_id != $selectedProdiId) {
+                $selectedPeriodeId = 'semua'; // Reset to semua
+            }
+        }
+        
+        if ($selectedPeriodeId && $selectedPeriodeId !== '' && $selectedPeriodeId !== 'semua') {
+            // Get specific period
+            $periode = PeriodeTa::where('id', $selectedPeriodeId)->get();
+        } else {
+            // Get all periods (filtered by program studi if selected) - default to semua
+            $periode = $filteredPeriode->flatten();
+        }
+        
         $query = BimbingUji::with(['tugas_akhir', 'dosen'])->where('dosen_id', $user->id)->whereHas('tugas_akhir', function($q) use ($periode){
             $q->whereIn('periode_ta_id', $periode->pluck('id'));
         });
@@ -49,14 +80,16 @@ class DaftarBimbinganController extends Controller
         
         $query = $query->get();
         $kuota = KuotaDosen::whereIn('periode_ta_id', $periode->pluck('id'))->where('dosen_id', $user->id)->with('programStudi')->get();
-        $bimbing1 = BimbingUji::where('dosen_id', $user->id)->where('jenis', 'pembimbing')->where('urut', 1)->whereHas('tugas_akhir', function ($query) {
-                $query->whereNotIn('status', ['reject', 'cancel']);
+        $bimbing1 = BimbingUji::where('dosen_id', $user->id)->where('jenis', 'pembimbing')->where('urut', 1)->whereHas('tugas_akhir', function ($q) use ($periode) {
+                $q->whereNotIn('status', ['reject', 'cancel'])
+                  ->whereIn('periode_ta_id', $periode->pluck('id'));
             })->with(['tugas_akhir.mahasiswa.programStudi'])->get()->groupBy('tugas_akhir.mahasiswa.program_studi_id')->map(function ($group) {
                 return $group->count();
             });
         
-        $bimbing2 = BimbingUji::where('dosen_id', $user->id)->where('jenis', 'pembimbing')->where('urut', 2)->whereHas('tugas_akhir', function ($query) {
-                $query->whereNotIn('status', ['reject', 'cancel']);
+        $bimbing2 = BimbingUji::where('dosen_id', $user->id)->where('jenis', 'pembimbing')->where('urut', 2)->whereHas('tugas_akhir', function ($q) use ($periode) {
+                $q->whereNotIn('status', ['reject', 'cancel'])
+                  ->whereIn('periode_ta_id', $periode->pluck('id'));
             })->with(['tugas_akhir.mahasiswa.programStudi'])->get()->groupBy('tugas_akhir.mahasiswa.program_studi_id')->map(function ($group) {
                 return $group->count();
             });
@@ -95,6 +128,7 @@ class DaftarBimbinganController extends Controller
             'bimbing1' => $bimbing1,
             'bimbing2' => $bimbing2,
             'prodi' => ProgramStudi::all(),
+            'periode' => $filteredPeriode,
         ];
         
         return view('administrator.daftar-bimbingan.index', $data);
