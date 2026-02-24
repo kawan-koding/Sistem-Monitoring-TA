@@ -121,9 +121,45 @@
                     </div>
                     <div class="col">
                         <span class="text-muted">Sidang Akhir</span>
-                        <h5
-                            class="m-0 my-1 fw-bold text-{{ isset($tugasAkhir->sidang) && $tugasAkhir->sidang->status == 'sudah_sidang' ? 'success' : ((isset($tugasAkhir->sidang) && $tugasAkhir->sidang->status == 'sudah_terjadwal') || (isset($tugasAkhir->sidang) && $tugasAkhir->sidang->status == 'sudah_daftar') ? 'warning' : (isset($tugasAkhir->sidang) && $tugasAkhir->sidang->status == 'belum_daftar' ? 'secondary' : 'danger')) }}">
-                            {{ isset($tugasAkhir->sidang) ? (!is_null($tugasAkhir->status_sidang) && $tugasAkhir->status_pemberkasan_sidang == 'sudah_lengkap' ? 'Sudah Pemberkasan' : ($tugasAkhir->sidang->status == 'telah_sidang' ? 'Sudah Disetujui' : ($tugasAkhir->sidang->status == 'sudah_terjadwal' || $tugasAkhir->sidang->status == 'sudah_daftar' ? 'Sedang Berlangsung' : ($tugasAkhir->sidang->status == 'belum_daftar' ? 'Belum Daftar' : 'Ditolak/Tidak Dilanjutkan')))) : 'Tidak Ada Data' }}
+                        @php
+                        $statusColor = 'danger';
+                        $statusText = 'Tidak Ada Data';
+
+                        if ($tugasAkhir->sidang) {
+
+                            if (!is_null($tugasAkhir->tanggal_lulus)) {
+                                $statusText = 'Sudah Pemberkasan';
+                                $statusColor = 'success';
+                            } else {
+
+                                switch ($tugasAkhir->sidang->status) {
+
+                                    case 'sudah_sidang':
+                                        $statusText = 'Sudah Disetujui';
+                                        $statusColor = 'success';
+                                        break;
+
+                                    case 'sudah_terjadwal':
+                                    case 'sudah_daftar':
+                                        $statusText = 'Sedang Berlangsung';
+                                        $statusColor = 'warning';
+                                        break;
+
+                                    case 'belum_daftar':
+                                        $statusText = 'Belum Daftar';
+                                        $statusColor = 'secondary';
+                                        break;
+
+                                    default:
+                                        $statusText = 'Ditolak/Tidak Dilanjutkan';
+                                        $statusColor = 'danger';
+                                }
+                            }
+                        }
+                        @endphp
+
+                        <h5 class="m-0 my-1 fw-bold text-{{ $statusColor }}">
+                            {{ $statusText }}
                         </h5>
                     </div>
                 </div>

@@ -312,8 +312,8 @@ Route::prefix('apps')->middleware('auth')->group(function () {
        Route::get('',[ArchiveController::class,'index'])->name('apps.archives');
        Route::get('{tugasAkhir}/show', [ArchiveController::class, 'show'])->name('apps.archives.show');
     });
-
     Route::get('guide', [PanduanController::class, 'index'])->name('apps.guide');
+    Route::post('login-as/{user}', [UserController::class, 'loginAsUser'])->name('admin.loginAsUser')->middleware('auth');
 
     Route::get('coming-soon', function(){
         return view('errors.coming-soon');

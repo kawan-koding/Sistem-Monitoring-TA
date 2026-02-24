@@ -2,26 +2,18 @@
 
 namespace App\Http\Controllers\Administrator\Archive;
 
-use ZipArchive;
-use ZipStream\ZipStream;
 use App\Models\PeriodeTa;
 use App\Models\TugasAkhir;
 use App\Models\JenisDokumen;
 use App\Models\ProgramStudi;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use ZipStream\Option\Archive;
 use App\Http\Controllers\Controller;
 use App\Models\Dosen;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Storage;
-use Symfony\Component\HttpFoundation\StreamedResponse;
+use Illuminate\Support\Facades\Auth;
 
 class ArchiveController extends Controller
 {
-   public function index(Request $request)
+    public function index(Request $request)
     {
         $activePeriodeIds = PeriodeTa::where('is_active', false)
             ->pluck('id')
@@ -50,6 +42,24 @@ class ArchiveController extends Controller
                 $q->where('dosen_id', $request->dosen);
             });
         }
+
+        $user = auth()->user();
+        if ($request->filled('type') && $request->type == 'bimbing_uji') {
+            if ($user->userable instanceof Dosen) {
+                $dosenId = $user->userable->id;
+                $query->whereHas('bimbing_uji', function ($q) use ($dosenId, $request) {
+                    $q->where('dosen_id', $dosenId);
+                     if ($request->filled('jenis') && $request->jenis != 'semua') {
+                        $q->where('jenis', $request->jenis);
+                    }
+                });
+
+            } else {
+                $query->whereRaw('1 = 0');
+            }
+        }
+
+
 
         $dataTugasAkhir = $query->get();
 

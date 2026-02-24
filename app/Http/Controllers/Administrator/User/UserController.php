@@ -11,6 +11,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\User\UserRequest;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -120,5 +121,15 @@ class UserController extends Controller
         } catch (\Exception $e) {
             return $this->exceptionResponse($e);
         }
+    }
+
+    public function loginAsUser(User $user)
+    {
+        if (!auth()->user()->hasRole('Admin')) {
+            abort(403);
+        }
+        session()->forget('switchRoles');
+        Auth::login($user);
+        return redirect()->route('apps.dashboard')->with('success', 'Login sebagai user berhasil.');
     }
 }
