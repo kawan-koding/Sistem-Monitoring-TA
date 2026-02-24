@@ -44,9 +44,16 @@ class DaftarBimbinganController extends Controller
             }
         }
         
-        $query = BimbingUji::with(['tugas_akhir', 'dosen'])->where('dosen_id', $user->id)->whereHas('tugas_akhir', function($q) use ($periode){
-            $q->whereIn('periode_ta_id', $periode->pluck('id'));
-        });
+        $query = BimbingUji::with(['tugas_akhir', 'dosen'])
+            ->where('dosen_id', $user->id)
+            ->whereHas('tugas_akhir', function ($q) use ($periode, $selectedPeriodeNama) {
+                $q->whereIn('periode_ta_id', $periode->pluck('id'));
+
+                // Jika filter periode dipilih (bukan "semua"), hanya tampilkan yang belum lulus
+                if ($selectedPeriodeNama && $selectedPeriodeNama !== '' && $selectedPeriodeNama !== 'semua') {
+                    $q->whereNull('tanggal_lulus');
+                }
+            });
 
         if ($request->has('program_studi') && !empty($request->program_studi) && $request->program_studi !== 'semua') {
             $query->whereHas('tugas_akhir.mahasiswa', function($query) use ($request) {
