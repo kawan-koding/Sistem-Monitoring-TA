@@ -16,22 +16,22 @@ class DaftarBimbinganController extends Controller
     {
         $query = [];
         $user = getInfoLogin()->userable;
-        
+
         // Get selected program studi
         $selectedProdiId = $request->input('program_studi');
-        
+
         // Get unique period names (grouped by nama) - show all periods regardless of program studi
         $allPeriode = PeriodeTa::orderBy('nama', 'desc')->get();
         $uniquePeriodeNames = $allPeriode->groupBy('nama')->keys()->sortDesc();
-        
+
         // Get periods for dropdown (unique names only)
         $periodeForDropdown = $uniquePeriodeNames->map(function($nama) use ($allPeriode) {
             return $allPeriode->where('nama', $nama)->first(); // Get first period with this name for display
         });
-        
+
         // Determine which period to filter by
         $selectedPeriodeNama = $request->input('periode');
-        
+
         if ($selectedPeriodeNama && $selectedPeriodeNama !== '' && $selectedPeriodeNama !== 'semua') {
             // Get all periods with the same name (from all program studi)
             $periode = PeriodeTa::where('nama', $selectedPeriodeNama)->get();
@@ -43,7 +43,7 @@ class DaftarBimbinganController extends Controller
                 $periode = $allPeriode;
             }
         }
-        
+
         $query = BimbingUji::with(['tugas_akhir', 'dosen'])
             ->where('dosen_id', $user->id)
             ->whereHas('tugas_akhir', function ($q) use ($periode, $selectedPeriodeNama) {
@@ -69,18 +69,18 @@ class DaftarBimbinganController extends Controller
 
         if ($request->status == 'mahasiswa_uji') {
             $query->whereIn('jenis', ['penguji', 'pengganti']);
-            
+
             if ($request->has('penguji') && $request->penguji !== 'semua') {
                 $query->where('urut', $request->penguji);
             }
         } else {
             $query->where('jenis', 'pembimbing');
-            
+
             if ($request->has('pembimbing') && $request->pembimbing !== 'semua') {
                 $query->where('urut', $request->pembimbing);
             }
         }
-        
+
         $query = $query->get();
         $kuota = KuotaDosen::whereIn('periode_ta_id', $periode->pluck('id'))->where('dosen_id', $user->id)->with('programStudi')->get();
         $bimbing1 = BimbingUji::where('dosen_id', $user->id)->where('jenis', 'pembimbing')->where('urut', 1)->whereHas('tugas_akhir', function ($q) use ($periode) {
@@ -89,20 +89,20 @@ class DaftarBimbinganController extends Controller
             })->with(['tugas_akhir.mahasiswa.programStudi'])->get()->groupBy('tugas_akhir.mahasiswa.program_studi_id')->map(function ($group) {
                 return $group->count();
             });
-        
+
         $bimbing2 = BimbingUji::where('dosen_id', $user->id)->where('jenis', 'pembimbing')->where('urut', 2)->whereHas('tugas_akhir', function ($q) use ($periode) {
                 $q->whereNotIn('status', ['reject', 'cancel'])
                   ->whereIn('periode_ta_id', $periode->pluck('id'));
             })->with(['tugas_akhir.mahasiswa.programStudi'])->get()->groupBy('tugas_akhir.mahasiswa.program_studi_id')->map(function ($group) {
                 return $group->count();
             });
-        
+
         $sisaKuota = $kuota->map(function ($item) use ($bimbing1, $bimbing2) {
             $programStudiId = $item->program_studi_id;
-        
+
             $mahasiswaBimbing1 = $bimbing1->get($programStudiId, 0);
             $mahasiswaBimbing2 = $bimbing2->get($programStudiId, 0);
-        
+
             return [
                 'prodi' => $item->programStudi->display ?? 'Tidak Diketahui',
                 'total_kuota_pemb_1' => $item->pembimbing_1 ?? 0,
@@ -111,7 +111,7 @@ class DaftarBimbinganController extends Controller
                 'sisa_kuota_pemb_2' => max(($item->pembimbing_2 ?? 0) - $mahasiswaBimbing2, 0),
             ];
         });
-        
+
         $data = [
             'title' => 'Mahasiswa Bimbingan',
             'mods' => 'daftar_bimbingan',
@@ -133,7 +133,7 @@ class DaftarBimbinganController extends Controller
             'prodi' => ProgramStudi::all(),
             'periode' => $periodeForDropdown,
         ];
-        
+
         return view('administrator.daftar-bimbingan.index', $data);
     }
 
