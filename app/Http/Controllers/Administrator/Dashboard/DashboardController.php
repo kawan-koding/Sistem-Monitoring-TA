@@ -183,10 +183,24 @@ class DashboardController extends Controller
     private function mahasiswaRole(): array
     {
         $tugasAkhir = TugasAkhir::where('mahasiswa_id', getInfoLogin()->userable->id)->orderBy('id', 'desc')->first();
-        $jadwalSeminar = JadwalSeminar::where('tugas_akhir_id', $tugasAkhir->id)->first();
-        $jadwalSidang = Sidang::where('tugas_akhir_id', $tugasAkhir->id)->first();
 
         $jadwal = [];
+        $jadwalSeminar = null;
+        $jadwalSidang = null;
+
+        // ✅ Jika belum ada tugas akhir, langsung return
+        if (!$tugasAkhir) {
+
+            return [
+                'tugasAkhir' => null,
+                'jadwal' => [],
+                'mods' => 'dashboard',
+                'topik' => [],
+            ];
+        }
+
+        $jadwalSeminar = JadwalSeminar::where('tugas_akhir_id', $tugasAkhir->id)->first();
+        $jadwalSidang  = Sidang::where('tugas_akhir_id', $tugasAkhir->id)->first();
 
         if ($jadwalSeminar && $jadwalSeminar->tanggal !== null) {
             $jadwal[] = [

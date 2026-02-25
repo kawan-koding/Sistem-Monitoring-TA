@@ -110,58 +110,72 @@
         </div>
     </div>
     <div class="col-md-4 col-sm-4 col-12">
-        <div class="card shadow-sm mb-4"
-            style="border-left: 3px solid {{ isset($tugasAkhir->sidang) && $tugasAkhir->sidang->status == 'sudah_sidang' ? '#1db45c' : ((isset($tugasAkhir->sidang) && $tugasAkhir->sidang->status == 'sudah_terjadwal') || (isset($tugasAkhir->sidang) && $tugasAkhir->sidang->status == 'sudah_daftar') ? '#ebe831' : (isset($tugasAkhir->sidang) && $tugasAkhir->sidang->status == 'belum_daftar' ? '#b4b4b4' : '#ff5b5b')) }}">
+        @php
+            $statusColor = 'secondary';
+            $statusText = 'Belum Memiliki Data';
+            $icon = 'mdi mdi-file-alert-outline';
+            $borderColor = '#b4b4b4';
+
+            if ($tugasAkhir && $tugasAkhir->sidang) {
+                if (!is_null($tugasAkhir->tanggal_lulus)) {
+                    $statusText = 'Sudah Pemberkasan';
+                    $statusColor = 'success';
+                    $icon = 'mdi mdi-file-document-box-check-outline';
+                    $borderColor = '#1db45c';
+                } else {
+                    switch ($tugasAkhir->sidang->status) {
+                        case 'sudah_sidang':
+                            $statusText = 'Sudah Disetujui';
+                            $statusColor = 'success';
+                            $icon = 'mdi mdi-file-document-box-check-outline';
+                            $borderColor = '#1db45c';
+                            break;
+
+                        case 'sudah_terjadwal':
+                        case 'sudah_daftar':
+                            $statusText = 'Sedang Berlangsung';
+                            $statusColor = 'warning';
+                            $icon = 'mdi mdi-calendar-clock';
+                            $borderColor = '#ebe831';
+                            break;
+
+                        case 'belum_daftar':
+                            $statusText = 'Belum Daftar';
+                            $statusColor = 'secondary';
+                            $icon = 'mdi mdi-account-alert';
+                            $borderColor = '#b4b4b4';
+                            break;
+
+                        default:
+                            $statusText = 'Ditolak/Tidak Dilanjutkan';
+                            $statusColor = 'danger';
+                            $icon = 'mdi mdi-file-alert-outline';
+                            $borderColor = '#ff5b5b';
+                    }
+                }
+            }
+        @endphp
+
+
+        <div class="card shadow-sm mb-4" style="border-left: 3px solid {{ $borderColor }}">
             <div class="card-body p-3">
                 <div class="d-flex align-items-center justify-content-between gap-3">
-                    <div style="width: 55px;height: 55px;font-size: 2rem"
-                        class="bg-soft-{{ isset($tugasAkhir->sidang) && $tugasAkhir->sidang->status == 'sudah_sidang' ? 'success' : ((isset($tugasAkhir->sidang) && $tugasAkhir->sidang->status == 'sudah_terjadwal') || (isset($tugasAkhir->sidang) && $tugasAkhir->sidang->status == 'sudah_daftar') ? 'warning' : (isset($tugasAkhir->sidang) && $tugasAkhir->sidang->status == 'belum_daftar' ? 'secondary' : 'danger')) }} rounded d-flex align-items-center justify-content-center text-{{ isset($tugasAkhir->sidang) && $tugasAkhir->sidang->status == 'sudah_sidang' ? 'success' : ((isset($tugasAkhir->sidang) && $tugasAkhir->sidang->status == 'sudah_terjadwal') || (isset($tugasAkhir->sidang) && $tugasAkhir->sidang->status == 'sudah_daftar') ? 'warning' : (isset($tugasAkhir->sidang) && $tugasAkhir->sidang->status == 'belum_daftar' ? 'secondary' : 'danger')) }}">
-                        <i
-                            class="{{ isset($tugasAkhir->sidang) && $tugasAkhir->sidang->status == 'sudah_sidang' ? 'mdi mdi-file-document-box-check-outline' : ((isset($tugasAkhir->sidang) && $tugasAkhir->sidang->status == 'sudah_terjadwal') || (isset($tugasAkhir->sidang) && $tugasAkhir->sidang->status == 'sudah_daftar') ? 'mdi mdi-calendar-clock' : (isset($tugasAkhir->sidang) && $tugasAkhir->sidang->status == 'belum_daftar' ? 'mdi mdi-account-alert' : 'mdi mdi-file-alert-outline')) }}"></i>
+
+                    <div style="width:55px;height:55px;font-size:2rem"
+                        class="bg-soft-{{ $statusColor }}
+                       rounded d-flex align-items-center justify-content-center
+                       text-{{ $statusColor }}">
+                        <i class="{{ $icon }}"></i>
                     </div>
+
                     <div class="col">
                         <span class="text-muted">Sidang Akhir</span>
-                        @php
-                        $statusColor = 'danger';
-                        $statusText = 'Tidak Ada Data';
-
-                        if ($tugasAkhir->sidang) {
-
-                            if (!is_null($tugasAkhir->tanggal_lulus)) {
-                                $statusText = 'Sudah Pemberkasan';
-                                $statusColor = 'success';
-                            } else {
-
-                                switch ($tugasAkhir->sidang->status) {
-
-                                    case 'sudah_sidang':
-                                        $statusText = 'Sudah Disetujui';
-                                        $statusColor = 'success';
-                                        break;
-
-                                    case 'sudah_terjadwal':
-                                    case 'sudah_daftar':
-                                        $statusText = 'Sedang Berlangsung';
-                                        $statusColor = 'warning';
-                                        break;
-
-                                    case 'belum_daftar':
-                                        $statusText = 'Belum Daftar';
-                                        $statusColor = 'secondary';
-                                        break;
-
-                                    default:
-                                        $statusText = 'Ditolak/Tidak Dilanjutkan';
-                                        $statusColor = 'danger';
-                                }
-                            }
-                        }
-                        @endphp
 
                         <h5 class="m-0 my-1 fw-bold text-{{ $statusColor }}">
                             {{ $statusText }}
                         </h5>
                     </div>
+
                 </div>
             </div>
         </div>

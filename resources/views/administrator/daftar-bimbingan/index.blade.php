@@ -103,13 +103,13 @@
                                     <option value="{{ $p->id }}" {{ request('program_studi') == $p->id ? 'selected' : '' }}>{{ $p->display }}</option>
                                 @endforeach
                             </select>
-                            <select name="periode" id="periode" class="form-control" style="min-width: 300px; width: 100%" onchange="this.form.submit()">
+                            {{-- <select name="periode" id="periode" class="form-control" style="min-width: 300px; width: 100%" onchange="this.form.submit()">
                                 <option selected disabled hidden>Filter Periode</option>
                                 <option value="semua" {{ request('periode') == 'semua' || !request('periode') ? 'selected' : '' }}>Semua Periode</option>
                                 @foreach($periode as $p)
                                     <option value="{{ $p->nama }}" {{ request('periode') == $p->nama ? 'selected' : '' }}>{{ $p->nama }}</option>
                                 @endforeach
-                            </select>
+                            </select> --}}
                             @if (request('status') == 'mahasiswa_uji')
                                 <select name="penguji" id="penguji" class="form-control" style="min-width: 300px; width: 100%" onchange="this.form.submit()">
                                     <option selected disabled hidden>Filter Penguji</option>

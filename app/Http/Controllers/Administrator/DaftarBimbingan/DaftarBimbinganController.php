@@ -48,7 +48,9 @@ class DaftarBimbinganController extends Controller
             ->where('dosen_id', $user->id)
             ->whereHas('tugas_akhir', function ($q) use ($periode) {
                 $q->whereIn('periode_ta_id', $periode->pluck('id'))
-                  ->whereNull('tanggal_lulus'); // Selalu hanya yang belum lulus
+                    ->whereNull('tanggal_lulus')->where(function ($sub) {
+                        $sub->whereNull('status_pemberkasan_sidang')->orWhere('status_pemberkasan_sidang', '!=', 'sudah_lengkap');
+                    });
             });
 
         if ($request->has('program_studi') && !empty($request->program_studi) && $request->program_studi !== 'semua') {
